@@ -1,0 +1,599 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689029525 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029525), decision 1 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Mirror Armor",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Bulk Up",
+     "Rest"
+    ],
+    "name": "Corviknight",
+    "nature": "Serious",
+    "species": "Corviknight"
+   },
+   {
+    "ability": "Stance Change",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Occa Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wide Guard",
+     "King's Shield",
+     "Rest"
+    ],
+    "name": "Aegislash",
+    "nature": "Serious",
+    "species": "Aegislash"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Blizzard",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sacred Sword",
+     "Sucker Punch",
+     "Rest"
+    ],
+    "name": "Samurott",
+    "nature": "Serious",
+    "species": "Samurott-Hisui"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Hurricane",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "boosts": {},
+       "hp": 167,
+       "item": "occaberry",
+       "lastMove": "wideguard",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "kingsshield": 8,
+        "rest": 8,
+        "wideguard": 11
+       },
+       "slot": 1,
+       "species": "Aegislash",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "mirrorarmor",
+       "boosts": {
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 205,
+       "item": "",
+       "lastMove": "bulkup",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 197,
+       "item": "lifeorb",
+       "maxhp": 197,
+       "name": "Samurott",
+       "pp": {
+        "rest": 8,
+        "sacredsword": 16,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Samurott-Hisui",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "electroshot": {},
+        "twoturnmove": {
+         "duration": 1,
+         "move": "electroshot"
+        }
+       }
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "hurricane": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move bulkup, move wideguard",
+   "move heatwave mega, move electroshot 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stancechange",
+      "boosts": {},
+      "hp": 167,
+      "item": "occaberry",
+      "maxhp": 167,
+      "name": "Aegislash",
+      "pp": {
+       "kingsshield": 8,
+       "rest": 8,
+       "wideguard": 12
+      },
+      "slot": 1,
+      "species": "Aegislash",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "mirrorarmor",
+      "boosts": {},
+      "hp": 205,
+      "item": "",
+      "maxhp": 205,
+      "name": "Corviknight",
+      "pp": {
+       "bulkup": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Corviknight",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowwarning",
+      "hp": 180,
+      "item": "",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "blizzard": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "hp": 197,
+      "item": "lifeorb",
+      "maxhp": 197,
+      "name": "Samurott",
+      "pp": {
+       "rest": 8,
+       "sacredsword": 16,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Samurott-Hisui",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "electroshot": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "hurricane": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Politoed",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move bulkup, move kingsshield",
+  "p2": "move heatwave, move electroshot 1"
+ }
+}

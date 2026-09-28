@@ -1,0 +1,2726 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689047197 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047197), decision 13 = turn 10 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hurricane",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Psychic",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Leech Life",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Synchronize",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Gardevoirite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Hyper Voice",
+     "Protect",
+     "Trick Room"
+    ],
+    "name": "Gardevoir",
+    "nature": "Serious",
+    "species": "Gardevoir"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Helping Hand",
+     "Psychic",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Drought",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Torkoal",
+    "nature": "Serious",
+    "species": "Torkoal"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "charizarditey",
+       "lastMove": "hurricane",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "expandingforce",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 12,
+        "protect": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 20,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "charizarditey",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 58,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "hypervoice",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 11,
+        "protect": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 101,
+       "item": "",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 2,
+       "item": "charizarditey",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "hypervoice",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 10,
+        "protect": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 25,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 2,
+       "item": "charizarditey",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "hypervoice",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 10,
+        "protect": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 25,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "sunnyday",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 2,
+       "item": "charizarditey",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 5,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 116,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "hypervoice",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 9,
+        "protect": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 25,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 4,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": "fnt"
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 116,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "hypervoice",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 8,
+        "protect": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 25,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 4,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 116,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "hypervoice",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 8,
+        "protect": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 25,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 4,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 116,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "protect",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 8,
+        "protect": 7,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 59,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "sunnyday",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 4,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 116,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 175,
+       "item": "gardevoirite",
+       "lastMove": "protect",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 8,
+        "protect": 7,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 4,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 116,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 6,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 10,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 33,
+       "item": "gardevoirite",
+       "lastMove": "trickroom",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 8,
+        "protect": 7,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 4,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 5,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 9,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 8,
+        "protect": 7,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 4,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 5,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 9,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 8,
+        "protect": 7,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 4,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 5,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 9,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 10
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 11,
+        "hypervoice": 8,
+        "protect": 7,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "helpinghand": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "closecombat",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 59,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "weatherball": 9
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 10,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move hurricane 2 mega, move protect",
+   "move expandingforce 1 mega, move trickroom"
+  ],
+  [
+   "move protect, move weatherball 2",
+   "move hypervoice, move helpinghand -1"
+  ],
+  [
+   "move protect, move weatherball 2",
+   "move hypervoice, move psychic 2"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move protect, move psychic 2",
+   "move hypervoice, switch 3"
+  ],
+  [
+   "move protect, move protect",
+   "move hypervoice, move weatherball 2"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move leechlife 1, move psychic 2",
+   "move protect, switch 3"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move leechlife 1, move protect",
+   "move trickroom, move protect"
+  ],
+  [
+   "move leechlife 1, move protect",
+   "move expandingforce -2, move weatherball 2"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move protect, pass",
+   "move closecombat 1, move weatherball 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "hurricane": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cudchew",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "protect": 8,
+       "psychic": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Farigiraf",
+      "status": ""
+     },
+     {
+      "ability": "emergencyexit",
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "leechlife": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": 1,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "synchronize",
+      "boosts": {},
+      "canMega": true,
+      "hp": 175,
+      "item": "gardevoirite",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "expandingforce": 12,
+       "hypervoice": 12,
+       "protect": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Gardevoir",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "helpinghand": 20,
+       "psychic": 12,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     },
+     {
+      "ability": "drought",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Torkoal",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Torkoal",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, pass",
+  "p2": "move closecombat 1, move weatherball 1"
+ }
+}

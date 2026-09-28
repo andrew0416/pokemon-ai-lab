@@ -1,0 +1,1844 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689050529 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050529), decision 8 = turn 7 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "White Herb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Quaquaval",
+    "nature": "Serious",
+    "species": "Quaquaval"
+   },
+   {
+    "ability": "Thermal Exchange",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Baxcalibrite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Glaive Rush",
+     "Rest"
+    ],
+    "name": "Baxcalibur",
+    "nature": "Serious",
+    "species": "Baxcalibur"
+   },
+   {
+    "ability": "Toxic Debris",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Earth Power",
+     "Spiky Shield",
+     "Rest"
+    ],
+    "name": "Glimmora",
+    "nature": "Serious",
+    "species": "Glimmora"
+   },
+   {
+    "ability": "Stance Change",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Shadow Ball",
+     "Flash Cannon",
+     "Rest"
+    ],
+    "name": "Aegislash",
+    "nature": "Serious",
+    "species": "Aegislash"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Trick Room",
+     "Psychic",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Protect",
+     "Drill Run",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Snarl",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "hp": 167,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Aegislash",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "toxicdebris",
+       "hp": 190,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "earthpower": 12,
+        "rest": 8,
+        "spikyshield": 8
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastItem": "whiteherb",
+       "lastMove": "closecombat",
+       "maxhp": 192,
+       "name": "Quaquaval",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Quaquaval",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 49,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "hp": 167,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Aegislash",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 190,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "earthpower": 12,
+        "rest": 8,
+        "spikyshield": 8
+       },
+       "slot": 1,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastItem": "whiteherb",
+       "lastMove": "closecombat",
+       "maxhp": 192,
+       "name": "Quaquaval",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Quaquaval",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 49,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 15,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "hp": 167,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Aegislash",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 190,
+       "item": "",
+       "lastMove": "earthpower",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8,
+        "spikyshield": 8
+       },
+       "slot": 1,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 192,
+       "item": "",
+       "lastItem": "whiteherb",
+       "lastMove": "closecombat",
+       "maxhp": 192,
+       "name": "Quaquaval",
+       "pp": {
+        "closecombat": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Quaquaval",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 130,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 49,
+       "item": "golisopite",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "boosts": {},
+       "hp": 141,
+       "item": "lifeorb",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8,
+        "shadowball": 16
+       },
+       "slot": 0,
+       "species": "Aegislash",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 190,
+       "item": "",
+       "lastMove": "spikyshield",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8,
+        "spikyshield": 7
+       },
+       "slot": 1,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "torrent",
+       "hp": 192,
+       "item": "",
+       "lastItem": "whiteherb",
+       "maxhp": 192,
+       "name": "Quaquaval",
+       "pp": {
+        "closecombat": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Quaquaval",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 186,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 27,
+       "item": "golisopite",
+       "lastMove": "drillrun",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "ironhead": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "boosts": {},
+       "hp": 125,
+       "item": "lifeorb",
+       "lastMove": "shadowball",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8,
+        "shadowball": 15
+       },
+       "slot": 0,
+       "species": "Aegislash-Blade",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "hp": 190,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8,
+        "spikyshield": 7
+       },
+       "slot": null,
+       "species": "Glimmora",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "lastItem": "whiteherb",
+       "maxhp": 192,
+       "name": "Quaquaval",
+       "pp": {
+        "closecombat": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Quaquaval",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 186,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 10,
+        "ironhead": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "boosts": {},
+       "hp": 125,
+       "item": "lifeorb",
+       "lastMove": "shadowball",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8,
+        "shadowball": 15
+       },
+       "slot": 0,
+       "species": "Aegislash-Blade",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 190,
+       "item": "",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8,
+        "spikyshield": 7
+       },
+       "slot": 1,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "lastItem": "whiteherb",
+       "maxhp": 192,
+       "name": "Quaquaval",
+       "pp": {
+        "closecombat": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Quaquaval",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 186,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 10,
+        "ironhead": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "boosts": {},
+       "hp": 125,
+       "item": "lifeorb",
+       "lastMove": "shadowball",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8,
+        "shadowball": 14
+       },
+       "slot": 0,
+       "species": "Aegislash-Blade",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 26,
+       "item": "",
+       "lastMove": "earthpower",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "earthpower": 10,
+        "rest": 8,
+        "spikyshield": 7
+       },
+       "slot": 1,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "lastItem": "whiteherb",
+       "maxhp": 192,
+       "name": "Quaquaval",
+       "pp": {
+        "closecombat": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Quaquaval",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 186,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 9,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 10,
+        "ironhead": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stancechange",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 31,
+       "item": "lifeorb",
+       "lastMove": "shadowball",
+       "maxhp": 167,
+       "name": "Aegislash",
+       "pp": {
+        "flashcannon": 12,
+        "rest": 8,
+        "shadowball": 13
+       },
+       "slot": 0,
+       "species": "Aegislash-Blade",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "hp": 0,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "glaiverush": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur-Mega",
+       "status": ""
+      },
+      {
+       "ability": "toxicdebris",
+       "boosts": {},
+       "hp": 26,
+       "item": "",
+       "lastMove": "spikyshield",
+       "maxhp": 190,
+       "name": "Glimmora",
+       "pp": {
+        "earthpower": 10,
+        "rest": 8,
+        "spikyshield": 6
+       },
+       "slot": 1,
+       "species": "Glimmora",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "lastItem": "whiteherb",
+       "maxhp": 192,
+       "name": "Quaquaval",
+       "pp": {
+        "closecombat": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Quaquaval",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 52,
+       "item": "leftovers",
+       "lastMove": "snarl",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "blaze",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 186,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "psychic": 8,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 10,
+        "ironhead": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move closecombat 2, move glaiverush 2 mega",
+   "move protect, move ironhead 2 mega"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move closecombat 1, move earthpower 2",
+   "move trickroom, move protect"
+  ],
+  [
+   "switch 4, move spikyshield",
+   "move psychic 1, move drillrun 2"
+  ],
+  [
+   "move shadowball 2, switch 4",
+   "move psychic 2, move drillrun 2"
+  ],
+  [
+   "switch 4",
+   "switch 3"
+  ],
+  [
+   "move shadowball 2, move earthpower 2",
+   "move psychic 2, move protect"
+  ],
+  [
+   "move shadowball 2, move spikyshield",
+   "move psychic 2, move snarl"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stancechange",
+      "hp": 167,
+      "item": "lifeorb",
+      "maxhp": 167,
+      "name": "Aegislash",
+      "pp": {
+       "flashcannon": 12,
+       "rest": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Aegislash",
+      "status": ""
+     },
+     {
+      "ability": "thermalexchange",
+      "boosts": {},
+      "canMega": true,
+      "hp": 222,
+      "item": "baxcalibrite",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "glaiverush": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Baxcalibur",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "toxicdebris",
+      "hp": 190,
+      "item": "",
+      "maxhp": 190,
+      "name": "Glimmora",
+      "pp": {
+       "earthpower": 12,
+       "rest": 8,
+       "spikyshield": 8
+      },
+      "slot": null,
+      "species": "Glimmora",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "boosts": {},
+      "hp": 192,
+      "item": "whiteherb",
+      "maxhp": 192,
+      "name": "Quaquaval",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Quaquaval",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "snarl": 16
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "protect": 8,
+       "psychic": 12,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "boosts": {},
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "ironhead": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move flashcannon 1, move earthpower 2",
+  "p2": "move psychic 2, move protect"
+ }
+}

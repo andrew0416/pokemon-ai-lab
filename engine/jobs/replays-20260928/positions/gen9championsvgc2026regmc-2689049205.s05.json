@@ -1,0 +1,1357 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689049205 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049205), decision 5 = turn 3 Replacement. Teams rebuilt from the log and open team sheets with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Hurricane",
+     "Weather Ball",
+     "Protect"
+    ],
+    "name": "Charizard",
+    "nature": "Timid",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Mystic Water",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Ice Beam",
+     "Weather Ball",
+     "Protect"
+    ],
+    "name": "Politoed",
+    "nature": "Modest",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 17,
+     "hp": 32,
+     "spa": 0,
+     "spd": 17,
+     "spe": 0
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Snarl",
+     "Electro Shot",
+     "Protect"
+    ],
+    "name": "Archaludon",
+    "nature": "Modest",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Leech Life",
+     "Drill Run",
+     "Iron Head",
+     "Protect"
+    ],
+    "name": "Golisopod",
+    "nature": "Adamant",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Clear Body",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Metagrossite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Psychic Fangs",
+     "Iron Head",
+     "Ice Punch"
+    ],
+    "name": "Metagross",
+    "nature": "Adamant",
+    "species": "Metagross"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Parting Shot",
+     "Flare Blitz",
+     "Throat Chop"
+    ],
+    "name": "Incineroar",
+    "nature": "Careful",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Moonblast",
+     "Encore",
+     "Protect"
+    ],
+    "name": "Whimsicott",
+    "nature": "Timid",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Hospitality",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rage Powder",
+     "Matcha Gotcha",
+     "Life Dew",
+     "Trick Room"
+    ],
+    "name": "Sinistcha",
+    "nature": "Bold",
+    "species": "Sinistcha"
+   }
+  ]
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "hurricane": 12,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 197,
+       "item": "mysticwater",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 11,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 150,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 154,
+       "item": "metagrossite",
+       "lastMove": "psychicfangs",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "icepunch": 16,
+        "ironhead": 16,
+        "protect": 8,
+        "psychicfangs": 11
+       },
+       "slot": 0,
+       "species": "Metagross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "leftovers",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "lifedew": 12,
+        "matchagotcha": 16,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "hurricane": 12,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 197,
+       "item": "mysticwater",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 11,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 150,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 154,
+       "item": "metagrossite",
+       "lastMove": "psychicfangs",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "icepunch": 16,
+        "ironhead": 16,
+        "protect": 8,
+        "psychicfangs": 11
+       },
+       "slot": 0,
+       "species": "Metagross-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "leftovers",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "lifedew": 12,
+        "matchagotcha": 16,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "electroshot": 11,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "electroshot": {},
+        "twoturnmove": {
+         "duration": 1,
+         "move": "electroshot"
+        }
+       }
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "hurricane": 12,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "mysticwater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 11,
+        "protect": 8,
+        "weatherball": 11
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 133,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "flareblitz",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 15,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "metagrossite",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "icepunch": 16,
+        "ironhead": 16,
+        "protect": 8,
+        "psychicfangs": 10
+       },
+       "slot": null,
+       "species": "Metagross-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "leftovers",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "lifedew": 12,
+        "matchagotcha": 16,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "electroshot": 11,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "electroshot": {},
+        "twoturnmove": {
+         "duration": 1,
+         "move": "electroshot"
+        }
+       }
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "hurricane": 12,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "leechlife": 12,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "mysticwater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 11,
+        "protect": 8,
+        "weatherball": 11
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 133,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "flareblitz",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 15,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "metagrossite",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "icepunch": 16,
+        "ironhead": 16,
+        "protect": 8,
+        "psychicfangs": 10
+       },
+       "slot": null,
+       "species": "Metagross-Mega",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "leftovers",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "lifedew": 12,
+        "matchagotcha": 16,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1,
+        "spa": 1
+       },
+       "hp": 128,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "electroshot": 11,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 0,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "hurricane": 12,
+        "protect": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 101,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "leechlife": 11,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "mysticwater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 11,
+        "protect": 8,
+        "weatherball": 11
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 14,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": "fnt"
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "metagrossite",
+       "maxhp": 187,
+       "name": "Metagross",
+       "pp": {
+        "icepunch": 16,
+        "ironhead": 16,
+        "protect": 8,
+        "psychicfangs": 10
+       },
+       "slot": null,
+       "species": "Metagross-Mega",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "leftovers",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "lifedew": 12,
+        "matchagotcha": 16,
+        "ragepowder": 20,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 106,
+       "item": "focussash",
+       "lastMove": "moonblast",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 15,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move heatwave mega, move muddywater",
+   "move psychicfangs 1 mega, move fakeout 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move electroshot 1, move weatherball 1",
+   "move psychicfangs 2, move flareblitz 2"
+  ],
+  [
+   "switch 4",
+   "switch 3"
+  ],
+  [
+   "move electroshot 1, move leechlife 2",
+   "move moonblast 1, move flareblitz 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "electroshot": 12,
+       "protect": 8,
+       "snarl": 16
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "hurricane": 12,
+       "protect": 8,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "ironhead": 16,
+       "leechlife": 12,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 197,
+      "item": "mysticwater",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "muddywater": 12,
+       "protect": 8,
+       "weatherball": 12
+      },
+      "slot": 1,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20,
+       "throatchop": 16
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "clearbody",
+      "boosts": {},
+      "canMega": true,
+      "hp": 187,
+      "item": "metagrossite",
+      "maxhp": 187,
+      "name": "Metagross",
+      "pp": {
+       "icepunch": 16,
+       "ironhead": 16,
+       "protect": 8,
+       "psychicfangs": 12
+      },
+      "slot": 0,
+      "species": "Metagross",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "hospitality",
+      "hp": 178,
+      "item": "leftovers",
+      "maxhp": 178,
+      "name": "Sinistcha",
+      "pp": {
+       "lifedew": 12,
+       "matchagotcha": 16,
+       "ragepowder": 20,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Sinistcha",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "focussash",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "encore": 8,
+       "moonblast": 16,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "",
+  "p2": "switch 4"
+ }
+}

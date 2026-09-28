@@ -1,0 +1,757 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689050297 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050297), decision 2 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Meowsticite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Alluring Voice",
+     "Rest"
+    ],
+    "name": "Meowstic",
+    "nature": "Serious",
+    "species": "Meowstic-F"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Helping Hand",
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Flash Fire",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Flare Blitz",
+     "Rest"
+    ],
+    "name": "Arcanine",
+    "nature": "Serious",
+    "species": "Arcanine-Hisui"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Iron Fist",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Headlong Rush",
+     "Rest"
+    ],
+    "name": "Golurk",
+    "nature": "Serious",
+    "species": "Golurk"
+   },
+   {
+    "ability": "Contrary",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Topsy-Turvy",
+     "Rest"
+    ],
+    "name": "Malamar",
+    "nature": "Serious",
+    "species": "Malamar"
+   },
+   {
+    "ability": "Seed Sower",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Arboliva",
+    "nature": "Serious",
+    "species": "Arboliva"
+   },
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "hp": 202,
+       "item": "lifeorb",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "flareblitz": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "trace",
+       "hp": 0,
+       "item": "meowsticite",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "alluringvoice": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Meowstic-F-Mega",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "seedsower",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Arboliva",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Arboliva",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 177,
+       "item": "lifeorb",
+       "lastMove": "headlongrush",
+       "maxhp": 196,
+       "name": "Golurk",
+       "pp": {
+        "headlongrush": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golurk",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "boosts": {},
+       "hp": 55,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "rest": 8,
+        "topsyturvy": 20,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Malamar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 202,
+       "item": "lifeorb",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "flareblitz": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "trace",
+       "hp": 0,
+       "item": "meowsticite",
+       "maxhp": 181,
+       "name": "Meowstic",
+       "pp": {
+        "alluringvoice": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Meowstic-F-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "seedsower",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Arboliva",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Arboliva",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "ironfist",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 177,
+       "item": "lifeorb",
+       "lastMove": "headlongrush",
+       "maxhp": 196,
+       "name": "Golurk",
+       "pp": {
+        "headlongrush": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golurk",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "boosts": {},
+       "hp": 55,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "rest": 8,
+        "topsyturvy": 20,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Malamar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move alluringvoice 2 mega, move helpinghand -1",
+   "move headlongrush 1, move trickroom"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "hp": 202,
+      "item": "lifeorb",
+      "maxhp": 202,
+      "name": "Arcanine",
+      "pp": {
+       "flareblitz": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Arcanine-Hisui",
+      "status": ""
+     },
+     {
+      "ability": "swiftswim",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "keeneye",
+      "boosts": {},
+      "canMega": true,
+      "hp": 181,
+      "item": "meowsticite",
+      "maxhp": 181,
+      "name": "Meowstic",
+      "pp": {
+       "alluringvoice": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Meowstic-F",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "seedsower",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Arboliva",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Arboliva",
+      "status": ""
+     },
+     {
+      "ability": "sandveil",
+      "hp": 215,
+      "item": "",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "ironfist",
+      "boosts": {},
+      "hp": 196,
+      "item": "lifeorb",
+      "maxhp": 196,
+      "name": "Golurk",
+      "pp": {
+       "headlongrush": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Golurk",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "contrary",
+      "boosts": {},
+      "hp": 193,
+      "item": "sitrusberry",
+      "maxhp": 193,
+      "name": "Malamar",
+      "pp": {
+       "rest": 8,
+       "topsyturvy": 20,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Malamar",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move flareblitz 1, move followme",
+  "p2": "move headlongrush 2, move topsyturvy -1"
+ }
+}

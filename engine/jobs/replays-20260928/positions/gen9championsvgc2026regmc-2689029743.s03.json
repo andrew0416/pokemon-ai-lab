@@ -1,0 +1,982 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689029743 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689029743), decision 3 = turn 3 Turn. Teams rebuilt from the log and open team sheets with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Rock Head",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Flare Blitz",
+     "Head Smash",
+     "Extreme Speed",
+     "Protect"
+    ],
+    "name": "Arcanine",
+    "nature": "Adamant",
+    "species": "Arcanine-Hisui"
+   },
+   {
+    "ability": "Adaptability",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Mystic Water",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wave Crash",
+     "Last Respects",
+     "Aqua Jet",
+     "Protect"
+    ],
+    "name": "Basculegion",
+    "nature": "Adamant",
+    "species": "Basculegion"
+   },
+   {
+    "ability": "Rough Skin",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Earthquake",
+     "Stomping Tantrum",
+     "Dragon Claw",
+     "Protect"
+    ],
+    "name": "Garchomp",
+    "nature": "Jolly",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 2,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "M",
+    "item": "Staraptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Brave Bird",
+     "Close Combat",
+     "Protect",
+     "Roost"
+    ],
+    "name": "Staraptor",
+    "nature": "Jolly",
+    "species": "Staraptor"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Lightning Rod",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Raichunite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Zap Cannon",
+     "Focus Blast",
+     "Encore",
+     "Protect"
+    ],
+    "name": "Raichu",
+    "nature": "Timid",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Miracle Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Grassy Glide",
+     "Wood Hammer",
+     "High Horsepower"
+    ],
+    "name": "Rillaboom",
+    "nature": "Adamant",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Make It Rain",
+     "Shadow Ball",
+     "Nasty Plot",
+     "Protect"
+    ],
+    "name": "Gholdengo",
+    "nature": "Modest",
+    "species": "Gholdengo"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hurricane",
+     "Weather Ball",
+     "Tailwind",
+     "Wide Guard"
+    ],
+    "name": "Pelipper",
+    "nature": "Modest",
+    "species": "Pelipper"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 202,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 16,
+        "headsmash": 8,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "adaptability",
+       "hp": 227,
+       "item": "mysticwater",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 12,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 12,
+        "protect": 8,
+        "stompingtantrum": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 192,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 16,
+        "closecombat": 8,
+        "protect": 8,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "focussash",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 8,
+        "focusblast": 8,
+        "protect": 8,
+        "zapcannon": 7
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "miracleseed",
+       "lastMove": "highhorsepower",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 11,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 13,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "flareblitz",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 15,
+        "headsmash": 8,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "adaptability",
+       "hp": 227,
+       "item": "mysticwater",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 12,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 207,
+       "item": "lifeorb",
+       "lastMove": "stompingtantrum",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 12,
+        "protect": 8,
+        "stompingtantrum": 11
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 192,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 16,
+        "closecombat": 8,
+        "protect": 8,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "focussash",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "hp": 0,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 8,
+        "focusblast": 7,
+        "protect": 8,
+        "zapcannon": 7
+       },
+       "slot": null,
+       "species": "Raichu-Mega-Y",
+       "status": "fnt"
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "miracleseed",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 11,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 13,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "flareblitz",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "extremespeed": 8,
+        "flareblitz": 15,
+        "headsmash": 8,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "adaptability",
+       "hp": 227,
+       "item": "mysticwater",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 12,
+        "protect": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 207,
+       "item": "lifeorb",
+       "lastMove": "stompingtantrum",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 12,
+        "protect": 8,
+        "stompingtantrum": 11
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 192,
+       "item": "staraptite",
+       "maxhp": 192,
+       "name": "Staraptor",
+       "pp": {
+        "bravebird": 16,
+        "closecombat": 8,
+        "protect": 8,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Staraptor",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "shadowball": 16
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "focussash",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "noguard",
+       "hp": 0,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "encore": 8,
+        "focusblast": 7,
+        "protect": 8,
+        "zapcannon": 7
+       },
+       "slot": null,
+       "species": "Raichu-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "miracleseed",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "highhorsepower": 11,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect, switch 3",
+   "move zapcannon 1 mega, move highhorsepower 1"
+  ],
+  [
+   "move flareblitz 2, move stompingtantrum 1",
+   "move focusblast 1, switch 3"
+  ],
+  [
+   "",
+   "switch 4, switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "rockhead",
+      "boosts": {},
+      "hp": 202,
+      "item": "focussash",
+      "maxhp": 202,
+      "name": "Arcanine",
+      "pp": {
+       "extremespeed": 8,
+       "flareblitz": 16,
+       "headsmash": 8,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Arcanine-Hisui",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "adaptability",
+      "boosts": {},
+      "hp": 227,
+      "item": "mysticwater",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "lastrespects": 12,
+       "protect": 8,
+       "wavecrash": 12
+      },
+      "slot": 1,
+      "species": "Basculegion",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "roughskin",
+      "hp": 215,
+      "item": "lifeorb",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "dragonclaw": 16,
+       "earthquake": 12,
+       "protect": 8,
+       "stompingtantrum": 12
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 192,
+      "item": "staraptite",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "bravebird": 16,
+       "closecombat": 8,
+       "protect": 8,
+       "roost": 8
+      },
+      "slot": null,
+      "species": "Staraptor",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "goodasgold",
+      "hp": 194,
+      "item": "lifeorb",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "nastyplot": 20,
+       "protect": 8,
+       "shadowball": 16
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "hp": 167,
+      "item": "focussash",
+      "maxhp": 167,
+      "name": "Pelipper",
+      "pp": {
+       "hurricane": 12,
+       "tailwind": 16,
+       "weatherball": 12,
+       "wideguard": 12
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     },
+     {
+      "ability": "lightningrod",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitey",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "encore": 8,
+       "focusblast": 8,
+       "protect": 8,
+       "zapcannon": 8
+      },
+      "slot": 0,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "miracleseed",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "highhorsepower": 12,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move earthquake",
+  "p2": "move weatherball 2, move fakeout 2"
+ }
+}

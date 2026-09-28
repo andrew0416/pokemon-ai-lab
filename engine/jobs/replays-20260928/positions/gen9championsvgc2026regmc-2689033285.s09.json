@@ -1,0 +1,2097 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689033285 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689033285), decision 9 = turn 7 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Flip Turn",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   },
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Kowtow Cleave",
+     "Sucker Punch",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Swords Dance",
+     "Leech Life",
+     "Protect",
+     "Iron Head"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hurricane",
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Pelipper",
+    "nature": "Serious",
+    "species": "Pelipper"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Throat Chop",
+     "Dire Claw",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Grassy Glide",
+     "U-turn",
+     "Fake Out",
+     "High Horsepower"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Salamencite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Flamethrower",
+     "Hyper Voice",
+     "Rest"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aurora Veil",
+     "Blizzard",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 27,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "flipturn": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 12,
+        "protect": 8,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "uturn": 20
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "flamethrower": 16,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 141,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "closecombat",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "rest": 8,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "flipturn": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": "fnt"
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 180,
+       "item": "golisopite",
+       "lastMove": "swordsdance",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 12,
+        "protect": 8,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "flamethrower": 16,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 152,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "throatchop",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "flipturn": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 180,
+       "item": "golisopite",
+       "lastMove": "swordsdance",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 12,
+        "protect": 8,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "flamethrower": 16,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 152,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "throatchop",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "flipturn": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 60,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 11,
+        "protect": 8,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "hurricane",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 101,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 112,
+       "item": "salamencite",
+       "lastMove": "flamethrower",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "flamethrower": 15,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 152,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "flipturn": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 71,
+       "item": "golisopite",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 11,
+        "protect": 7,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 64,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 112,
+       "item": "",
+       "lastMove": "auroraveil",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "flamethrower": 15,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 152,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "flipturn": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 71,
+       "item": "golisopite",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 11,
+        "protect": 7,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 64,
+       "item": "",
+       "lastMove": "weatherball",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 112,
+       "item": "",
+       "lastMove": "auroraveil",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "uturn": 19
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "flamethrower": 15,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 152,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "flipturn": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 53,
+       "item": "golisopite",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 11,
+        "protect": 7,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "frz",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 189,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 64,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 123,
+       "item": "",
+       "lastMove": "blizzard",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "uturn": 19
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "flamethrower": 15,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 152,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "flipturn": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 128,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 10,
+        "protect": 7,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 49,
+       "item": "",
+       "lastMove": "kowtowcleave",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 64,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 123,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 19,
+        "highhorsepower": 11,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": "fnt"
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "flamethrower": 15,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 152,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 0,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "flipturn": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 128,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "leechlife": 10,
+        "protect": 7,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 49,
+       "item": "",
+       "lastMove": "kowtowcleave",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 64,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 11,
+        "rest": 8,
+        "weatherball": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 123,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 19,
+        "highhorsepower": 11,
+        "uturn": 19
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 0,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "flamethrower": 15,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 152,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "direclaw": 16,
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move flipturn 1, move protect",
+   "move closecombat 2, move grassyglide 1",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move swordsdance mega, switch 3",
+   "move throatchop 2, move uturn 1",
+   {
+    "p1": [],
+    "p2": [
+     "switch 3"
+    ]
+   }
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move leechlife 2, move hurricane 1",
+   "switch 4, move flamethrower 1 mega"
+  ],
+  [
+   "move protect, move weatherball 2",
+   "move auroraveil, move hypervoice"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move swordsdance, switch 3",
+   "move blizzard, move fakeout 1"
+  ],
+  [
+   "move leechlife 2, move kowtowcleave 2",
+   "move protect, move highhorsepower 2"
+  ],
+  [
+   "",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "boosts": {},
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "flipturn": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Basculegion",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "ironhead": 16,
+       "leechlife": 12,
+       "protect": 8,
+       "swordsdance": 20
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "defiant",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "protect": 8,
+       "rest": 8,
+       "suckerpunch": 8
+      },
+      "slot": 1,
+      "species": "Kingambit",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Pelipper",
+      "pp": {
+       "hurricane": 12,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "snowwarning",
+      "hp": 180,
+      "item": "",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "highhorsepower": 12,
+       "uturn": 20
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 202,
+      "item": "salamencite",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "flamethrower": 16,
+       "hypervoice": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {
+       "def": 1
+      },
+      "hp": 187,
+      "item": "",
+      "lastItem": "grassyseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "direclaw": 16,
+       "rest": 8,
+       "throatchop": 16
+      },
+      "slot": 0,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {
+       "unburden": {}
+      }
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move ironhead 1, move suckerpunch 2",
+  "p2": "move blizzard, move direclaw 2"
+ }
+}

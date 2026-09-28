@@ -1,0 +1,2896 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689037632 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037632), decision 13 = turn 12 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Vital Spirit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rage Fist",
+     "Drain Punch",
+     "Protect",
+     "Bulk Up"
+    ],
+    "name": "Annihilape",
+    "nature": "Serious",
+    "species": "Annihilape"
+   },
+   {
+    "ability": "Friend Guard",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Beat Up",
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Maushold",
+    "nature": "Serious",
+    "species": "Maushold"
+   },
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 2,
+     "hp": 32,
+     "spa": 0,
+     "spd": 32,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Coil",
+     "Hypnosis",
+     "Muddy Water",
+     "Ice Beam"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Light Clay",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aurora Veil",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Psychic",
+     "Trick Room",
+     "Grass Knot",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Light Clay",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Reflect",
+     "Spirit Break",
+     "Light Screen",
+     "Rest"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Serious",
+    "species": "Grimmsnarl"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 24,
+       "item": "leftovers",
+       "lastMove": "ragefist",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 12,
+        "protect": 8,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "boosts": {},
+       "hp": 48,
+       "item": "",
+       "lastMove": "beatup",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Maushold",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "muddywater": 12
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": "fnt"
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "reflect": 20,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 24,
+       "item": "leftovers",
+       "lastMove": "ragefist",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 12,
+        "protect": 8,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "boosts": {},
+       "hp": 48,
+       "item": "",
+       "lastMove": "beatup",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Maushold",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "muddywater": 12
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "reflect": 20,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 64,
+       "item": "leftovers",
+       "lastMove": "drainpunch",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 11,
+        "protect": 8,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": "fnt"
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "muddywater": 12
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 7
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 173,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "lightclay",
+       "lastMove": "reflect",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 64,
+       "item": "leftovers",
+       "lastMove": "drainpunch",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 11,
+        "protect": 8,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 20,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "muddywater": 12
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 7
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 173,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "lightclay",
+       "lastMove": "reflect",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 77,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 11,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 1,
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 202,
+       "item": "sitrusberry",
+       "lastMove": "coil",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 19,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "muddywater": 12
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 6
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 173,
+       "item": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "lightclay",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 15
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 77,
+       "item": "leftovers",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 11,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 134,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "coil",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 20,
+        "icebeam": 12,
+        "muddywater": 12
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 120,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 5
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 173,
+       "item": "sitrusberry",
+       "lastMove": "grassknot",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 19,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "lightclay",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 14
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 7
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 77,
+       "item": "leftovers",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 11,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 64,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 19,
+        "icebeam": 12,
+        "muddywater": 12
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 60,
+       "item": "lightclay",
+       "lastMove": "auroraveil",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 173,
+       "item": "sitrusberry",
+       "lastMove": "grassknot",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 18,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "lightclay",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 13
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 6
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 77,
+       "item": "leftovers",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 11,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 64,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 19,
+        "icebeam": 12,
+        "muddywater": 11
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 60,
+       "item": "lightclay",
+       "lastMove": "protect",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ninetales-Alola",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "accuracy": -1,
+        "def": 1
+       },
+       "hp": 182,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 173,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 18,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 3
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 153,
+       "item": "lightclay",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 12
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 5
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 90,
+       "item": "leftovers",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 11,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 64,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 18,
+        "icebeam": 12,
+        "muddywater": 11
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 60,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 7
+      },
+      "reflect": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "accuracy": -1,
+        "def": 1
+       },
+       "hp": 194,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 173,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 18,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 3
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 153,
+       "item": "lightclay",
+       "lastMove": "lightscreen",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 19,
+        "rest": 8,
+        "spiritbreak": 12
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 103,
+       "item": "leftovers",
+       "lastMove": "bulkup",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 19,
+        "drainpunch": 11,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 64,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 17,
+        "icebeam": 12,
+        "muddywater": 11
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 60,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 6
+      },
+      "reflect": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "accuracy": -1,
+        "def": 1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "slp",
+       "statusTime": 1,
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 173,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 18,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 3
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 153,
+       "item": "lightclay",
+       "lastMove": "reflect",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 18,
+        "rest": 8,
+        "spiritbreak": 12
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 96,
+       "item": "leftovers",
+       "lastMove": "drainpunch",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 19,
+        "drainpunch": 10,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 64,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "icebeam",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 17,
+        "icebeam": 11,
+        "muddywater": 11
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 60,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 5
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "accuracy": -1,
+        "def": 3
+       },
+       "hp": 113,
+       "item": "leftovers",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 173,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 18,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 3
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 153,
+       "item": "lightclay",
+       "lastMove": "reflect",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 18,
+        "rest": 8,
+        "spiritbreak": 12
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 10,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 109,
+       "item": "leftovers",
+       "lastMove": "drainpunch",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 19,
+        "drainpunch": 9,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 64,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 17,
+        "icebeam": 11,
+        "muddywater": 10
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 60,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "accuracy": -1,
+        "def": 3
+       },
+       "hp": 125,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 173,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 18,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 3
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 116,
+       "item": "lightclay",
+       "lastMove": "reflect",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 18,
+        "rest": 8,
+        "spiritbreak": 12
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "slp",
+       "statusTime": 1,
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 11,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 100,
+       "item": "leftovers",
+       "lastMove": "drainpunch",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 19,
+        "drainpunch": 8,
+        "protect": 7,
+        "ragefist": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 64,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 16,
+        "icebeam": 11,
+        "muddywater": 10
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 60,
+       "item": "lightclay",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "auroraveil": 19,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "lightscreen": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "accuracy": -1,
+        "def": 4
+       },
+       "hp": 77,
+       "item": "leftovers",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "hp": 173,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 18,
+        "psychic": 10,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 3
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 116,
+       "item": "lightclay",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 19,
+        "reflect": 18,
+        "rest": 8,
+        "spiritbreak": 11
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 12,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move ragefist 1, move beatup -1",
+   "move heatwave mega, move psychic 1"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move drainpunch 2, move followme",
+   "move reflect, move psychic 2"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move protect, move coil",
+   "move spiritbreak 1, move trickroom"
+  ],
+  [
+   "switch 4, move coil",
+   "move spiritbreak 1, move grassknot 2"
+  ],
+  [
+   "move auroraveil, move hypnosis 2",
+   "move spiritbreak 1, move grassknot 2"
+  ],
+  [
+   "move protect, move muddywater",
+   "move spiritbreak 1, switch 4"
+  ],
+  [
+   "switch 4, move hypnosis 2",
+   "move lightscreen, move dragonpulse -1"
+  ],
+  [
+   "move bulkup, move hypnosis 1",
+   "move reflect, move dragonpulse -1"
+  ],
+  [
+   "move drainpunch 2, move icebeam 2",
+   "move reflect, move dragonpulse 1"
+  ],
+  [
+   "move drainpunch 2, move muddywater",
+   "move reflect, move protect"
+  ],
+  [
+   "move drainpunch 2, move hypnosis 2",
+   "move spiritbreak 1, move dragonpulse 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "vitalspirit",
+      "boosts": {},
+      "hp": 217,
+      "item": "leftovers",
+      "maxhp": 217,
+      "name": "Annihilape",
+      "pp": {
+       "bulkup": 20,
+       "drainpunch": 12,
+       "protect": 8,
+       "ragefist": 12
+      },
+      "slot": 0,
+      "species": "Annihilape",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "friendguard",
+      "boosts": {},
+      "hp": 181,
+      "item": "",
+      "maxhp": 181,
+      "name": "Maushold",
+      "pp": {
+       "beatup": 12,
+       "followme": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Maushold",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "marvelscale",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "coil": 20,
+       "hypnosis": 20,
+       "icebeam": 12,
+       "muddywater": 12
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "snowwarning",
+      "hp": 180,
+      "item": "lightclay",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "auroraveil": 20,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "grassknot": 20,
+       "psychic": 12,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 202,
+      "item": "lightclay",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "lightscreen": 20,
+       "reflect": 20,
+       "rest": 8,
+       "spiritbreak": 16
+      },
+      "slot": null,
+      "species": "Grimmsnarl",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move ragefist 2, move hypnosis 1",
+  "p2": "move reflect, move dragonpulse -1"
+ }
+}

@@ -1,0 +1,1572 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689052141 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689052141), decision 6 = turn 6 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [
+   "switch 4"
+  ],
+  "p2": []
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Parting Shot",
+     "Throat Chop",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Garchompite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Power Gem",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Quiver Dance",
+     "Heat Wave",
+     "Rest"
+    ],
+    "name": "Volcarona",
+    "nature": "Serious",
+    "species": "Volcarona"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Pyro Ball",
+     "Rest"
+    ],
+    "name": "Cinderace",
+    "nature": "Serious",
+    "species": "Cinderace"
+   },
+   {
+    "ability": "Oblivious",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Icicle Crash",
+     "Protect",
+     "High Horsepower",
+     "Ice Shard"
+    ],
+    "name": "Mamoswine",
+    "nature": "Serious",
+    "species": "Mamoswine"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "F",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Follow Me",
+     "Helping Hand",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Bold",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Surge Surfer",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Raichu-Alola",
+    "nature": "Serious",
+    "species": "Raichu-Alola"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 215,
+       "item": "garchompitez",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "powergem": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "partingshot": 19,
+        "rest": 8,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 192,
+       "item": "grassyseed",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "heatwave": 12,
+        "protect": 8,
+        "quiverdance": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 177,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 217,
+       "item": "focussash",
+       "lastMove": "iciclecrash",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "iceshard": 20,
+        "iciclecrash": 11,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "surgesurfer",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "powergem": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "partingshot": 19,
+        "rest": 8,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 93,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 192,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "protect",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "heatwave": 12,
+        "protect": 7,
+        "quiverdance": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 177,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "trickroom",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 217,
+       "item": "focussash",
+       "lastMove": "iciclecrash",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "iceshard": 20,
+        "iciclecrash": 10,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "surgesurfer",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "powergem": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "partingshot": 19,
+        "rest": 8,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 105,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "def": 1,
+        "spa": 1,
+        "spd": 1,
+        "spe": 1
+       },
+       "hp": 192,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "quiverdance",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "heatwave": 12,
+        "protect": 7,
+        "quiverdance": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 177,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "followme",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 217,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "iceshard": 20,
+        "iciclecrash": 10,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "surgesurfer",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "powergem": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "partingshot": 19,
+        "rest": 8,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": "fnt"
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "def": 1,
+        "spa": 1,
+        "spd": 1,
+        "spe": 1
+       },
+       "hp": 192,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "heatwave",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "heatwave": 11,
+        "protect": 7,
+        "quiverdance": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 130,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 14,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "iciclecrash",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "iceshard": 20,
+        "iciclecrash": 9,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "surgesurfer",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu-Alola",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "powergem": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "partingshot": 19,
+        "rest": 8,
+        "throatchop": 16
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "def": 1,
+        "spa": 1,
+        "spd": 1,
+        "spe": 1
+       },
+       "hp": 192,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "heatwave",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "heatwave": 11,
+        "protect": 7,
+        "quiverdance": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1,
+        "spd": 1
+       },
+       "hp": 130,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 14,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "iciclecrash",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "iceshard": 20,
+        "iciclecrash": 9,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "surgesurfer",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "powergem": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "throatchop",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "partingshot": 19,
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "def": 1,
+        "spa": 2,
+        "spd": 2,
+        "spe": 2
+       },
+       "hp": 192,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "quiverdance",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "heatwave": 11,
+        "protect": 7,
+        "quiverdance": 18,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "blaze",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "pyroball": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "atk": -1,
+        "spd": 1
+       },
+       "hp": 25,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "followme",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "helpinghand": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {
+        "throatchop": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 27,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "protect",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "iceshard": 20,
+        "iciclecrash": 9,
+        "protect": 6
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "surgesurfer",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Raichu-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move partingshot 2, move protect mega",
+   "switch 3, move iciclecrash 2",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move protect, switch 4",
+   "move trickroom, move iciclecrash 2"
+  ],
+  [
+   "move quiverdance, move fakeout 2",
+   "move followme, move protect"
+  ],
+  [
+   "move heatwave, move rest",
+   "move helpinghand -2, move iciclecrash 2"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move quiverdance, move throatchop 1",
+   "move followme, move protect"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 215,
+      "item": "garchompitez",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "powergem": 20,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "partingshot": 20,
+       "rest": 8,
+       "throatchop": 16
+      },
+      "slot": 0,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "hp": 192,
+      "item": "grassyseed",
+      "maxhp": 192,
+      "name": "Volcarona",
+      "pp": {
+       "heatwave": 12,
+       "protect": 8,
+       "quiverdance": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Volcarona",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Cinderace",
+      "pp": {
+       "pyroball": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Cinderace",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 177,
+      "item": "psychicseed",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Indeedee-F",
+      "status": ""
+     },
+     {
+      "ability": "oblivious",
+      "boosts": {},
+      "hp": 217,
+      "item": "focussash",
+      "maxhp": 217,
+      "name": "Mamoswine",
+      "pp": {
+       "highhorsepower": 12,
+       "iceshard": 20,
+       "iciclecrash": 12,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Mamoswine",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "surgesurfer",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Raichu-Alola",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move partingshot 2",
+  "p2": "switch 3, move highhorsepower 2"
+ }
+}

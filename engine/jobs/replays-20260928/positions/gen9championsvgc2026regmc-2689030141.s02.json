@@ -1,0 +1,795 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689030141 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689030141), decision 2 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [
+   "switch 3"
+  ],
+  "p2": []
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Snarl",
+     "Volt Switch",
+     "Protect",
+     "Thunderbolt"
+    ],
+    "name": "Manectric",
+    "nature": "Serious",
+    "species": "Manectric"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "U-turn",
+     "Wood Hammer",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Sap Sipper",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Curse",
+     "Heavy Slam",
+     "Body Press",
+     "Life Dew"
+    ],
+    "name": "Goodra",
+    "nature": "Serious",
+    "species": "Goodra-Hisui"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Raichunite X",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Play Rough",
+     "Protect",
+     "Volt Tackle"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Merciless",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Infestation",
+     "Rest"
+    ],
+    "name": "Toxapex",
+    "nature": "Serious",
+    "species": "Toxapex"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sucker Punch",
+     "Kowtow Cleave",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   }
+  ]
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sapsipper",
+       "hp": 187,
+       "item": "grassyseed",
+       "maxhp": 187,
+       "name": "Goodra",
+       "pp": {
+        "bodypress": 12,
+        "curse": 12,
+        "heavyslam": 12,
+        "lifedew": 12
+       },
+       "slot": null,
+       "species": "Goodra-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "boosts": {},
+       "hp": 177,
+       "item": "",
+       "lastMove": "snarl",
+       "maxhp": 177,
+       "name": "Manectric",
+       "pp": {
+        "protect": 8,
+        "snarl": 15,
+        "thunderbolt": 16,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Manectric",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 135,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "rest": 8,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {
+        "partiallytrapped": {
+         "duration": 4
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 145,
+       "item": "raichunitex",
+       "lastMove": "fakeout",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 11,
+        "playrough": 12,
+        "protect": 8,
+        "volttackle": 16
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-X",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "merciless",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 150,
+       "item": "leftovers",
+       "lastMove": "infestation",
+       "maxhp": 157,
+       "name": "Toxapex",
+       "pp": {
+        "infestation": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Toxapex",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sapsipper",
+       "boosts": {},
+       "hp": 187,
+       "item": "grassyseed",
+       "maxhp": 187,
+       "name": "Goodra",
+       "pp": {
+        "bodypress": 12,
+        "curse": 12,
+        "heavyslam": 12,
+        "lifedew": 12
+       },
+       "slot": 1,
+       "species": "Goodra-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "static",
+       "boosts": {},
+       "hp": 60,
+       "item": "",
+       "lastMove": "snarl",
+       "maxhp": 177,
+       "name": "Manectric",
+       "pp": {
+        "protect": 8,
+        "snarl": 14,
+        "thunderbolt": 16,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Manectric",
+       "status": "",
+       "volatiles": {
+        "partiallytrapped": {
+         "duration": 4
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 135,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "rest": 8,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "focussash",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 70,
+       "item": "raichunitex",
+       "lastMove": "playrough",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "fakeout": 11,
+        "playrough": 11,
+        "protect": 8,
+        "volttackle": 16
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-X",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "merciless",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 143,
+       "item": "leftovers",
+       "lastMove": "infestation",
+       "maxhp": 157,
+       "name": "Toxapex",
+       "pp": {
+        "infestation": 18,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Toxapex",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move snarl, move uturn -1",
+   "move fakeout 2 mega, move infestation 2"
+  ],
+  [
+   "move snarl, move uturn 1",
+   "move playrough 1, move infestation 1",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sapsipper",
+      "hp": 187,
+      "item": "grassyseed",
+      "maxhp": 187,
+      "name": "Goodra",
+      "pp": {
+       "bodypress": 12,
+       "curse": 12,
+       "heavyslam": 12,
+       "lifedew": 12
+      },
+      "slot": null,
+      "species": "Goodra-Hisui",
+      "status": ""
+     },
+     {
+      "ability": "static",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Manectric",
+      "pp": {
+       "protect": 8,
+       "snarl": 16,
+       "thunderbolt": 16,
+       "voltswitch": 20
+      },
+      "slot": 0,
+      "species": "Manectric",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "rest": 8,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "defiant",
+      "hp": 207,
+      "item": "focussash",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "rest": 8,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Kingambit",
+      "status": ""
+     },
+     {
+      "ability": "static",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitex",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "fakeout": 12,
+       "playrough": 12,
+       "protect": 8,
+       "volttackle": 16
+      },
+      "slot": 0,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     },
+     {
+      "ability": "merciless",
+      "boosts": {},
+      "hp": 157,
+      "item": "leftovers",
+      "maxhp": 157,
+      "name": "Toxapex",
+      "pp": {
+       "infestation": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Toxapex",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move voltswitch 2, move curse",
+  "p2": "move playrough 2, move infestation 2"
+ }
+}

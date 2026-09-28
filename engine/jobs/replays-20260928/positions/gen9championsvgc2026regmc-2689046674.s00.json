@@ -1,0 +1,422 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689046674 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046674), decision 0 = turn 1 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Overgrow",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Venusaurite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sludge Bomb",
+     "Protect",
+     "Giga Drain",
+     "Rest"
+    ],
+    "name": "Venusaur",
+    "nature": "Serious",
+    "species": "Venusaur"
+   },
+   {
+    "ability": "Vital Spirit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Ice Punch",
+     "Rest"
+    ],
+    "name": "Annihilape",
+    "nature": "Serious",
+    "species": "Annihilape"
+   },
+   {
+    "ability": "Purifying Salt",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wide Guard",
+     "Salt Cure",
+     "Rest"
+    ],
+    "name": "Salt",
+    "nature": "Serious",
+    "species": "Garganacl"
+   },
+   {
+    "ability": "Inner Focus",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Dragonite",
+    "nature": "Serious",
+    "species": "Dragonite"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Rough Skin",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Beam",
+     "Rest"
+    ],
+    "name": "Sylveon",
+    "nature": "Serious",
+    "species": "Sylveon"
+   },
+   {
+    "ability": "Unnerve",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Aerodactylite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Ice Fang",
+     "Rest"
+    ],
+    "name": "Aerodactyl",
+    "nature": "Serious",
+    "species": "Aerodactyl"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Weather Ball",
+     "Heat Wave",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "vitalspirit",
+      "boosts": {},
+      "hp": 217,
+      "item": "",
+      "maxhp": 217,
+      "name": "Annihilape",
+      "pp": {
+       "icepunch": 16,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Annihilape",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "innerfocus",
+      "hp": 198,
+      "item": "",
+      "maxhp": 198,
+      "name": "Dragonite",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Dragonite",
+      "status": ""
+     },
+     {
+      "ability": "purifyingsalt",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Salt",
+      "pp": {
+       "rest": 8,
+       "saltcure": 16,
+       "wideguard": 12
+      },
+      "slot": null,
+      "species": "Garganacl",
+      "status": ""
+     },
+     {
+      "ability": "overgrow",
+      "boosts": {},
+      "canMega": true,
+      "hp": 187,
+      "item": "venusaurite",
+      "maxhp": 187,
+      "name": "Venusaur",
+      "pp": {
+       "gigadrain": 12,
+       "protect": 8,
+       "rest": 8,
+       "sludgebomb": 12
+      },
+      "slot": 0,
+      "species": "Venusaur",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "unnerve",
+      "canMega": true,
+      "hp": 187,
+      "item": "aerodactylite",
+      "maxhp": 187,
+      "name": "Aerodactyl",
+      "pp": {
+       "icefang": 16,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Aerodactyl",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "protect": 8,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Charizard",
+      "status": ""
+     },
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "hp": 215,
+      "item": "",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cutecharm",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Sylveon",
+      "pp": {
+       "hyperbeam": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Sylveon",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move sludgebomb 2 mega, move icepunch 1",
+  "p2": "move rest, move hyperbeam 2"
+ }
+}

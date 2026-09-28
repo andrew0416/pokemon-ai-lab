@@ -1,0 +1,1141 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689048593 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689048593), decision 4 = turn 5 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Immunity",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Stockpile",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Snorlax",
+    "nature": "Serious",
+    "species": "Snorlax"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Parting Shot",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Water Absorb",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Encore",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Limber",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Hawlucha",
+    "nature": "Serious",
+    "species": "Hawlucha"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Kowtow Cleave",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   },
+   {
+    "ability": "Pressure",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Absolite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Night Slash",
+     "Rest"
+    ],
+    "name": "Absol",
+    "nature": "Serious",
+    "species": "Absol"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Gatote",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Serious",
+    "species": "Grimmsnarl"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "limber",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Hawlucha",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "waterabsorb",
+       "hp": 197,
+       "item": "sitrusberry",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "encore": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      },
+      {
+       "ability": "immunity",
+       "boosts": {
+        "def": 1,
+        "spd": 1
+       },
+       "hp": 169,
+       "item": "leftovers",
+       "lastMove": "stockpile",
+       "maxhp": 267,
+       "name": "Snorlax",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "stockpile": 19
+       },
+       "slot": 0,
+       "species": "Snorlax",
+       "status": "",
+       "volatiles": {
+        "stockpile": {
+         "layers": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sharpness",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 172,
+       "item": "absolitez",
+       "lastMove": "nightslash",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "nightslash": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Absol-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 197,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "limber",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Hawlucha",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "waterabsorb",
+       "boosts": {},
+       "hp": 197,
+       "item": "sitrusberry",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "encore": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "immunity",
+       "boosts": {
+        "atk": -1,
+        "def": 1,
+        "spd": 1
+       },
+       "hp": 185,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 267,
+       "name": "Snorlax",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "stockpile": 19
+       },
+       "slot": 0,
+       "species": "Snorlax",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        },
+        "stockpile": {
+         "layers": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sharpness",
+       "hp": 172,
+       "item": "absolitez",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "nightslash": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Absol-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 197,
+       "item": "",
+       "lastMove": "kowtowcleave",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "limber",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Hawlucha",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "waterabsorb",
+       "boosts": {},
+       "hp": 178,
+       "item": "sitrusberry",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "encore": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "immunity",
+       "boosts": {
+        "atk": -1,
+        "def": 2,
+        "spd": 2
+       },
+       "hp": 75,
+       "item": "leftovers",
+       "lastMove": "stockpile",
+       "maxhp": 267,
+       "name": "Snorlax",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "stockpile": 18
+       },
+       "slot": 0,
+       "species": "Snorlax",
+       "status": "",
+       "volatiles": {
+        "stockpile": {
+         "layers": 2
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sharpness",
+       "hp": 172,
+       "item": "absolitez",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "nightslash": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Absol-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 197,
+       "item": "",
+       "lastMove": "kowtowcleave",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "limber",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Hawlucha",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hawlucha",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "waterabsorb",
+       "boosts": {},
+       "hp": 85,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "encore",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "encore": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "immunity",
+       "boosts": {
+        "atk": -1,
+        "def": 2,
+        "spd": 2
+       },
+       "hp": 91,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 267,
+       "name": "Snorlax",
+       "pp": {
+        "protect": 6,
+        "rest": 8,
+        "stockpile": 18
+       },
+       "slot": 0,
+       "species": "Snorlax",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        },
+        "stockpile": {
+         "layers": 2
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sharpness",
+       "boosts": {},
+       "hp": 172,
+       "item": "absolitez",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "nightslash": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Absol-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 197,
+       "item": "",
+       "lastMove": "kowtowcleave",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 9,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 2,
+         "move": "kowtowcleave"
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move stockpile, move fakeout 1",
+   "move kowtowcleave -2, move nightslash 1 mega"
+  ],
+  [
+   "move protect, move partingshot 2",
+   "move kowtowcleave 1, switch 3",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move stockpile, move encore -1",
+   "move kowtowcleave 1, move fakeout 2"
+  ],
+  [
+   "move protect, move encore 1",
+   "move kowtowcleave 2, switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "limber",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Hawlucha",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Hawlucha",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "waterabsorb",
+      "hp": 197,
+      "item": "sitrusberry",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "encore": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Politoed",
+      "status": ""
+     },
+     {
+      "ability": "immunity",
+      "boosts": {},
+      "hp": 267,
+      "item": "leftovers",
+      "maxhp": 267,
+      "name": "Snorlax",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "stockpile": 20
+      },
+      "slot": 0,
+      "species": "Snorlax",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "pressure",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 172,
+      "item": "absolitez",
+      "maxhp": 172,
+      "name": "Absol",
+      "pp": {
+       "nightslash": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Absol",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Gatote",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Grimmsnarl",
+      "status": ""
+     },
+     {
+      "ability": "defiant",
+      "boosts": {
+       "atk": 1
+      },
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Kingambit",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move stockpile, move encore 1",
+  "p2": "move kowtowcleave 1, move nightslash 1"
+ }
+}

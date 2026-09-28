@@ -1,0 +1,2189 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689049795 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049795), decision 10 = turn 9 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [
+   "switch 3"
+  ],
+  "p2": []
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Garchompite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Dragon Pulse",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Parting Shot",
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Rocky Helmet",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rage Powder",
+     "Rest"
+    ],
+    "name": "Volcarona",
+    "nature": "Serious",
+    "species": "Volcarona"
+   },
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Nasty Plot",
+     "Make It Rain",
+     "Rest"
+    ],
+    "name": "Gholdengo",
+    "nature": "Serious",
+    "species": "Gholdengo"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Dire Claw",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Thermal Exchange",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Baxcalibrite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Icicle Crash",
+     "Protect",
+     "High Horsepower",
+     "Rest"
+    ],
+    "name": "Baxcalibur",
+    "nature": "Serious",
+    "species": "Baxcalibur"
+   },
+   {
+    "ability": "Rock Head",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Aerodactyl",
+    "nature": "Serious",
+    "species": "Aerodactyl"
+   },
+   {
+    "ability": "Volt Absorb",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Nuzzle",
+     "Mach Punch",
+     "Thunder Punch",
+     "Rest"
+    ],
+    "name": "Pawmot",
+    "nature": "Serious",
+    "species": "Pawmot"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "boosts": {},
+       "canMega": true,
+       "hp": 215,
+       "item": "garchompitez",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 192,
+       "item": "rockyhelmet",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": -1
+       },
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "lastMove": "iciclecrash",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "nuzzle": 20,
+        "rest": 8,
+        "thunderpunch": 16
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "atk": -2,
+        "spa": -1
+       },
+       "hp": 187,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 16,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 215,
+       "item": "garchompitez",
+       "lastMove": "dragonpulse",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 134,
+       "item": "rockyhelmet",
+       "lastMove": "ragepowder",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "boosts": {},
+       "hp": 42,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Aerodactyl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "nuzzle": 20,
+        "rest": 8,
+        "thunderpunch": 16
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "atk": -2,
+        "spa": -1
+       },
+       "hp": 156,
+       "item": "",
+       "lastMove": "direclaw",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 15,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 215,
+       "item": "garchompitez",
+       "lastMove": "dragonpulse",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 134,
+       "item": "rockyhelmet",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": "fnt"
+      },
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "nuzzle": 20,
+        "rest": 8,
+        "thunderpunch": 16
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 156,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 15,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 215,
+       "item": "garchompitez",
+       "lastMove": "dragonpulse",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 134,
+       "item": "rockyhelmet",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "voltabsorb",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "nuzzle": 20,
+        "rest": 8,
+        "thunderpunch": 16
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 156,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 15,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 215,
+       "item": "garchompitez",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 10,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 134,
+       "item": "rockyhelmet",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "boosts": {},
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "lastMove": "protect",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "voltabsorb",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 177,
+       "item": "",
+       "lastMove": "nuzzle",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "nuzzle": 19,
+        "rest": 8,
+        "thunderpunch": 16
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 156,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 15,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 10,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 194,
+       "item": "lifeorb",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 115,
+       "item": "rockyhelmet",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "par",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 137,
+       "item": "",
+       "lastMove": "nuzzle",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "nuzzle": 18,
+        "rest": 8,
+        "thunderpunch": 16
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "brn",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 156,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 15,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 10,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 194,
+       "item": "lifeorb",
+       "lastMove": "nastyplot",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 73,
+       "item": "rockyhelmet",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "par",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 97,
+       "item": "",
+       "lastMove": "machpunch",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 19,
+        "nuzzle": 18,
+        "rest": 8,
+        "thunderpunch": 16
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "brn",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "atk": -1,
+        "spa": -1
+       },
+       "hp": 125,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 15,
+        "fakeout": 10,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 10,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 154,
+       "item": "lifeorb",
+       "lastMove": "makeitrain",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 7,
+        "nastyplot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Baxcalibur",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 19,
+        "nuzzle": 18,
+        "rest": 8,
+        "thunderpunch": 15
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 14,
+        "fakeout": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 10,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 154,
+       "item": "lifeorb",
+       "lastMove": "makeitrain",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 7,
+        "nastyplot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 18,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": -1
+       },
+       "canMega": true,
+       "hp": 222,
+       "item": "baxcalibrite",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 19,
+        "nuzzle": 18,
+        "rest": 8,
+        "thunderpunch": 15
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 14,
+        "fakeout": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonpulse": 10,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 154,
+       "item": "lifeorb",
+       "lastMove": "makeitrain",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 6,
+        "nastyplot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "partingshot": 18,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "rockhead",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "thermalexchange",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 222,
+       "item": "baxcalibrite",
+       "lastMove": "protect",
+       "maxhp": 222,
+       "name": "Baxcalibur",
+       "pp": {
+        "highhorsepower": 12,
+        "iciclecrash": 11,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Baxcalibur-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 19,
+        "nuzzle": 18,
+        "rest": 8,
+        "thunderpunch": 15
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 14,
+        "fakeout": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect, move partingshot 1",
+   "move fakeout 1, move iciclecrash 1",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move dragonpulse 2 mega, move ragepowder",
+   "move direclaw 2, switch 3"
+  ],
+  [
+   "move dragonpulse 2, switch 3",
+   "switch 4, move rest"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move protect, move fakeout 2",
+   "move nuzzle 1, move protect"
+  ],
+  [
+   "switch 3, move partingshot 2",
+   "move nuzzle 1, switch 4",
+   {
+    "p1": [
+     "switch 4"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move ragepowder, move nastyplot",
+   "move machpunch 1, move fakeout 1"
+  ],
+  [
+   "move ragepowder, move makeitrain",
+   "move thunderpunch 2, move direclaw 1"
+  ],
+  [
+   "switch 4",
+   "pass, switch 4"
+  ],
+  [
+   "move fakeout 2, move makeitrain",
+   "pass, move protect mega"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 215,
+      "item": "garchompitez",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "dragonpulse": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "goodasgold",
+      "hp": 194,
+      "item": "lifeorb",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "nastyplot": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flamebody",
+      "hp": 192,
+      "item": "rockyhelmet",
+      "maxhp": 192,
+      "name": "Volcarona",
+      "pp": {
+       "ragepowder": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Volcarona",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "rockhead",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Aerodactyl",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Aerodactyl",
+      "status": ""
+     },
+     {
+      "ability": "thermalexchange",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 222,
+      "item": "baxcalibrite",
+      "maxhp": 222,
+      "name": "Baxcalibur",
+      "pp": {
+       "highhorsepower": 12,
+       "iciclecrash": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Baxcalibur",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "voltabsorb",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Pawmot",
+      "pp": {
+       "machpunch": 20,
+       "nuzzle": 20,
+       "rest": 8,
+       "thunderpunch": 16
+      },
+      "slot": null,
+      "species": "Pawmot",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "direclaw": 16,
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move partingshot 2, move makeitrain",
+  "p2": "pass, move highhorsepower 2"
+ }
+}

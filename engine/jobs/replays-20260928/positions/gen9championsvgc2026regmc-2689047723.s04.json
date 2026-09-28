@@ -1,0 +1,1112 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689047723 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047723), decision 4 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Unnerve",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Pyroarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Rest"
+    ],
+    "name": "Nala",
+    "nature": "Serious",
+    "species": "Pyroar"
+   },
+   {
+    "ability": "Drought",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Helping Hand",
+     "Rest"
+    ],
+    "name": "Benjamin",
+    "nature": "Serious",
+    "species": "Torkoal"
+   },
+   {
+    "ability": "Overgrow",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Solar Beam",
+     "Leaf Storm",
+     "Rest"
+    ],
+    "name": "absolutely vile",
+    "nature": "Serious",
+    "species": "Venusaur"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Moonblast",
+     "Sunny Day",
+     "Protect",
+     "Rest"
+    ],
+    "name": "willy wonka",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Ice Beam",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Snarl",
+     "Protect",
+     "Electro Shot",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Light Screen",
+     "Rest"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Serious",
+    "species": "Grimmsnarl"
+   }
+  ]
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {
+        "accuracy": -1,
+        "spa": -1
+       },
+       "hp": 79,
+       "item": "leftovers",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Benjamin",
+       "pp": {
+        "helpinghand": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "firemane",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 80,
+       "item": "pyroarite",
+       "lastMove": "heatwave",
+       "maxhp": 193,
+       "name": "Nala",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pyroar-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "overgrow",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "absolutely vile",
+       "pp": {
+        "leafstorm": 8,
+        "rest": 8,
+        "solarbeam": 12
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "willy wonka",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8,
+        "sunnyday": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "snarl",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 77,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 177,
+       "name": "Benjamin",
+       "pp": {
+        "helpinghand": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": "fnt"
+      },
+      {
+       "ability": "firemane",
+       "hp": 0,
+       "item": "pyroarite",
+       "maxhp": 193,
+       "name": "Nala",
+       "pp": {
+        "heatwave": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pyroar-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "overgrow",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "absolutely vile",
+       "pp": {
+        "leafstorm": 8,
+        "rest": 8,
+        "solarbeam": 12
+       },
+       "slot": null,
+       "species": "Venusaur",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "willy wonka",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8,
+        "sunnyday": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 19,
+       "item": "leftovers",
+       "lastMove": "snarl",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 14
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 10,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 177,
+       "name": "Benjamin",
+       "pp": {
+        "helpinghand": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      },
+      {
+       "ability": "firemane",
+       "hp": 0,
+       "item": "pyroarite",
+       "maxhp": 193,
+       "name": "Nala",
+       "pp": {
+        "heatwave": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pyroar-Mega",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "absolutely vile",
+       "pp": {
+        "leafstorm": 8,
+        "rest": 8,
+        "solarbeam": 12
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "willy wonka",
+       "pp": {
+        "moonblast": 16,
+        "protect": 8,
+        "rest": 8,
+        "sunnyday": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 19,
+       "item": "leftovers",
+       "lastMove": "snarl",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 14
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 10,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 177,
+       "name": "Benjamin",
+       "pp": {
+        "helpinghand": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      },
+      {
+       "ability": "firemane",
+       "hp": 0,
+       "item": "pyroarite",
+       "maxhp": 193,
+       "name": "Nala",
+       "pp": {
+        "heatwave": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pyroar-Mega",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "solarbeam",
+       "maxhp": 187,
+       "name": "absolutely vile",
+       "pp": {
+        "leafstorm": 8,
+        "rest": 8,
+        "solarbeam": 11
+       },
+       "slot": 0,
+       "species": "Venusaur",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "moonblast",
+       "maxhp": 167,
+       "name": "willy wonka",
+       "pp": {
+        "moonblast": 15,
+        "protect": 8,
+        "rest": 8,
+        "sunnyday": 8
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 31,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "protect": 7,
+        "rest": 8,
+        "snarl": 14
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 71,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 10,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move heatwave mega, move helpinghand -1",
+   "move muddywater, move snarl"
+  ],
+  [
+   "move heatwave, move helpinghand -1",
+   "move muddywater, move snarl"
+  ],
+  [
+   "switch 3, switch 4",
+   ""
+  ],
+  [
+   "move solarbeam 1, move moonblast 2",
+   "switch 3, move protect",
+   {
+    "p1": [],
+    "p2": [
+     "switch 3"
+    ]
+   }
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "sunnyday",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "drought",
+      "boosts": {},
+      "hp": 177,
+      "item": "leftovers",
+      "maxhp": 177,
+      "name": "Benjamin",
+      "pp": {
+       "helpinghand": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Torkoal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unnerve",
+      "boosts": {},
+      "canMega": true,
+      "hp": 193,
+      "item": "pyroarite",
+      "maxhp": 193,
+      "name": "Nala",
+      "pp": {
+       "heatwave": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Pyroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "overgrow",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "absolutely vile",
+      "pp": {
+       "leafstorm": 8,
+       "rest": 8,
+       "solarbeam": 12
+      },
+      "slot": null,
+      "species": "Venusaur",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "willy wonka",
+      "pp": {
+       "moonblast": 16,
+       "protect": 8,
+       "rest": 8,
+       "sunnyday": 8
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "electroshot": 12,
+       "protect": 8,
+       "rest": 8,
+       "snarl": 16
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "lightscreen": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Grimmsnarl",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "muddywater": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move solarbeam 2, move sunnyday",
+  "p2": "move icebeam 1, move electroshot 1"
+ }
+}
