@@ -532,6 +532,90 @@ impl<const N: usize> State<N> {
     }
 }
 
+/// The key hash of a position together with `extra` (what else tells two positions apart for the
+/// caller: the remaining turn of a staged enumeration, a suspended turn), from the state's
+/// [`State::position_hash`]: the hash the enumeration's merge and [`PositionMap`] index by
+/// (board P3b). A function of the position hash and `extra`, so equal keys hash equally.
+#[inline]
+pub fn key_hash<T: Hash + ?Sized>(position_hash: u64, extra: &T) -> u64 {
+    let mut hasher = KeyHasher::new();
+    hasher.write_u64(position_hash);
+    extra.hash(&mut hasher);
+    hasher.finish()
+}
+
+/// A [`std::hash::BuildHasher`] for maps keyed by hashes already computed ([`key_hash`]):
+/// [`KeyHasher`] mixes the one word.
+#[derive(Clone, Copy, Debug, Default)]
+pub struct BuildKeyHasher;
+
+impl std::hash::BuildHasher for BuildKeyHasher {
+    type Hasher = KeyHasher;
+
+    fn build_hasher(&self) -> KeyHasher {
+        KeyHasher::new()
+    }
+}
+
+/// A map from positions (any key `K: Eq`, typically a state with what else the caller keys by)
+/// to values, indexed by a hash the caller supplies ([`key_hash`] of the state's incrementally
+/// kept or computed [`State::position_hash`]) and confirmed by `Eq`: a hash collision costs a
+/// comparison, never a wrong value (board B32), and no key is ever hashed by the map (a derived
+/// `Hash` of a `State` reads ~5 KB). The hash must be a function of the key.
+#[derive(Clone, Debug)]
+pub struct PositionMap<K, V> {
+    buckets: std::collections::HashMap<u64, Vec<(K, V)>, BuildKeyHasher>,
+    len: usize,
+}
+
+impl<K, V> Default for PositionMap<K, V> {
+    fn default() -> Self {
+        PositionMap {
+            buckets: std::collections::HashMap::default(),
+            len: 0,
+        }
+    }
+}
+
+impl<K: Eq, V> PositionMap<K, V> {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn len(&self) -> usize {
+        self.len
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len == 0
+    }
+
+    pub fn clear(&mut self) {
+        self.buckets.clear();
+        self.len = 0;
+    }
+
+    /// The value of `key`, whose hash is `hash`.
+    pub fn get(&self, hash: u64, key: &K) -> Option<&V> {
+        self.buckets
+            .get(&hash)?
+            .iter()
+            .find(|(k, _)| k == key)
+            .map(|(_, v)| v)
+    }
+
+    /// Stores `value` for `key` (hash `hash`); returns the value it replaces.
+    pub fn insert(&mut self, hash: u64, key: K, value: V) -> Option<V> {
+        let bucket = self.buckets.entry(hash).or_default();
+        if let Some((_, v)) = bucket.iter_mut().find(|(k, _)| *k == key) {
+            return Some(std::mem::replace(v, value));
+        }
+        bucket.push((key, value));
+        self.len += 1;
+        None
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -820,5 +904,30 @@ mod tests {
         e.side_mut(SideId::One).slots[0].boosts[1] = 1;
         assert_ne!(d.position_hash(), e.position_hash());
         assert_eq!(base.position_hash(), base.clone().position_hash());
+    }
+
+    /// A position map finds keys by their hash and tells apart keys that share one.
+    #[test]
+    fn position_map_confirms_keys_by_eq() {
+        let a = doubles_with_leads();
+        let mut b = a.clone();
+        b.turn = 3;
+        let mut map: PositionMap<(State<2>, u8), f32> = PositionMap::new();
+        let ka = key_hash(a.position_hash(), &0u8);
+        assert_eq!(map.insert(ka, (a.clone(), 0), 1.0), None);
+        // A different key forced onto the same hash is kept apart.
+        assert_eq!(map.insert(ka, (b.clone(), 0), 2.0), None);
+        assert_eq!(map.len(), 2);
+        assert_eq!(map.get(ka, &(a.clone(), 0)), Some(&1.0));
+        assert_eq!(map.get(ka, &(b.clone(), 0)), Some(&2.0));
+        assert_eq!(map.get(ka, &(a.clone(), 1)), None);
+        assert_eq!(map.insert(ka, (a.clone(), 0), 3.0), Some(1.0));
+        assert_eq!(map.len(), 2);
+        assert_ne!(
+            key_hash(a.position_hash(), &0u8),
+            key_hash(a.position_hash(), &1u8)
+        );
+        map.clear();
+        assert!(map.is_empty());
     }
 }

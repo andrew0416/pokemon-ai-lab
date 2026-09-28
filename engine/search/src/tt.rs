@@ -4,10 +4,12 @@
 //! replies and outcomes of one analysis and across analyses by the same solver (a rollout's
 //! decisions, several `lab-plan` modes on one position).
 //!
-//! The key is the position itself (`State` + the suspended turn, `State: Eq + Hash`, the
-//! engine's outcome-merge key), never a hash alone: a 64-bit hash would hand one position
-//! another's value on a collision (board B32). A cheaper key is board P3a/P3b (incremental
-//! hash, merge key) and only needs [`PositionKey`] replaced here.
+//! The key is the position itself (`State` + the suspended turn, the engine's outcome-merge
+//! key), never a hash alone: a 64-bit hash would hand one position another's value on a
+//! collision (board B32). The table indexes it by the engine's position hash
+//! (`lab_engine::hash::key_hash` of `State::position_hash` and the suspension, board P3b) and
+//! confirms by `Eq` (`lab_engine::hash::PositionMap`), instead of a SipHash of the whole state
+//! for every lookup and every growth of the map.
 //!
 //! The value stored for a position depends on the solver's configuration (evaluator, rolls,
 //! chance, pruning, side); a table belongs to one [`crate::Solver`], so a caller that changes
@@ -20,8 +22,7 @@
 //! beam pairs, so PP alone tells their children apart), more often in small positions (the
 //! `ability-change-fails` oracle scenario 19 in 27).
 
-use std::collections::HashMap;
-
+use lab_engine::hash::{key_hash, PositionMap};
 use lab_engine::state::State;
 use lab_engine::turn::Suspension;
 
@@ -33,7 +34,7 @@ pub type PositionKey<const N: usize> = (State<N>, Option<Suspension>);
 pub const DEFAULT_CAPACITY: usize = 200_000;
 
 pub struct TranspositionTable<const N: usize> {
-    entries: HashMap<PositionKey<N>, f32>,
+    entries: PositionMap<PositionKey<N>, f32>,
     capacity: usize,
     enabled: bool,
 }
@@ -41,7 +42,7 @@ pub struct TranspositionTable<const N: usize> {
 impl<const N: usize> TranspositionTable<N> {
     pub fn new(enabled: bool, capacity: usize) -> Self {
         TranspositionTable {
-            entries: HashMap::new(),
+            entries: PositionMap::new(),
             capacity,
             enabled,
         }
@@ -64,17 +65,22 @@ impl<const N: usize> TranspositionTable<N> {
         if !self.enabled {
             return None;
         }
-        self.entries.get(key).copied()
+        self.entries.get(Self::hash(key), key).copied()
     }
 
     /// Stores `value` for `key` unless disabled or full.
     pub fn insert(&mut self, key: PositionKey<N>, value: f32) {
         if self.enabled && self.entries.len() < self.capacity {
-            self.entries.insert(key, value);
+            self.entries.insert(Self::hash(&key), key, value);
         }
     }
 
     pub fn clear(&mut self) {
         self.entries.clear();
+    }
+
+    /// The index of `key`: the engine's position hash with the suspended turn.
+    fn hash(key: &PositionKey<N>) -> u64 {
+        key_hash(key.0.position_hash(), &key.1)
     }
 }

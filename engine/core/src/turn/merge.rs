@@ -10,14 +10,14 @@
 //! result (entries, their order and the order in which probabilities add up) is the same as the
 //! map's.
 //!
-//! The key's hash is the state's [`State::position_hash`], which the caller keeps
-//! incrementally while a run applies its instructions (board P3a), mixed with the hash of the
+//! The key's hash is [`crate::hash::key_hash`] of the state's [`State::position_hash`], which
+//! the caller keeps incrementally while a run applies its instructions (board P3a), and the
 //! remaining turn: the state itself is not hashed here.
 
-use std::hash::{Hash, Hasher};
+use std::hash::Hash;
 use std::sync::atomic::{AtomicBool, Ordering};
 
-use crate::hash::KeyHasher;
+use crate::hash::key_hash;
 use crate::state::State;
 
 /// Whether [`Merger::add`] checks every incrementally kept position hash against
@@ -64,10 +64,7 @@ impl<const N: usize, Q: Hash + Eq + Clone> Merger<N, Q> {
                 "the incrementally kept position hash differs from the full one"
             );
         }
-        let mut hasher = KeyHasher::new();
-        hasher.write_u64(state_hash);
-        rest.hash(&mut hasher);
-        let hash = hasher.finish();
+        let hash = key_hash(state_hash, rest);
         let mask = self.table.len() - 1;
         let mut i = hash as usize & mask;
         loop {
