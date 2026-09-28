@@ -253,6 +253,10 @@
    {
     "name": "PotentialMon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swarm",
+     "Sniper"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -261,6 +265,7 @@
    {
     "name": "Kind Bridge",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -269,6 +274,7 @@
    {
     "name": "Wet chud",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": "damprock (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": true,
@@ -277,6 +283,11 @@
    {
     "name": "Sukuna",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swarm",
+     "Sheer Force",
+     "Sharpness"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -287,6 +298,11 @@
    {
     "name": "Meowstic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Keen Eye",
+     "Infiltrator",
+     "Competitive"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -295,6 +311,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -303,6 +320,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -311,6 +333,11 @@
    {
     "name": "Kommo-o",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Bulletproof",
+     "Soundproof",
+     "Overcoat"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

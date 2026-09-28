@@ -259,6 +259,11 @@
    {
     "name": "Basculegion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swift Swim",
+     "Adaptability",
+     "Mold Breaker"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -267,6 +272,7 @@
    {
     "name": "Ninetales",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -275,6 +281,10 @@
    {
     "name": "Dragonite",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Inner Focus",
+     "Multiscale"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -283,6 +293,10 @@
    {
     "name": "Froslass",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Snow Cloak",
+     "Cursed Body"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -293,6 +307,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -301,6 +316,11 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Frisk",
+     "Pickpocket"
+    ],
     "item_shown": false,
     "item_inferred": "lightclay (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": false,
@@ -309,6 +329,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -317,6 +340,11 @@
    {
     "name": "Hydrapple",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Supersweet Syrup",
+     "Regenerator",
+     "Sticky Hold"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

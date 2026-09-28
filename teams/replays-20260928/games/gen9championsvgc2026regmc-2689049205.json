@@ -266,6 +266,7 @@
    {
     "name": "Charizard",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -274,6 +275,7 @@
    {
     "name": "Politoed",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -282,6 +284,7 @@
    {
     "name": "Archaludon",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -290,6 +293,7 @@
    {
     "name": "Golisopod",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -300,6 +304,7 @@
    {
     "name": "Metagross",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -308,6 +313,7 @@
    {
     "name": "Incineroar",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -316,6 +322,7 @@
    {
     "name": "Whimsicott",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -324,6 +331,7 @@
    {
     "name": "Sinistcha",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

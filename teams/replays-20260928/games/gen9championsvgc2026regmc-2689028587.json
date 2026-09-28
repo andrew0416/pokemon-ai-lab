@@ -254,6 +254,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -262,6 +263,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -270,6 +272,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -278,6 +283,11 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Frisk",
+     "Pickpocket"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -288,6 +298,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -296,6 +307,11 @@
    {
     "name": "Hatterene",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Healer",
+     "Anticipation",
+     "Magic Bounce"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -304,6 +320,11 @@
    {
     "name": "Camerupt",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Magma Armor",
+     "Solid Rock",
+     "Anger Point"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -312,6 +333,11 @@
    {
     "name": "Suckerrr",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Defiant",
+     "Supreme Overlord",
+     "Pressure"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

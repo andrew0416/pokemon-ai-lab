@@ -255,6 +255,7 @@
    {
     "name": "Pelipper",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -263,6 +264,7 @@
    {
     "name": "Dragonite",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -281,6 +283,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -289,6 +292,10 @@
    {
     "name": "Samurott",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Sharpness"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -297,6 +304,7 @@
    {
     "name": "Staraptor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -305,6 +313,9 @@
    {
     "name": "Aegislash",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Stance Change"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

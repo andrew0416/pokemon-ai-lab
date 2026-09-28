@@ -1,7 +1,7 @@
 """Public Showdown replays as a parity source (board V13-replay-parity): tables and oracle jobs.
 
 Usage:
-  python engine/scripts/replay_summary.py stats <run-dir>
+  python engine/scripts/replay_summary.py stats <run-dir> [--checks checks] [--suffix S]
       <run-dir>/checks/*.replay.json (lab-replay) -> <run-dir>/summary.json, summary.md:
       replay coverage, why replays stop, the observation check (model ② consistency) and its
       first structural differences by kind, the candidate list.
@@ -9,13 +9,15 @@ Usage:
       the pinned positions (<run-dir>/positions) as list files <run-dir>/pack/list-<k>.txt for
       `oracle_job.py pack` (a workflow matrix holds at most 256 runners).
   python engine/scripts/replay_summary.py ingest <run-dir> <actions-run-id>... [--repo owner/name]
-      reads the oracle workflow runs' summary table annotations (no token; a few API requests)
+      reads the oracle workflow runs' summary table annotations (a few API requests; GITHUB_TOKEN
+      from the environment when set)
       and writes one parity_sweep-style row per position to <run-dir>/rows/, the totals to
       <run-dir>/oracle.json, and <run-dir>/sources.json in parity_corpus.py's format.
 """
 import argparse
 import collections
 import json
+import os
 import pathlib
 import re
 import sys
@@ -25,9 +27,9 @@ import urllib.request
 NAME = re.compile(r"^(?P<game>.+)\.s(?P<step>\d+)$")
 
 
-def load_checks(run):
+def load_checks(run, checks_dir="checks"):
     out = []
-    for f in sorted((run / "checks").glob("*.replay.json")):
+    for f in sorted((run / checks_dir).glob("*.replay.json")):
         out.append(json.loads(f.read_text(encoding="utf-8")))
     return out
 
@@ -40,8 +42,8 @@ def kind_of(diff):
     return d.split(" engine")[0].replace("p1 ", "").replace("p2 ", "")
 
 
-def stats(run):
-    checks = load_checks(run)
+def stats(run, checks_dir="checks", suffix=""):
+    checks = load_checks(run, checks_dir)
     games = json.loads((run / "games" / "index.json").read_text(encoding="utf-8"))
     limits = []
     log = run / "replay.log"
@@ -86,7 +88,7 @@ def stats(run):
         "unknown_actions": sum(g.get("unknown_actions", 0) for g in games),
         "mid_switches": sum(g.get("mid_switches", 0) for g in games),
     }
-    (run / "summary.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
+    (run / f"summary{suffix}.json").write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
     lines = [
         f"- replays {summary['replays']}, games replayed {summary['games']} (open team sheets {summary['ots_games']})",
         f"- decisions {decisions}, replayed {replayed}, pinned positions {summary['positions']}",
@@ -97,7 +99,7 @@ def stats(run):
     lines += [f"| {k} | {v} |" for k, v in stops.most_common()]
     lines += ["", "| first divergence: difference kind | games |", "|---|---|"]
     lines += [f"| {k} | {v} |" for k, v in first.most_common()]
-    (run / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (run / f"summary{suffix}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))
 
 
@@ -113,8 +115,11 @@ def lists(run, chunk):
 
 
 def api(url):
-    req = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json",
-                                               "User-Agent": "pokemon-ai-lab replay_summary.py"})
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": "pokemon-ai-lab replay_summary.py"}
+    token = os.environ.get("GITHUB_TOKEN")  # optional (5,000 requests/h instead of 60); never printed
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=60) as r:
         return json.loads(r.read().decode("utf-8"))
 
@@ -187,11 +192,13 @@ def main():
     ap.add_argument("run_dir")
     ap.add_argument("run_ids", nargs="*")
     ap.add_argument("--chunk", type=int, default=250)
+    ap.add_argument("--checks", default="checks", help="stats: the lab-replay checks directory")
+    ap.add_argument("--suffix", default="", help="stats: summary<suffix>.json/.md")
     ap.add_argument("--repo", default="andrew0416/pokemon-ai-lab")
     a = ap.parse_args()
     run = pathlib.Path(a.run_dir)
     if a.cmd == "stats":
-        stats(run)
+        stats(run, a.checks, a.suffix)
     elif a.cmd == "lists":
         lists(run, a.chunk)
     else:

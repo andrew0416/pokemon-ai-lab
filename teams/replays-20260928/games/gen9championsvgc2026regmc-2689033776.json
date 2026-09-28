@@ -252,6 +252,10 @@
    {
     "name": "Glimmora",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Toxic Debris",
+     "Corrosion"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -260,6 +264,11 @@
    {
     "name": "Basculegion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swift Swim",
+     "Adaptability",
+     "Mold Breaker"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -268,6 +277,7 @@
    {
     "name": "Staraptor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -276,6 +286,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -286,6 +300,7 @@
    {
     "name": "Ninetales",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -294,6 +309,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -302,6 +318,11 @@
    {
     "name": "Gardevoir",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Synchronize",
+     "Trace",
+     "Telepathy"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

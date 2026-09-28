@@ -254,6 +254,10 @@
    {
     "name": "Garchomp",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sand Veil",
+     "Rough Skin"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -262,6 +266,11 @@
    {
     "name": "Basculegion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swift Swim",
+     "Adaptability",
+     "Mold Breaker"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -270,6 +279,7 @@
    {
     "name": "Staraptor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -278,6 +288,11 @@
    {
     "name": "Whimsicott",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Infiltrator",
+     "Chlorophyll"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -288,6 +303,10 @@
    {
     "name": "Garchomp",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sand Veil",
+     "Rough Skin"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -296,6 +315,10 @@
    {
     "name": "Volcarona",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Swarm"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -304,6 +327,10 @@
    {
     "name": "Sylveon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cute Charm",
+     "Pixilate"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -312,6 +339,9 @@
    {
     "name": "Gholdengo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Good as Gold"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

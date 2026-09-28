@@ -253,6 +253,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -261,6 +262,10 @@
    {
     "name": "Blaziken",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Speed Boost"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -269,6 +274,11 @@
    {
     "name": "Kingambit",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Defiant",
+     "Supreme Overlord",
+     "Pressure"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -283,6 +293,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -291,6 +305,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -299,6 +316,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -307,6 +325,11 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Stamina",
+     "Sturdy",
+     "Stalwart"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

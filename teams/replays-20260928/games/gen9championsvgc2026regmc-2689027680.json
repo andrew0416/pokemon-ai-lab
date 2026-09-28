@@ -253,6 +253,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -261,6 +266,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -279,6 +287,10 @@
    {
     "name": "Garchomp",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sand Veil",
+     "Rough Skin"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -287,6 +299,10 @@
    {
     "name": "Sylveon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cute Charm",
+     "Pixilate"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

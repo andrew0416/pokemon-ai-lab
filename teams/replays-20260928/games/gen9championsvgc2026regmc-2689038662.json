@@ -254,6 +254,10 @@
    {
     "name": "Garchomp",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sand Veil",
+     "Rough Skin"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -262,6 +266,7 @@
    {
     "name": "Tyranitar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -270,6 +275,11 @@
    {
     "name": "Basculegion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swift Swim",
+     "Adaptability",
+     "Mold Breaker"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -278,6 +288,7 @@
    {
     "name": "Pelipper",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -288,6 +299,11 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Stamina",
+     "Sturdy",
+     "Stalwart"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -296,6 +312,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -304,6 +321,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -312,6 +333,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

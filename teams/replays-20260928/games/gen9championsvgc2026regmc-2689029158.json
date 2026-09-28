@@ -259,6 +259,10 @@
    {
     "name": "Garchomp",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sand Veil",
+     "Rough Skin"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -267,6 +271,11 @@
    {
     "name": "Malamar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Contrary",
+     "Suction Cups",
+     "Infiltrator"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -275,6 +284,11 @@
    {
     "name": "Whimsicott",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Infiltrator",
+     "Chlorophyll"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -283,6 +297,7 @@
    {
     "name": "Sinistcha",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -293,6 +308,10 @@
    {
     "name": "Floette",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flower Veil",
+     "Symbiosis"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -301,6 +320,11 @@
    {
     "name": "Lucario",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Steadfast",
+     "Inner Focus",
+     "Justified"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -309,6 +333,11 @@
    {
     "name": "Sableye",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Keen Eye",
+     "Stall",
+     "Prankster"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -317,6 +346,7 @@
    {
     "name": "Pelipper",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,

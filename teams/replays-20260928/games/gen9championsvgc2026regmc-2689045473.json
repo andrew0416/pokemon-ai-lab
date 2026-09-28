@@ -259,6 +259,10 @@
    {
     "name": "Pikachu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -267,6 +271,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -275,6 +283,9 @@
    {
     "name": "Morpeko",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Hunger Switch"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -283,6 +294,11 @@
    {
     "name": "Dedenne",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cheek Pouch",
+     "Pickup",
+     "Plus"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -293,6 +309,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -301,6 +318,11 @@
    {
     "name": "Sableye",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Keen Eye",
+     "Stall",
+     "Prankster"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -309,6 +331,10 @@
    {
     "name": "Metagross",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Clear Body",
+     "Light Metal"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -317,6 +343,10 @@
    {
     "name": "Sylveon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cute Charm",
+     "Pixilate"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

@@ -253,6 +253,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -261,6 +265,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -269,6 +274,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -277,6 +285,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -287,6 +300,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -295,6 +312,10 @@
    {
     "name": "Froslass",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Snow Cloak",
+     "Cursed Body"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -303,6 +324,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -311,6 +337,11 @@
    {
     "name": "Arcanine",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Intimidate",
+     "Flash Fire",
+     "Rock Head"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

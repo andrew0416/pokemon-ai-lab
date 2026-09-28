@@ -250,6 +250,7 @@
    {
     "name": "Scrafty",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -258,6 +259,11 @@
    {
     "name": "Malamar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Contrary",
+     "Suction Cups",
+     "Infiltrator"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -276,6 +282,7 @@
    {
     "name": "Gardevoir",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -284,6 +291,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

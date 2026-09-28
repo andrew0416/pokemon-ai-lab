@@ -258,6 +258,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -266,6 +270,11 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Frisk",
+     "Pickpocket"
+    ],
     "item_shown": false,
     "item_inferred": "lightclay (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": false,
@@ -274,6 +283,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -282,6 +292,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -292,6 +303,7 @@
    {
     "name": "Yoruichi",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -300,6 +312,7 @@
    {
     "name": "Ichigo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -308,6 +321,7 @@
    {
     "name": "Soi fon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -316,6 +330,10 @@
    {
     "name": "Uryu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Overgrow",
+     "Long Reach"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

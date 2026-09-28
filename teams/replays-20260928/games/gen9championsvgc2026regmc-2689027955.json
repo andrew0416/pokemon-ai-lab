@@ -256,6 +256,7 @@
    {
     "name": "Absol",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -264,6 +265,11 @@
    {
     "name": "Whimsicott",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Infiltrator",
+     "Chlorophyll"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -282,6 +288,7 @@
    {
     "name": "Glimmora",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -290,6 +297,7 @@
    {
     "name": "Staraptor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -298,6 +306,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -306,6 +318,11 @@
    {
     "name": "Whimsicott",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Infiltrator",
+     "Chlorophyll"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

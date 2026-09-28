@@ -266,6 +266,7 @@
    {
     "name": "Arcanine",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -274,6 +275,7 @@
    {
     "name": "Basculegion",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -282,6 +284,7 @@
    {
     "name": "Garchomp",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -290,6 +293,7 @@
    {
     "name": "Staraptor",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -300,6 +304,7 @@
    {
     "name": "Raichu",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -308,6 +313,7 @@
    {
     "name": "Rillaboom",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -316,6 +322,7 @@
    {
     "name": "Gholdengo",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -324,6 +331,7 @@
    {
     "name": "Pelipper",
     "source": "open team sheet (Stat Points assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

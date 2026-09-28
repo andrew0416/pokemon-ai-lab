@@ -260,6 +260,11 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Frisk",
+     "Pickpocket"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -268,6 +273,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -276,6 +282,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -284,6 +294,11 @@
    {
     "name": "Basculegion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swift Swim",
+     "Adaptability",
+     "Mold Breaker"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -294,6 +309,7 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -302,6 +318,11 @@
    {
     "name": "Whimsicott",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Infiltrator",
+     "Chlorophyll"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -310,6 +331,7 @@
    {
     "name": "Metagross",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -318,6 +340,11 @@
    {
     "name": "Scrafty",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Shed Skin",
+     "Moxie",
+     "Intimidate"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -849,7 +876,10 @@
     {
      "kind": "move",
      "move": "dracometeor",
-     "target": null,
+     "target": {
+      "side": "p2",
+      "slot": 0
+     },
      "flags": [
       "[notarget]"
      ],

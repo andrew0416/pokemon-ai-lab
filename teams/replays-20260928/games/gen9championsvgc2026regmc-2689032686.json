@@ -256,6 +256,10 @@
    {
     "name": "roggero",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Sniper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -264,6 +268,11 @@
    {
     "name": "Maushold",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Friend Guard",
+     "Cheek Pouch",
+     "Technician"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -272,6 +281,10 @@
    {
     "name": "Froslass",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Snow Cloak",
+     "Cursed Body"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -280,6 +293,10 @@
    {
     "name": "Typhlosion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Frisk"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -290,6 +307,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -298,6 +316,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -306,6 +325,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -314,6 +338,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

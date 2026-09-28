@@ -1,0 +1,364 @@
+{
+ "replays": 200,
+ "games": 199,
+ "ots_games": 4,
+ "decisions": 1777,
+ "replayed": 1749,
+ "positions": 1749,
+ "consistent_prefix": 1742,
+ "consistent_all": 1742,
+ "games_fully_consistent": 192,
+ "stops": [
+  [
+   "replacement: no legal p1 choice fits the log's actions",
+   2
+  ],
+  [
+   "turn: the engine's position asks for Replacement",
+   2
+  ],
+  [
+   "turn: no legal p2 choice fits the log's actions",
+   1
+  ],
+  [
+   "replacement: the engine's position asks for Turn",
+   1
+  ]
+ ],
+ "limits": [
+  "games/gen9championsvgc2026regmc-2689048666.json: limit: memory > 4 GB",
+  "games/gen9championsvgc2026regmc-2689049007.json: limit: memory > 4 GB"
+ ],
+ "first_divergence_kinds": [
+  [
+   "faint",
+   7
+  ]
+ ],
+ "tiers": {
+  "1": 1723,
+  "2": 26
+ },
+ "truncated_decisions": 4,
+ "candidates": [
+  {
+   "id": "gen9championsvgc2026regmc-2689032994",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032994",
+   "ots": false,
+   "step": 10,
+   "turn": 9,
+   "kind": "turn",
+   "choices": [
+    "move leechlife 1, switch 3",
+    "move heatwave, move blizzard"
+   ],
+   "tier": 2,
+   "structural": [
+    "p1:Politoed faint engine false log true (engine hp 141/197, log 0%)"
+   ],
+   "hpDistance": 6,
+   "spFit": [
+    {
+     "ability": "Competitive",
+     "consistentDecisions": 10,
+     "evs": {
+      "atk": 0,
+      "def": 0,
+      "hp": 2,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+     },
+     "name": "Milotic",
+     "nature": "Serious",
+     "side": "p2"
+    }
+   ]
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689037834",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689037834",
+   "ots": false,
+   "step": 6,
+   "turn": 6,
+   "kind": "turn",
+   "choices": [
+    "move headsmash 1, move helpinghand -1",
+    "switch 4, switch 3"
+   ],
+   "tier": 2,
+   "structural": [
+    "p2:Primarina faint engine true log false (engine hp 0/157, log 47%)"
+   ],
+   "hpDistance": 31,
+   "spFit": [
+    {
+     "ability": "Torrent",
+     "consistentDecisions": 14,
+     "evs": {
+      "atk": 0,
+      "def": 0,
+      "hp": 2,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+     },
+     "name": "Primarina",
+     "nature": "Serious",
+     "side": "p2"
+    }
+   ]
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689038915",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038915",
+   "ots": false,
+   "step": 6,
+   "turn": 5,
+   "kind": "turn",
+   "choices": [
+    "move suckerpunch 2, move grassyglide 2",
+    "move moonblast 1, move rest"
+   ],
+   "tier": 2,
+   "structural": [
+    "p2:Charizard faint engine false log true (engine hp 185/185, log 0%)"
+   ],
+   "hpDistance": 0,
+   "spFit": [
+    {
+     "ability": "Inner Focus",
+     "consistentDecisions": 6,
+     "evs": {
+      "atk": 32,
+      "def": 0,
+      "hp": 2,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+     },
+     "name": "Dragonite",
+     "nature": "Serious",
+     "side": "p1"
+    },
+    {
+     "ability": "Blaze",
+     "consistentDecisions": 6,
+     "evs": {
+      "atk": 0,
+      "def": 32,
+      "hp": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+     },
+     "name": "Charizard",
+     "nature": "Serious",
+     "side": "p2"
+    },
+    {
+     "ability": "Grassy Surge",
+     "consistentDecisions": 6,
+     "evs": {
+      "atk": 0,
+      "def": 32,
+      "hp": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+     },
+     "name": "Rillaboom",
+     "nature": "Serious",
+     "side": "p1"
+    }
+   ]
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689041342",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689041342",
+   "ots": false,
+   "step": 7,
+   "turn": 6,
+   "kind": "turn",
+   "choices": [
+    "move spiritbreak 1, move electroshot 1",
+    "move moonblast 1, move protect"
+   ],
+   "tier": 2,
+   "structural": [
+    "p2:Whimsicott faint engine true log false (engine hp 0/167, log 2%)"
+   ],
+   "hpDistance": 1,
+   "spFit": [
+    {
+     "ability": "Prankster",
+     "consistentDecisions": 7,
+     "evs": {
+      "atk": 0,
+      "def": 17,
+      "hp": 32,
+      "spa": 0,
+      "spd": 17,
+      "spe": 0
+     },
+     "name": "Whimsicott",
+     "nature": "Serious",
+     "side": "p2"
+    },
+    {
+     "ability": "Intimidate",
+     "consistentDecisions": 7,
+     "evs": {
+      "atk": 32,
+      "def": 32,
+      "hp": 2,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+     },
+     "name": "Staraptor",
+     "nature": "Serious",
+     "side": "p2"
+    }
+   ]
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044769",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044769",
+   "ots": false,
+   "step": 10,
+   "turn": 7,
+   "kind": "turn",
+   "choices": [
+    "pass, move reflect",
+    "move dazzlinggleam, move fakeout 2"
+   ],
+   "tier": 2,
+   "structural": [
+    "p1:Grimmsnarl faint engine true log false (engine hp 0/202, log 10%)"
+   ],
+   "hpDistance": 0,
+   "spFit": [
+    {
+     "ability": "Cud Chew",
+     "consistentDecisions": 12,
+     "evs": {
+      "atk": 0,
+      "def": 17,
+      "hp": 32,
+      "spa": 0,
+      "spd": 17,
+      "spe": 0
+     },
+     "name": "Farigiraf",
+     "nature": "Serious",
+     "side": "p1"
+    }
+   ]
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689044888",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044888",
+   "ots": false,
+   "step": 1,
+   "turn": 2,
+   "kind": "turn",
+   "choices": [
+    "move protect, switch 3",
+    "move grassyglide 1, move suckerpunch 1"
+   ],
+   "tier": 2,
+   "structural": [
+    "p1:Charizard faint engine false log true (engine hp 126/155, log 0%)"
+   ],
+   "hpDistance": 0,
+   "spFit": [
+    {
+     "ability": "Blaze",
+     "consistentDecisions": 1,
+     "evs": {
+      "atk": 0,
+      "def": 0,
+      "hp": 2,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+     },
+     "name": "Charizard",
+     "nature": "Serious",
+     "side": "p1"
+    }
+   ]
+  },
+  {
+   "id": "gen9championsvgc2026regmc-2689051543",
+   "url": "https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689051543",
+   "ots": false,
+   "step": 4,
+   "turn": 4,
+   "kind": "turn",
+   "choices": [
+    "move protect, move raindance",
+    "move helpinghand -2, move expandingforce 2"
+   ],
+   "tier": 2,
+   "structural": [
+    "p1:Torkoal faint engine false log true (engine hp 177/177, log 0%)"
+   ],
+   "hpDistance": 0,
+   "spFit": [
+    {
+     "ability": "Armor Tail",
+     "consistentDecisions": 4,
+     "evs": {
+      "atk": 0,
+      "def": 0,
+      "hp": 2,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+     },
+     "name": "Farigiraf",
+     "nature": "Serious",
+     "side": "p1"
+    },
+    {
+     "ability": "Psychic Surge",
+     "consistentDecisions": 4,
+     "evs": {
+      "atk": 0,
+      "def": 17,
+      "hp": 32,
+      "spa": 0,
+      "spd": 17,
+      "spe": 0
+     },
+     "name": "Indeedee",
+     "nature": "Serious",
+     "side": "p2"
+    }
+   ]
+  }
+ ],
+ "parse_stops": [
+  [
+   "Ally Switch (|swap|)",
+   2
+  ],
+  [
+   "Illusion (|replace|)",
+   1
+  ],
+  [
+   "Illusion (one name in both slots)",
+   1
+  ],
+  [
+   "Transform",
+   1
+  ]
+ ],
+ "unknown_actions": 628,
+ "mid_switches": 85
+}

@@ -261,6 +261,10 @@
    {
     "name": "Armarouge",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flash Fire",
+     "Weak Armor"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -269,6 +273,7 @@
    {
     "name": "Drampa",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -277,6 +282,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -285,6 +291,7 @@
    {
     "name": "Meowscarada",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -295,6 +302,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -303,6 +314,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -311,6 +323,9 @@
    {
     "name": "Gholdengo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Good as Gold"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -319,6 +334,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,

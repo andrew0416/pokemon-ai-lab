@@ -257,6 +257,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -265,6 +266,7 @@
    {
     "name": "Pelipper",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -273,6 +275,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -287,6 +290,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -295,6 +302,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -303,6 +311,9 @@
    {
     "name": "Gholdengo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Good as Gold"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -311,6 +322,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

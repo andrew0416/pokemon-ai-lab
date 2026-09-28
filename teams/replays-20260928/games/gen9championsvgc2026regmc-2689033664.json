@@ -254,6 +254,10 @@
    {
     "name": "Baxcalibur",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Thermal Exchange",
+     "Ice Body"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -262,6 +266,7 @@
    {
     "name": "Ninetales",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -270,6 +275,10 @@
    {
     "name": "Armarouge",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flash Fire",
+     "Weak Armor"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -278,6 +287,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -288,6 +298,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -296,6 +307,11 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Stamina",
+     "Sturdy",
+     "Stalwart"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

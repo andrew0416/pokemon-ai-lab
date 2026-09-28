@@ -250,6 +250,11 @@
    {
     "name": "Reyna",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Keen Eye",
+     "Infiltrator",
+     "Competitive"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -258,6 +263,7 @@
    {
     "name": "Skye",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -266,6 +272,7 @@
    {
     "name": "Astra",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -274,6 +281,7 @@
    {
     "name": "Brimstone",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -284,6 +292,7 @@
    {
     "name": "Pyroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -292,6 +301,11 @@
    {
     "name": "Whimsicott",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Infiltrator",
+     "Chlorophyll"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -300,6 +314,10 @@
    {
     "name": "Primarina",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Liquid Voice"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

@@ -256,6 +256,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -264,6 +269,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -272,6 +278,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -280,6 +287,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -290,6 +300,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -298,6 +309,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -306,6 +321,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -314,6 +334,10 @@
    {
     "name": "Volcarona",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Swarm"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

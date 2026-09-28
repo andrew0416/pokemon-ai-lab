@@ -39,7 +39,7 @@
     "name": "Farigiraf",
     "species": "Farigiraf",
     "item": "Sitrus Berry",
-    "ability": "Cud Chew",
+    "ability": "Armor Tail",
     "gender": "F",
     "nature": "Serious",
     "evs": {
@@ -256,6 +256,10 @@
    {
     "name": "Blastoise",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Rain Dish"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -264,14 +268,16 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
-    "ability_shown": false,
+    "ability_shown": true,
     "moves_shown": 2
    },
    {
     "name": "Torkoal",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -280,6 +286,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -290,6 +297,9 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Surge Surfer"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -298,6 +308,7 @@
    {
     "name": "Gardevoir",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -306,6 +317,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

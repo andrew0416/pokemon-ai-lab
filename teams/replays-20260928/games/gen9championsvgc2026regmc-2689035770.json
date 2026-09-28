@@ -250,6 +250,11 @@
    {
     "name": "Golurk",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Iron Fist",
+     "Klutz",
+     "No Guard"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -258,6 +263,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -266,6 +276,10 @@
    {
     "name": "Sylveon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cute Charm",
+     "Pixilate"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -274,6 +288,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -284,6 +303,7 @@
    {
     "name": "Krookodile",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -292,6 +312,11 @@
    {
     "name": "Sableye",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Keen Eye",
+     "Stall",
+     "Prankster"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -300,6 +325,10 @@
    {
     "name": "Primarina",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Liquid Voice"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

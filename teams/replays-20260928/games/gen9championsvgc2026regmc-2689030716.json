@@ -259,6 +259,7 @@
    {
     "name": "Pelipper",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -267,6 +268,7 @@
    {
     "name": "Meowscarada",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -275,6 +277,11 @@
    {
     "name": "Overqwil",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Poison Point",
+     "Swift Swim",
+     "Intimidate"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -283,6 +290,7 @@
    {
     "name": "Dragonite",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -293,6 +301,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -301,6 +313,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -309,6 +322,9 @@
    {
     "name": "Aegislash",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Stance Change"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -317,6 +333,10 @@
    {
     "name": "Serperior",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Overgrow",
+     "Contrary"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

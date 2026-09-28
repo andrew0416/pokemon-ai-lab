@@ -97,6 +97,8 @@ class Mon:
         self.item = None  # None unknown, "" none/gone, else id
         self.orig_item = None
         self.item_changed = False
+        self.sleep = None  # index of the current sleep episode
+        self.sleep_attempts = 0
         self.item_inferred = False
         self.ability = None
         self.mega = False
@@ -141,6 +143,9 @@ class Game:
                 o["boosts"] = {k: v for k, v in sorted(m.boosts.items()) if v}
             if m.item is not None:
                 o["item"] = m.item
+            if not m.fainted and m.status == "slp" and m.sleep is not None:
+                # Filled in after the log is read: the sleep's remaining `statusTime`.
+                o["sleep"] = [m.sleep, m.sleep_attempts]
             mons.append(o)
         return {"mons": mons, "weather": self.weather, "terrain": self.terrain,
                 "pseudoWeather": sorted(self.pseudo),
@@ -204,6 +209,7 @@ def parse_game(rid, text):
     cur = None  # current decision being filled
     section = None  # "turn" | "replace"
     moved_this_turn = False
+    sleeps = []
     last_user = [None]
     last_target = [None]
     screens = {}
@@ -328,6 +334,8 @@ def parse_game(rid, text):
             elif cmd == "move":
                 who = ident(args[0])
                 m = g.mon(who)
+                if m and m.status == "slp" and m.sleep is not None and from_tag(args[3:]) is None:
+                    m.sleep_attempts += 1  # Sleep Talk / Snore
                 last_user[0] = m
                 t = ident(args[2]) if len(args) > 2 and args[2] else None
                 last_target[0] = g.mon(t) if t else None
@@ -349,6 +357,12 @@ def parse_game(rid, text):
                         t = ident(args[2]) if len(args) > 2 and args[2] else None
                         if t and t[1] is not None:
                             target = {"side": t[0], "slot": t[1]}
+                        elif t:
+                            # `p2: Name` ([notarget]): the target had fainted; its slot at the
+                            # start of the turn is the one chosen.
+                            starts = cur["start_active"][t[0]]
+                            if t[2] in starts:
+                                target = {"side": t[0], "slot": starts.index(t[2])}
                         if key in cur["encored"]:
                             # Champions Encore replaces the pending action: the printed move
                             # is the Encored one, not the one chosen.
@@ -357,6 +371,9 @@ def parse_game(rid, text):
                             cur["actions"][key] = {"kind": "move", "move": toid(move), "target": target,
                                                    "flags": [a for a in args[3:] if a]}
             elif cmd == "cant":
+                m = g.mon(ident(args[0]))
+                if m and m.status == "slp" and m.sleep is not None:
+                    m.sleep_attempts += 1
                 if section == "turn":
                     moved_this_turn = True
             elif cmd in ("-damage", "-heal", "-sethp"):
@@ -383,6 +400,9 @@ def parse_game(rid, text):
                 m = g.mon(ident(args[0]))
                 if m:
                     m.status = args[1]
+                    if args[1] == "slp":
+                        m.sleep, m.sleep_attempts = len(sleeps), 0
+                        sleeps.append(None)
                 tag = from_tag(args[2:])
                 if tag and tag.startswith("item:"):
                     reveal_item(m, tag[5:].strip(), "from")
@@ -391,7 +411,11 @@ def parse_game(rid, text):
             elif cmd == "-curestatus":
                 m = g.mon(ident(args[0]))
                 if m:
+                    if m.status == "slp" and m.sleep is not None and "[msg]" in args[2:]:
+                        # Woke up at a move attempt: the episode's startTime is known.
+                        sleeps[m.sleep] = m.sleep_attempts + 1
                     m.status = ""
+                    m.sleep = None
             elif cmd == "-cureteam":
                 side = ident(args[0])[0]
                 for (s, _), m in g.mons.items():
@@ -506,6 +530,7 @@ def parse_game(rid, text):
                 if m:
                     if "Trace" in tag:
                         reveal_ability(m, "Trace")
+                        reveal_ability(of_mon(g, args[2:]), args[1])  # what it copied
                     elif tag.startswith("ability:"):
                         pass
                     elif not tag:
@@ -523,6 +548,9 @@ def parse_game(rid, text):
                     if a.startswith("[from] ability: "):
                         holder = of_mon(g, args[1:]) or (g.mon(ident(args[0])) if ident(args[0]) else None)
                         reveal_ability(holder, a[16:])
+                        break
+                    if cmd == "-activate" and a == "move: Poltergeist" and len(args) > 2:
+                        reveal_item(g.mon(ident(args[0])) if ident(args[0]) else None, args[2], "poltergeist")
                         break
                     if a.startswith("item: ") and cmd in ("-activate", "-block", "-end", "-start"):
                         reveal_item(g.mon(ident(args[0])) if ident(args[0]) else None, a[6:], "activate")
@@ -584,6 +612,14 @@ def parse_game(rid, text):
     if stop:
         # Drop the decision the stop happened in and everything after it.
         decisions = [d for d in decisions if d["turn"] < stop["turn"]]
+    # Sleep: Champions draws startTime from [2, 3, 3] at the start and wakes the Pokémon at the
+    # move attempt that brings `time` to 0; an episode that ended in a wake-up tells its
+    # startTime, so every observation of it gets the remaining statusTime.
+    for obs in [start_obs] + [d["obs"] for d in decisions]:
+        for o in (obs or {}).get("mons", []):
+            ep = o.pop("sleep", None)
+            if ep is not None and sleeps[ep[0]] is not None:
+                o["statusTime"] = sleeps[ep[0]] - ep[1]
     return g, ots, decisions, start_obs, stop
 
 
@@ -670,7 +706,7 @@ def build_team(g, side, ots_sets):
             moves = [name_of("moves", x) for x in m.moves[:4]] or ["Protect"]
             # A filler for the turns it did not act (`unknown`): a priority-0 move whose
             # failure changes nothing, so its choice cannot jump ahead like Protect.
-            if len(moves) < 4 and "Rest" not in moves:
+            if len(moves) < 4 and "Rest" not in moves and "Last Resort" not in moves:
                 moves.append("Rest")
             item = name_of("items", m.orig_item) if m.orig_item else ""
             ability = name_of("abilities", m.ability) if m.ability else silent_ability(entry)
@@ -679,7 +715,9 @@ def build_team(g, side, ots_sets):
         sp = default_sp(base, m.move_cats)
         team.append({"name": n, "species": name_of("species", base), "item": item, "ability": ability,
                      "gender": m.gender, "nature": nature, "evs": sp, "ivs": IVS, "level": 50, "moves": moves})
-        prov.append({"name": n, "source": source, "item_shown": (m.orig_item is not None and not m.item_inferred) or bool(ots),
+        options = [] if (m.ability is not None or ots) else \
+            [x for _, x in sorted(entry.get("abilities", {}).items())]
+        prov.append({"name": n, "source": source, "abilityOptions": options, "item_shown": (m.orig_item is not None and not m.item_inferred) or bool(ots),
                      "item_inferred": f"{m.orig_item} (a screen, weather or terrain it set lasted past 5 turns)" if m.item_inferred else None,
                      "ability_shown": m.ability is not None or bool(ots), "moves_shown": len(m.moves)})
     # Unseen brought members: from the unseen preview species.

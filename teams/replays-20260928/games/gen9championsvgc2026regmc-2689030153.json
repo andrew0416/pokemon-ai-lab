@@ -252,6 +252,7 @@
    {
     "name": "Salamence",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -260,6 +261,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -268,6 +274,11 @@
    {
     "name": "Basculegion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Swift Swim",
+     "Adaptability",
+     "Mold Breaker"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -276,6 +287,10 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Overgrow",
+     "Grassy Surge"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -286,6 +301,7 @@
    {
     "name": "Staraptor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -294,6 +310,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -302,6 +322,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -310,6 +331,9 @@
    {
     "name": "Gholdengo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Good as Gold"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

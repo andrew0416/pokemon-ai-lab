@@ -254,6 +254,7 @@
    {
     "name": "Pincurchin",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -262,6 +263,10 @@
    {
     "name": "Talonflame",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Gale Wings"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -270,6 +275,11 @@
    {
     "name": "Toxtricity",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Punk Rock",
+     "Minus",
+     "Technician"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -278,6 +288,9 @@
    {
     "name": "Hydreigon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Levitate"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -288,6 +301,10 @@
    {
     "name": "Sylveon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cute Charm",
+     "Pixilate"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -296,6 +313,11 @@
    {
     "name": "Kingambit",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Defiant",
+     "Supreme Overlord",
+     "Pressure"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -304,6 +326,7 @@
    {
     "name": "Aerodactyl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -312,6 +335,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

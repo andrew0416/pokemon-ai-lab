@@ -516,6 +516,8 @@ struct Change {
     i: usize,
     evs: Value,
     nature: Value,
+    /// A different ability (the fit's ability trials), or `None` to keep the set's.
+    ability: Option<Value>,
 }
 
 /// The spreads the fit tries for a set: every preset with a neutral nature (or the open team
@@ -535,6 +537,7 @@ fn candidates(set: &Value, off: &str, ots: bool, pair: bool) -> Vec<Change> {
             i: 0,
             evs: preset_evs(set, off, PRESETS[p]),
             nature,
+            ability: None,
         });
     };
     let presets: &[usize] = if pair {
@@ -611,6 +614,24 @@ fn replay_game(file: &str, options: &Options) -> Result<String, String> {
             // frailer, with another involved one) only when no single change helps.
             let mut trials: Vec<Vec<Change>> = Vec::new();
             for &(side, i) in &involved {
+                // An ability the log never showed: the species' other abilities
+                // (`replay_parse.py` lists them in the provenance), with the current spread.
+                let key = if side == 0 { "p1" } else { "p2" };
+                for ability in game["provenance"][key][i]["abilityOptions"]
+                    .as_array()
+                    .into_iter()
+                    .flatten()
+                {
+                    if *ability != teams[side][i]["ability"] {
+                        trials.push(vec![Change {
+                            side,
+                            i,
+                            evs: teams[side][i]["evs"].clone(),
+                            nature: teams[side][i]["nature"].clone(),
+                            ability: Some(ability.clone()),
+                        }]);
+                    }
+                }
                 for c in candidates(&teams[side][i], offense[side][i], ots, false) {
                     trials.push(vec![Change { side, i, ..c }]);
                 }
@@ -651,11 +672,17 @@ fn replay_game(file: &str, options: &Options) -> Result<String, String> {
                 let mut changed = false;
                 for c in &trial {
                     let set = &mut team_trial[c.side][c.i];
-                    if set["evs"] != c.evs || set["nature"] != c.nature {
+                    if set["evs"] != c.evs
+                        || set["nature"] != c.nature
+                        || c.ability.as_ref().is_some_and(|a| *a != set["ability"])
+                    {
                         changed = true;
                     }
                     set["evs"] = c.evs.clone();
                     set["nature"] = c.nature.clone();
+                    if let Some(a) = &c.ability {
+                        set["ability"] = a.clone();
+                    }
                 }
                 if !changed {
                     continue;
@@ -681,11 +708,15 @@ fn replay_game(file: &str, options: &Options) -> Result<String, String> {
             for c in &trial {
                 teams[c.side][c.i]["evs"] = c.evs.clone();
                 teams[c.side][c.i]["nature"] = c.nature.clone();
+                if let Some(a) = &c.ability {
+                    teams[c.side][c.i]["ability"] = a.clone();
+                }
                 fit_log.push(json!({
                     "side": if c.side == 0 { "p1" } else { "p2" },
                     "name": teams[c.side][c.i]["name"],
                     "evs": c.evs,
                     "nature": c.nature,
+                    "ability": teams[c.side][c.i]["ability"],
                     "consistentDecisions": run.fit_key().0,
                 }));
             }
@@ -1097,6 +1128,14 @@ fn score(canonical: &Value, obs: &Value) -> (Vec<String>, i64) {
             diffs.push(format!(
                 "{label} status engine {c_status:?} log {o_status:?}"
             ));
+        }
+        if let (Some(want), true) = (o["statusTime"].as_i64(), c_status == "slp") {
+            let have = c["statusTime"].as_i64();
+            if have != Some(want) {
+                diffs.push(format!(
+                    "{label} sleep turns engine {have:?} log {want} (from its wake-up)"
+                ));
+            }
         }
         let c_slot = c["slot"].as_i64();
         let o_slot = o["slot"].as_i64();

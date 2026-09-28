@@ -253,6 +253,10 @@
    {
     "name": "Mista",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Sniper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -261,6 +265,7 @@
    {
     "name": "Ice Feam",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -269,6 +274,10 @@
    {
     "name": "BamBam",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Overgrow",
+     "Grassy Surge"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -283,6 +292,11 @@
    {
     "name": "Lucario",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Steadfast",
+     "Inner Focus",
+     "Justified"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -291,6 +305,7 @@
    {
     "name": "Pelipper",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -299,6 +314,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -307,6 +323,11 @@
    {
     "name": "Sableye",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Keen Eye",
+     "Stall",
+     "Prankster"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

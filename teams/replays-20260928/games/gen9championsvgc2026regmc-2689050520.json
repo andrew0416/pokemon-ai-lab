@@ -255,6 +255,11 @@
    {
     "name": "Pet Shop",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Limber",
+     "Unburden",
+     "Mold Breaker"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -263,6 +268,7 @@
    {
     "name": "Ice Feam",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -271,6 +277,10 @@
    {
     "name": "Silky",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Swarm"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -279,6 +289,10 @@
    {
     "name": "Mista",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Sniper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -289,6 +303,11 @@
    {
     "name": "No Priority 😡",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -297,6 +316,11 @@
    {
     "name": "This Guy",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Intimidate",
+     "Hustle",
+     "Guts"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -305,6 +329,10 @@
    {
     "name": "Crit Merchant",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Steadfast",
+     "Scrappy"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -313,6 +341,7 @@
    {
     "name": "Extra",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

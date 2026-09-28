@@ -192,7 +192,7 @@
     "name": "Pelipper",
     "species": "Pelipper",
     "item": "Sitrus Berry",
-    "ability": "Keen Eye",
+    "ability": "Drizzle",
     "gender": "M",
     "nature": "Serious",
     "evs": {
@@ -256,6 +256,11 @@
    {
     "name": "Thievul",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Run Away",
+     "Unburden",
+     "Stakeout"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -264,6 +269,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -272,6 +278,7 @@
    {
     "name": "Gardevoir",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -280,6 +287,9 @@
    {
     "name": "Gholdengo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Good as Gold"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -290,6 +300,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -298,6 +309,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -306,14 +320,16 @@
    {
     "name": "Pelipper",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
-    "ability_shown": false,
+    "ability_shown": true,
     "moves_shown": 0
    },
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

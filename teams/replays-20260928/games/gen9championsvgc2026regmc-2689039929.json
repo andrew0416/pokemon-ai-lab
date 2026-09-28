@@ -252,6 +252,10 @@
    {
     "name": "Typhlosion",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Frisk"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -260,6 +264,9 @@
    {
     "name": "Gholdengo",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Good as Gold"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -268,6 +275,11 @@
    {
     "name": "Whimsicott",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Infiltrator",
+     "Chlorophyll"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -282,6 +294,7 @@
    {
     "name": "Ninetales",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -290,6 +303,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -298,6 +312,11 @@
    {
     "name": "Kingambit",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Defiant",
+     "Supreme Overlord",
+     "Pressure"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

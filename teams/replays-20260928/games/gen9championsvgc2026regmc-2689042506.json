@@ -255,6 +255,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -263,6 +264,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -271,6 +273,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -279,6 +285,11 @@
    {
     "name": "Grimmsnarl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Prankster",
+     "Frisk",
+     "Pickpocket"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -289,6 +300,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -297,6 +309,7 @@
    {
     "name": "Staraptor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -305,6 +318,10 @@
    {
     "name": "Armarouge",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flash Fire",
+     "Weak Armor"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -313,6 +330,11 @@
    {
     "name": "Milotic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Marvel Scale",
+     "Competitive",
+     "Cute Charm"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

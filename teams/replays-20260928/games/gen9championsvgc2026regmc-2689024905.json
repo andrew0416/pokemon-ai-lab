@@ -263,6 +263,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -271,6 +272,7 @@
    {
     "name": "Aerodactyl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -279,6 +281,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -287,6 +290,10 @@
    {
     "name": "Ceruledge",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flash Fire",
+     "Weak Armor"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -297,6 +304,10 @@
    {
     "name": "Garchomp",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sand Veil",
+     "Rough Skin"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -305,6 +316,7 @@
    {
     "name": "Hippowdon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -313,6 +325,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -321,6 +334,10 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Overgrow",
+     "Grassy Surge"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

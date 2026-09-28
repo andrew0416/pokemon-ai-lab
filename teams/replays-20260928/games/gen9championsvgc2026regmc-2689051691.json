@@ -254,6 +254,10 @@
    {
     "name": "Talonflame",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Gale Wings"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -262,6 +266,7 @@
    {
     "name": "Ninetales",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -270,6 +275,10 @@
    {
     "name": "Espeon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Synchronize",
+     "Magic Bounce"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -278,6 +287,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -288,6 +298,10 @@
    {
     "name": "Silky",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flame Body",
+     "Swarm"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -296,6 +310,10 @@
    {
     "name": "Mista",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Sniper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -304,6 +322,11 @@
    {
     "name": "Ice Feam",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Ice Body",
+     "Snow Warning",
+     "Weak Armor"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -312,6 +335,11 @@
    {
     "name": "Pet Shop",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Limber",
+     "Unburden",
+     "Mold Breaker"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

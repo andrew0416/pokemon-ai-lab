@@ -261,6 +261,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -269,6 +270,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -277,6 +279,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -285,6 +291,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -295,6 +304,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -303,6 +316,11 @@
    {
     "name": "Arcanine",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Intimidate",
+     "Flash Fire",
+     "Rock Head"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -311,6 +329,7 @@
    {
     "name": "Milotic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -319,6 +338,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -890,7 +910,8 @@
       "boosts": {
        "def": 1
       },
-      "item": "leftovers"
+      "item": "leftovers",
+      "statusTime": 1
      },
      {
       "side": "p1",

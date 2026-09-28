@@ -263,6 +263,11 @@
    {
     "name": "Golurk",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Iron Fist",
+     "Klutz",
+     "No Guard"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -271,6 +276,11 @@
    {
     "name": "Malamar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Contrary",
+     "Suction Cups",
+     "Infiltrator"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -279,6 +289,7 @@
    {
     "name": "Arboliva",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": "terrainextender (a screen, weather or terrain it set lasted past 5 turns)",
     "ability_shown": true,
@@ -287,6 +298,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -297,6 +311,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -305,6 +320,9 @@
    {
     "name": "Gengar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cursed Body"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -313,6 +331,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -321,6 +344,7 @@
    {
     "name": "Corviknight",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

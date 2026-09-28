@@ -257,6 +257,7 @@
    {
     "name": "Milotic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -265,6 +266,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -273,6 +275,10 @@
    {
     "name": "Froslass",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Snow Cloak",
+     "Cursed Body"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -281,6 +287,7 @@
    {
     "name": "Rillaboom",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -291,6 +298,7 @@
    {
     "name": "Salamence",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -299,6 +307,7 @@
    {
     "name": "Corviknight",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -307,6 +316,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -315,6 +329,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -1002,7 +1017,8 @@
        "def": 3,
        "spd": 1
       },
-      "item": ""
+      "item": "",
+      "statusTime": 1
      },
      {
       "side": "p2",
@@ -1329,7 +1345,8 @@
        "accuracy": -1,
        "atk": -1
       },
-      "item": "salamencite"
+      "item": "salamencite",
+      "statusTime": 3
      },
      {
       "side": "p2",
@@ -1482,7 +1499,8 @@
        "accuracy": -2,
        "atk": -1
       },
-      "item": "salamencite"
+      "item": "salamencite",
+      "statusTime": 2
      },
      {
       "side": "p2",
@@ -1641,7 +1659,8 @@
        "accuracy": -3,
        "atk": -1
       },
-      "item": "salamencite"
+      "item": "salamencite",
+      "statusTime": 1
      },
      {
       "side": "p2",

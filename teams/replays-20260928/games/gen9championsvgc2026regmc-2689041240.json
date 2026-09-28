@@ -258,6 +258,11 @@
    {
     "name": "Dragapult",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Clear Body",
+     "Infiltrator",
+     "Cursed Body"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -266,6 +271,10 @@
    {
     "name": "Armarouge",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Flash Fire",
+     "Weak Armor"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -274,6 +283,7 @@
    {
     "name": "Milotic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -282,6 +292,7 @@
    {
     "name": "Staraptor",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -292,6 +303,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -300,6 +312,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -308,6 +325,7 @@
    {
     "name": "Kingambit",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -316,6 +334,7 @@
    {
     "name": "Salamence",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

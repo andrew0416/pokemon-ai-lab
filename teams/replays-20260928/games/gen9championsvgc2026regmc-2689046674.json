@@ -256,6 +256,10 @@
    {
     "name": "Venusaur",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Overgrow",
+     "Chlorophyll"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -264,6 +268,11 @@
    {
     "name": "Annihilape",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Vital Spirit",
+     "Inner Focus",
+     "Defiant"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -272,6 +281,11 @@
    {
     "name": "Salt",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Purifying Salt",
+     "Sturdy",
+     "Clear Body"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -286,6 +300,7 @@
    {
     "name": "Garchomp",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -294,6 +309,10 @@
    {
     "name": "Sylveon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cute Charm",
+     "Pixilate"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -302,6 +321,7 @@
    {
     "name": "Aerodactyl",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -310,6 +330,10 @@
    {
     "name": "Charizard",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Blaze",
+     "Solar Power"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,

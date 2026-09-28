@@ -258,6 +258,10 @@
    {
     "name": "Garchomp",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sand Veil",
+     "Rough Skin"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -266,6 +270,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -274,6 +283,10 @@
    {
     "name": "Meganium",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Overgrow",
+     "Leaf Guard"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -282,6 +295,11 @@
    {
     "name": "Kingambit",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Defiant",
+     "Supreme Overlord",
+     "Pressure"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -292,6 +310,7 @@
    {
     "name": "Politoed",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -300,6 +319,7 @@
    {
     "name": "Archaludon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -308,6 +328,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -316,6 +341,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

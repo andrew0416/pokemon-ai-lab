@@ -254,6 +254,11 @@
    {
     "name": "Pet Shop",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Limber",
+     "Unburden",
+     "Mold Breaker"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -262,6 +267,7 @@
    {
     "name": "Ice Feam",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -270,6 +276,7 @@
    {
     "name": "BamBam",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -278,6 +285,10 @@
    {
     "name": "Mista",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Torrent",
+     "Sniper"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -288,6 +299,10 @@
    {
     "name": "Sylveon",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cute Charm",
+     "Pixilate"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -296,6 +311,7 @@
    {
     "name": "Incineroar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -304,6 +320,7 @@
    {
     "name": "Absol",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,
@@ -312,6 +329,11 @@
    {
     "name": "Milotic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Marvel Scale",
+     "Competitive",
+     "Cute Charm"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,

@@ -251,6 +251,10 @@
    {
     "name": "Pikachu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -259,6 +263,11 @@
    {
     "name": "Pawmot",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Volt Absorb",
+     "Natural Cure",
+     "Iron Fist"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -267,6 +276,9 @@
    {
     "name": "Morpeko",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Hunger Switch"
+    ],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": false,
@@ -275,6 +287,10 @@
    {
     "name": "Raichu",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Static",
+     "Lightning Rod"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -285,6 +301,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -293,6 +310,9 @@
    {
     "name": "Gengar",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cursed Body"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -301,6 +321,7 @@
    {
     "name": "Corviknight",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": true,

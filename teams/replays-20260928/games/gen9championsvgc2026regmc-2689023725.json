@@ -257,6 +257,11 @@
    {
     "name": "Farigiraf",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Cud Chew",
+     "Armor Tail",
+     "Sap Sipper"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -265,6 +270,7 @@
    {
     "name": "Pelipper",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -273,6 +279,9 @@
    {
     "name": "Golisopod",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Emergency Exit"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -281,6 +290,10 @@
    {
     "name": "Garchomp",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Sand Veil",
+     "Rough Skin"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -291,6 +304,7 @@
    {
     "name": "Indeedee",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [],
     "item_shown": false,
     "item_inferred": null,
     "ability_shown": true,
@@ -299,6 +313,11 @@
    {
     "name": "Milotic",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Marvel Scale",
+     "Competitive",
+     "Cute Charm"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -307,6 +326,11 @@
    {
     "name": "Sneasler",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Pressure",
+     "Unburden",
+     "Poison Touch"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -315,6 +339,11 @@
    {
     "name": "Mamoswine",
     "source": "log (moves used, item/ability shown; rest assumed)",
+    "abilityOptions": [
+     "Oblivious",
+     "Snow Cloak",
+     "Thick Fat"
+    ],
     "item_shown": true,
     "item_inferred": null,
     "ability_shown": false,
@@ -557,7 +586,8 @@
       "hint": "",
       "status": "slp",
       "slot": 0,
-      "boosts": {}
+      "boosts": {},
+      "statusTime": 3
      },
      {
       "side": "p1",
@@ -675,7 +705,8 @@
       "status": "slp",
       "slot": 0,
       "boosts": {},
-      "item": "golisopite"
+      "item": "golisopite",
+      "statusTime": 2
      },
      {
       "side": "p1",
@@ -787,7 +818,8 @@
       "status": "slp",
       "slot": 0,
       "boosts": {},
-      "item": "golisopite"
+      "item": "golisopite",
+      "statusTime": 1
      },
      {
       "side": "p1",
@@ -880,7 +912,8 @@
       "status": "slp",
       "slot": 0,
       "boosts": {},
-      "item": "golisopite"
+      "item": "golisopite",
+      "statusTime": 1
      },
      {
       "side": "p1",
@@ -1386,7 +1419,8 @@
       "hint": "",
       "status": "slp",
       "slot": 0,
-      "boosts": {}
+      "boosts": {},
+      "statusTime": 2
      },
      {
       "side": "p1",
@@ -1540,7 +1574,8 @@
       "hint": "",
       "status": "slp",
       "slot": 0,
-      "boosts": {}
+      "boosts": {},
+      "statusTime": 1
      },
      {
       "side": "p1",
@@ -1668,7 +1703,8 @@
       "hint": "",
       "status": "slp",
       "slot": 0,
-      "boosts": {}
+      "boosts": {},
+      "statusTime": 1
      },
      {
       "side": "p1",
