@@ -168,6 +168,7 @@ fn rollout_games_are_deterministic() {
         max_turns: 5,
         policy: Policy::Nash,
         beam: 2,
+        deep_rest: None,
         master_seed: 11,
         lazy: false,
     };

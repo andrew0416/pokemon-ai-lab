@@ -24,7 +24,10 @@
 //! - `rollout` (feature `scenario`): self-play under an equilibrium policy — `lab-rollout`'s
 //!   logic (board PY3a: the binaries only parse arguments and print).
 //!
-//! - [`tt`]: the transposition table of child equilibria (depth 2).
+//! - `api` (feature `scenario`): every search mode as a JSON report with choice strings (the
+//!   Python API's search methods, board PY3b).
+//! - [`tt`]: the transposition tables of child equilibria (depth 2) and deep children (depth
+//!   3 and beyond, [`Solver::analyse_deep_mixed_levels`]).
 //!
 //! Speed (board S24, `engine/scripts/search_bench.py`): payoff matrices and the children of
 //! depth-2 analyses run on a rayon pool (`Config::threads`, results independent of the
@@ -33,6 +36,8 @@
 //!
 //! Not here yet: plan conditions, the spread-grid tables.
 
+#[cfg(feature = "scenario")]
+pub mod api;
 pub mod choice;
 pub mod game;
 #[cfg(feature = "scenario")]

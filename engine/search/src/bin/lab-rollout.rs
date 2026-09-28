@@ -7,7 +7,7 @@
 //! 용도와 정보 모델", AGENTS.md "대전과 비교 방법").
 //!
 //! Usage: lab-rollout <scenario.json> [--games n] [--seed s] [--threads k] [--max-turns t]
-//!                    [--policy nash|deep-nash [--beam b] [--outcomes k]]
+//!                    [--policy nash|deep-nash [--beam b[,b2]] [--outcomes k[,k2]]]
 //!                    [--rolls median|extremes|quartiles|full|pessimistic]
 //!                    [--eval material|heuristic|file:<weights.json>]
 //!                    [--setup-rolls full|median|extremes|quartiles] [--position i]
@@ -20,7 +20,8 @@
 //! depth-2 mixed equilibrium instead (`Solver::analyse_deep_mixed`: both sides' `--beam` best
 //! choices plus their shallow supports, children worth their next-turn equilibrium over the
 //! `--outcomes` most probable outcomes) — much slower per decision, less bound to the
-//! evaluator's one-turn view. Game `g` of seed `s` is deterministic
+//! evaluator's one-turn view. Two entries (`--beam 3,2 --outcomes 2,1`) make it depth 3 (S24c):
+//! the children are depth-2 analyses with the second level's beam and cap. Game `g` of seed `s` is deterministic
 //! given the engine, the evaluator and the policy. A game the solver cannot value (an effect the
 //! engine does not implement) is aborted, a game still going after `--max-turns` turns is a
 //! cutoff; both are reported outside the win tally (AGENTS.md: 중단 경기는 승패 집계에서 제외).
@@ -45,7 +46,7 @@ use lab_search::model::{load_evaluator, side_name};
 use lab_search::rollout::{
     run_games, team_files, wilson, winner_label, Ending, Policy, RolloutSettings,
 };
-use lab_search::Config;
+use lab_search::{Config, DeepLevel};
 
 fn main() -> ExitCode {
     match run() {
@@ -74,6 +75,8 @@ fn run() -> Result<(), String> {
     let mut out: Option<String> = None;
     let mut quiet = false;
     let mut lazy = false;
+    let mut rest_beam: Option<usize> = None;
+    let mut rest_outcomes: Option<usize> = None;
     let mut i = 0;
     while i < args.len() {
         match args[i].as_str() {
@@ -111,11 +114,21 @@ fn run() -> Result<(), String> {
             }
             "--beam" => {
                 i += 1;
-                beam = parse(&args, i, "--beam")?;
+                let list = parse_list(&args, i, "--beam")?;
+                beam = list[0];
+                rest_beam = list.get(1).copied();
+                if list.len() > 2 {
+                    return Err("--beam takes at most two levels (depth 3)".into());
+                }
             }
             "--outcomes" => {
                 i += 1;
-                outcomes = Some(parse(&args, i, "--outcomes")?);
+                let list = parse_list(&args, i, "--outcomes")?;
+                outcomes = Some(list[0]);
+                rest_outcomes = list.get(1).copied();
+                if list.len() > 2 {
+                    return Err("--outcomes takes at most two levels (depth 3)".into());
+                }
             }
             "--setup-rolls" => {
                 i += 1;
@@ -178,10 +191,23 @@ fn run() -> Result<(), String> {
     config.rolls = rolls;
     config.threads = if game_threads == 1 { 0 } else { 1 };
     config.outcome_cap = outcomes;
+    // `--beam a,b` / `--outcomes a,b`: depth 3 (S24c), the second entry the children's level
+    // (a missing one repeats the first).
+    let deep_rest = (rest_beam.is_some() || rest_outcomes.is_some()).then(|| DeepLevel {
+        beam: rest_beam.unwrap_or(beam),
+        outcomes: rest_outcomes.or(outcomes),
+    });
+    let deep_depth = if deep_rest.is_some() { 3 } else { 2 };
     let policy_text = match policy {
         Policy::Nash if lazy => "nash depth 1 (double oracle)".to_owned(),
         Policy::Nash => "nash depth 1".to_owned(),
-        Policy::DeepNash => format!("deep-nash beam {beam} outcomes {outcomes:?}"),
+        Policy::DeepNash => match deep_rest {
+            Some(rest) => format!(
+                "deep-nash depth 3 beams {beam},{} outcomes {outcomes:?},{:?}",
+                rest.beam, rest.outcomes
+            ),
+            None => format!("deep-nash beam {beam} outcomes {outcomes:?}"),
+        },
     };
 
     let teams = team_files(&scenario)?;
@@ -203,6 +229,7 @@ fn run() -> Result<(), String> {
         max_turns,
         policy,
         beam,
+        deep_rest,
         master_seed: seed,
         lazy,
     };
@@ -298,7 +325,7 @@ fn run() -> Result<(), String> {
             "teams": teams.iter().map(|(side, path, hash)| json!({"side": side, "file": path, "fnv1a64": format!("{hash:016x}")})).collect::<Vec<_>>(),
             "games": games,
             "seed": seed,
-            "policy": {"solve": match policy { Policy::Nash => "nash", Policy::DeepNash => "deep-nash" }, "depth": match policy { Policy::Nash => 1, Policy::DeepNash => 2 }, "beam": match policy { Policy::Nash => Value::Null, Policy::DeepNash => json!(beam) }, "outcomes": outcomes, "rolls": format!("{rolls:?}"), "eval": eval, "chance_in_play": "exact (sample_turn)"},
+            "policy": {"solve": match policy { Policy::Nash => "nash", Policy::DeepNash => "deep-nash" }, "depth": match policy { Policy::Nash => 1, Policy::DeepNash => deep_depth }, "beam": match policy { Policy::Nash => Value::Null, Policy::DeepNash => json!(beam) }, "outcomes": outcomes, "children_level": match (policy, deep_rest) { (Policy::DeepNash, Some(rest)) => json!({"beam": rest.beam, "outcomes": rest.outcomes}), _ => Value::Null }, "rolls": format!("{rolls:?}"), "eval": eval, "chance_in_play": "exact (sample_turn)"},
             "max_turns": max_turns,
             "initial_states": positions.len(),
             "tally": {"p1": p1, "p2": p2, "tie": ties, "cutoff": cutoffs, "aborted": aborted, "decided": decided},
@@ -328,6 +355,18 @@ fn run() -> Result<(), String> {
         println!("written {path}");
     }
     Ok(())
+}
+
+/// A number or two, comma-separated (`3` or `3,2`).
+fn parse_list(args: &[String], i: usize, flag: &str) -> Result<Vec<usize>, String> {
+    args.get(i)
+        .and_then(|s| {
+            s.split(',')
+                .map(|x| x.trim().parse().ok())
+                .collect::<Option<Vec<usize>>>()
+        })
+        .filter(|l| !l.is_empty())
+        .ok_or_else(|| format!("{flag} needs a number or a list a,b"))
 }
 
 fn parse<T: std::str::FromStr>(args: &[String], i: usize, flag: &str) -> Result<T, String> {

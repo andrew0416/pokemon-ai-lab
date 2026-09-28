@@ -1,6 +1,6 @@
 //! Self-play rollouts under an equilibrium policy (the library side of `lab-rollout`, board
 //! PY3a): at every decision both sides draw their choice from the matrix-game equilibrium
-//! (one-turn [`Policy::Nash`] or depth-2 [`Policy::DeepNash`], opponent model ①, the same
+//! (one-turn [`Policy::Nash`] or depth-2/3 [`Policy::DeepNash`], opponent model ①, the same
 //! evaluator on both sides), the turn is played once with exact chance (`sample_turn`), and
 //! the game runs to its end. Game `g` of seed `s` is deterministic given the engine, the
 //! evaluator and the policy. The policy's strategies are cached across games by position
@@ -21,7 +21,7 @@ use lab_scenario::{advance_order, LoadedScenario, PartyOrder, Position};
 
 use crate::model::side_name;
 use crate::nash::Equilibrium;
-use crate::solve::{Config, SearchError, Solver};
+use crate::solve::{Config, DeepLevel, SearchError, Solver};
 use crate::{format_choice, Choice, Decision};
 
 /// Both sides' mixed strategies at one decision, as the policy produced them.
@@ -173,6 +173,9 @@ pub struct RolloutSettings {
     pub policy: Policy,
     /// [`Policy::DeepNash`]'s beam.
     pub beam: usize,
+    /// [`Policy::DeepNash`] at depth 3 (board S24c): the children's own level (beam and
+    /// outcome cap); `None` is depth 2.
+    pub deep_rest: Option<DeepLevel>,
     pub master_seed: u64,
     /// [`Policy::Nash`] by double oracle ([`Solver::analyse_mixed_lazy`]): the same policy
     /// within the equilibrium solver's tolerance from a fraction of the pairs.
@@ -239,13 +242,20 @@ pub fn play_game<E: Evaluator<2> + ?Sized + Sync>(
                                 equilibrium: m.equilibrium,
                             })
                     }
-                    Policy::DeepNash => solver
-                        .analyse_deep_mixed(&mut state, suspension.as_ref(), settings.beam)
-                        .map(|d| Strategies {
-                            ours: d.ours,
-                            theirs: d.theirs,
-                            equilibrium: d.equilibrium,
-                        }),
+                    Policy::DeepNash => {
+                        let mut levels = vec![DeepLevel {
+                            beam: settings.beam,
+                            outcomes: config.outcome_cap,
+                        }];
+                        levels.extend(settings.deep_rest);
+                        solver
+                            .analyse_deep_mixed_levels(&mut state, suspension.as_ref(), &levels)
+                            .map(|d| Strategies {
+                                ours: d.ours,
+                                theirs: d.theirs,
+                                equilibrium: d.equilibrium,
+                            })
+                    }
                 };
                 if let Ok(s) = &solved {
                     cache.put(key, s.clone());

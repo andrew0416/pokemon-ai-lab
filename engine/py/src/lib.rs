@@ -19,13 +19,18 @@ use pyo3::prelude::*;
 use ::lab_engine::eval::{Heuristic, FEATURE_COUNT, FEATURE_NAMES};
 use ::lab_engine::state::{BattleResult, SideId};
 use ::lab_engine::turn::EnumerateOptions;
-use lab_scenario::{load_scenario_file, load_scenario_str, LoadError, LoadedScenario};
+use lab_scenario::canonical::format_ruleset;
+use lab_scenario::{
+    load_scenario_file, load_scenario_str, scenario_positions_with, LoadError, LoadedScenario,
+};
+use lab_search::api::{self, BeliefRequest};
 use lab_search::nash::{self as rm, Matrix};
 use lab_search::node::{
     decision_name, parse_pruning, parse_rolls, scenario_nodes, weights_by_name, NashTurn as RsNash,
     Node, NodeError,
 };
-use lab_search::Config;
+use lab_search::rollout::{Policy, RolloutSettings};
+use lab_search::{Chance, Config, DeepLevel};
 
 create_exception!(
     lab_engine,
@@ -123,6 +128,128 @@ fn side_name(side: SideId) -> &'static str {
     }
 }
 
+/// A JSON report (`lab_search::api`) as Python objects (dicts, lists, floats, strings, `None`)
+/// through the standard `json` module, so the result is exactly what `json.dumps` writes back.
+fn json_to_py<'py>(py: Python<'py>, value: &serde_json::Value) -> PyResult<Bound<'py, PyAny>> {
+    let text =
+        serde_json::to_string(value).map_err(|e| PyValueError::new_err(format!("report: {e}")))?;
+    py.import("json")?.call_method1("loads", (text,))
+}
+
+/// Runs `$body` with `$e` bound to the evaluator: the heuristic, or `Weighted` when weights
+/// were given.
+macro_rules! with_evaluator {
+    ($weights:expr, $e:ident => $body:expr) => {
+        match $weights {
+            Some(weights) => {
+                let $e = &::lab_engine::eval::Weighted { weights };
+                $body
+            }
+            None => {
+                let $e = &Heuristic;
+                $body
+            }
+        }
+    };
+}
+
+/// A count or one count per deep level (`4` or `[4, 3]`).
+#[derive(FromPyObject)]
+enum CountArg {
+    One(usize),
+    Many(Vec<usize>),
+}
+
+impl CountArg {
+    fn list(&self) -> Vec<usize> {
+        match self {
+            CountArg::One(n) => vec![*n],
+            CountArg::Many(v) => v.clone(),
+        }
+    }
+}
+
+/// A plan: one string with turns separated by `/`, or a list of per-turn strings.
+#[derive(FromPyObject)]
+enum PlanArg {
+    Text(String),
+    Turns(Vec<String>),
+}
+
+/// A start position: an index or `"max"` (the most probable).
+#[derive(FromPyObject)]
+enum PositionArg {
+    Index(usize),
+    Name(String),
+}
+
+/// The deep levels from `beam` and `outcomes` (`None`: every outcome at every level): one per
+/// entry of the longer list, the shorter repeating its last entry (as `lab-plan --beam 4,3
+/// --outcomes 4,2`).
+fn deep_levels(beam: &CountArg, outcomes: Option<&CountArg>) -> PyResult<Vec<DeepLevel>> {
+    let beams = beam.list();
+    let caps = outcomes.map(CountArg::list).unwrap_or_default();
+    if beams.is_empty() || (outcomes.is_some() && caps.is_empty()) {
+        return Err(PyValueError::new_err("beam / outcomes: at least one entry"));
+    }
+    let n = beams.len().max(caps.len());
+    Ok((0..n)
+        .map(|i| DeepLevel {
+            beam: *beams.get(i).or(beams.last()).expect("non-empty"),
+            outcomes: caps.get(i).or(caps.last()).copied(),
+        })
+        .collect())
+}
+
+/// The search keyword arguments every search method takes.
+struct SearchArgs {
+    us: SideId,
+    rolls: String,
+    depth: u32,
+    chance: Chance,
+    pruning: String,
+    threads: usize,
+}
+
+impl SearchArgs {
+    fn new(
+        side: SideArg,
+        rolls: &str,
+        depth: u32,
+        chance: &str,
+        pruning: &str,
+        threads: usize,
+    ) -> PyResult<SearchArgs> {
+        let chance = match chance {
+            "expect" => Chance::Expect,
+            "worst" => Chance::Worst,
+            other => {
+                return Err(PyValueError::new_err(format!(
+                    "chance {other:?}: \"expect\" (average) or \"worst\" (every roll)"
+                )))
+            }
+        };
+        Ok(SearchArgs {
+            us: side.side()?,
+            rolls: rolls.to_owned(),
+            depth: depth.max(1),
+            chance,
+            pruning: pruning.to_owned(),
+            threads,
+        })
+    }
+
+    fn config(&self, ruleset: ::lab_engine::rules::Ruleset) -> PyResult<Config> {
+        let mut config = Config::new(ruleset, self.us);
+        config.rolls = parse_rolls(&self.rolls, Some(self.us)).map_err(py_err)?;
+        config.pruning = parse_pruning(&self.pruning).map_err(py_err)?;
+        config.depth = self.depth;
+        config.chance = self.chance;
+        config.threads = self.threads;
+        Ok(config)
+    }
+}
+
 /// A position of any supported format (doubles today).
 #[derive(Clone)]
 enum AnyNode {
@@ -179,17 +306,23 @@ fn load_scenario(
     base_dir: Option<PathBuf>,
 ) -> PyResult<Scenario> {
     check_format(format)?;
-    let loaded = match source.extract::<String>() {
+    let (loaded, path) = match source.extract::<String>() {
         Ok(text) if looks_like_json(&text) => {
             let base = base_dir.unwrap_or_else(|| PathBuf::from("."));
-            load_scenario_str(&text, &base)
+            (load_scenario_str(&text, &base), None)
         }
-        Ok(path) => load_scenario_file(path),
-        Err(_) => load_scenario_file(source.extract::<PathBuf>()?),
-    }
-    .map_err(load_err)?;
+        Ok(path) => (load_scenario_file(&path), Some(path)),
+        Err(_) => {
+            let path = source.extract::<PathBuf>()?;
+            (
+                load_scenario_file(&path),
+                Some(path.to_string_lossy().into_owned()),
+            )
+        }
+    };
     Ok(Scenario {
-        loaded: Arc::new(loaded),
+        loaded: Arc::new(loaded.map_err(load_err)?),
+        path,
     })
 }
 
@@ -235,6 +368,14 @@ fn nash(
 #[pyclass(frozen, module = "lab_engine")]
 struct Scenario {
     loaded: Arc<LoadedScenario>,
+    /// The file it was loaded from (`None` for JSON text): the believed-team analyses edit it.
+    path: Option<String>,
+}
+
+impl Scenario {
+    fn ruleset(&self) -> PyResult<::lab_engine::rules::Ruleset> {
+        format_ruleset(&self.loaded.meta.format).map_err(|e| PyValueError::new_err(e.to_string()))
+    }
 }
 
 #[pymethods]
@@ -317,6 +458,166 @@ impl Scenario {
             .into_iter()
             .map(|(p, node)| (p, Position { node: node.into() }))
             .collect())
+    }
+
+    /// Opponent models ② and ③ (`lab-plan --believed-team ... --observed-turn ...`), from
+    /// `side`'s point of view. `believed_teams`: team files the opponent may believe we have
+    /// (our side's team in the scenario replaced), weighted by `believed_weights` (default
+    /// uniform); their equilibrium strategies mixed by weight are answered on the real
+    /// position (`responses`, `best_response`, `real_equilibrium`). `observed`: what the
+    /// opponent saw of our side after setup turns, `{turn: "Name:pct,Name:pct"}` (a fainted
+    /// Pokémon is 0), within `observed_tolerance` points; each belief's weight is multiplied
+    /// by the observations' likelihood under its own replay (`teams`: `prior`, `posterior`).
+    /// Without believed teams the result is the matrix game over the positions the
+    /// observations cannot tell apart. Needs a scenario loaded from a file.
+    #[pyo3(signature = (side = SideArg::Index(0), believed_teams = Vec::new(), believed_weights = None, observed = None, observed_tolerance = 1.0, setup_rolls = "full", lenient = false, position = None, rolls = "median", depth = 1, chance = "expect", pruning = "sensible", threads = 0, weights = None))]
+    #[allow(clippy::too_many_arguments)]
+    fn believed<'py>(
+        &self,
+        py: Python<'py>,
+        side: SideArg,
+        believed_teams: Vec<PathBuf>,
+        believed_weights: Option<Vec<f32>>,
+        observed: Option<HashMap<usize, String>>,
+        observed_tolerance: f32,
+        setup_rolls: &str,
+        lenient: bool,
+        position: Option<PositionArg>,
+        rolls: &str,
+        depth: u32,
+        chance: &str,
+        pruning: &str,
+        threads: usize,
+        weights: Option<WeightsArg>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let path = self.path.clone().ok_or_else(|| {
+            PyValueError::new_err(
+                "believed / observed analyses need a scenario loaded from a file (the believed teams replace a team file in it)",
+            )
+        })?;
+        let settings = SearchArgs::new(side, rolls, depth, chance, pruning, threads)?;
+        let w = self::weights(weights)?;
+        let ruleset = self.ruleset()?;
+        let config = settings.config(ruleset)?;
+        let mut observations: Vec<(usize, String)> =
+            observed.unwrap_or_default().into_iter().collect();
+        observations.sort();
+        let (index, most_probable) = match position {
+            None => (None, false),
+            Some(PositionArg::Index(i)) => (Some(i), false),
+            Some(PositionArg::Name(n)) if n == "max" => (None, true),
+            Some(PositionArg::Name(n)) => {
+                return Err(PyValueError::new_err(format!(
+                    "position {n:?}: an index or \"max\""
+                )))
+            }
+        };
+        let request = BeliefRequest {
+            scenario: path,
+            believed_teams: believed_teams
+                .iter()
+                .map(|p| p.to_string_lossy().into_owned())
+                .collect(),
+            believed_weights: believed_weights.unwrap_or_default(),
+            observations,
+            tolerance: observed_tolerance,
+            setup: EnumerateOptions {
+                rolls: parse_rolls(setup_rolls, None).map_err(py_err)?,
+            },
+            lenient,
+            position: index,
+            most_probable,
+        };
+        let report = py.detach(|| with_evaluator!(w, e => api::believed(&request, config, e)));
+        json_to_py(py, &report.map_err(PyValueError::new_err)?)
+    }
+
+    /// Self-play (`lab-rollout`): `games` games from the scenario's positions (drawn by
+    /// probability; `position` fixes one), both sides drawing their choices from the
+    /// equilibrium of `policy` (`"nash"`: one turn, `lazy=True` by double oracle;
+    /// `"deep-nash"`: depth 2 with `beam` / `outcomes`, depth 3 when they are two-entry lists),
+    /// solved with `rolls`; the games themselves run with exact chance, `game_threads` at once
+    /// (each solving on `threads`, 0 = all cores). Game `g` of `seed` is deterministic. The
+    /// dict has the `tally` (cut-off and aborted games outside it), `p1_score` (ties half),
+    /// `wilson95` and every game's record. A policy's result, not a strength verdict.
+    #[pyo3(signature = (games = 10, seed = 1, policy = "nash", beam = CountArg::One(3), outcomes = Some(CountArg::One(2)), rolls = "median", max_turns = 30, game_threads = 1, threads = 0, lazy = false, position = None, setup_rolls = "full", weights = None))]
+    #[allow(clippy::too_many_arguments)]
+    fn rollout<'py>(
+        &self,
+        py: Python<'py>,
+        games: usize,
+        seed: u64,
+        policy: &str,
+        beam: CountArg,
+        outcomes: Option<CountArg>,
+        rolls: &str,
+        max_turns: u16,
+        game_threads: usize,
+        threads: usize,
+        lazy: bool,
+        position: Option<usize>,
+        setup_rolls: &str,
+        weights: Option<WeightsArg>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let w = self::weights(weights)?;
+        let policy = match policy {
+            "nash" => Policy::Nash,
+            "deep-nash" => Policy::DeepNash,
+            other => {
+                return Err(PyValueError::new_err(format!(
+                    "policy {other:?}: \"nash\" or \"deep-nash\""
+                )))
+            }
+        };
+        let levels = deep_levels(&beam, outcomes.as_ref())?;
+        if levels.len() > 2 {
+            return Err(PyValueError::new_err(
+                "rollouts take at most two deep levels (depth 3)",
+            ));
+        }
+        let mut config = Config::new(self.ruleset()?, SideId::One);
+        config.rolls = parse_rolls(rolls, Some(SideId::One)).map_err(py_err)?;
+        config.threads = threads;
+        config.outcome_cap = levels[0].outcomes;
+        let settings = RolloutSettings {
+            config,
+            max_turns,
+            policy,
+            beam: levels[0].beam,
+            deep_rest: levels.get(1).copied(),
+            master_seed: seed,
+            lazy,
+        };
+        let setup = EnumerateOptions {
+            rolls: parse_rolls(setup_rolls, None).map_err(py_err)?,
+        };
+        let loaded = Arc::clone(&self.loaded);
+        let path = self.path.clone();
+        let report = py.detach(|| -> Result<serde_json::Value, String> {
+            let mut positions =
+                scenario_positions_with(&loaded, setup).map_err(|e| e.to_string())?;
+            if let Some(i) = position {
+                let n = positions.len();
+                let chosen = positions
+                    .into_iter()
+                    .nth(i)
+                    .ok_or_else(|| format!("position {i}: only {n} initial states"))?;
+                positions = vec![lab_scenario::Position {
+                    probability: 1.0,
+                    ..chosen
+                }];
+            }
+            with_evaluator!(w, e => api::rollout(
+                &loaded,
+                path.as_deref(),
+                &positions,
+                &settings,
+                e,
+                games,
+                game_threads,
+            ))
+        });
+        json_to_py(py, &report.map_err(PyValueError::new_err)?)
     }
 
     fn __repr__(&self) -> String {
@@ -537,6 +838,169 @@ impl Position {
                 None => n.nash_turn(config, &Heuristic),
             });
             Ok(NashTurn::new(result.map_err(py_err)?, us))
+        })
+    }
+
+    /// Depth-limited maximin (`lab-plan --solve maximin`): every one of `side`'s choices with
+    /// its value against the reply that hurts it most, `depth` turns deep. A dict (JSON-ready):
+    /// `lines` (`ours`, `value`, `exact`: false for an upper bound after a cutoff unless
+    /// `exact=True`, `reply`), `value`, counters, `unsupported`, `stats`, `config`.
+    #[pyo3(signature = (side = SideArg::Index(0), rolls = "median", depth = 1, chance = "expect", pruning = "sensible", threads = 0, weights = None, exact = false, max_turns = None))]
+    #[allow(clippy::too_many_arguments)] // Python keyword arguments
+    fn maximin<'py>(
+        &self,
+        py: Python<'py>,
+        side: SideArg,
+        rolls: &str,
+        depth: u32,
+        chance: &str,
+        pruning: &str,
+        threads: usize,
+        weights: Option<WeightsArg>,
+        exact: bool,
+        max_turns: Option<u64>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let settings = SearchArgs::new(side, rolls, depth, chance, pruning, threads)?;
+        let w = self::weights(weights)?;
+        with_node!(&self.node, n => {
+            let mut config = settings.config(n.ruleset)?;
+            config.exact_lines = exact;
+            config.max_turns = max_turns;
+            let report = py.detach(|| with_evaluator!(w, e => api::maximin(n, config, e)));
+            json_to_py(py, &report.map_err(py_err)?)
+        })
+    }
+
+    /// The one-turn matrix game as a dict (`lab-plan --solve nash`; `nash_turn` gives the same
+    /// as an object): `ours`, `theirs`, `matrix` (from `side`), `equilibrium`, `value`,
+    /// `our_strategy` / `their_strategy` (`[choice, p]`, p >= 1%), `maximin`, counters, `stats`.
+    /// `lazy=True` solves it by double oracle (`--lazy`): `matrix` has `None` for pairs never
+    /// valued.
+    #[pyo3(signature = (side = SideArg::Index(0), rolls = "median", depth = 1, chance = "expect", pruning = "sensible", threads = 0, weights = None, lazy = false))]
+    #[allow(clippy::too_many_arguments)]
+    fn nash<'py>(
+        &self,
+        py: Python<'py>,
+        side: SideArg,
+        rolls: &str,
+        depth: u32,
+        chance: &str,
+        pruning: &str,
+        threads: usize,
+        weights: Option<WeightsArg>,
+        lazy: bool,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let settings = SearchArgs::new(side, rolls, depth, chance, pruning, threads)?;
+        let w = self::weights(weights)?;
+        with_node!(&self.node, n => {
+            let config = settings.config(n.ruleset)?;
+            let report = py.detach(|| with_evaluator!(w, e => api::nash(n, config, e, lazy)));
+            json_to_py(py, &report.map_err(py_err)?)
+        })
+    }
+
+    /// Two turns deep against the worst replies (`lab-plan --solve deep`): `side`'s `beam` best
+    /// choices by the one-turn maximin, each against its `beam` worst replies with the
+    /// positions after them worth their next-turn equilibrium (the `outcomes` most probable
+    /// outcomes; `None`: all). `lines`: `ours`, `deep`, `shallow`, `replies` (`[choice, value]`).
+    #[pyo3(signature = (side = SideArg::Index(0), beam = 6, outcomes = Some(4), rolls = "median", chance = "expect", pruning = "sensible", threads = 0, weights = None))]
+    #[allow(clippy::too_many_arguments)]
+    fn deep<'py>(
+        &self,
+        py: Python<'py>,
+        side: SideArg,
+        beam: usize,
+        outcomes: Option<usize>,
+        rolls: &str,
+        chance: &str,
+        pruning: &str,
+        threads: usize,
+        weights: Option<WeightsArg>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let settings = SearchArgs::new(side, rolls, 1, chance, pruning, threads)?;
+        let w = self::weights(weights)?;
+        with_node!(&self.node, n => {
+            let mut config = settings.config(n.ruleset)?;
+            config.outcome_cap = outcomes;
+            let report = py.detach(|| with_evaluator!(w, e => api::deep(n, config, e, beam)));
+            json_to_py(py, &report.map_err(py_err)?)
+        })
+    }
+
+    /// The deep mixed equilibrium (`lab-plan --solve deep-nash`): both sides' `beam` best
+    /// choices (plus their one-turn support), each pair's `outcomes` most probable outcomes
+    /// valued one level down. `beam` / `outcomes` as lists give one level each (`beam=[4, 3],
+    /// outcomes=[4, 2]` is depth 3: the children are depth-2 analyses with beams of 3 and 2
+    /// outcomes); the shorter list repeats its last entry, `outcomes=None` follows every
+    /// outcome. The dict has `depth`, `levels`, the deep `matrix` over the beams, `equilibrium`,
+    /// `value`, both strategies, the one-turn `shallow` game, counters and `stats`.
+    #[pyo3(signature = (side = SideArg::Index(0), beam = CountArg::One(4), outcomes = Some(CountArg::One(4)), rolls = "median", chance = "expect", pruning = "sensible", threads = 0, weights = None, transposition = true, dominance = true, double_oracle = true))]
+    #[allow(clippy::too_many_arguments)]
+    fn deep_nash<'py>(
+        &self,
+        py: Python<'py>,
+        side: SideArg,
+        beam: CountArg,
+        outcomes: Option<CountArg>,
+        rolls: &str,
+        chance: &str,
+        pruning: &str,
+        threads: usize,
+        weights: Option<WeightsArg>,
+        transposition: bool,
+        dominance: bool,
+        double_oracle: bool,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let settings = SearchArgs::new(side, rolls, 1, chance, pruning, threads)?;
+        let w = self::weights(weights)?;
+        let levels = deep_levels(&beam, outcomes.as_ref())?;
+        with_node!(&self.node, n => {
+            let mut config = settings.config(n.ruleset)?;
+            config.transposition = transposition;
+            config.dominance = dominance;
+            config.double_oracle = double_oracle;
+            let report =
+                py.detach(|| with_evaluator!(w, e => api::deep_nash(n, config, e, &levels)));
+            json_to_py(py, &report.map_err(py_err)?)
+        })
+    }
+
+    /// A fixed plan of `side`'s turn choices (`lab-plan --plan`): a list of choice strings or
+    /// one string with turns separated by `/`, read against this position, valued against the
+    /// worst reply at every turn (a turn whose choice is no longer legal falls back to maximin
+    /// and counts in `broken`), then `depth - 1` maximin turns. `child_nash=True` (one-turn
+    /// plans) also values the positions after the plan by their next-turn equilibrium for the
+    /// `beam` worst replies and `outcomes` most probable outcomes (`child`).
+    #[pyo3(signature = (plan, side = SideArg::Index(0), depth = 1, child_nash = false, beam = 6, outcomes = Some(4), rolls = "median", chance = "expect", pruning = "sensible", threads = 0, weights = None))]
+    #[allow(clippy::too_many_arguments)]
+    fn plan<'py>(
+        &self,
+        py: Python<'py>,
+        plan: PlanArg,
+        side: SideArg,
+        depth: u32,
+        child_nash: bool,
+        beam: usize,
+        outcomes: Option<usize>,
+        rolls: &str,
+        chance: &str,
+        pruning: &str,
+        threads: usize,
+        weights: Option<WeightsArg>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let settings = SearchArgs::new(side, rolls, depth, chance, pruning, threads)?;
+        let w = self::weights(weights)?;
+        let turns: Vec<String> = match plan {
+            PlanArg::Text(text) => text.split('/').map(|s| s.trim().to_owned()).collect(),
+            PlanArg::Turns(turns) => turns,
+        };
+        with_node!(&self.node, n => {
+            let mut config = settings.config(n.ruleset)?;
+            config.child_nash = child_nash;
+            config.reply_beam = Some(beam);
+            config.outcome_cap = outcomes;
+            let report = py.detach(|| with_evaluator!(w, e => api::plan(n, config, e, &turns)));
+            json_to_py(py, &report.map_err(py_err)?)
         })
     }
 
