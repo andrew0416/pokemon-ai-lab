@@ -1,0 +1,623 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689038053 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038053), decision 1 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [],
+  "p2": [
+   "switch 3"
+  ]
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Competitive",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Scald",
+     "Protect",
+     "Ice Beam",
+     "Recover"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Leech Life",
+     "Sucker Punch",
+     "Rest"
+    ],
+    "name": "GolisoGOAT",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Regenerator",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "White Herb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Leaf Storm",
+     "Rest"
+    ],
+    "name": "HydraGOAT",
+    "nature": "Serious",
+    "species": "Hydrapple"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Parting Shot",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Inner Focus",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Psychic",
+     "Encore",
+     "Instruct"
+    ],
+    "name": "Oranguru",
+    "nature": "Serious",
+    "species": "Oranguru"
+   },
+   {
+    "ability": "Hospitality",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Matcha Gotcha",
+     "Rest"
+    ],
+    "name": "Sinistcha",
+    "nature": "Serious",
+    "species": "Sinistcha"
+   },
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Nasty Plot",
+     "Make It Rain",
+     "Rest"
+    ],
+    "name": "Gholdengo",
+    "nature": "Serious",
+    "species": "Gholdengo"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "GolisoGOAT",
+       "pp": {
+        "leechlife": 12,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "regenerator",
+       "hp": 213,
+       "item": "whiteherb",
+       "maxhp": 213,
+       "name": "HydraGOAT",
+       "pp": {
+        "leafstorm": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Hydrapple",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "competitive",
+       "boosts": {
+        "atk": -1,
+        "spa": 2
+       },
+       "hp": 202,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "icebeam": 12,
+        "protect": 7,
+        "recover": 8,
+        "scald": 16
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "innerfocus",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 197,
+       "name": "Oranguru",
+       "pp": {
+        "encore": 8,
+        "instruct": 16,
+        "psychic": 12,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Oranguru",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "matchagotcha": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect, switch 3",
+   "move fakeout 1, move trickroom"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "emergencyexit",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "GolisoGOAT",
+      "pp": {
+       "leechlife": 12,
+       "rest": 8,
+       "suckerpunch": 8
+      },
+      "slot": 1,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "regenerator",
+      "hp": 213,
+      "item": "whiteherb",
+      "maxhp": 213,
+      "name": "HydraGOAT",
+      "pp": {
+       "leafstorm": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Hydrapple",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "competitive",
+      "boosts": {
+       "atk": -1,
+       "spa": 2
+      },
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "icebeam": 12,
+       "protect": 8,
+       "recover": 8,
+       "scald": 16
+      },
+      "slot": 0,
+      "species": "Milotic",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "goodasgold",
+      "hp": 194,
+      "item": "",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "nastyplot": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "partingshot": 20,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "innerfocus",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Oranguru",
+      "pp": {
+       "encore": 8,
+       "instruct": 16,
+       "psychic": 12,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Oranguru",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "hospitality",
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Sinistcha",
+      "pp": {
+       "matchagotcha": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sinistcha",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move scald 1, move fakeout 2",
+  "p2": "move partingshot 2, move psychic 1"
+ }
+}

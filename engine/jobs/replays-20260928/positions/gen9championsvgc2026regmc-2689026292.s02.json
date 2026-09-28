@@ -1,0 +1,785 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689026292 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026292), decision 2 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [],
+  "p2": [
+   "switch 3"
+  ]
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Vital Spirit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Bulk Up",
+     "Rage Fist",
+     "Rest"
+    ],
+    "name": "Annihilape",
+    "nature": "Serious",
+    "species": "Annihilape"
+   },
+   {
+    "ability": "Friend Guard",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Maushold",
+    "nature": "Serious",
+    "species": "Maushold"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Ninetales",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Raichunite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Focus Blast",
+     "Volt Switch",
+     "Rest"
+    ],
+    "name": "FuckItWeZapCannon",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Speed Boost",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Swords Dance",
+     "Detect",
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Jollibee",
+    "nature": "Serious",
+    "species": "Blaziken"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Ally Switch",
+     "Rest"
+    ],
+    "name": "Cumlord",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Berserk",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Drampa",
+    "nature": "Serious",
+    "species": "Drampa"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 217,
+       "item": "",
+       "lastMove": "bulkup",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 19,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "boosts": {},
+       "hp": 181,
+       "item": "focussash",
+       "lastMove": "protect",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Maushold",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Cumlord",
+       "pp": {
+        "allyswitch": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "fakeout",
+       "maxhp": 167,
+       "name": "FuckItWeZapCannon",
+       "pp": {
+        "fakeout": 11,
+        "focusblast": 8,
+        "rest": 8,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "speedboost",
+       "boosts": {
+        "atk": 2,
+        "spe": 1
+       },
+       "hp": 187,
+       "item": "",
+       "lastMove": "swordsdance",
+       "maxhp": 187,
+       "name": "Jollibee",
+       "pp": {
+        "closecombat": 8,
+        "detect": 8,
+        "rest": 8,
+        "swordsdance": 19
+       },
+       "slot": 1,
+       "species": "Blaziken",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 217,
+       "item": "",
+       "lastMove": "ragefist",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 19,
+        "ragefist": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "followme",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 19,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Maushold",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowwarning",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Cumlord",
+       "pp": {
+        "allyswitch": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "focusblast",
+       "maxhp": 167,
+       "name": "FuckItWeZapCannon",
+       "pp": {
+        "fakeout": 11,
+        "focusblast": 7,
+        "rest": 8,
+        "voltswitch": 20
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "speedboost",
+       "boosts": {
+        "atk": 4,
+        "spe": 2
+       },
+       "hp": 93,
+       "item": "",
+       "lastMove": "swordsdance",
+       "maxhp": 187,
+       "name": "Jollibee",
+       "pp": {
+        "closecombat": 8,
+        "detect": 8,
+        "rest": 8,
+        "swordsdance": 18
+       },
+       "slot": 1,
+       "species": "Blaziken",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move bulkup, move protect",
+   "move fakeout 2 mega, move swordsdance"
+  ],
+  [
+   "move ragefist 2, move followme",
+   "move focusblast 2, move swordsdance"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "vitalspirit",
+      "boosts": {},
+      "hp": 217,
+      "item": "",
+      "maxhp": 217,
+      "name": "Annihilape",
+      "pp": {
+       "bulkup": 20,
+       "ragefist": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Annihilape",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "friendguard",
+      "boosts": {},
+      "hp": 181,
+      "item": "focussash",
+      "maxhp": 181,
+      "name": "Maushold",
+      "pp": {
+       "followme": 20,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Maushold",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowwarning",
+      "hp": 180,
+      "item": "",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "cudchew",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Cumlord",
+      "pp": {
+       "allyswitch": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Farigiraf",
+      "status": ""
+     },
+     {
+      "ability": "berserk",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Drampa",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Drampa",
+      "status": ""
+     },
+     {
+      "ability": "static",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitey",
+      "maxhp": 167,
+      "name": "FuckItWeZapCannon",
+      "pp": {
+       "fakeout": 12,
+       "focusblast": 8,
+       "rest": 8,
+       "voltswitch": 20
+      },
+      "slot": 0,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "speedboost",
+      "boosts": {},
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Jollibee",
+      "pp": {
+       "closecombat": 8,
+       "detect": 8,
+       "rest": 8,
+       "swordsdance": 20
+      },
+      "slot": 1,
+      "species": "Blaziken",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move ragefist 2, move followme",
+  "p2": "move voltswitch 2, move detect"
+ }
+}

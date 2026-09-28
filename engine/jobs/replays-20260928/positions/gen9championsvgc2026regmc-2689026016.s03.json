@@ -1,0 +1,980 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689026016 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026016), decision 3 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [],
+  "p2": [
+   "switch 3"
+  ]
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Psychic",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Spirit Break",
+     "Light Screen",
+     "Rest"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Serious",
+    "species": "Grimmsnarl"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cursed Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Gengarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Perish Song",
+     "Rest"
+    ],
+    "name": "Gengar",
+    "nature": "Serious",
+    "species": "Gengar"
+   },
+   {
+    "ability": "Shield Dust",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sleep Powder",
+     "Rest"
+    ],
+    "name": "Vivillon",
+    "nature": "Serious",
+    "species": "Vivillon-River"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Parting Shot",
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Flash Cannon",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "flashcannon": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "shadowtag",
+       "boosts": {},
+       "hp": 167,
+       "item": "gengarite",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "Gengar",
+       "pp": {
+        "perishsong": 8,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Gengar-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "shielddust",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "sleeppowder",
+       "maxhp": 187,
+       "name": "Vivillon",
+       "pp": {
+        "rest": 8,
+        "sleeppowder": 15
+       },
+       "slot": 1,
+       "species": "Vivillon-River",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {
+        "perishsong": {
+         "duration": 3
+        }
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {
+        "perishsong": {
+         "duration": 3
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "flashcannon": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "shadowtag",
+       "boosts": {},
+       "hp": 167,
+       "item": "gengarite",
+       "lastMove": "perishsong",
+       "maxhp": 167,
+       "name": "Gengar",
+       "pp": {
+        "perishsong": 7,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Gengar-Mega",
+       "status": "",
+       "volatiles": {
+        "perishsong": {
+         "duration": 3
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "shielddust",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "sleeppowder",
+       "maxhp": 187,
+       "name": "Vivillon",
+       "pp": {
+        "rest": 8,
+        "sleeppowder": 14
+       },
+       "slot": 1,
+       "species": "Vivillon-River",
+       "status": "",
+       "volatiles": {
+        "perishsong": {
+         "duration": 3
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "slp",
+       "statusTime": 1,
+       "volatiles": {
+        "perishsong": {
+         "duration": 2
+        }
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 227,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "slp",
+       "statusTime": 1,
+       "volatiles": {
+        "perishsong": {
+         "duration": 2
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "lightscreen": 20,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "flashcannon": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "shadowtag",
+       "boosts": {},
+       "hp": 167,
+       "item": "gengarite",
+       "lastMove": "protect",
+       "maxhp": 167,
+       "name": "Gengar",
+       "pp": {
+        "perishsong": 7,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Gengar-Mega",
+       "status": "",
+       "volatiles": {
+        "perishsong": {
+         "duration": 2
+        },
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "shielddust",
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 187,
+       "name": "Vivillon",
+       "pp": {
+        "rest": 8,
+        "sleeppowder": 14
+       },
+       "slot": null,
+       "species": "Vivillon-River",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move heatwave mega, move psychic 1",
+   "move protect mega, move sleeppowder 1"
+  ],
+  [
+   "move heatwave, move psychic -1",
+   "move perishsong, move sleeppowder 2"
+  ],
+  [
+   "move heatwave, move psychic -1",
+   "move protect, switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "psychic": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "lightscreen": 20,
+       "rest": 8,
+       "spiritbreak": 16
+      },
+      "slot": null,
+      "species": "Grimmsnarl",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "flashcannon": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "cursedbody",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "gengarite",
+      "maxhp": 167,
+      "name": "Gengar",
+      "pp": {
+       "perishsong": 8,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Gengar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "shielddust",
+      "boosts": {},
+      "hp": 187,
+      "item": "focussash",
+      "maxhp": 187,
+      "name": "Vivillon",
+      "pp": {
+       "rest": 8,
+       "sleeppowder": 16
+      },
+      "slot": 1,
+      "species": "Vivillon-River",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move weatherball 1, move psychic 2",
+  "p2": "switch 3, move partingshot 1"
+ }
+}

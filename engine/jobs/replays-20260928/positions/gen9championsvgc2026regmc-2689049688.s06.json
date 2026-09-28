@@ -1,0 +1,1573 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689049688 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049688), decision 6 = turn 6 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sucker Punch",
+     "Protect",
+     "Kowtow Cleave",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Flare Blitz",
+     "Parting Shot",
+     "Rest"
+    ],
+    "name": "Gatote",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Pressure",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Absolite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Psycho Cut",
+     "Detect",
+     "Rest"
+    ],
+    "name": "Absol",
+    "nature": "Serious",
+    "species": "Absol"
+   },
+   {
+    "ability": "Hunger Switch",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aura Wheel",
+     "Rest"
+    ],
+    "name": "Morpeko",
+    "nature": "Serious",
+    "species": "Morpeko"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Salamencite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Double-Edge",
+     "Protect",
+     "Hyper Voice"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "U-turn",
+     "Wood Hammer",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Aqua Jet",
+     "Wave Crash",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "canMega": true,
+       "hp": 172,
+       "item": "absolitez",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "detect": 8,
+        "psychocut": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Absol",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 168,
+       "item": "sitrusberry",
+       "lastMove": "flareblitz",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "flareblitz": 15,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 207,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "hungerswitch",
+       "hp": 165,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "protect": 8,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 132,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8,
+        "uturn": 20,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 202,
+       "item": "salamencite",
+       "lastMove": "tailwind",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 16,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "canMega": true,
+       "hp": 172,
+       "item": "absolitez",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "detect": 8,
+        "psychocut": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Absol",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 112,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "flareblitz",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "flareblitz": 14,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 194,
+       "item": "",
+       "lastMove": "suckerpunch",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 7,
+        "rest": 8,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "hungerswitch",
+       "hp": 165,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "protect": 8,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 132,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 53,
+       "item": "salamencite",
+       "lastMove": "doubleedge",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 15,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 135,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "boosts": {},
+       "canMega": true,
+       "hp": 172,
+       "item": "absolitez",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "detect": 8,
+        "psychocut": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Absol",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 13,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "flareblitz": 14,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 1
+       },
+       "hp": 206,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 6,
+        "rest": 8,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "hungerswitch",
+       "hp": 165,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "protect": 8,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 132,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 20,
+       "item": "salamencite",
+       "lastMove": "doubleedge",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "hypervoice": 12,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "atk": -1,
+        "def": 1,
+        "spa": -1
+       },
+       "hp": 146,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "closecombat",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sharpness",
+       "boosts": {},
+       "hp": 172,
+       "item": "absolitez",
+       "lastMove": "psychocut",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "detect": 8,
+        "psychocut": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Absol-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "flareblitz": 14,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": "fnt"
+      },
+      {
+       "ability": "defiant",
+       "hp": 206,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 6,
+        "rest": 8,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "hungerswitch",
+       "hp": 165,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "protect": 8,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 132,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 20,
+       "item": "salamencite",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "hypervoice": 12,
+        "protect": 7,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sharpness",
+       "boosts": {},
+       "hp": 172,
+       "item": "absolitez",
+       "lastMove": "psychocut",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "detect": 8,
+        "psychocut": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Absol-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "flareblitz": 14,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 206,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 6,
+        "rest": 8,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "hungerswitch",
+       "boosts": {},
+       "hp": 165,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Morpeko",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "protect": 8,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 132,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 20,
+       "item": "salamencite",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "hypervoice": 12,
+        "protect": 7,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sharpness",
+       "boosts": {},
+       "hp": 172,
+       "item": "absolitez",
+       "lastMove": "detect",
+       "maxhp": 172,
+       "name": "Absol",
+       "pp": {
+        "detect": 7,
+        "psychocut": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Absol-Mega-Z",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 202,
+       "name": "Gatote",
+       "pp": {
+        "flareblitz": 14,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 206,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 6,
+        "rest": 8,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "hungerswitch",
+       "boosts": {},
+       "hp": 135,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "aurawheel": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Morpeko-Hangry",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "protect": 8,
+        "rest": 8,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 144,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 10,
+        "rest": 8,
+        "uturn": 19,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {
+        "atk": -2
+       },
+       "hp": 20,
+       "item": "salamencite",
+       "lastMove": "tailwind",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "doubleedge": 14,
+        "hypervoice": 12,
+        "protect": 7,
+        "tailwind": 14
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect, move flareblitz 2",
+   "move tailwind mega, move fakeout 1"
+  ],
+  [
+   "move suckerpunch 1, move flareblitz 2",
+   "move doubleedge 2, move uturn 1",
+   {
+    "p1": [],
+    "p2": [
+     "switch 3"
+    ]
+   }
+  ],
+  [
+   "move protect, move partingshot 2",
+   "move doubleedge 2, move closecombat 1",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "switch 3, move psychocut 2 mega",
+   "move protect, move closecombat 1"
+  ],
+  [
+   "switch 4",
+   "switch 3"
+  ],
+  [
+   "move aurawheel -2, move detect",
+   "move tailwind, move fakeout 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "pressure",
+      "canMega": true,
+      "hp": 172,
+      "item": "absolitez",
+      "maxhp": 172,
+      "name": "Absol",
+      "pp": {
+       "detect": 8,
+       "psychocut": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Absol",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Gatote",
+      "pp": {
+       "flareblitz": 16,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "defiant",
+      "boosts": {
+       "atk": 1
+      },
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "protect": 8,
+       "rest": 8,
+       "suckerpunch": 8
+      },
+      "slot": 0,
+      "species": "Kingambit",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "hungerswitch",
+      "hp": 165,
+      "item": "",
+      "maxhp": 165,
+      "name": "Morpeko",
+      "pp": {
+       "aurawheel": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Morpeko",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "protect": 8,
+       "rest": 8,
+       "wavecrash": 12
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 207,
+      "item": "sitrusberry",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8,
+       "uturn": 20,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 202,
+      "item": "salamencite",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "doubleedge": 16,
+       "hypervoice": 12,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "grassyseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move aurawheel 1, move psychocut -1",
+  "p2": "move protect, move woodhammer 2"
+ }
+}

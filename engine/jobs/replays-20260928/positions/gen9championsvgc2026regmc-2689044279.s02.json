@@ -1,0 +1,742 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689044279 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044279), decision 2 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Meowsticite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Reyna",
+    "nature": "Serious",
+    "species": "Meowstic-F"
+   },
+   {
+    "ability": "Protean",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Triple Axel",
+     "Rest"
+    ],
+    "name": "Skye",
+    "nature": "Serious",
+    "species": "Meowscarada"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Astra",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Drought",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Brimstone",
+    "nature": "Serious",
+    "species": "Torkoal"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Unnerve",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Pyroarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Rest"
+    ],
+    "name": "Pyroar",
+    "nature": "Serious",
+    "species": "Pyroar"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Rest"
+    ],
+    "name": "Primarina",
+    "nature": "Serious",
+    "species": "Primarina"
+   },
+   {
+    "ability": "Oblivious",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Mamoswine",
+    "nature": "Serious",
+    "species": "Mamoswine"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Astra",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Brimstone",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      },
+      {
+       "ability": "firemane",
+       "boosts": {},
+       "hp": 181,
+       "item": "meowsticite",
+       "lastMove": "fakeout",
+       "maxhp": 181,
+       "name": "Reyna",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Meowstic-F-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 183,
+       "item": "",
+       "lastMove": "tripleaxel",
+       "maxhp": 183,
+       "name": "Skye",
+       "pp": {
+        "rest": 8,
+        "tripleaxel": 11
+       },
+       "slot": 1,
+       "species": "Meowscarada",
+       "status": "",
+       "types": "Ice",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Primarina",
+       "status": ""
+      },
+      {
+       "ability": "firemane",
+       "boosts": {},
+       "hp": 178,
+       "item": "pyroarite",
+       "maxhp": 193,
+       "name": "Pyroar",
+       "pp": {
+        "heatwave": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pyroar-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Astra",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 177,
+       "item": "",
+       "maxhp": 177,
+       "name": "Brimstone",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      },
+      {
+       "ability": "firemane",
+       "boosts": {},
+       "hp": 181,
+       "item": "meowsticite",
+       "lastMove": "fakeout",
+       "maxhp": 181,
+       "name": "Reyna",
+       "pp": {
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Meowstic-F-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 183,
+       "item": "",
+       "lastMove": "tripleaxel",
+       "maxhp": 183,
+       "name": "Skye",
+       "pp": {
+        "rest": 8,
+        "tripleaxel": 11
+       },
+       "slot": 1,
+       "species": "Meowscarada",
+       "status": "",
+       "types": "Ice",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Primarina",
+       "pp": {
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Primarina",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "firemane",
+       "boosts": {},
+       "hp": 178,
+       "item": "pyroarite",
+       "maxhp": 193,
+       "name": "Pyroar",
+       "pp": {
+        "heatwave": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pyroar-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move fakeout 1 mega, move tripleaxel 2",
+   "move heatwave mega, move tailwind"
+  ],
+  [
+   "",
+   "switch 3"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "psychicsurge",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Astra",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Indeedee-F",
+      "status": ""
+     },
+     {
+      "ability": "drought",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Brimstone",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Torkoal",
+      "status": ""
+     },
+     {
+      "ability": "keeneye",
+      "boosts": {},
+      "canMega": true,
+      "hp": 181,
+      "item": "meowsticite",
+      "maxhp": 181,
+      "name": "Reyna",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Meowstic-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "protean",
+      "boosts": {},
+      "hp": 183,
+      "item": "",
+      "maxhp": 183,
+      "name": "Skye",
+      "pp": {
+       "rest": 8,
+       "tripleaxel": 12
+      },
+      "slot": 1,
+      "species": "Meowscarada",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "oblivious",
+      "hp": 217,
+      "item": "",
+      "maxhp": 217,
+      "name": "Mamoswine",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Mamoswine",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Primarina",
+      "pp": {
+       "hypervoice": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Primarina",
+      "status": ""
+     },
+     {
+      "ability": "unnerve",
+      "boosts": {},
+      "canMega": true,
+      "hp": 193,
+      "item": "pyroarite",
+      "maxhp": 193,
+      "name": "Pyroar",
+      "pp": {
+       "heatwave": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Pyroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "boosts": {},
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 1,
+      "species": "Whimsicott",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move rest, switch 3",
+  "p2": "move heatwave, move hypervoice"
+ }
+}

@@ -1,0 +1,1184 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689047732 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689047732), decision 4 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "always misses",
+    "nature": "Serious",
+    "species": "Volcarona"
+   },
+   {
+    "ability": "Flower Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 2,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "F",
+    "item": "Floettite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Dazzling Gleam",
+     "Calm Mind",
+     "Draining Kiss"
+    ],
+    "name": "Floette",
+    "nature": "Serious",
+    "species": "Floette-Eternal"
+   },
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Stomping Tantrum",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Flare Blitz",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Salamencite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Hyper Voice",
+     "Rest"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Grassy Glide",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Flash Fire",
+    "evs": {
+     "atk": 0,
+     "def": 2,
+     "hp": 32,
+     "spa": 0,
+     "spd": 32,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Head Smash",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Arcanine",
+    "nature": "Careful",
+    "species": "Arcanine-Hisui"
+   },
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Detect",
+     "Quick Attack",
+     "Rest"
+    ],
+    "name": "Sylveon",
+    "nature": "Serious",
+    "species": "Sylveon"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "boosts": {
+        "atk": -1
+       },
+       "canMega": true,
+       "hp": 181,
+       "item": "floettite",
+       "lastMove": "protect",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 12,
+        "drainingkiss": 12,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "atk": -1,
+        "def": 1
+       },
+       "hp": 192,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "protect",
+       "maxhp": 192,
+       "name": "always misses",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "headsmash": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Arcanine-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 202,
+       "item": "salamencite",
+       "lastMove": "tailwind",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 12,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "detect": 8,
+        "hypervoice": 12,
+        "quickattack": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 146,
+       "item": "floettite",
+       "lastMove": "dazzlinggleam",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 11,
+        "drainingkiss": 12,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {
+        "atk": -1,
+        "def": 1
+       },
+       "hp": 66,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "tailwind",
+       "maxhp": 192,
+       "name": "always misses",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 166,
+       "item": "",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "headsmash": 8,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 28,
+       "item": "salamencite",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 11,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cutecharm",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "detect": 8,
+        "hypervoice": 12,
+        "quickattack": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sylveon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 157,
+       "item": "floettite",
+       "lastMove": "protect",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 11,
+        "drainingkiss": 12,
+        "protect": 6
+       },
+       "slot": 1,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 192,
+       "name": "always misses",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "tailwind": 14
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 145,
+       "item": "",
+       "lastMove": "headsmash",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "headsmash": 7,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 28,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 11,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "detect": 8,
+        "hypervoice": 12,
+        "quickattack": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 157,
+       "item": "floettite",
+       "lastMove": "protect",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "dazzlinggleam": 11,
+        "drainingkiss": 12,
+        "protect": 6
+       },
+       "slot": 1,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandveil",
+       "boosts": {},
+       "hp": 215,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 192,
+       "name": "always misses",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "tailwind": 14
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 145,
+       "item": "",
+       "lastMove": "headsmash",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "headsmash": 7,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "aerilate",
+       "hp": 28,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 11,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Salamence-Mega",
+       "status": ""
+      },
+      {
+       "ability": "cutecharm",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Sylveon",
+       "pp": {
+        "detect": 8,
+        "hypervoice": 12,
+        "quickattack": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sylveon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect, move protect",
+   "move tailwind mega, move fakeout 1"
+  ],
+  [
+   "move tailwind, move dazzlinggleam mega",
+   "move hypervoice, switch 3"
+  ],
+  [
+   "move tailwind, move protect",
+   "switch 4, move headsmash 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flowerveil",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 181,
+      "item": "floettite",
+      "maxhp": 181,
+      "name": "Floette",
+      "pp": {
+       "calmmind": 20,
+       "dazzlinggleam": 12,
+       "drainingkiss": 12,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sandveil",
+      "hp": 215,
+      "item": "",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "rest": 8,
+       "stompingtantrum": 12
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "boosts": {
+       "atk": -1,
+       "def": 1
+      },
+      "hp": 192,
+      "item": "",
+      "lastItem": "grassyseed",
+      "maxhp": 192,
+      "name": "always misses",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 0,
+      "species": "Volcarona",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Arcanine",
+      "pp": {
+       "headsmash": 8,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Arcanine-Hisui",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "canMega": true,
+      "hp": 202,
+      "item": "salamencite",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "hypervoice": 12,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cutecharm",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Sylveon",
+      "pp": {
+       "detect": 8,
+       "hypervoice": 12,
+       "quickattack": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sylveon",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move stompingtantrum 2, move calmmind",
+  "p2": "move hypervoice, move protect"
+ }
+}

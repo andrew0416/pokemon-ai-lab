@@ -1,0 +1,1154 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689050776 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050776), decision 4 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Heat Wave",
+     "Weather Ball",
+     "Solar Beam"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Light Clay",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Reflect",
+     "Fake Tears",
+     "Rest"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Serious",
+    "species": "Grimmsnarl"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Tears",
+     "Tickle",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Contrary",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Superpower",
+     "Rest"
+    ],
+    "name": "Malamar",
+    "nature": "Serious",
+    "species": "Malamar"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Hurricane",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Snarl",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 7
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 12,
+        "protect": 7,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 15,
+       "item": "lightclay",
+       "lastMove": "reflect",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "faketears": 20,
+        "reflect": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "contrary",
+       "hp": 193,
+       "item": "",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "rest": 8,
+        "superpower": 8
+       },
+       "slot": null,
+       "species": "Malamar",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "rest": 8,
+        "tickle": 20
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "canMega": true,
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "hurricane": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 15,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 12,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 6
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 129,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "protect": 7,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "faketears": 19,
+        "reflect": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": "fnt"
+      },
+      {
+       "ability": "contrary",
+       "hp": 193,
+       "item": "",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "rest": 8,
+        "superpower": 8
+       },
+       "slot": null,
+       "species": "Malamar",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "rest": 8,
+        "tickle": 20
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {
+        "spd": -2
+       },
+       "hp": 41,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 10,
+        "hurricane": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 12,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 6
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 129,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "protect": 7,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "faketears": 19,
+        "reflect": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 193,
+       "item": "",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "rest": 8,
+        "superpower": 8
+       },
+       "slot": null,
+       "species": "Malamar",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 20,
+        "rest": 8,
+        "tickle": 20
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "boosts": {
+        "spd": -2
+       },
+       "hp": 41,
+       "item": "charizarditey",
+       "lastMove": "heatwave",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 10,
+        "hurricane": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 12,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "reflect": {
+       "duration": 5
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 129,
+       "item": "charizarditey",
+       "lastMove": "weatherball",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "protect": 7,
+        "solarbeam": 12,
+        "weatherball": 11
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "lightclay",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "faketears": 19,
+        "reflect": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "contrary",
+       "hp": 193,
+       "item": "",
+       "maxhp": 193,
+       "name": "Malamar",
+       "pp": {
+        "rest": 8,
+        "superpower": 8
+       },
+       "slot": null,
+       "species": "Malamar",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "faketears",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "faketears": 19,
+        "rest": 8,
+        "tickle": 20
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 41,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 10,
+        "hurricane": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 56,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 12,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect mega, move reflect",
+   "move heatwave, move ironhead 2"
+  ],
+  [
+   "move heatwave, move faketears 1",
+   "move heatwave mega, move protect"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move weatherball 2, move faketears 2",
+   "switch 3, move ironhead -1",
+   {
+    "p1": [],
+    "p2": [
+     "switch 4"
+    ]
+   }
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "protect": 8,
+       "solarbeam": 12,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "boosts": {},
+      "hp": 202,
+      "item": "lightclay",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "faketears": 20,
+       "reflect": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Grimmsnarl",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "contrary",
+      "hp": 193,
+      "item": "",
+      "maxhp": 193,
+      "name": "Malamar",
+      "pp": {
+       "rest": 8,
+       "superpower": 8
+      },
+      "slot": null,
+      "species": "Malamar",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "faketears": 20,
+       "rest": 8,
+       "tickle": 20
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "electroshot": 12,
+       "protect": 8,
+       "rest": 8,
+       "snarl": 16
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "hurricane": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "boosts": {},
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "ironhead": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "muddywater": 12,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Politoed",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "switch 4, move tickle 2",
+  "p2": "move muddywater, move electroshot 2"
+ }
+}

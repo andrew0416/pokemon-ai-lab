@@ -1,0 +1,436 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689043972 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043972), decision 0 = turn 1 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Iron Fist",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Headlong Rush",
+     "Ice Punch",
+     "Rest"
+    ],
+    "name": "Golurk",
+    "nature": "Serious",
+    "species": "Golurk"
+   },
+   {
+    "ability": "Contrary",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Knock Off",
+     "Topsy-Turvy",
+     "Rest"
+    ],
+    "name": "Malamar",
+    "nature": "Serious",
+    "species": "Malamar"
+   },
+   {
+    "ability": "Seed Sower",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Earth Power",
+     "Hyper Voice",
+     "Leaf Storm",
+     "Rest"
+    ],
+    "name": "Arboliva",
+    "nature": "Serious",
+    "species": "Arboliva"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "First Impression",
+     "Iron Head",
+     "Leech Life",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Trick",
+     "Protect",
+     "Tri Attack"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee"
+   },
+   {
+    "ability": "Cursed Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Gengarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Shadow Ball",
+     "Rest"
+    ],
+    "name": "Gengar",
+    "nature": "Serious",
+    "species": "Gengar"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Pressure",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Bulk Up",
+     "Power Trip",
+     "Roost",
+     "Rest"
+    ],
+    "name": "Corviknight",
+    "nature": "Impish",
+    "species": "Corviknight"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "seedsower",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Arboliva",
+      "pp": {
+       "earthpower": 12,
+       "hypervoice": 12,
+       "leafstorm": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Arboliva",
+      "status": ""
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "firstimpression": 12,
+       "ironhead": 16,
+       "leechlife": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "ironfist",
+      "boosts": {},
+      "hp": 196,
+      "item": "lifeorb",
+      "maxhp": 196,
+      "name": "Golurk",
+      "pp": {
+       "headlongrush": 8,
+       "icepunch": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Golurk",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "contrary",
+      "boosts": {},
+      "hp": 193,
+      "item": "",
+      "maxhp": 193,
+      "name": "Malamar",
+      "pp": {
+       "knockoff": 20,
+       "rest": 8,
+       "topsyturvy": 20,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Malamar",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "pressure",
+      "hp": 205,
+      "item": "psychicseed",
+      "maxhp": 205,
+      "name": "Corviknight",
+      "pp": {
+       "bulkup": 20,
+       "powertrip": 12,
+       "rest": 8,
+       "roost": 8
+      },
+      "slot": null,
+      "species": "Corviknight",
+      "status": ""
+     },
+     {
+      "ability": "cursedbody",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "gengarite",
+      "maxhp": 167,
+      "name": "Gengar",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "shadowball": 16
+      },
+      "slot": 1,
+      "species": "Gengar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Indeedee",
+      "pp": {
+       "expandingforce": 12,
+       "protect": 8,
+       "triattack": 12,
+       "trick": 12
+      },
+      "slot": 0,
+      "species": "Indeedee",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "focussash",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move trickroom",
+  "p2": "move expandingforce 2, move protect mega"
+ }
+}

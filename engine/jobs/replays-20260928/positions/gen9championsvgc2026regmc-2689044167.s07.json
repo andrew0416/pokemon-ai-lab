@@ -1,0 +1,1690 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689044167 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044167), decision 7 = turn 5 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Clear Body",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Dragapult",
+    "nature": "Serious",
+    "species": "Dragapult"
+   },
+   {
+    "ability": "Own Tempo",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Alluring Voice",
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Drought",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Eruption",
+     "Burning Jealousy",
+     "Rest"
+    ],
+    "name": "Torkoal",
+    "nature": "Serious",
+    "species": "Torkoal"
+   },
+   {
+    "ability": "Synchronize",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Gardevoirite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Hyper Voice",
+     "Rest"
+    ],
+    "name": "Gardevoir",
+    "nature": "Serious",
+    "species": "Gardevoir"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee"
+   },
+   {
+    "ability": "Run Away",
+    "evs": {
+     "atk": 2,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "F",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Foul Play",
+     "Fake Tears",
+     "Rest"
+    ],
+    "name": "Thievul",
+    "nature": "Serious",
+    "species": "Thievul"
+   },
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Nasty Plot",
+     "Make It Rain",
+     "Rest"
+    ],
+    "name": "Gholdengo",
+    "nature": "Serious",
+    "species": "Gholdengo"
+   },
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Garchompite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Power Gem",
+     "Protect",
+     "Flamethrower",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "clearbody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 195,
+       "name": "Dragapult",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Dragapult",
+       "status": "fnt"
+      },
+      {
+       "ability": "synchronize",
+       "canMega": true,
+       "hp": 175,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 120,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "alluringvoice": 12,
+        "followme": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 177,
+       "item": "leftovers",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "burningjealousy": 8,
+        "eruption": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "canMega": true,
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "flamethrower": 16,
+        "powergem": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "leftovers",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "runaway",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 177,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "foulplay",
+       "maxhp": 177,
+       "name": "Thievul",
+       "pp": {
+        "faketears": 20,
+        "foulplay": 15,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Thievul",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "sunnyday",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "clearbody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 195,
+       "name": "Dragapult",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Dragapult",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "canMega": true,
+       "hp": 175,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 120,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "alluringvoice": 12,
+        "followme": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 177,
+       "item": "leftovers",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "burningjealousy": 8,
+        "eruption": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "canMega": true,
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "flamethrower": 16,
+        "powergem": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "leftovers",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "runaway",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 177,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "foulplay",
+       "maxhp": 177,
+       "name": "Thievul",
+       "pp": {
+        "faketears": 20,
+        "foulplay": 15,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Thievul",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "clearbody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 195,
+       "name": "Dragapult",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Dragapult",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "canMega": true,
+       "hp": 175,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 57,
+       "item": "",
+       "lastMove": "alluringvoice",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "alluringvoice": 11,
+        "followme": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "boosts": {
+        "spd": -2
+       },
+       "hp": 70,
+       "item": "leftovers",
+       "lastMove": "eruption",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "burningjealousy": 8,
+        "eruption": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "canMega": true,
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "flamethrower": 16,
+        "powergem": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "leftovers",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 32,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "runaway",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 47,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "faketears",
+       "maxhp": 177,
+       "name": "Thievul",
+       "pp": {
+        "faketears": 19,
+        "foulplay": 15,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Thievul",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "clearbody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 195,
+       "name": "Dragapult",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Dragapult",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "canMega": true,
+       "hp": 175,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 57,
+       "item": "",
+       "lastMove": "alluringvoice",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "alluringvoice": 10,
+        "followme": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "boosts": {
+        "spd": -2
+       },
+       "hp": 81,
+       "item": "leftovers",
+       "lastMove": "burningjealousy",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "burningjealousy": 7,
+        "eruption": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "canMega": true,
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "flamethrower": 16,
+        "powergem": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "goodasgold",
+       "hp": 194,
+       "item": "leftovers",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gholdengo",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": "fnt"
+      },
+      {
+       "ability": "runaway",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 177,
+       "name": "Thievul",
+       "pp": {
+        "faketears": 19,
+        "foulplay": 15,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Thievul",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "clearbody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 195,
+       "name": "Dragapult",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Dragapult",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "canMega": true,
+       "hp": 175,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 57,
+       "item": "",
+       "lastMove": "alluringvoice",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "alluringvoice": 10,
+        "followme": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "boosts": {
+        "spd": -2
+       },
+       "hp": 81,
+       "item": "leftovers",
+       "lastMove": "burningjealousy",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "burningjealousy": 7,
+        "eruption": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Torkoal",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "boosts": {},
+       "canMega": true,
+       "hp": 215,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "flamethrower": 16,
+        "powergem": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 194,
+       "item": "leftovers",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "runaway",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 177,
+       "name": "Thievul",
+       "pp": {
+        "faketears": 19,
+        "foulplay": 15,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Thievul",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "clearbody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 195,
+       "name": "Dragapult",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Dragapult",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "canMega": true,
+       "hp": 175,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 57,
+       "item": "",
+       "lastMove": "alluringvoice",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "alluringvoice": 9,
+        "followme": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "burningjealousy": 6,
+        "eruption": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 97,
+       "item": "garchompitez",
+       "lastMove": "powergem",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "flamethrower": 16,
+        "powergem": 19,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 194,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "runaway",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 177,
+       "name": "Thievul",
+       "pp": {
+        "faketears": 19,
+        "foulplay": 15,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Thievul",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 1
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "clearbody",
+       "hp": 0,
+       "item": "",
+       "maxhp": 195,
+       "name": "Dragapult",
+       "pp": {
+        "protect": 8,
+        "rest": 7
+       },
+       "slot": null,
+       "species": "Dragapult",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "canMega": true,
+       "hp": 175,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "expandingforce": 12,
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Gardevoir",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 57,
+       "item": "",
+       "lastMove": "alluringvoice",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "alluringvoice": 9,
+        "followme": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 177,
+       "name": "Torkoal",
+       "pp": {
+        "burningjealousy": 6,
+        "eruption": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Torkoal",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 97,
+       "item": "garchompitez",
+       "lastMove": "powergem",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "flamethrower": 16,
+        "powergem": 19,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {},
+       "hp": 194,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "makeitrain": 8,
+        "nastyplot": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "runaway",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 177,
+       "name": "Thievul",
+       "pp": {
+        "faketears": 19,
+        "foulplay": 15,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Thievul",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move rest, move trickroom",
+   "move expandingforce 2, move foulplay 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move eruption, move alluringvoice 2",
+   "move expandingforce 1, move faketears 1"
+  ],
+  [
+   "move burningjealousy, move alluringvoice 1",
+   "move expandingforce -2, move foulplay -1"
+  ],
+  [
+   "",
+   "switch 4, switch 3"
+  ],
+  [
+   "move burningjealousy, move alluringvoice 1",
+   "move powergem 1 mega, move protect"
+  ],
+  [
+   "switch 4",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "clearbody",
+      "boosts": {},
+      "hp": 195,
+      "item": "",
+      "maxhp": 195,
+      "name": "Dragapult",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Dragapult",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "synchronize",
+      "canMega": true,
+      "hp": 175,
+      "item": "gardevoirite",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "expandingforce": 12,
+       "hypervoice": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Gardevoir",
+      "status": ""
+     },
+     {
+      "ability": "owntempo",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "alluringvoice": 12,
+       "followme": 20,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drought",
+      "hp": 177,
+      "item": "leftovers",
+      "maxhp": 177,
+      "name": "Torkoal",
+      "pp": {
+       "burningjealousy": 8,
+       "eruption": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Torkoal",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandveil",
+      "canMega": true,
+      "hp": 215,
+      "item": "garchompitez",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "flamethrower": 16,
+       "powergem": 20,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "goodasgold",
+      "hp": 194,
+      "item": "leftovers",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "makeitrain": 8,
+       "nastyplot": 20,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Gholdengo",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Indeedee",
+      "pp": {
+       "expandingforce": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Indeedee",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "runaway",
+      "boosts": {
+       "spd": 1
+      },
+      "hp": 177,
+      "item": "",
+      "lastItem": "psychicseed",
+      "maxhp": 177,
+      "name": "Thievul",
+      "pp": {
+       "faketears": 20,
+       "foulplay": 16,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Thievul",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move expandingforce 1 mega, move alluringvoice 2",
+  "p2": "move protect, move nastyplot"
+ }
+}

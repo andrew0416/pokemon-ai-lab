@@ -1,0 +1,426 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689026991 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026991), decision 0 = turn 1 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [
+   "switch 3"
+  ],
+  "p2": []
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Tough Claws",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Accelerock",
+     "Endeavor",
+     "Rest"
+    ],
+    "name": "Lycanroc",
+    "nature": "Serious",
+    "species": "Lycanroc-Dusk"
+   },
+   {
+    "ability": "Electric Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Eject Button",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Pincurchin",
+    "nature": "Serious",
+    "species": "Pincurchin"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "White Herb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Shell Smash",
+     "Ice Beam",
+     "Rest"
+    ],
+    "name": "Blastoise",
+    "nature": "Serious",
+    "species": "Blastoise"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Raichunite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Zap Cannon",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Rush",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Earthquake",
+     "Rest"
+    ],
+    "name": "Excadrill",
+    "nature": "Serious",
+    "species": "Excadrill"
+   },
+   {
+    "ability": "Sand Stream",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Tyranitarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rock Slide",
+     "Knock Off",
+     "Rest"
+    ],
+    "name": "Tyranitar",
+    "nature": "Serious",
+    "species": "Tyranitar"
+   },
+   {
+    "ability": "Heatproof",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Matcha Gotcha",
+     "Rest"
+    ],
+    "name": "Sinistcha",
+    "nature": "Serious",
+    "species": "Sinistcha"
+   },
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "electricterrain",
+   "terrainDuration": 5,
+   "weather": "sandstorm",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "torrent",
+      "hp": 186,
+      "item": "whiteherb",
+      "maxhp": 186,
+      "name": "Blastoise",
+      "pp": {
+       "icebeam": 12,
+       "rest": 8,
+       "shellsmash": 16
+      },
+      "slot": null,
+      "species": "Blastoise",
+      "status": ""
+     },
+     {
+      "ability": "toughclaws",
+      "boosts": {},
+      "hp": 182,
+      "item": "focussash",
+      "maxhp": 182,
+      "name": "Lycanroc",
+      "pp": {
+       "accelerock": 20,
+       "closecombat": 8,
+       "endeavor": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Lycanroc-Dusk",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "electricsurge",
+      "boosts": {},
+      "hp": 155,
+      "item": "ejectbutton",
+      "maxhp": 155,
+      "name": "Pincurchin",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Pincurchin",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "static",
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitey",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "rest": 8,
+       "zapcannon": 8
+      },
+      "slot": null,
+      "species": "Raichu",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandrush",
+      "boosts": {},
+      "hp": 217,
+      "item": "focussash",
+      "maxhp": 217,
+      "name": "Excadrill",
+      "pp": {
+       "earthquake": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Excadrill",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "marvelscale",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "heatproof",
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Sinistcha",
+      "pp": {
+       "matchagotcha": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sinistcha",
+      "status": ""
+     },
+     {
+      "ability": "sandstream",
+      "boosts": {},
+      "canMega": true,
+      "hp": 207,
+      "item": "tyranitarite",
+      "maxhp": 207,
+      "name": "Tyranitar",
+      "pp": {
+       "knockoff": 20,
+       "protect": 8,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Tyranitar",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move closecombat 1, move rest",
+  "p2": "move earthquake, move protect mega"
+ }
+}

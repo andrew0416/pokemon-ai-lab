@@ -1,0 +1,424 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689026287 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689026287), decision 0 = turn 1 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flower Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Floettite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dazzling Gleam",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Floette",
+    "nature": "Serious",
+    "species": "Floette-Eternal"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Throat Chop",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Grassy Glide",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Raichunite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Focus Blast",
+     "Zap Cannon",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Slide",
+     "Dire Claw",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Limber",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Ditto",
+    "nature": "Serious",
+    "species": "Ditto"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 181,
+      "item": "floettite",
+      "maxhp": 181,
+      "name": "Floette",
+      "pp": {
+       "dazzlinggleam": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "rest": 8,
+       "throatchop": 16
+      },
+      "slot": 1,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "limber",
+      "hp": 155,
+      "item": "",
+      "maxhp": 155,
+      "name": "Ditto",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ditto",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "static",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitey",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "focusblast": 8,
+       "protect": 8,
+       "rest": 8,
+       "zapcannon": 8
+      },
+      "slot": 0,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "psychicseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "direclaw": 16,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move dazzlinggleam mega, move throatchop 2",
+  "p2": "move focusblast 2 mega, move followme"
+ }
+}

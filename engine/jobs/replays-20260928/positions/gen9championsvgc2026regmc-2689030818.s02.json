@@ -1,0 +1,796 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689030818 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689030818), decision 2 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Ice Beam",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Snarl",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Psychic",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Drill Run",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Parting Shot",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Cloud Nine",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Drampanite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Calm Mind",
+     "Protect",
+     "Earth Power",
+     "Hyper Voice"
+    ],
+    "name": "Drampa",
+    "nature": "Serious",
+    "species": "Drampa"
+   },
+   {
+    "ability": "Hospitality",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rage Powder",
+     "Rest"
+    ],
+    "name": "Sinistcha",
+    "nature": "Serious",
+    "species": "Sinistcha"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "Pelipper",
+    "nature": "Serious",
+    "species": "Pelipper"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "atk": -1,
+        "def": 1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 197,
+       "item": "",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cloudnine",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "canMega": true,
+       "hp": 97,
+       "item": "drampanite",
+       "lastMove": "calmmind",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "calmmind": 19,
+        "earthpower": 12,
+        "hypervoice": 12,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Drampa",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "ragepowder": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "atk": -2,
+        "def": 1,
+        "spa": -1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 197,
+       "item": "",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cloudnine",
+       "boosts": {
+        "spa": 1,
+        "spd": 1
+       },
+       "canMega": true,
+       "hp": 143,
+       "item": "drampanite",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "calmmind": 19,
+        "earthpower": 12,
+        "hypervoice": 12,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Drampa",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "hospitality",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "ragepowder": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Sinistcha",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move icebeam 2, move dragonpulse -1",
+   "move fakeout 2, move calmmind"
+  ],
+  [
+   "move icebeam 2, move dragonpulse 2",
+   "move partingshot 2, move protect",
+   {
+    "p1": [],
+    "p2": [
+     "switch 3"
+    ]
+   }
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "protect": 8,
+       "rest": 8,
+       "snarl": 16
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cudchew",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "psychic": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Farigiraf",
+      "status": ""
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "ironhead": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "cloudnine",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "drampanite",
+      "maxhp": 185,
+      "name": "Drampa",
+      "pp": {
+       "calmmind": 20,
+       "earthpower": 12,
+       "hypervoice": 12,
+       "protect": 8
+      },
+      "slot": 1,
+      "species": "Drampa",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Pelipper",
+      "pp": {
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     },
+     {
+      "ability": "hospitality",
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Sinistcha",
+      "pp": {
+       "ragepowder": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sinistcha",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move icebeam 1, move snarl",
+  "p2": "move ragepowder, move earthpower 2 mega"
+ }
+}

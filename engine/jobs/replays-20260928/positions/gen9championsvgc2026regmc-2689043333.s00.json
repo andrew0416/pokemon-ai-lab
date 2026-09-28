@@ -1,0 +1,412 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689043333 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043333), decision 0 = turn 1 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Limber",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Hawluchanite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Entrainment",
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Pet Shop",
+    "nature": "Serious",
+    "species": "Hawlucha"
+   },
+   {
+    "ability": "Snow Warning",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sheer Cold",
+     "Rest"
+    ],
+    "name": "Ice Feam",
+    "nature": "Serious",
+    "species": "Vanilluxe"
+   },
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Inteleon",
+    "nature": "Serious",
+    "species": "Inteleon"
+   },
+   {
+    "ability": "Overgrow",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Trace",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Gardevoirite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Calm Mind",
+     "Rest"
+    ],
+    "name": "Gardevoir",
+    "nature": "Serious",
+    "species": "Gardevoir"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Mystical Fire",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Flash Fire",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Bitter Blade",
+     "Rest"
+    ],
+    "name": "Ceruledge",
+    "nature": "Serious",
+    "species": "Ceruledge"
+   },
+   {
+    "ability": "Inner Focus",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Dragonite",
+    "nature": "Serious",
+    "species": "Dragonite"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "snowscape",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "snowwarning",
+      "boosts": {},
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Ice Feam",
+      "pp": {
+       "rest": 8,
+       "sheercold": 8
+      },
+      "slot": 1,
+      "species": "Vanilluxe",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "torrent",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Inteleon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Inteleon",
+      "status": ""
+     },
+     {
+      "ability": "limber",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "hawluchanite",
+      "maxhp": 185,
+      "name": "Pet Shop",
+      "pp": {
+       "entrainment": 16,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": 0,
+      "species": "Hawlucha",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "overgrow",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Ceruledge",
+      "pp": {
+       "bitterblade": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ceruledge",
+      "status": ""
+     },
+     {
+      "ability": "innerfocus",
+      "hp": 198,
+      "item": "",
+      "maxhp": 198,
+      "name": "Dragonite",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Dragonite",
+      "status": ""
+     },
+     {
+      "ability": "limber",
+      "boosts": {},
+      "canMega": true,
+      "hp": 175,
+      "item": "gardevoirite",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "calmmind": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Gardevoir",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "mysticalfire": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move entrainment -2 mega, move sheercold 1",
+  "p2": "move calmmind mega, move mysticalfire 2"
+ }
+}

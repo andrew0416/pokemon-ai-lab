@@ -1,0 +1,1814 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689034540 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689034540), decision 8 = turn 6 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Bold",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Ice Beam",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Snarl",
+     "Protect",
+     "Dragon Pulse",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Bold",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Drill Run",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wood Hammer",
+     "High Horsepower",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Raichunite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Zap Cannon",
+     "Focus Blast",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Swords Dance",
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Overheat",
+     "Rest"
+    ],
+    "name": "Volcarona",
+    "nature": "Serious",
+    "species": "Volcarona"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 21,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "rest": 8,
+        "zapcannon": 7
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 71,
+       "item": "",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "highhorsepower": 12,
+        "rest": 8,
+        "woodhammer": 15
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 91,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "par",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "rest": 8,
+        "zapcannon": 6
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 18,
+       "item": "",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "highhorsepower": 12,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 91,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "par",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "rest": 8,
+        "zapcannon": 6
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 18,
+       "item": "",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "highhorsepower": 12,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 147,
+       "item": "leftovers",
+       "lastMove": "snarl",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "noguard",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 153,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "rest": 8,
+        "zapcannon": 5
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "highhorsepower": 11,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 147,
+       "item": "leftovers",
+       "lastMove": "snarl",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 8,
+        "rest": 8,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "noguard",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 153,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "rest": 8,
+        "zapcannon": 5
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "highhorsepower": 11,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 187,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 171,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "protect": 7,
+        "rest": 8,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 124,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "noguard",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 79,
+       "item": "raichunitey",
+       "lastMove": "zapcannon",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "rest": 8,
+        "zapcannon": 4
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "highhorsepower": 11,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "atk": 2,
+        "def": 1
+       },
+       "hp": 187,
+       "item": "",
+       "lastItem": "grassyseed",
+       "lastMove": "swordsdance",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "rest": 8,
+        "swordsdance": 19
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 2
+       },
+       "hp": 27,
+       "item": "leftovers",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "protect": 7,
+        "rest": 8,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 135,
+       "item": "golisopite",
+       "lastMove": "drillrun",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "noguard",
+       "hp": 79,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "rest": 8,
+        "zapcannon": 4
+       },
+       "slot": null,
+       "species": "Raichu-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "highhorsepower": 11,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8,
+        "swordsdance": 19
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 146,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 2
+       },
+       "hp": 27,
+       "item": "leftovers",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "protect": 7,
+        "rest": 8,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 0,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 135,
+       "item": "golisopite",
+       "lastMove": "drillrun",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "noguard",
+       "boosts": {},
+       "hp": 79,
+       "item": "raichunitey",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "focusblast": 8,
+        "rest": 8,
+        "zapcannon": 4
+       },
+       "slot": 0,
+       "species": "Raichu-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "highhorsepower": 11,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "rest": 8,
+        "swordsdance": 19
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "boosts": {},
+       "hp": 146,
+       "item": "",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "overheat": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Volcarona",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move rest, move icebeam 1",
+   "move woodhammer 1, move zapcannon 1 mega"
+  ],
+  [
+   "move protect, move icebeam -1",
+   "move woodhammer 2, move zapcannon 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move rest, move snarl",
+   "move highhorsepower 2, move zapcannon 1"
+  ],
+  [
+   "switch 4",
+   "switch 3"
+  ],
+  [
+   "move ironhead 2 mega, move protect",
+   "move swordsdance, move zapcannon 1"
+  ],
+  [
+   "move drillrun 1, move dragonpulse 2",
+   "move closecombat 2, switch 4"
+  ],
+  [
+   "",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "protect": 8,
+       "rest": 8,
+       "snarl": 16
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "ironhead": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "static",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitey",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "focusblast": 8,
+       "rest": 8,
+       "zapcannon": 8
+      },
+      "slot": 1,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "highhorsepower": 12,
+       "rest": 8,
+       "woodhammer": 16
+      },
+      "slot": 0,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "grassyseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "rest": 8,
+       "swordsdance": 20
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "hp": 192,
+      "item": "",
+      "maxhp": 192,
+      "name": "Volcarona",
+      "pp": {
+       "overheat": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Volcarona",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move ironhead -2, move snarl",
+  "p2": "move focusblast 2, move overheat 1"
+ }
+}

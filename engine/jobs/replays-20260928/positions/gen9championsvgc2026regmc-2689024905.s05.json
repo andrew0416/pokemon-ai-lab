@@ -1,0 +1,1380 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689024905 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689024905), decision 5 = turn 6 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [
+   "switch 3"
+  ],
+  "p2": []
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Parting Shot",
+     "Flare Blitz",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Unnerve",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Aerodactyl",
+    "nature": "Serious",
+    "species": "Aerodactyl"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Grassy Glide",
+     "U-turn",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Flash Fire",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Bulk Up",
+     "Bitter Blade",
+     "Rest"
+    ],
+    "name": "Ceruledge",
+    "nature": "Serious",
+    "species": "Ceruledge"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Garchompite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Power Gem",
+     "Draco Meteor",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Sand Stream",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Stone Edge",
+     "Yawn",
+     "High Horsepower",
+     "Rest"
+    ],
+    "name": "Hippowdon",
+    "nature": "Serious",
+    "species": "Hippowdon"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Parting Shot",
+     "Flare Blitz",
+     "Throat Chop",
+     "Fake Out"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Overgrow",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "High Horsepower",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "unnerve",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "tailwind",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "rest": 8,
+        "rockslide": 12,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Aerodactyl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "flashfire",
+       "hp": 182,
+       "item": "grassyseed",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "bitterblade": 12,
+        "bulkup": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ceruledge",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 190,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "rest": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 202,
+       "item": "garchompitez",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "powergem": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 215,
+       "item": "leftovers",
+       "lastMove": "stoneedge",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "highhorsepower": 12,
+        "rest": 8,
+        "stoneedge": 7,
+        "yawn": 12
+       },
+       "slot": 1,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "sandstorm",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "unnerve",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "rockslide",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "rest": 8,
+        "rockslide": 11,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Aerodactyl",
+       "status": "",
+       "volatiles": {
+        "yawn": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "flashfire",
+       "hp": 182,
+       "item": "grassyseed",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "bitterblade": 12,
+        "bulkup": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ceruledge",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 190,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "grassyglide": 20,
+        "rest": 8,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 135,
+       "item": "garchompitez",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "powergem": 20,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {
+        "atk": -2,
+        "spa": -1
+       },
+       "hp": 215,
+       "item": "leftovers",
+       "lastMove": "yawn",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "highhorsepower": 12,
+        "rest": 8,
+        "stoneedge": 7,
+        "yawn": 11
+       },
+       "slot": 1,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "sandstorm",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "unnerve",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "rest": 8,
+        "rockslide": 11,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "flashfire",
+       "hp": 182,
+       "item": "grassyseed",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "bitterblade": 12,
+        "bulkup": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ceruledge",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 144,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 207,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "rest": 8,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 135,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "powergem": 20,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {
+        "atk": -3,
+        "spa": -1
+       },
+       "hp": 215,
+       "item": "leftovers",
+       "lastMove": "stoneedge",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "highhorsepower": 12,
+        "rest": 8,
+        "stoneedge": 6,
+        "yawn": 11
+       },
+       "slot": 1,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 184,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "overgrow",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "sandstorm",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "unnerve",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "rest": 8,
+        "rockslide": 11,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "flashfire",
+       "hp": 182,
+       "item": "grassyseed",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "bitterblade": 12,
+        "bulkup": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ceruledge",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 144,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 207,
+       "item": "",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 19,
+        "rest": 8,
+        "uturn": 20
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 135,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "powergem": 20,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "highhorsepower": 12,
+        "rest": 8,
+        "stoneedge": 6,
+        "yawn": 11
+       },
+       "slot": null,
+       "species": "Hippowdon",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 168,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 20,
+        "throatchop": 16
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "overgrow",
+       "boosts": {},
+       "hp": 182,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 12,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "unnerve",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Aerodactyl",
+       "pp": {
+        "rest": 8,
+        "rockslide": 11,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Aerodactyl",
+       "status": ""
+      },
+      {
+       "ability": "flashfire",
+       "boosts": {
+        "atk": -1,
+        "def": 1,
+        "spa": -1
+       },
+       "hp": 182,
+       "item": "",
+       "lastItem": "grassyseed",
+       "maxhp": 182,
+       "name": "Ceruledge",
+       "pp": {
+        "bitterblade": 12,
+        "bulkup": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Ceruledge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 130,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 19,
+        "rest": 8,
+        "uturn": 20
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "levitate",
+       "hp": 135,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "powergem": 20,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 215,
+       "item": "leftovers",
+       "maxhp": 215,
+       "name": "Hippowdon",
+       "pp": {
+        "highhorsepower": 12,
+        "rest": 8,
+        "stoneedge": 6,
+        "yawn": 11
+       },
+       "slot": 0,
+       "species": "Hippowdon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 168,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "flareblitz": 16,
+        "partingshot": 19,
+        "throatchop": 16
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "boosts": {},
+       "hp": 194,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "highhorsepower": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move fakeout 1, move tailwind",
+   "move protect mega, move stoneedge 2"
+  ],
+  [
+   "move partingshot 2, move rockslide",
+   "move protect, move yawn 2",
+   {
+    "p1": [
+     "switch 3"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move fakeout 1, switch 3",
+   "switch 3, move stoneedge 2"
+  ],
+  [
+   "move grassyglide 2, move fakeout 1",
+   "move partingshot -2, switch 4"
+  ],
+  [
+   "switch 4, move partingshot -1",
+   "move partingshot 1, move fakeout 2",
+   {
+    "p1": [],
+    "p2": [
+     "switch 4"
+    ]
+   }
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "sandstorm",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "unnerve",
+      "boosts": {},
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Aerodactyl",
+      "pp": {
+       "rest": 8,
+       "rockslide": 12,
+       "tailwind": 16
+      },
+      "slot": 1,
+      "species": "Aerodactyl",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "flashfire",
+      "hp": 182,
+      "item": "grassyseed",
+      "maxhp": 182,
+      "name": "Ceruledge",
+      "pp": {
+       "bitterblade": 12,
+       "bulkup": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ceruledge",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Incineroar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "rest": 8,
+       "uturn": 20
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandveil",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 215,
+      "item": "garchompitez",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "dracometeor": 8,
+       "powergem": 20,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sandstream",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 215,
+      "item": "leftovers",
+      "maxhp": 215,
+      "name": "Hippowdon",
+      "pp": {
+       "highhorsepower": 12,
+       "rest": 8,
+       "stoneedge": 8,
+       "yawn": 12
+      },
+      "slot": 1,
+      "species": "Hippowdon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "flareblitz": 16,
+       "partingshot": 20,
+       "throatchop": 16
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "overgrow",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "highhorsepower": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move bulkup, move partingshot 1",
+  "p2": "move highhorsepower 1, move highhorsepower 1"
+ }
+}

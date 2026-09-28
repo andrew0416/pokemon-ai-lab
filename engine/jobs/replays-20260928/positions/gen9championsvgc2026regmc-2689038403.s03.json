@@ -1,0 +1,964 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689038403 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038403), decision 3 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sap Sipper",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Shelter",
+     "Draco Meteor",
+     "Body Press"
+    ],
+    "name": "Goodra",
+    "nature": "Serious",
+    "species": "Goodra-Hisui"
+   },
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Dragon Cheer",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "First Impression",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Reflect",
+     "Rest"
+    ],
+    "name": "Sableye",
+    "nature": "Serious",
+    "species": "Sableye"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Moxie",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Salamencite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Dragon Pulse",
+     "Rest"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Grassy Glide",
+     "Wood Hammer",
+     "High Horsepower"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "sapsipper",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 187,
+       "name": "Goodra",
+       "pp": {
+        "bodypress": 12,
+        "dracometeor": 8,
+        "protect": 7,
+        "shelter": 12
+       },
+       "slot": 0,
+       "species": "Goodra-Hisui",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 202,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "dragoncheer": 16,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "keeneye",
+       "hp": 157,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "fakeout": 12,
+        "reflect": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 20,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "moxie",
+       "boosts": {},
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "dragonpulse": 12,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "sapsipper",
+       "boosts": {
+        "def": 2
+       },
+       "hp": 152,
+       "item": "",
+       "lastMove": "shelter",
+       "maxhp": 187,
+       "name": "Goodra",
+       "pp": {
+        "bodypress": 12,
+        "dracometeor": 8,
+        "protect": 7,
+        "shelter": 11
+       },
+       "slot": 0,
+       "species": "Goodra-Hisui",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 80,
+       "item": "leftovers",
+       "lastMove": "dragoncheer",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "dragoncheer": 15,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "keeneye",
+       "hp": 157,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "fakeout": 12,
+        "reflect": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "moxie",
+       "boosts": {},
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "lastMove": "dragonpulse",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "dragonpulse": 11,
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "firstimpression": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "sapsipper",
+       "boosts": {
+        "def": 4
+       },
+       "hp": 139,
+       "item": "",
+       "lastMove": "shelter",
+       "maxhp": 187,
+       "name": "Goodra",
+       "pp": {
+        "bodypress": 12,
+        "dracometeor": 8,
+        "protect": 7,
+        "shelter": 10
+       },
+       "slot": 0,
+       "species": "Goodra-Hisui",
+       "status": "",
+       "volatiles": {
+        "dragoncheer": {}
+       }
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 104,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "dragoncheer": 15,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "keeneye",
+       "hp": 157,
+       "item": "",
+       "maxhp": 157,
+       "name": "Sableye",
+       "pp": {
+        "fakeout": 12,
+        "reflect": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sableye",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "fakeout": 11,
+        "grassyglide": 19,
+        "highhorsepower": 12,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 202,
+       "item": "salamencite",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "dragonpulse": 11,
+        "hypervoice": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect, move protect",
+   "move hypervoice, move fakeout 2"
+  ],
+  [
+   "move shelter, move dragoncheer -1",
+   "move dragonpulse 1, move grassyglide 2"
+  ],
+  [
+   "move shelter, move protect",
+   "move hypervoice mega, move woodhammer 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "firstimpression": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "sapsipper",
+      "boosts": {},
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Goodra",
+      "pp": {
+       "bodypress": 12,
+       "dracometeor": 8,
+       "protect": 8,
+       "shelter": 12
+      },
+      "slot": 0,
+      "species": "Goodra-Hisui",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "marvelscale",
+      "boosts": {},
+      "hp": 202,
+      "item": "leftovers",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "dragoncheer": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Milotic",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "keeneye",
+      "hp": 157,
+      "item": "",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "fakeout": 12,
+       "reflect": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sableye",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "fakeout": 12,
+       "grassyglide": 20,
+       "highhorsepower": 12,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "moxie",
+      "boosts": {},
+      "canMega": true,
+      "hp": 202,
+      "item": "salamencite",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "dragonpulse": 12,
+       "hypervoice": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Salamence",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move dracometeor 1, move dragoncheer -1",
+  "p2": "move dragonpulse 1, move grassyglide 2"
+ }
+}

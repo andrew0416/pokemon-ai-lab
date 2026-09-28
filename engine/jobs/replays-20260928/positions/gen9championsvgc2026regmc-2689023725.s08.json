@@ -1,0 +1,1860 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689023725 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689023725), decision 8 = turn 7 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Helping Hand",
+     "Tailwind",
+     "Hurricane",
+     "Rest"
+    ],
+    "name": "Pelipper",
+    "nature": "Serious",
+    "species": "Pelipper"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Claw",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Follow Me",
+     "Psychic",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 2,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Coil",
+     "Hypnosis",
+     "Muddy Water",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Tomb",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Oblivious",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Icicle Crash",
+     "Stomping Tantrum",
+     "Rest"
+    ],
+    "name": "Mamoswine",
+    "nature": "Serious",
+    "species": "Mamoswine"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "hypervoice",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "hypervoice": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "helpinghand",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "helpinghand": 19,
+        "hurricane": 12,
+        "rest": 8,
+        "tailwind": 16
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 98,
+       "item": "",
+       "lastMove": "followme",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "lifeorb",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "iciclecrash": 12,
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 1,
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 126,
+       "item": "sitrusberry",
+       "lastMove": "coil",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 19,
+        "hypnosis": 20,
+        "muddywater": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "rocktomb": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "hypervoice": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 94,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "tailwind",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "helpinghand": 19,
+        "hurricane": 12,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 98,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "lifeorb",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "iciclecrash": 12,
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 1,
+        "atk": 1,
+        "def": 1
+       },
+       "hp": 126,
+       "item": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 19,
+        "hypnosis": 19,
+        "muddywater": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "rocktomb": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "hypervoice": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 59,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "hurricane",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "helpinghand": 19,
+        "hurricane": 11,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 25,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "lifeorb",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "iciclecrash": 12,
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 126,
+       "item": "sitrusberry",
+       "lastMove": "coil",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 19,
+        "muddywater": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "rocktomb": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "hypervoice": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 59,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "slp",
+       "statusTime": 1,
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "hurricane",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "helpinghand": 19,
+        "hurricane": 10,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "lifeorb",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "iciclecrash": 12,
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 126,
+       "item": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 18,
+        "muddywater": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "rocktomb": 16
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "hypervoice": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 59,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "slp",
+       "statusTime": 1,
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "hurricane",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "helpinghand": 19,
+        "hurricane": 10,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "slp",
+       "statusTime": 3,
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "lifeorb",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "iciclecrash": 12,
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 126,
+       "item": "sitrusberry",
+       "lastMove": "hypnosis",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 18,
+        "muddywater": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 187,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "rocktomb": 16
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "hypervoice": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "hp": 215,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 8,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "spe": -1
+       },
+       "hp": 49,
+       "item": "",
+       "lastMove": "hurricane",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "helpinghand": 19,
+        "hurricane": 10,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Pelipper",
+       "status": "slp",
+       "statusTime": 2,
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "lifeorb",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "iciclecrash": 12,
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 126,
+       "item": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 18,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 12,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "rocktomb",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "rocktomb": 15
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "hypervoice": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "sandveil",
+       "boosts": {
+        "accuracy": -1,
+        "spe": -1
+       },
+       "hp": 135,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "hp": 49,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "helpinghand": 19,
+        "hurricane": 10,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "slp",
+       "statusTime": 2
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "lifeorb",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "iciclecrash": 12,
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 126,
+       "item": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 18,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 12,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "rocktomb",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "rocktomb": 14
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "hypervoice": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandveil",
+       "boosts": {
+        "accuracy": -1,
+        "spe": -1
+       },
+       "hp": 135,
+       "item": "lifeorb",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 49,
+       "item": "",
+       "maxhp": 167,
+       "name": "Pelipper",
+       "pp": {
+        "helpinghand": 19,
+        "hurricane": 10,
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "slp",
+       "statusTime": 2
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "psychic": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "lifeorb",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "iciclecrash": 12,
+        "rest": 8,
+        "stompingtantrum": 12
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {
+        "accuracy": 2,
+        "atk": 2,
+        "def": 2
+       },
+       "hp": 126,
+       "item": "sitrusberry",
+       "lastMove": "muddywater",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "coil": 18,
+        "hypnosis": 18,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 12,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "rocktomb",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "rocktomb": 14
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move hypervoice, move helpinghand -1",
+   "move followme, move coil"
+  ],
+  [
+   "switch 3, move tailwind",
+   "move psychic 1, move hypnosis 1"
+  ],
+  [
+   "move ironhead -2 mega, move hurricane 1",
+   "move psychic 1, move coil"
+  ],
+  [
+   "move ironhead -2, move hurricane 1",
+   "move followme, move hypnosis 2"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move ironhead 1, move helpinghand -1",
+   "move rocktomb 2, move muddywater"
+  ],
+  [
+   "move ironhead -2, switch 4",
+   "move rocktomb 2, move muddywater"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "hypervoice": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sandveil",
+      "hp": 215,
+      "item": "lifeorb",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "dragonclaw": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Garchomp",
+      "status": ""
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "ironhead": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Pelipper",
+      "pp": {
+       "helpinghand": 20,
+       "hurricane": 12,
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 1,
+      "species": "Pelipper",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "psychic": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "oblivious",
+      "hp": 217,
+      "item": "lifeorb",
+      "maxhp": 217,
+      "name": "Mamoswine",
+      "pp": {
+       "iciclecrash": 12,
+       "rest": 8,
+       "stompingtantrum": 12
+      },
+      "slot": null,
+      "species": "Mamoswine",
+      "status": ""
+     },
+     {
+      "ability": "marvelscale",
+      "boosts": {},
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "coil": 20,
+       "hypnosis": 20,
+       "muddywater": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Milotic",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "psychicseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "rest": 8,
+       "rocktomb": 16
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move hypervoice, move dragonclaw 2",
+  "p2": "switch 4, move hypnosis 1"
+ }
+}

@@ -1,0 +1,600 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689035484 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035484), decision 1 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "High Horsepower",
+     "Grassy Glide",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Flower Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Floettite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Calm Mind",
+     "Rest"
+    ],
+    "name": "Floette",
+    "nature": "Serious",
+    "species": "Floette-Eternal"
+   },
+   {
+    "ability": "Flame Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rage Powder",
+     "Rest"
+    ],
+    "name": "Volcarona",
+    "nature": "Serious",
+    "species": "Volcarona"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flower Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Floettite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Light of Ruin",
+     "Rest"
+    ],
+    "name": "Floette",
+    "nature": "Serious",
+    "species": "Floette-Eternal"
+   },
+   {
+    "ability": "Good as Gold",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Nasty Plot",
+     "Rest"
+    ],
+    "name": "Gholdengo",
+    "nature": "Serious",
+    "species": "Gholdengo"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Grassy Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Dire Claw",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "fairyaura",
+       "boosts": {},
+       "hp": 181,
+       "item": "floettite",
+       "lastMove": "protect",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "calmmind": 20,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Floette-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "highhorsepower": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "flamebody",
+       "hp": 192,
+       "item": "grassyseed",
+       "maxhp": 192,
+       "name": "Volcarona",
+       "pp": {
+        "ragepowder": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Volcarona",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flowerveil",
+       "boosts": {},
+       "canMega": true,
+       "hp": 181,
+       "item": "floettite",
+       "lastMove": "protect",
+       "maxhp": 181,
+       "name": "Floette",
+       "pp": {
+        "lightofruin": 8,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Floette-Eternal",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "goodasgold",
+       "boosts": {
+        "spa": 2
+       },
+       "hp": 36,
+       "item": "",
+       "lastMove": "nastyplot",
+       "maxhp": 194,
+       "name": "Gholdengo",
+       "pp": {
+        "nastyplot": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gholdengo",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "grassyseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "direclaw": 16,
+        "fakeout": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move highhorsepower 2, move protect mega",
+   "move protect, move nastyplot"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 181,
+      "item": "floettite",
+      "maxhp": 181,
+      "name": "Floette",
+      "pp": {
+       "calmmind": 20,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "grassyglide": 20,
+       "highhorsepower": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "flamebody",
+      "hp": 192,
+      "item": "grassyseed",
+      "maxhp": 192,
+      "name": "Volcarona",
+      "pp": {
+       "ragepowder": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Volcarona",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 181,
+      "item": "floettite",
+      "maxhp": 181,
+      "name": "Floette",
+      "pp": {
+       "lightofruin": 8,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "goodasgold",
+      "boosts": {},
+      "hp": 194,
+      "item": "",
+      "maxhp": 194,
+      "name": "Gholdengo",
+      "pp": {
+       "nastyplot": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Gholdengo",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "hp": 187,
+      "item": "grassyseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "direclaw": 16,
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sneasler",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move grassyglide 2, move calmmind",
+  "p2": "move lightofruin 1 mega, move nastyplot"
+ }
+}

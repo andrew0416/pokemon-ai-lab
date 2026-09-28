@@ -1,0 +1,2027 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689050087 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689050087), decision 9 = turn 7 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Psychic",
+     "Trick Room",
+     "Protect",
+     "Grass Knot"
+    ],
+    "name": "Farigiraf",
+    "nature": "Bold",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Leech Life",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Swarm",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Scizorite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trailblaze",
+     "Rest"
+    ],
+    "name": "Scizor",
+    "nature": "Serious",
+    "species": "Scizor"
+   },
+   {
+    "ability": "Synchronize",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Rocky Helmet",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Snarl",
+     "Taunt",
+     "Foul Play",
+     "Rest"
+    ],
+    "name": "Umbreon",
+    "nature": "Serious",
+    "species": "Umbreon"
+   },
+   {
+    "ability": "Vital Spirit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Storm Throw",
+     "Rage Fist",
+     "Rest"
+    ],
+    "name": "Annihilape",
+    "nature": "Serious",
+    "species": "Annihilape"
+   },
+   {
+    "ability": "Sap Sipper",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Flamethrower",
+     "Ice Beam",
+     "Thunderbolt",
+     "Rest"
+    ],
+    "name": "Goodra",
+    "nature": "Serious",
+    "species": "Goodra"
+   }
+  ]
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 178,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "psychic": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 31,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "ragefist": 12,
+        "rest": 8,
+        "stormthrow": 12
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "sapsipper",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 16,
+        "icebeam": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Goodra",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "hp": 0,
+       "item": "scizorite",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "rest": 8,
+        "trailblaze": 19
+       },
+       "slot": null,
+       "species": "Scizor-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 202,
+       "item": "rockyhelmet",
+       "lastMove": "snarl",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "rest": 8,
+        "snarl": 15,
+        "taunt": 20
+       },
+       "slot": 1,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1
+       },
+       "hp": 178,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "psychic": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 31,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "ragefist": 12,
+        "rest": 8,
+        "stormthrow": 12
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sapsipper",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 16,
+        "icebeam": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Goodra",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "hp": 0,
+       "item": "scizorite",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "rest": 8,
+        "trailblaze": 19
+       },
+       "slot": null,
+       "species": "Scizor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 202,
+       "item": "rockyhelmet",
+       "lastMove": "snarl",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "rest": 8,
+        "snarl": 15,
+        "taunt": 20
+       },
+       "slot": 1,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3
+       },
+       "hp": 43,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 10,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 171,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "psychic": 12,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 31,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 99,
+       "item": "",
+       "lastMove": "stormthrow",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "ragefist": 12,
+        "rest": 8,
+        "stormthrow": 11
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sapsipper",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 16,
+        "icebeam": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Goodra",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "hp": 0,
+       "item": "scizorite",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "rest": 8,
+        "trailblaze": 19
+       },
+       "slot": null,
+       "species": "Scizor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 202,
+       "item": "rockyhelmet",
+       "lastMove": "snarl",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "rest": 8,
+        "snarl": 14,
+        "taunt": 20
+       },
+       "slot": 1,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3
+       },
+       "hp": 55,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 171,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "psychic": 11,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "taunt": {
+         "duration": 2
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 31,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 99,
+       "item": "",
+       "lastMove": "stormthrow",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "ragefist": 12,
+        "rest": 8,
+        "stormthrow": 10
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sapsipper",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 16,
+        "icebeam": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Goodra",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "hp": 0,
+       "item": "scizorite",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "rest": 8,
+        "trailblaze": 19
+       },
+       "slot": null,
+       "species": "Scizor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 202,
+       "item": "rockyhelmet",
+       "lastMove": "taunt",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "rest": 8,
+        "snarl": 14,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 55,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 143,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "psychic": 10,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "taunt": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {
+        "spa": -1
+       },
+       "canMega": true,
+       "hp": 121,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 31,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 25,
+       "item": "",
+       "lastMove": "stormthrow",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "ragefist": 12,
+        "rest": 8,
+        "stormthrow": 9
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sapsipper",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 16,
+        "icebeam": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Goodra",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "hp": 0,
+       "item": "scizorite",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "rest": 8,
+        "trailblaze": 19
+       },
+       "slot": null,
+       "species": "Scizor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 202,
+       "item": "rockyhelmet",
+       "lastMove": "snarl",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 16,
+        "rest": 8,
+        "snarl": 13,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 55,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 103,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "psychic": 9,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 97,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 31,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "ragefist": 11,
+        "rest": 8,
+        "stormthrow": 9
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": "fnt"
+      },
+      {
+       "ability": "sapsipper",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 16,
+        "icebeam": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": null,
+       "species": "Goodra",
+       "status": ""
+      },
+      {
+       "ability": "technician",
+       "hp": 0,
+       "item": "scizorite",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "rest": 8,
+        "trailblaze": 19
+       },
+       "slot": null,
+       "species": "Scizor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 16,
+       "item": "rockyhelmet",
+       "lastMove": "foulplay",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 15,
+        "rest": 8,
+        "snarl": 13,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 55,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spa": -2
+       },
+       "hp": 103,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "psychic": 9,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 97,
+       "item": "golisopite",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 31,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "ragefist": 11,
+        "rest": 8,
+        "stormthrow": 9
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "sapsipper",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 16,
+        "icebeam": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": 0,
+       "species": "Goodra",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "technician",
+       "hp": 0,
+       "item": "scizorite",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "rest": 8,
+        "trailblaze": 19
+       },
+       "slot": null,
+       "species": "Scizor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 16,
+       "item": "rockyhelmet",
+       "lastMove": "foulplay",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 15,
+        "rest": 8,
+        "snarl": 13,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 55,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spa": -3
+       },
+       "hp": 25,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "psychic": 9,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "hp": 31,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "ragefist": 11,
+        "rest": 8,
+        "stormthrow": 9
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "sapsipper",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "flamethrower",
+       "maxhp": 197,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "icebeam": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": 0,
+       "species": "Goodra",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "technician",
+       "hp": 0,
+       "item": "scizorite",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "rest": 8,
+        "trailblaze": 19
+       },
+       "slot": null,
+       "species": "Scizor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 16,
+       "item": "rockyhelmet",
+       "lastMove": "snarl",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 15,
+        "rest": 8,
+        "snarl": 12,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 55,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "electroshot": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "spa": -3
+       },
+       "hp": 25,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "protect": 8,
+        "psychic": 9,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "hp": 0,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod-Mega",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 31,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "muddywater": 11,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "ragefist": 11,
+        "rest": 8,
+        "stormthrow": 9
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "sapsipper",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "flamethrower",
+       "maxhp": 197,
+       "name": "Goodra",
+       "pp": {
+        "flamethrower": 15,
+        "icebeam": 12,
+        "rest": 8,
+        "thunderbolt": 16
+       },
+       "slot": 0,
+       "species": "Goodra",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "technician",
+       "hp": 0,
+       "item": "scizorite",
+       "maxhp": 177,
+       "name": "Scizor",
+       "pp": {
+        "rest": 8,
+        "trailblaze": 19
+       },
+       "slot": null,
+       "species": "Scizor-Mega",
+       "status": ""
+      },
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 16,
+       "item": "rockyhelmet",
+       "lastMove": "snarl",
+       "maxhp": 202,
+       "name": "Umbreon",
+       "pp": {
+        "foulplay": 15,
+        "rest": 8,
+        "snarl": 12,
+        "taunt": 19
+       },
+       "slot": 1,
+       "species": "Umbreon",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move muddywater, move electroshot 1",
+   "move trailblaze 1 mega, move snarl"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "switch 3, move electroshot 1",
+   "move stormthrow 2, move snarl"
+  ],
+  [
+   "move psychic -2, move protect",
+   "move stormthrow 2, move taunt 1"
+  ],
+  [
+   "move psychic 1, switch 4",
+   "move stormthrow 2, move snarl"
+  ],
+  [
+   "move psychic 1, move leechlife 2 mega",
+   "move ragefist 2, move foulplay 1"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move trickroom, move leechlife -1",
+   "move flamethrower 2, move snarl"
+  ],
+  [
+   "switch 4",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "electroshot": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cudchew",
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "grassknot": 20,
+       "protect": 8,
+       "psychic": 12,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Farigiraf",
+      "status": ""
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "leechlife": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "muddywater": 12,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "vitalspirit",
+      "hp": 217,
+      "item": "",
+      "maxhp": 217,
+      "name": "Annihilape",
+      "pp": {
+       "ragefist": 12,
+       "rest": 8,
+       "stormthrow": 12
+      },
+      "slot": null,
+      "species": "Annihilape",
+      "status": ""
+     },
+     {
+      "ability": "sapsipper",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Goodra",
+      "pp": {
+       "flamethrower": 16,
+       "icebeam": 12,
+       "rest": 8,
+       "thunderbolt": 16
+      },
+      "slot": null,
+      "species": "Goodra",
+      "status": ""
+     },
+     {
+      "ability": "swarm",
+      "boosts": {},
+      "canMega": true,
+      "hp": 177,
+      "item": "scizorite",
+      "maxhp": 177,
+      "name": "Scizor",
+      "pp": {
+       "rest": 8,
+       "trailblaze": 20
+      },
+      "slot": 0,
+      "species": "Scizor",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "synchronize",
+      "boosts": {},
+      "hp": 202,
+      "item": "rockyhelmet",
+      "maxhp": 202,
+      "name": "Umbreon",
+      "pp": {
+       "foulplay": 16,
+       "rest": 8,
+       "snarl": 16,
+       "taunt": 20
+      },
+      "slot": 1,
+      "species": "Umbreon",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move electroshot -1",
+  "p2": "move icebeam 2, move snarl"
+ }
+}

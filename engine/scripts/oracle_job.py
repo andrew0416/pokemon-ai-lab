@@ -137,7 +137,9 @@ def pack(list_file: str, job: str, sets: list[str]) -> None:
         json.dump(d, open(out, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
         prov["positions"].append({"file": sc.name, "from": src.replace("\\", "/")})
     json.dump(prov, open(dst / "provenance.json", "w", encoding="utf-8"), indent=1, ensure_ascii=False)
-    conf = {}
+    # The job runs only on the branch it was packed on (the workflow checks this): a merge
+    # carrying the job into another branch must not run it again.
+    conf = {"branch": subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], text=True, cwd=ROOT).strip()}
     for s in sets:
         k, v = s.split("=", 1)
         conf[k] = json.loads(v)

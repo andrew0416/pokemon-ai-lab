@@ -1,0 +1,1473 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689045639 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689045639), decision 6 = turn 5 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Earth Power",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Close Combat",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Overgrow",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Meganiumite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Solar Beam",
+     "Protect",
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Meganium",
+    "nature": "Serious",
+    "species": "Meganium"
+   },
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Swords Dance",
+     "Kowtow Cleave",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Ice Beam",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Snarl",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Psychic",
+     "Grass Knot",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Drill Run",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": "fnt"
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 8,
+        "rest": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "canMega": true,
+       "hp": 187,
+       "item": "meganiumite",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Meganium",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 119,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 8,
+        "rest": 8,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "overgrow",
+       "boosts": {},
+       "canMega": true,
+       "hp": 187,
+       "item": "meganiumite",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "solarbeam": 12,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Meganium",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 119,
+       "item": "",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 8,
+        "rest": 8,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "megasol",
+       "boosts": {},
+       "hp": 187,
+       "item": "meganiumite",
+       "lastMove": "solarbeam",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "solarbeam": 11,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Meganium-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 119,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 8,
+        "rest": 8,
+        "swordsdance": 20
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "megasol",
+       "boosts": {},
+       "hp": 187,
+       "item": "meganiumite",
+       "lastMove": "solarbeam",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "solarbeam": 11,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Meganium-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 119,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 2
+       },
+       "hp": 207,
+       "item": "",
+       "lastMove": "swordsdance",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "protect": 8,
+        "rest": 8,
+        "swordsdance": 19
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "megasol",
+       "boosts": {},
+       "hp": 187,
+       "item": "meganiumite",
+       "lastMove": "protect",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "solarbeam": 11,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Meganium-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 119,
+       "item": "",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 20,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 182,
+       "item": "golisopite",
+       "lastMove": "ironhead",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 12,
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 2
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandveil",
+       "hp": 0,
+       "item": "",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "earthpower": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 2
+       },
+       "hp": 48,
+       "item": "",
+       "lastMove": "kowtowcleave",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "protect": 8,
+        "rest": 8,
+        "swordsdance": 19
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "megasol",
+       "boosts": {},
+       "hp": 187,
+       "item": "meganiumite",
+       "lastMove": "protect",
+       "maxhp": 187,
+       "name": "Meganium",
+       "pp": {
+        "protect": 6,
+        "rest": 8,
+        "solarbeam": 11,
+        "weatherball": 12
+       },
+       "slot": 0,
+       "species": "Meganium-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 8,
+        "fakeout": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "rest": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 119,
+       "item": "",
+       "lastMove": "grassknot",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "grassknot": 19,
+        "psychic": 11,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {},
+       "hp": 73,
+       "item": "golisopite",
+       "lastMove": "drillrun",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "drillrun": 11,
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move earthpower 2, move fakeout 2",
+   "move icebeam 1, switch 3"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move solarbeam 1 mega, switch 4",
+   "move icebeam -2, move trickroom"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move protect, move swordsdance",
+   "move ironhead 1 mega, move psychic 1"
+  ],
+  [
+   "move protect, move kowtowcleave 1",
+   "move drillrun 2, move grassknot 2"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandveil",
+      "boosts": {},
+      "hp": 215,
+      "item": "",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "earthpower": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "defiant",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "protect": 8,
+       "rest": 8,
+       "swordsdance": 20
+      },
+      "slot": null,
+      "species": "Kingambit",
+      "status": ""
+     },
+     {
+      "ability": "overgrow",
+      "canMega": true,
+      "hp": 187,
+      "item": "meganiumite",
+      "maxhp": 187,
+      "name": "Meganium",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "solarbeam": 12,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Meganium",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {},
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "rest": 8,
+       "snarl": 16
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cudchew",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "grassknot": 20,
+       "psychic": 12,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Farigiraf",
+      "status": ""
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "drillrun": 12,
+       "ironhead": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move protect, move protect",
+  "p2": "move drillrun 2, move psychic 1"
+ }
+}

@@ -1,0 +1,762 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689044254 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044254), decision 2 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Heat Wave",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Psychic",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Spirit Break",
+     "Reflect",
+     "Parting Shot",
+     "Rest"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Serious",
+    "species": "Grimmsnarl"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rage Fist",
+     "Bulk Up",
+     "Drain Punch",
+     "Rest"
+    ],
+    "name": "Annihilape",
+    "nature": "Serious",
+    "species": "Annihilape"
+   },
+   {
+    "ability": "Friend Guard",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Beat Up",
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Maushold",
+    "nature": "Serious",
+    "species": "Maushold"
+   },
+   {
+    "ability": "Justified",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Lucarionite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Drain Punch",
+     "Extreme Speed",
+     "Rest"
+    ],
+    "name": "Lucario",
+    "nature": "Serious",
+    "species": "Lucario"
+   },
+   {
+    "ability": "Snow Cloak",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Ninetales-Alola",
+    "nature": "Serious",
+    "species": "Ninetales-Alola"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": "fnt"
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "partingshot": 20,
+        "reflect": 20,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 118,
+       "item": "leftovers",
+       "lastMove": "ragefist",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 12,
+        "ragefist": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "justified",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionite",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "drainpunch": 12,
+        "extremespeed": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "friendguard",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "beatup",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Maushold",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "heatwave": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "lastMove": "psychic",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "partingshot": 20,
+        "reflect": 20,
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 118,
+       "item": "leftovers",
+       "lastMove": "ragefist",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "bulkup": 20,
+        "drainpunch": 12,
+        "ragefist": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "justified",
+       "canMega": true,
+       "hp": 177,
+       "item": "lucarionite",
+       "maxhp": 177,
+       "name": "Lucario",
+       "pp": {
+        "drainpunch": 12,
+        "extremespeed": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Lucario",
+       "status": ""
+      },
+      {
+       "ability": "friendguard",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "beatup",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "beatup": 11,
+        "followme": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Maushold",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "snowcloak",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Ninetales",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Ninetales-Alola",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move heatwave mega, move psychic 1",
+   "move ragefist 1, move beatup -1"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "heatwave": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {},
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "psychic": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "prankster",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "partingshot": 20,
+       "reflect": 20,
+       "rest": 8,
+       "spiritbreak": 16
+      },
+      "slot": null,
+      "species": "Grimmsnarl",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "defiant",
+      "boosts": {},
+      "hp": 217,
+      "item": "leftovers",
+      "maxhp": 217,
+      "name": "Annihilape",
+      "pp": {
+       "bulkup": 20,
+       "drainpunch": 12,
+       "ragefist": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Annihilape",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "justified",
+      "canMega": true,
+      "hp": 177,
+      "item": "lucarionite",
+      "maxhp": 177,
+      "name": "Lucario",
+      "pp": {
+       "drainpunch": 12,
+       "extremespeed": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Lucario",
+      "status": ""
+     },
+     {
+      "ability": "friendguard",
+      "boosts": {},
+      "hp": 181,
+      "item": "focussash",
+      "maxhp": 181,
+      "name": "Maushold",
+      "pp": {
+       "beatup": 12,
+       "followme": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Maushold",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "snowcloak",
+      "hp": 180,
+      "item": "",
+      "maxhp": 180,
+      "name": "Ninetales",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Ninetales-Alola",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move spiritbreak 1, move psychic 1",
+  "p2": "switch 3, move beatup -1"
+ }
+}

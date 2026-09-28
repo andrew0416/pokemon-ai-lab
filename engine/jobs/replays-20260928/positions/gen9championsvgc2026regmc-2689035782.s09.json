@@ -1,0 +1,1991 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689035782 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689035782), decision 9 = turn 7 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Libero",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "High Jump Kick",
+     "Rest"
+    ],
+    "name": "Cinderace",
+    "nature": "Serious",
+    "species": "Cinderace"
+   },
+   {
+    "ability": "Trace",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Gardevoirite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Mystical Fire",
+     "Hyper Voice",
+     "Rest"
+    ],
+    "name": "Gardevoir",
+    "nature": "Serious",
+    "species": "Gardevoir"
+   },
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Follow Me",
+     "Trick Room",
+     "Helping Hand",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Oblivious",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "High Horsepower",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Mamoswine",
+    "nature": "Serious",
+    "species": "Mamoswine"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Stream",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Slide",
+     "Fire Punch",
+     "Rest"
+    ],
+    "name": "Tyranitar",
+    "nature": "Serious",
+    "species": "Tyranitar"
+   },
+   {
+    "ability": "Rock Head",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Steelixite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Steelix",
+    "nature": "Serious",
+    "species": "Steelix"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Destiny Bond",
+     "Helping Hand",
+     "Lash Out"
+    ],
+    "name": "Dogrino",
+    "nature": "Serious",
+    "species": "Mabosstiff"
+   },
+   {
+    "ability": "Synchronize",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dazzling Gleam",
+     "Rest"
+    ],
+    "name": "Alakazam",
+    "nature": "Serious",
+    "species": "Alakazam"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "boosts": {},
+       "hp": 116,
+       "item": "",
+       "lastMove": "highjumpkick",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "highjumpkick": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Cinderace",
+       "status": "",
+       "types": "Fighting",
+       "volatiles": {}
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {},
+       "hp": 5,
+       "item": "gardevoirite",
+       "lastMove": "mysticalfire",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "hypervoice": 12,
+        "mysticalfire": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 177,
+       "item": "psychicseed",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 162,
+       "item": "",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "dazzlinggleam": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Alakazam",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Dogrino",
+       "pp": {
+        "destinybond": 8,
+        "helpinghand": 20,
+        "lashout": 8,
+        "protect": 8
+       },
+       "slot": null,
+       "species": "Mabosstiff",
+       "status": ""
+      },
+      {
+       "ability": "sandforce",
+       "hp": 0,
+       "item": "steelixite",
+       "maxhp": 182,
+       "name": "Steelix",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Steelix-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 187,
+       "item": "lifeorb",
+       "lastMove": "rockslide",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "firepunch": 16,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 116,
+       "item": "",
+       "lastMove": "highjumpkick",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "highjumpkick": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Cinderace",
+       "status": "",
+       "types": "Fighting",
+       "volatiles": {}
+      },
+      {
+       "ability": "pixilate",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 5,
+       "item": "gardevoirite",
+       "lastMove": "mysticalfire",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "hypervoice": 12,
+        "mysticalfire": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Gardevoir-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 177,
+       "item": "psychicseed",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 162,
+       "item": "",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "dazzlinggleam": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Alakazam",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 187,
+       "item": "",
+       "maxhp": 187,
+       "name": "Dogrino",
+       "pp": {
+        "destinybond": 8,
+        "helpinghand": 20,
+        "lashout": 8,
+        "protect": 8
+       },
+       "slot": 1,
+       "species": "Mabosstiff",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandforce",
+       "hp": 0,
+       "item": "steelixite",
+       "maxhp": 182,
+       "name": "Steelix",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Steelix-Mega",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 187,
+       "item": "lifeorb",
+       "lastMove": "rockslide",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "firepunch": 16,
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "highjumpkick": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": "fnt"
+      },
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "hypervoice": 11,
+        "mysticalfire": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": "fnt"
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 177,
+       "item": "psychicseed",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "oblivious",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Mamoswine",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 162,
+       "item": "",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "dazzlinggleam": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Alakazam",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 176,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 187,
+       "name": "Dogrino",
+       "pp": {
+        "destinybond": 8,
+        "helpinghand": 20,
+        "lashout": 8,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Mabosstiff",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandforce",
+       "hp": 0,
+       "item": "steelixite",
+       "maxhp": 182,
+       "name": "Steelix",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Steelix-Mega",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 51,
+       "item": "lifeorb",
+       "lastMove": "rockslide",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "firepunch": 16,
+        "rest": 8,
+        "rockslide": 10
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 5,
+    "weather": "sandstorm",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "highjumpkick": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "hypervoice": 11,
+        "mysticalfire": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 177,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 162,
+       "item": "",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "dazzlinggleam": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Alakazam",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 176,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 187,
+       "name": "Dogrino",
+       "pp": {
+        "destinybond": 8,
+        "helpinghand": 20,
+        "lashout": 8,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Mabosstiff",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandforce",
+       "hp": 0,
+       "item": "steelixite",
+       "maxhp": 182,
+       "name": "Steelix",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Steelix-Mega",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 51,
+       "item": "lifeorb",
+       "lastMove": "rockslide",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "firepunch": 16,
+        "rest": 8,
+        "rockslide": 10
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "sandstorm",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "highjumpkick": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "hypervoice": 11,
+        "mysticalfire": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 85,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "followme",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 19,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 162,
+       "item": "",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "dazzlinggleam": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Alakazam",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 65,
+       "item": "",
+       "lastMove": "destinybond",
+       "maxhp": 187,
+       "name": "Dogrino",
+       "pp": {
+        "destinybond": 7,
+        "helpinghand": 20,
+        "lashout": 8,
+        "protect": 7
+       },
+       "slot": 1,
+       "species": "Mabosstiff",
+       "status": "",
+       "volatiles": {
+        "destinybond": {}
+       }
+      },
+      {
+       "ability": "sandforce",
+       "hp": 0,
+       "item": "steelixite",
+       "maxhp": 182,
+       "name": "Steelix",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Steelix-Mega",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "boosts": {},
+       "hp": 31,
+       "item": "lifeorb",
+       "lastMove": "firepunch",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "firepunch": 15,
+        "rest": 8,
+        "rockslide": 10
+       },
+       "slot": 0,
+       "species": "Tyranitar",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "sandstorm",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "highjumpkick": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "hypervoice": 11,
+        "mysticalfire": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 74,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "followme",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 10,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 162,
+       "item": "",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "dazzlinggleam": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Alakazam",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 54,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 187,
+       "name": "Dogrino",
+       "pp": {
+        "destinybond": 7,
+        "helpinghand": 20,
+        "lashout": 8,
+        "protect": 6
+       },
+       "slot": 1,
+       "species": "Mabosstiff",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandforce",
+       "hp": 0,
+       "item": "steelixite",
+       "maxhp": 182,
+       "name": "Steelix",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Steelix-Mega",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "firepunch": 15,
+        "rest": 8,
+        "rockslide": 10
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "sandstorm",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "highjumpkick": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "hypervoice": 11,
+        "mysticalfire": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 74,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "followme",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 10,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 162,
+       "item": "",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "dazzlinggleam": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Alakazam",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 54,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 187,
+       "name": "Dogrino",
+       "pp": {
+        "destinybond": 7,
+        "helpinghand": 20,
+        "lashout": 8,
+        "protect": 6
+       },
+       "slot": 1,
+       "species": "Mabosstiff",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandforce",
+       "hp": 0,
+       "item": "steelixite",
+       "maxhp": 182,
+       "name": "Steelix",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Steelix-Mega",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "firepunch": 15,
+        "rest": 8,
+        "rockslide": 10
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "highjumpkick": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "hypervoice": 11,
+        "mysticalfire": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 40,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "trickroom",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "helpinghand": 20,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "boosts": {},
+       "hp": 162,
+       "item": "",
+       "lastMove": "dazzlinggleam",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "dazzlinggleam": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Alakazam",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 54,
+       "item": "",
+       "lastMove": "helpinghand",
+       "maxhp": 187,
+       "name": "Dogrino",
+       "pp": {
+        "destinybond": 7,
+        "helpinghand": 19,
+        "lashout": 8,
+        "protect": 6
+       },
+       "slot": 1,
+       "species": "Mabosstiff",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandforce",
+       "hp": 0,
+       "item": "steelixite",
+       "maxhp": 182,
+       "name": "Steelix",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Steelix-Mega",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "firepunch": 15,
+        "rest": 8,
+        "rockslide": 10
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "libero",
+       "hp": 0,
+       "item": "",
+       "maxhp": 187,
+       "name": "Cinderace",
+       "pp": {
+        "highjumpkick": 10,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Cinderace",
+       "status": ""
+      },
+      {
+       "ability": "pixilate",
+       "hp": 0,
+       "item": "gardevoirite",
+       "maxhp": 175,
+       "name": "Gardevoir",
+       "pp": {
+        "hypervoice": 11,
+        "mysticalfire": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Gardevoir-Mega",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 18,
+        "helpinghand": 19,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "oblivious",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "lastMove": "highhorsepower",
+       "maxhp": 217,
+       "name": "Mamoswine",
+       "pp": {
+        "highhorsepower": 9,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Mamoswine",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "synchronize",
+       "hp": 0,
+       "item": "",
+       "maxhp": 162,
+       "name": "Alakazam",
+       "pp": {
+        "dazzlinggleam": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Alakazam",
+       "status": "fnt"
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 54,
+       "item": "",
+       "lastMove": "lashout",
+       "maxhp": 187,
+       "name": "Dogrino",
+       "pp": {
+        "destinybond": 7,
+        "helpinghand": 19,
+        "lashout": 7,
+        "protect": 6
+       },
+       "slot": 1,
+       "species": "Mabosstiff",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandforce",
+       "hp": 0,
+       "item": "steelixite",
+       "maxhp": 182,
+       "name": "Steelix",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Steelix-Mega",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "firepunch": 15,
+        "rest": 8,
+        "rockslide": 10
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move highjumpkick 2, move mysticalfire 2 mega",
+   "move rockslide, move rest mega"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move highjumpkick 2, move hypervoice",
+   "move rockslide, move protect"
+  ],
+  [
+   "switch 3, switch 4",
+   ""
+  ],
+  [
+   "move followme, move highhorsepower 2",
+   "move firepunch 1, move destinybond"
+  ],
+  [
+   "move followme, move highhorsepower 1",
+   "move rockslide, move protect"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move trickroom, move protect",
+   "move dazzlinggleam, move helpinghand -1"
+  ],
+  [
+   "move helpinghand -2, move highhorsepower 1",
+   "move dazzlinggleam, move lashout 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "sandstorm",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "libero",
+      "boosts": {},
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Cinderace",
+      "pp": {
+       "highjumpkick": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Cinderace",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sandstream",
+      "boosts": {},
+      "canMega": true,
+      "hp": 175,
+      "item": "gardevoirite",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "hypervoice": 12,
+       "mysticalfire": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Gardevoir",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "hp": 177,
+      "item": "psychicseed",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Indeedee-F",
+      "status": ""
+     },
+     {
+      "ability": "oblivious",
+      "hp": 217,
+      "item": "",
+      "maxhp": 217,
+      "name": "Mamoswine",
+      "pp": {
+       "highhorsepower": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Mamoswine",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "synchronize",
+      "hp": 162,
+      "item": "",
+      "maxhp": 162,
+      "name": "Alakazam",
+      "pp": {
+       "dazzlinggleam": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Alakazam",
+      "status": ""
+     },
+     {
+      "ability": "intimidate",
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Dogrino",
+      "pp": {
+       "destinybond": 8,
+       "helpinghand": 20,
+       "lashout": 8,
+       "protect": 8
+      },
+      "slot": null,
+      "species": "Mabosstiff",
+      "status": ""
+     },
+     {
+      "ability": "rockhead",
+      "boosts": {},
+      "canMega": true,
+      "hp": 182,
+      "item": "steelixite",
+      "maxhp": 182,
+      "name": "Steelix",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Steelix",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sandstream",
+      "boosts": {},
+      "hp": 207,
+      "item": "lifeorb",
+      "maxhp": 207,
+      "name": "Tyranitar",
+      "pp": {
+       "firepunch": 16,
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": 0,
+      "species": "Tyranitar",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "pass, move highhorsepower 2",
+  "p2": "pass, move destinybond"
+ }
+}

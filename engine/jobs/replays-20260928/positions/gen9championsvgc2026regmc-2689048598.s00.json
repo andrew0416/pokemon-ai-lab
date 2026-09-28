@@ -1,0 +1,422 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689048598 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689048598), decision 0 = turn 1 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Weather Ball",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dragon Pulse",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Leech Life",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rain Dance",
+     "Rest"
+    ],
+    "name": "Sableye",
+    "nature": "Serious",
+    "species": "Sableye"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Draco Meteor",
+     "Flash Cannon",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Staraptite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Close Combat",
+     "Protect",
+     "Roost",
+     "Dual Wingbeat"
+    ],
+    "name": "Staraptor",
+    "nature": "Serious",
+    "species": "Staraptor"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "leechlife": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": 1,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dracometeor": 8,
+       "electroshot": 12,
+       "flashcannon": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "keeneye",
+      "boosts": {},
+      "hp": 157,
+      "item": "",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "raindance": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Sableye",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "canMega": true,
+      "hp": 192,
+      "item": "staraptite",
+      "maxhp": 192,
+      "name": "Staraptor",
+      "pp": {
+       "closecombat": 8,
+       "dualwingbeat": 12,
+       "protect": 8,
+       "roost": 8
+      },
+      "slot": null,
+      "species": "Staraptor",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move weatherball 2 mega, move weatherball 1",
+  "p2": "move raindance, move electroshot 1"
+ }
+}

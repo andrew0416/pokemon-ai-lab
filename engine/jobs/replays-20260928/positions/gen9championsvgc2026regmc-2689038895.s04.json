@@ -1,0 +1,1072 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689038895 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689038895), decision 4 = turn 3 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Nuzzle",
+     "Rest"
+    ],
+    "name": "Pikachu",
+    "nature": "Serious",
+    "species": "Pikachu"
+   },
+   {
+    "ability": "Volt Absorb",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Payapa Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Mach Punch",
+     "Rest"
+    ],
+    "name": "Pawmot",
+    "nature": "Serious",
+    "species": "Pawmot"
+   },
+   {
+    "ability": "Hunger Switch",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Morpeko",
+    "nature": "Serious",
+    "species": "Morpeko"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Raichunite X",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rising Voltage",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee"
+   },
+   {
+    "ability": "Cursed Body",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Gengarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Sludge Bomb",
+     "Rest"
+    ],
+    "name": "Gengar",
+    "nature": "Serious",
+    "species": "Gengar"
+   },
+   {
+    "ability": "Pressure",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Roost",
+     "Bulk Up",
+     "Rest"
+    ],
+    "name": "Corviknight",
+    "nature": "Serious",
+    "species": "Corviknight"
+   },
+   {
+    "ability": "Sand Stream",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Tyranitar",
+    "nature": "Serious",
+    "species": "Tyranitar"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "hungerswitch",
+       "hp": 0,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": "fnt"
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 177,
+       "item": "payapaberry",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "nuzzle",
+       "maxhp": 142,
+       "name": "Pikachu",
+       "pp": {
+        "nuzzle": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pikachu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "static",
+       "canMega": true,
+       "hp": 167,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "rest": 8,
+        "risingvoltage": 20
+       },
+       "slot": null,
+       "species": "Raichu",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "psychicseed",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "rest": 8,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "shadowtag",
+       "boosts": {},
+       "hp": 151,
+       "item": "gengarite",
+       "lastMove": "sludgebomb",
+       "maxhp": 167,
+       "name": "Gengar",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11
+       },
+       "slot": 1,
+       "species": "Gengar-Mega",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "hungerswitch",
+       "hp": 0,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 177,
+       "item": "payapaberry",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "boosts": {},
+       "hp": 1,
+       "item": "",
+       "lastItem": "focussash",
+       "lastMove": "nuzzle",
+       "maxhp": 142,
+       "name": "Pikachu",
+       "pp": {
+        "nuzzle": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pikachu",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "static",
+       "boosts": {},
+       "canMega": true,
+       "hp": 167,
+       "item": "raichunitex",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "rest": 8,
+        "risingvoltage": 20
+       },
+       "slot": 1,
+       "species": "Raichu",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "hp": 205,
+       "item": "psychicseed",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "rest": 8,
+        "roost": 8
+       },
+       "slot": null,
+       "species": "Corviknight",
+       "status": ""
+      },
+      {
+       "ability": "shadowtag",
+       "boosts": {},
+       "hp": 151,
+       "item": "gengarite",
+       "lastMove": "sludgebomb",
+       "maxhp": 167,
+       "name": "Gengar",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11
+       },
+       "slot": 1,
+       "species": "Gengar-Mega",
+       "status": "par",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "hungerswitch",
+       "hp": 0,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "hp": 177,
+       "item": "payapaberry",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pawmot",
+       "status": ""
+      },
+      {
+       "ability": "static",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 142,
+       "name": "Pikachu",
+       "pp": {
+        "nuzzle": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pikachu",
+       "status": "fnt"
+      },
+      {
+       "ability": "electricsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitex",
+       "lastMove": "risingvoltage",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "rest": 8,
+        "risingvoltage": 18
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-X",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 101,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "rest": 8,
+        "roost": 8
+       },
+       "slot": 1,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "shadowtag",
+       "hp": 151,
+       "item": "gengarite",
+       "maxhp": 167,
+       "name": "Gengar",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11
+       },
+       "slot": null,
+       "species": "Gengar-Mega",
+       "status": "par"
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "electricterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "hungerswitch",
+       "hp": 0,
+       "item": "",
+       "maxhp": 165,
+       "name": "Morpeko",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Morpeko",
+       "status": ""
+      },
+      {
+       "ability": "voltabsorb",
+       "boosts": {},
+       "hp": 177,
+       "item": "payapaberry",
+       "maxhp": 177,
+       "name": "Pawmot",
+       "pp": {
+        "machpunch": 20,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Pawmot",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "static",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 142,
+       "name": "Pikachu",
+       "pp": {
+        "nuzzle": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Pikachu",
+       "status": ""
+      },
+      {
+       "ability": "electricsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "raichunitex",
+       "lastMove": "risingvoltage",
+       "maxhp": 167,
+       "name": "Raichu",
+       "pp": {
+        "rest": 8,
+        "risingvoltage": 18
+       },
+       "slot": 1,
+       "species": "Raichu-Mega-X",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "pressure",
+       "boosts": {
+        "spd": 1
+       },
+       "hp": 101,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 205,
+       "name": "Corviknight",
+       "pp": {
+        "bulkup": 20,
+        "rest": 8,
+        "roost": 8
+       },
+       "slot": 1,
+       "species": "Corviknight",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "shadowtag",
+       "hp": 151,
+       "item": "gengarite",
+       "maxhp": 167,
+       "name": "Gengar",
+       "pp": {
+        "rest": 8,
+        "sludgebomb": 11
+       },
+       "slot": null,
+       "species": "Gengar-Mega",
+       "status": "par"
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move nuzzle 2, switch 3",
+   "move expandingforce 2, move sludgebomb 2 mega"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move nuzzle -2, move risingvoltage 2 mega",
+   "move expandingforce 1, switch 3"
+  ],
+  [
+   "switch 3",
+   ""
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "hungerswitch",
+      "hp": 165,
+      "item": "",
+      "maxhp": 165,
+      "name": "Morpeko",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Morpeko",
+      "status": ""
+     },
+     {
+      "ability": "voltabsorb",
+      "boosts": {},
+      "hp": 177,
+      "item": "payapaberry",
+      "maxhp": 177,
+      "name": "Pawmot",
+      "pp": {
+       "machpunch": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Pawmot",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "static",
+      "boosts": {},
+      "hp": 142,
+      "item": "focussash",
+      "maxhp": 142,
+      "name": "Pikachu",
+      "pp": {
+       "nuzzle": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Pikachu",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "static",
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitex",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "rest": 8,
+       "risingvoltage": 20
+      },
+      "slot": null,
+      "species": "Raichu",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "pressure",
+      "hp": 205,
+      "item": "psychicseed",
+      "maxhp": 205,
+      "name": "Corviknight",
+      "pp": {
+       "bulkup": 20,
+       "rest": 8,
+       "roost": 8
+      },
+      "slot": null,
+      "species": "Corviknight",
+      "status": ""
+     },
+     {
+      "ability": "cursedbody",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "gengarite",
+      "maxhp": 167,
+      "name": "Gengar",
+      "pp": {
+       "rest": 8,
+       "sludgebomb": 12
+      },
+      "slot": 1,
+      "species": "Gengar",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Indeedee",
+      "pp": {
+       "expandingforce": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Indeedee",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sandstream",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Tyranitar",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Tyranitar",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move machpunch 1, move risingvoltage 1",
+  "p2": "switch 3, move roost"
+ }
+}

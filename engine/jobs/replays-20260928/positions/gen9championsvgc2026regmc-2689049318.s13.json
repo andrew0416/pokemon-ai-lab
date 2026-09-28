@@ -1,0 +1,2739 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689049318 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049318), decision 13 = turn 11 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Garchompite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Power Gem",
+     "Flamethrower",
+     "Draco Meteor"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Vital Spirit",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Close Combat",
+     "Rage Fist",
+     "Rest"
+    ],
+    "name": "Annihilape",
+    "nature": "Serious",
+    "species": "Annihilape"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Parting Shot",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wood Hammer",
+     "Grassy Glide",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Charizardite Y",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hurricane",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Charizard",
+    "nature": "Serious",
+    "species": "Charizard"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Ice Beam",
+     "Protect",
+     "Muddy Water",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Leech Life",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Spirit Break",
+     "Rest"
+    ],
+    "name": "Grimmsnarl",
+    "nature": "Serious",
+    "species": "Grimmsnarl"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 8,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandveil",
+       "boosts": {},
+       "canMega": true,
+       "hp": 215,
+       "item": "garchompitez",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 20,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "hurricane",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {
+        "def": -1,
+        "spd": -1
+       },
+       "hp": 217,
+       "item": "",
+       "lastMove": "closecombat",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 7,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 77,
+       "item": "garchompitez",
+       "lastMove": "powergem",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 19,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "boosts": {},
+       "hp": 185,
+       "item": "charizarditey",
+       "lastMove": "protect",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Charizard-Mega-Y",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 182,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 95,
+       "item": "",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {
+        "def": -2,
+        "spd": -2
+       },
+       "hp": 217,
+       "item": "",
+       "lastMove": "closecombat",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 77,
+       "item": "garchompitez",
+       "lastMove": "powergem",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 18,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": "fnt"
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 149,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 95,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {
+        "def": -2,
+        "spd": -2
+       },
+       "hp": 217,
+       "item": "",
+       "lastMove": "closecombat",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 77,
+       "item": "garchompitez",
+       "lastMove": "powergem",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 18,
+        "protect": 7
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "hp": 149,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 16
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 95,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sunnyday",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 77,
+       "item": "garchompitez",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 16,
+        "powergem": 18,
+        "protect": 6
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 156,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 12,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 149,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 15
+       },
+       "slot": 0,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 95,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 17,
+       "item": "garchompitez",
+       "lastMove": "flamethrower",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 15,
+        "powergem": 18,
+        "protect": 6
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 156,
+       "item": "",
+       "lastMove": "fakeout",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 207,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 16
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 145,
+       "item": "",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 15
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 67,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 12,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 4,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 17,
+       "item": "garchompitez",
+       "lastMove": "protect",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 15,
+        "powergem": 18,
+        "protect": 5
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 156,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 207,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 16
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {
+        "atk": -2,
+        "spa": -1
+       },
+       "hp": 156,
+       "item": "",
+       "lastMove": "leechlife",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 15
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 79,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 12,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 17,
+       "item": "garchompitez",
+       "lastMove": "flamethrower",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 14,
+        "powergem": 18,
+        "protect": 5
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 156,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 157,
+       "item": "lifeorb",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": "fnt"
+      },
+      {
+       "ability": "prankster",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 15
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 91,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 12,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 17,
+       "item": "garchompitez",
+       "lastMove": "flamethrower",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 14,
+        "powergem": 18,
+        "protect": 5
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 156,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 157,
+       "item": "lifeorb",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 20,
+        "rest": 8,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 15
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 91,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 12,
+        "protect": 6,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 2,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 17,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 14,
+        "powergem": 18,
+        "protect": 5
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {
+        "spa": -1
+       },
+       "hp": 122,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 11,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Incineroar",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 169,
+       "item": "lifeorb",
+       "lastMove": "grassyglide",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8,
+        "woodhammer": 15
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 202,
+       "item": "",
+       "lastMove": "spiritbreak",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 14
+       },
+       "slot": 1,
+       "species": "Grimmsnarl",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 103,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 12,
+        "protect": 5,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "hp": 17,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 14,
+        "powergem": 18,
+        "protect": 5
+       },
+       "slot": null,
+       "species": "Garchomp-Mega-Z",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": "fnt"
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 105,
+       "item": "lifeorb",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 14
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 115,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 11,
+        "protect": 5,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "grassyterrain",
+    "terrainDuration": 1,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Annihilape",
+       "status": ""
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 17,
+       "item": "garchompitez",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 8,
+        "flamethrower": 14,
+        "powergem": 18,
+        "protect": 5
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "boosts": {},
+       "hp": 105,
+       "item": "lifeorb",
+       "lastMove": "woodhammer",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": 1,
+       "species": "Rillaboom",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 14
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 115,
+       "item": "",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 11,
+        "protect": 5,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 10,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "vitalspirit",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "maxhp": 217,
+       "name": "Annihilape",
+       "pp": {
+        "closecombat": 6,
+        "protect": 7,
+        "ragefist": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Annihilape",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 17,
+       "item": "garchompitez",
+       "lastMove": "dracometeor",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "dracometeor": 7,
+        "flamethrower": 14,
+        "powergem": 18,
+        "protect": 5
+       },
+       "slot": 0,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Incineroar",
+       "pp": {
+        "fakeout": 10,
+        "partingshot": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Incineroar",
+       "status": ""
+      },
+      {
+       "ability": "grassysurge",
+       "hp": 105,
+       "item": "lifeorb",
+       "maxhp": 207,
+       "name": "Rillaboom",
+       "pp": {
+        "grassyglide": 19,
+        "rest": 8,
+        "woodhammer": 14
+       },
+       "slot": null,
+       "species": "Rillaboom",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "drought",
+       "hp": 0,
+       "item": "charizarditey",
+       "maxhp": 185,
+       "name": "Charizard",
+       "pp": {
+        "hurricane": 11,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Charizard-Mega-Y",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "hp": 0,
+       "item": "",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "leechlife": 10,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "maxhp": 202,
+       "name": "Grimmsnarl",
+       "pp": {
+        "rest": 8,
+        "spiritbreak": 14
+       },
+       "slot": null,
+       "species": "Grimmsnarl",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 127,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 10,
+        "muddywater": 11,
+        "protect": 4,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 11,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move protect, move protect",
+   "move hurricane 2 mega, move icebeam 1"
+  ],
+  [
+   "move powergem 1 mega, move closecombat 2",
+   "move protect, move icebeam 1"
+  ],
+  [
+   "move powergem 1, move closecombat 2",
+   "move hurricane -2, switch 3"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move protect, switch 3",
+   "move spiritbreak 2, move protect"
+  ],
+  [
+   "move flamethrower 2, move fakeout 1",
+   "switch 3, move leechlife 1"
+  ],
+  [
+   "move protect, move partingshot 2",
+   "move protect, move leechlife 1",
+   {
+    "p1": [
+     "switch 4"
+    ],
+    "p2": []
+   }
+  ],
+  [
+   "move flamethrower 2, move woodhammer 2",
+   "move protect, move leechlife -1"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "switch 4, move grassyglide 1",
+   "move protect, move spiritbreak 1"
+  ],
+  [
+   "move fakeout 2, move woodhammer 2",
+   "move muddywater, move spiritbreak -1"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move dracometeor 1, switch 3",
+   "move protect, pass"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "vitalspirit",
+      "boosts": {},
+      "hp": 217,
+      "item": "",
+      "maxhp": 217,
+      "name": "Annihilape",
+      "pp": {
+       "closecombat": 8,
+       "protect": 8,
+       "ragefist": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Annihilape",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sandveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 215,
+      "item": "garchompitez",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "dracometeor": 8,
+       "flamethrower": 16,
+       "powergem": 20,
+       "protect": 8
+      },
+      "slot": 0,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "partingshot": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "hp": 207,
+      "item": "lifeorb",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "grassyglide": 20,
+       "rest": 8,
+       "woodhammer": 16
+      },
+      "slot": null,
+      "species": "Rillaboom",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "blaze",
+      "boosts": {},
+      "canMega": true,
+      "hp": 185,
+      "item": "charizarditey",
+      "maxhp": 185,
+      "name": "Charizard",
+      "pp": {
+       "hurricane": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Charizard",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "hp": 182,
+      "item": "",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "leechlife": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Grimmsnarl",
+      "pp": {
+       "rest": 8,
+       "spiritbreak": 16
+      },
+      "slot": null,
+      "species": "Grimmsnarl",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "muddywater": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move dracometeor 1, move closecombat 1",
+  "p2": "move protect, pass"
+ }
+}

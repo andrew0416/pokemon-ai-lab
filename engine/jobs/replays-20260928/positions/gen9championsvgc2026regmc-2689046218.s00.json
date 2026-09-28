@@ -1,0 +1,409 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689046218 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689046218), decision 0 = turn 1 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Keen Eye",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sableye",
+    "nature": "Serious",
+    "species": "Sableye"
+   },
+   {
+    "ability": "Trace",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Gardevoirite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Gardevoir",
+    "nature": "Serious",
+    "species": "Gardevoir"
+   },
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   },
+   {
+    "ability": "Steadfast",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Gallade",
+    "nature": "Serious",
+    "species": "Gallade"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Poison Jab",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Drought",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Eruption",
+     "Rest"
+    ],
+    "name": "Torkoal",
+    "nature": "Serious",
+    "species": "Torkoal"
+   },
+   {
+    "ability": "Iron Fist",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Golurk",
+    "nature": "Serious",
+    "species": "Golurk"
+   },
+   {
+    "ability": "Cute Charm",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sylveon",
+    "nature": "Serious",
+    "species": "Sylveon"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "sunnyday",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "steadfast",
+      "hp": 175,
+      "item": "",
+      "maxhp": 175,
+      "name": "Gallade",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Gallade",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {},
+      "canMega": true,
+      "hp": 175,
+      "item": "gardevoirite",
+      "maxhp": 175,
+      "name": "Gardevoir",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Gardevoir",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "defiant",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Kingambit",
+      "status": ""
+     },
+     {
+      "ability": "keeneye",
+      "boosts": {},
+      "hp": 157,
+      "item": "",
+      "maxhp": 157,
+      "name": "Sableye",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Sableye",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "ironfist",
+      "hp": 196,
+      "item": "",
+      "maxhp": 196,
+      "name": "Golurk",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golurk",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {},
+      "hp": 187,
+      "item": "",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "poisonjab": 20,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cutecharm",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Sylveon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sylveon",
+      "status": ""
+     },
+     {
+      "ability": "drought",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Torkoal",
+      "pp": {
+       "eruption": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Torkoal",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move rest, move rest mega",
+  "p2": "move poisonjab 2, move eruption"
+ }
+}

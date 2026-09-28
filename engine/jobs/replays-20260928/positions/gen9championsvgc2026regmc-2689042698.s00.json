@@ -1,0 +1,424 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689042698 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689042698), decision 0 = turn 1 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "midTurn": {
+  "p1": [],
+  "p2": [
+   "switch 3"
+  ]
+ },
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Flower Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Floettite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Dazzling Gleam",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Floette",
+    "nature": "Serious",
+    "species": "Floette-Eternal"
+   },
+   {
+    "ability": "Grassy Surge",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Wood Hammer",
+     "Rest"
+    ],
+    "name": "Rillaboom",
+    "nature": "Serious",
+    "species": "Rillaboom"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rest"
+    ],
+    "name": "Incineroar",
+    "nature": "Serious",
+    "species": "Incineroar"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Hunger Switch",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 2,
+     "spa": 0,
+     "spd": 0,
+     "spe": 32
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Volt Switch",
+     "Aura Wheel",
+     "Rest"
+    ],
+    "name": "Morpeko",
+    "nature": "Serious",
+    "species": "Morpeko"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Raichunite X",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Fake Out",
+     "Rising Voltage",
+     "Rest"
+    ],
+    "name": "Raichu",
+    "nature": "Serious",
+    "species": "Raichu"
+   },
+   {
+    "ability": "Static",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Endeavor",
+     "Rest"
+    ],
+    "name": "Pikachu",
+    "nature": "Serious",
+    "species": "Pikachu"
+   },
+   {
+    "ability": "Volt Absorb",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Double Shock",
+     "Ice Punch",
+     "Rest"
+    ],
+    "name": "Pawmot",
+    "nature": "Serious",
+    "species": "Pawmot"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [],
+ "setupTurns": [],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "grassyterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "flowerveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 181,
+      "item": "floettite",
+      "maxhp": 181,
+      "name": "Floette",
+      "pp": {
+       "dazzlinggleam": 12,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Floette-Eternal",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Incineroar",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Incineroar",
+      "status": ""
+     },
+     {
+      "ability": "grassysurge",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Rillaboom",
+      "pp": {
+       "rest": 8,
+       "woodhammer": 16
+      },
+      "slot": 1,
+      "species": "Rillaboom",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "hungerswitch",
+      "boosts": {},
+      "hp": 135,
+      "item": "",
+      "maxhp": 135,
+      "name": "Morpeko",
+      "pp": {
+       "aurawheel": 12,
+       "rest": 8,
+       "voltswitch": 20
+      },
+      "slot": 0,
+      "species": "Morpeko",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "voltabsorb",
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "Pawmot",
+      "pp": {
+       "doubleshock": 8,
+       "icepunch": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Pawmot",
+      "status": ""
+     },
+     {
+      "ability": "static",
+      "hp": 142,
+      "item": "focussash",
+      "maxhp": 142,
+      "name": "Pikachu",
+      "pp": {
+       "endeavor": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Pikachu",
+      "status": ""
+     },
+     {
+      "ability": "static",
+      "boosts": {},
+      "canMega": true,
+      "hp": 167,
+      "item": "raichunitex",
+      "maxhp": 167,
+      "name": "Raichu",
+      "pp": {
+       "fakeout": 12,
+       "rest": 8,
+       "risingvoltage": 20
+      },
+      "slot": 1,
+      "species": "Raichu",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move dazzlinggleam mega, move woodhammer -1",
+  "p2": "move voltswitch 1, move fakeout 2 mega"
+ }
+}

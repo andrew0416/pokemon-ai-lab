@@ -1,0 +1,1832 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689032686 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689032686), decision 8 = turn 6 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Torrent",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Focus Energy",
+     "Snipe Shot",
+     "Blizzard",
+     "Rest"
+    ],
+    "name": "roggero",
+    "nature": "Serious",
+    "species": "Inteleon"
+   },
+   {
+    "ability": "Friend Guard",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Maushold",
+    "nature": "Serious",
+    "species": "Maushold"
+   },
+   {
+    "ability": "Snow Cloak",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Froslassite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Aurora Veil",
+     "Blizzard",
+     "Rest"
+    ],
+    "name": "Froslass",
+    "nature": "Serious",
+    "species": "Froslass"
+   },
+   {
+    "ability": "Blaze",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Eruption",
+     "Rest"
+    ],
+    "name": "Typhlosion",
+    "nature": "Serious",
+    "species": "Typhlosion-Hisui"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Mystic Water",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Ice Beam",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Electro Shot",
+     "Dragon Pulse",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   },
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   }
+  ]
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "snowcloak",
+       "canMega": true,
+       "hp": 177,
+       "item": "froslassite",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Froslass",
+       "status": ""
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": "fnt"
+      },
+      {
+       "ability": "blaze",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Typhlosion",
+       "pp": {
+        "eruption": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Typhlosion-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 113,
+       "item": "",
+       "lastMove": "focusenergy",
+       "maxhp": 177,
+       "name": "roggero",
+       "pp": {
+        "blizzard": 8,
+        "focusenergy": 19,
+        "rest": 8,
+        "snipeshot": 16
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {
+        "focusenergy": {}
+       }
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "mysticwater",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "snowcloak",
+       "boosts": {},
+       "canMega": true,
+       "hp": 177,
+       "item": "froslassite",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 20,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Froslass",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Typhlosion",
+       "pp": {
+        "eruption": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Typhlosion-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 113,
+       "item": "",
+       "lastMove": "focusenergy",
+       "maxhp": 177,
+       "name": "roggero",
+       "pp": {
+        "blizzard": 8,
+        "focusenergy": 19,
+        "rest": 8,
+        "snipeshot": 16
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {
+        "focusenergy": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "spa": 1
+       },
+       "hp": 197,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 12,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "mysticwater",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 4
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 134,
+       "item": "froslassite",
+       "lastMove": "auroraveil",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Typhlosion",
+       "pp": {
+        "eruption": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Typhlosion-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "boosts": {},
+       "hp": 13,
+       "item": "",
+       "lastMove": "snipeshot",
+       "maxhp": 177,
+       "name": "roggero",
+       "pp": {
+        "blizzard": 8,
+        "focusenergy": 19,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": 0,
+       "species": "Inteleon",
+       "status": "",
+       "volatiles": {
+        "focusenergy": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1,
+        "spa": 1
+       },
+       "hp": 121,
+       "item": "leftovers",
+       "lastMove": "dragonpulse",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 197,
+       "item": "mysticwater",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 134,
+       "item": "froslassite",
+       "lastMove": "blizzard",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Typhlosion",
+       "pp": {
+        "eruption": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Typhlosion-Hisui",
+       "status": ""
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "roggero",
+       "pp": {
+        "blizzard": 7,
+        "focusenergy": 19,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": "fnt"
+      },
+      {
+       "ability": "cudchew",
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Farigiraf",
+       "status": ""
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 101,
+       "item": "mysticwater",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 134,
+       "item": "froslassite",
+       "lastMove": "blizzard",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {},
+       "hp": 180,
+       "item": "",
+       "maxhp": 180,
+       "name": "Typhlosion",
+       "pp": {
+        "eruption": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Typhlosion-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "roggero",
+       "pp": {
+        "blizzard": 7,
+        "focusenergy": 19,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 227,
+       "item": "sitrusberry",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "trickroom": 8
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 101,
+       "item": "mysticwater",
+       "lastMove": "icebeam",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {},
+       "hp": 134,
+       "item": "froslassite",
+       "lastMove": "blizzard",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 6,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 83,
+       "item": "",
+       "lastMove": "eruption",
+       "maxhp": 180,
+       "name": "Typhlosion",
+       "pp": {
+        "eruption": 7,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Typhlosion-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "roggero",
+       "pp": {
+        "blizzard": 7,
+        "focusenergy": 19,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 63,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 8,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 10,
+       "item": "mysticwater",
+       "lastMove": "muddywater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 9,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Politoed",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 91,
+       "item": "froslassite",
+       "lastMove": "blizzard",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 5,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 180,
+       "name": "Typhlosion",
+       "pp": {
+        "eruption": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Typhlosion-Hisui",
+       "status": "fnt"
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "roggero",
+       "pp": {
+        "blizzard": 7,
+        "focusenergy": 19,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 119,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Golisopod",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "mysticwater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 3
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "snowscape",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "auroraveil": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "snowwarning",
+       "boosts": {
+        "accuracy": -1
+       },
+       "hp": 91,
+       "item": "froslassite",
+       "lastMove": "blizzard",
+       "maxhp": 177,
+       "name": "Froslass",
+       "pp": {
+        "auroraveil": 19,
+        "blizzard": 5,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Froslass-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "friendguard",
+       "hp": 0,
+       "item": "",
+       "maxhp": 181,
+       "name": "Maushold",
+       "pp": {
+        "followme": 19,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Maushold",
+       "status": ""
+      },
+      {
+       "ability": "blaze",
+       "hp": 0,
+       "item": "",
+       "maxhp": 180,
+       "name": "Typhlosion",
+       "pp": {
+        "eruption": 7,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Typhlosion-Hisui",
+       "status": "fnt"
+      },
+      {
+       "ability": "torrent",
+       "hp": 0,
+       "item": "",
+       "maxhp": 177,
+       "name": "roggero",
+       "pp": {
+        "blizzard": 7,
+        "focusenergy": 19,
+        "rest": 8,
+        "snipeshot": 15
+       },
+       "slot": null,
+       "species": "Inteleon",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 0,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "dragonpulse": 11,
+        "electroshot": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {},
+       "hp": 119,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "protect": 7,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 1,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "emergencyexit",
+       "boosts": {},
+       "canMega": true,
+       "hp": 182,
+       "item": "golisopite",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Golisopod",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "mysticwater",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 11,
+        "muddywater": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move focusenergy, move followme",
+   "move muddywater, move electroshot 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move snipeshot 2, move auroraveil mega",
+   "move muddywater, move dragonpulse 1"
+  ],
+  [
+   "move blizzard, move blizzard",
+   "move icebeam 1, move electroshot -1"
+  ],
+  [
+   "switch 4",
+   "switch 3"
+  ],
+  [
+   "move eruption, move blizzard",
+   "move muddywater, move trickroom"
+  ],
+  [
+   "move eruption, move blizzard",
+   "move muddywater, move protect"
+  ],
+  [
+   "",
+   "switch 4"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "raindance",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "snowcloak",
+      "canMega": true,
+      "hp": 177,
+      "item": "froslassite",
+      "maxhp": 177,
+      "name": "Froslass",
+      "pp": {
+       "auroraveil": 20,
+       "blizzard": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Froslass",
+      "status": ""
+     },
+     {
+      "ability": "friendguard",
+      "boosts": {},
+      "hp": 181,
+      "item": "",
+      "maxhp": 181,
+      "name": "Maushold",
+      "pp": {
+       "followme": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Maushold",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "blaze",
+      "hp": 180,
+      "item": "",
+      "maxhp": 180,
+      "name": "Typhlosion",
+      "pp": {
+       "eruption": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Typhlosion-Hisui",
+      "status": ""
+     },
+     {
+      "ability": "torrent",
+      "boosts": {},
+      "hp": 177,
+      "item": "",
+      "maxhp": 177,
+      "name": "roggero",
+      "pp": {
+       "blizzard": 8,
+       "focusenergy": 20,
+       "rest": 8,
+       "snipeshot": 16
+      },
+      "slot": 0,
+      "species": "Inteleon",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "boosts": {},
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "dragonpulse": 12,
+       "electroshot": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Archaludon",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "cudchew",
+      "hp": 227,
+      "item": "sitrusberry",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "protect": 8,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": null,
+      "species": "Farigiraf",
+      "status": ""
+     },
+     {
+      "ability": "emergencyexit",
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "ironhead": 16,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Golisopod",
+      "status": ""
+     },
+     {
+      "ability": "drizzle",
+      "boosts": {},
+      "hp": 197,
+      "item": "mysticwater",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "muddywater": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Politoed",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "pass, move auroraveil",
+  "p2": "move ironhead 2 mega, move trickroom"
+ }
+}

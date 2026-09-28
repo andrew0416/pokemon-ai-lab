@@ -1,0 +1,607 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689049178 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689049178), decision 1 = turn 2 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Cud Chew",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Trick Room",
+     "Psychic",
+     "Rest"
+    ],
+    "name": "Farigiraf",
+    "nature": "Serious",
+    "species": "Farigiraf"
+   },
+   {
+    "ability": "Emergency Exit",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Golisopite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Iron Head",
+     "Rest"
+    ],
+    "name": "Golisopod",
+    "nature": "Serious",
+    "species": "Golisopod"
+   },
+   {
+    "ability": "Drizzle",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Muddy Water",
+     "Weather Ball",
+     "Ice Beam",
+     "Rest"
+    ],
+    "name": "Politoed",
+    "nature": "Serious",
+    "species": "Politoed"
+   },
+   {
+    "ability": "Stamina",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Leftovers",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Archaludon",
+    "nature": "Serious",
+    "species": "Archaludon"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rock Slide",
+     "Rest"
+    ],
+    "name": "Arcanine",
+    "nature": "Serious",
+    "species": "Arcanine-Hisui"
+   },
+   {
+    "ability": "Sand Veil",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Garchompite Z",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Flamethrower",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Garchomp",
+    "nature": "Serious",
+    "species": "Garchomp"
+   },
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Kowtow Cleave",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   },
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {
+     "trickroom": {
+      "duration": 4
+     }
+    },
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 197,
+       "item": "leftovers",
+       "maxhp": 197,
+       "name": "Archaludon",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "cudchew",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 169,
+       "item": "",
+       "lastMove": "trickroom",
+       "maxhp": 227,
+       "name": "Farigiraf",
+       "pp": {
+        "psychic": 12,
+        "rest": 8,
+        "trickroom": 7
+       },
+       "slot": 0,
+       "species": "Farigiraf",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "toughclaws",
+       "boosts": {
+        "atk": -1
+       },
+       "hp": 182,
+       "item": "golisopite",
+       "lastMove": "protect",
+       "maxhp": 182,
+       "name": "Golisopod",
+       "pp": {
+        "ironhead": 16,
+        "protect": 7,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Golisopod-Mega",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "drizzle",
+       "hp": 197,
+       "item": "",
+       "maxhp": 197,
+       "name": "Politoed",
+       "pp": {
+        "icebeam": 12,
+        "muddywater": 12,
+        "rest": 8,
+        "weatherball": 12
+       },
+       "slot": null,
+       "species": "Politoed",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 202,
+       "item": "",
+       "lastMove": "rockslide",
+       "maxhp": 202,
+       "name": "Arcanine",
+       "pp": {
+        "rest": 8,
+        "rockslide": 11
+       },
+       "slot": 0,
+       "species": "Arcanine-Hisui",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "levitate",
+       "boosts": {},
+       "hp": 215,
+       "item": "garchompitez",
+       "lastMove": "flamethrower",
+       "maxhp": 215,
+       "name": "Garchomp",
+       "pp": {
+        "flamethrower": 15,
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Garchomp-Mega-Z",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 207,
+       "item": "",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move trickroom, move protect mega",
+   "move rockslide, move flamethrower 2 mega"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 197,
+      "item": "leftovers",
+      "maxhp": 197,
+      "name": "Archaludon",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "cudchew",
+      "boosts": {
+       "atk": -1
+      },
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Farigiraf",
+      "pp": {
+       "psychic": 12,
+       "rest": 8,
+       "trickroom": 8
+      },
+      "slot": 0,
+      "species": "Farigiraf",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "emergencyexit",
+      "boosts": {
+       "atk": -1
+      },
+      "canMega": true,
+      "hp": 182,
+      "item": "golisopite",
+      "maxhp": 182,
+      "name": "Golisopod",
+      "pp": {
+       "ironhead": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Golisopod",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 197,
+      "item": "",
+      "maxhp": 197,
+      "name": "Politoed",
+      "pp": {
+       "icebeam": 12,
+       "muddywater": 12,
+       "rest": 8,
+       "weatherball": 12
+      },
+      "slot": null,
+      "species": "Politoed",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "intimidate",
+      "boosts": {},
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Arcanine",
+      "pp": {
+       "rest": 8,
+       "rockslide": 12
+      },
+      "slot": 0,
+      "species": "Arcanine-Hisui",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "sandveil",
+      "boosts": {},
+      "canMega": true,
+      "hp": 215,
+      "item": "garchompitez",
+      "maxhp": 215,
+      "name": "Garchomp",
+      "pp": {
+       "flamethrower": 16,
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "defiant",
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Kingambit",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move psychic 2, switch 3",
+  "p2": "move rockslide, move flamethrower 2"
+ }
+}

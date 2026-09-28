@@ -1,0 +1,1278 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689044110 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689044110), decision 5 = turn 4 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Protean",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Life Orb",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Triple Axel",
+     "Pollen Puff",
+     "Rest"
+    ],
+    "name": "Meowscarada",
+    "nature": "Serious",
+    "species": "Meowscarada"
+   },
+   {
+    "ability": "Own Tempo",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "F",
+    "item": "Colbur Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Helping Hand",
+     "Psychic",
+     "Follow Me",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee-F"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Last Respects",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   },
+   {
+    "ability": "Berserk",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Drampa",
+    "nature": "Serious",
+    "species": "Drampa"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Psychic Surge",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Imprison",
+     "Expanding Force",
+     "Rest"
+    ],
+    "name": "Indeedee",
+    "nature": "Serious",
+    "species": "Indeedee"
+   },
+   {
+    "ability": "Unburden",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Psychic Seed",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Throat Chop",
+     "Rest"
+    ],
+    "name": "Sneasler",
+    "nature": "Serious",
+    "species": "Sneasler"
+   },
+   {
+    "ability": "Flash Fire",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Expanding Force",
+     "Energy Ball",
+     "Rest"
+    ],
+    "name": "Armarouge",
+    "nature": "Serious",
+    "species": "Armarouge"
+   },
+   {
+    "ability": "Intimidate",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 128,
+       "item": "",
+       "lastItem": "colburberry",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {
+        "throatchop": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 165,
+       "item": "lifeorb",
+       "lastMove": "tripleaxel",
+       "maxhp": 183,
+       "name": "Meowscarada",
+       "pp": {
+        "pollenpuff": 16,
+        "rest": 8,
+        "tripleaxel": 11
+       },
+       "slot": 0,
+       "species": "Meowscarada",
+       "status": "",
+       "types": "Ice",
+       "volatiles": {}
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Armarouge",
+       "pp": {
+        "energyball": 12,
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Armarouge",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "imprison",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "imprison": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {
+        "imprison": {}
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 128,
+       "item": "",
+       "lastItem": "colburberry",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {
+        "throatchop": {
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "protean",
+       "boosts": {},
+       "hp": 165,
+       "item": "lifeorb",
+       "lastMove": "tripleaxel",
+       "maxhp": 183,
+       "name": "Meowscarada",
+       "pp": {
+        "pollenpuff": 16,
+        "rest": 8,
+        "tripleaxel": 11
+       },
+       "slot": 0,
+       "species": "Meowscarada",
+       "status": "",
+       "types": "Ice",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "maxhp": 192,
+       "name": "Armarouge",
+       "pp": {
+        "energyball": 12,
+        "expandingforce": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 167,
+       "item": "",
+       "lastMove": "imprison",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "imprison": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {
+        "imprison": {}
+       }
+      },
+      {
+       "ability": "intimidate",
+       "hp": 202,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 74,
+       "item": "",
+       "lastItem": "colburberry",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 18,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Meowscarada",
+       "pp": {
+        "pollenpuff": 15,
+        "rest": 8,
+        "tripleaxel": 11
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 192,
+       "name": "Armarouge",
+       "pp": {
+        "energyball": 12,
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "imprison": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 164,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 74,
+       "item": "",
+       "lastItem": "colburberry",
+       "lastMove": "helpinghand",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 18,
+        "psychic": 12,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Meowscarada",
+       "pp": {
+        "pollenpuff": 15,
+        "rest": 8,
+        "tripleaxel": 11
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastMove": "expandingforce",
+       "maxhp": 192,
+       "name": "Armarouge",
+       "pp": {
+        "energyball": 12,
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 167,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "imprison": 11,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Indeedee",
+       "status": ""
+      },
+      {
+       "ability": "intimidate",
+       "boosts": {},
+       "hp": 164,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "boosts": {},
+       "hp": 37,
+       "item": "",
+       "lastMove": "lastrespects",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "lastrespects": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "berserk",
+       "hp": 185,
+       "item": "",
+       "maxhp": 185,
+       "name": "Drampa",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Drampa",
+       "status": ""
+      },
+      {
+       "ability": "owntempo",
+       "boosts": {},
+       "hp": 74,
+       "item": "",
+       "lastItem": "colburberry",
+       "lastMove": "psychic",
+       "maxhp": 177,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 18,
+        "psychic": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Indeedee-F",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "protean",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Meowscarada",
+       "pp": {
+        "pollenpuff": 15,
+        "rest": 8,
+        "tripleaxel": 11
+       },
+       "slot": null,
+       "species": "Meowscarada",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "flashfire",
+       "boosts": {},
+       "hp": 192,
+       "item": "",
+       "lastMove": "energyball",
+       "maxhp": 192,
+       "name": "Armarouge",
+       "pp": {
+        "energyball": 11,
+        "expandingforce": 11,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Armarouge",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "boosts": {},
+       "hp": 128,
+       "item": "",
+       "maxhp": 167,
+       "name": "Indeedee",
+       "pp": {
+        "expandingforce": 12,
+        "imprison": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Indeedee",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "intimidate",
+       "hp": 164,
+       "item": "",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 187,
+       "name": "Sneasler",
+       "pp": {
+        "rest": 8,
+        "throatchop": 15
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move tripleaxel 2, move helpinghand -1",
+   "move imprison, move throatchop 2"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "move pollenpuff 1, move helpinghand -1",
+   "switch 4, move expandingforce 1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move lastrespects 1, move psychic 1",
+   "switch 4, move energyball 1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "lastrespects": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "berserk",
+      "hp": 185,
+      "item": "",
+      "maxhp": 185,
+      "name": "Drampa",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Drampa",
+      "status": ""
+     },
+     {
+      "ability": "owntempo",
+      "boosts": {},
+      "hp": 177,
+      "item": "colburberry",
+      "maxhp": 177,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "psychic": 12,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "protean",
+      "boosts": {},
+      "hp": 183,
+      "item": "lifeorb",
+      "maxhp": 183,
+      "name": "Meowscarada",
+      "pp": {
+       "pollenpuff": 16,
+       "rest": 8,
+       "tripleaxel": 12
+      },
+      "slot": 0,
+      "species": "Meowscarada",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "flashfire",
+      "hp": 192,
+      "item": "",
+      "maxhp": 192,
+      "name": "Armarouge",
+      "pp": {
+       "energyball": 12,
+       "expandingforce": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Armarouge",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 167,
+      "item": "",
+      "maxhp": 167,
+      "name": "Indeedee",
+      "pp": {
+       "expandingforce": 12,
+       "imprison": 12,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Indeedee",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "intimidate",
+      "hp": 202,
+      "item": "",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {
+       "spd": 1
+      },
+      "hp": 187,
+      "item": "",
+      "lastItem": "psychicseed",
+      "maxhp": 187,
+      "name": "Sneasler",
+      "pp": {
+       "rest": 8,
+       "throatchop": 16
+      },
+      "slot": 1,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {
+       "unburden": {}
+      }
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move lastrespects -2, move followme",
+  "p2": "move expandingforce 1, move expandingforce 2"
+ }
+}

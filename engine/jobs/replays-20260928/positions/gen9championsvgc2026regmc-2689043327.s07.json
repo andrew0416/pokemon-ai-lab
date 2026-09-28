@@ -1,0 +1,1616 @@
+{
+ "description": "V13 replay position (V13-replay-parity): gen9championsvgc2026regmc-2689043327 (https://replay.pokemonshowdown.com/gen9championsvgc2026regmc-2689043327), decision 7 = turn 6 Turn. Teams rebuilt from the log with assumed Stat Points; the earlier decisions are the logged choices, pinned by setupStates to the engine outcome closest to the log. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Prankster",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Focus Sash",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Tailwind",
+     "Rest"
+    ],
+    "name": "Whimsicott",
+    "nature": "Serious",
+    "species": "Whimsicott"
+   },
+   {
+    "ability": "Defiant",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Low Kick",
+     "Kowtow Cleave",
+     "Rest"
+    ],
+    "name": "Kingambit",
+    "nature": "Serious",
+    "species": "Kingambit"
+   },
+   {
+    "ability": "Moxie",
+    "evs": {
+     "atk": 0,
+     "def": 32,
+     "hp": 32,
+     "spa": 0,
+     "spd": 2,
+     "spe": 0
+    },
+    "gender": "F",
+    "item": "Salamencite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Hyper Voice",
+     "Rest"
+    ],
+    "name": "Salamence",
+    "nature": "Serious",
+    "species": "Salamence"
+   },
+   {
+    "ability": "Swift Swim",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Basculegion",
+    "nature": "Serious",
+    "species": "Basculegion"
+   }
+  ]
+ },
+ "p2": {
+  "order": "1234",
+  "team": [
+   {
+    "ability": "Sand Rush",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Iron Head",
+     "Rest"
+    ],
+    "name": "Excadrill",
+    "nature": "Serious",
+    "species": "Excadrill"
+   },
+   {
+    "ability": "Sand Stream",
+    "evs": {
+     "atk": 32,
+     "def": 0,
+     "hp": 32,
+     "spa": 0,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "F",
+    "item": "Tyranitarite",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Rest"
+    ],
+    "name": "Tyranitar",
+    "nature": "Serious",
+    "species": "Tyranitar"
+   },
+   {
+    "ability": "Heatproof",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "",
+    "item": "",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Rage Powder",
+     "Protect",
+     "Rest"
+    ],
+    "name": "Sinistcha",
+    "nature": "Serious",
+    "species": "Sinistcha"
+   },
+   {
+    "ability": "Marvel Scale",
+    "evs": {
+     "atk": 0,
+     "def": 0,
+     "hp": 32,
+     "spa": 32,
+     "spd": 0,
+     "spe": 2
+    },
+    "gender": "M",
+    "item": "Sitrus Berry",
+    "ivs": {
+     "atk": 31,
+     "def": 31,
+     "hp": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 50,
+    "moves": [
+     "Protect",
+     "Haze",
+     "Scald",
+     "Rest"
+    ],
+    "name": "Milotic",
+    "nature": "Serious",
+    "species": "Milotic"
+   }
+  ]
+ },
+ "setupRolls": "full",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "lowkick",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "lowkick": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "moxie",
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Salamence",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "lastMove": "ironhead",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "heatproof",
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "protect": 8,
+        "ragepowder": 20,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": ""
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "lowkick",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "lowkick": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "moxie",
+       "boosts": {},
+       "canMega": true,
+       "hp": 202,
+       "item": "salamencite",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 12,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {},
+       "hp": 217,
+       "item": "",
+       "lastMove": "ironhead",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "ironhead": 15,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "heatproof",
+       "boosts": {},
+       "hp": 178,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "protect": 8,
+        "ragepowder": 20,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sinistcha",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "lowkick",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "lowkick": 18,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 114,
+       "item": "salamencite",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 11,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "boosts": {},
+       "hp": 160,
+       "item": "",
+       "lastMove": "ironhead",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "ironhead": 14,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Excadrill",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "heatproof",
+       "boosts": {},
+       "hp": 27,
+       "item": "",
+       "lastMove": "ragepowder",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "protect": 8,
+        "ragepowder": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sinistcha",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "lowkick",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "lowkick": 17,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 17,
+       "item": "salamencite",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "ironhead": 13,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": "fnt"
+      },
+      {
+       "ability": "marvelscale",
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": null,
+       "species": "Milotic",
+       "status": ""
+      },
+      {
+       "ability": "heatproof",
+       "boosts": {},
+       "hp": 16,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "protect": 7,
+        "ragepowder": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sinistcha",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "lowkick",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 12,
+        "lowkick": 17,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 17,
+       "item": "salamencite",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 10,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "ironhead": 13,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 202,
+       "item": "sitrusberry",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 8,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "heatproof",
+       "boosts": {},
+       "hp": 16,
+       "item": "",
+       "lastMove": "protect",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "protect": 7,
+        "ragepowder": 19,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Sinistcha",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "sandstorm",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "kowtowcleave",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 11,
+        "lowkick": 17,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 5,
+       "item": "salamencite",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 9,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "ironhead": 13,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 190,
+       "item": "sitrusberry",
+       "lastMove": "protect",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 20,
+        "protect": 7,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "heatproof",
+       "hp": 0,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "protect": 7,
+        "ragepowder": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": "fnt"
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "swiftswim",
+       "hp": 227,
+       "item": "",
+       "maxhp": 227,
+       "name": "Basculegion",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 207,
+       "item": "",
+       "lastMove": "kowtowcleave",
+       "maxhp": 207,
+       "name": "Kingambit",
+       "pp": {
+        "kowtowcleave": 10,
+        "lowkick": 17,
+        "rest": 8
+       },
+       "slot": 1,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "aerilate",
+       "boosts": {},
+       "hp": 5,
+       "item": "salamencite",
+       "lastMove": "hypervoice",
+       "maxhp": 202,
+       "name": "Salamence",
+       "pp": {
+        "hypervoice": 8,
+        "rest": 8
+       },
+       "slot": 0,
+       "species": "Salamence-Mega",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 0,
+       "item": "",
+       "lastItem": "focussash",
+       "maxhp": 167,
+       "name": "Whimsicott",
+       "pp": {
+        "rest": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "sandrush",
+       "hp": 0,
+       "item": "",
+       "maxhp": 217,
+       "name": "Excadrill",
+       "pp": {
+        "ironhead": 13,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Excadrill",
+       "status": ""
+      },
+      {
+       "ability": "marvelscale",
+       "boosts": {},
+       "hp": 74,
+       "item": "",
+       "lastItem": "sitrusberry",
+       "lastMove": "haze",
+       "maxhp": 202,
+       "name": "Milotic",
+       "pp": {
+        "haze": 19,
+        "protect": 7,
+        "rest": 8,
+        "scald": 16
+       },
+       "slot": 0,
+       "species": "Milotic",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "heatproof",
+       "hp": 0,
+       "item": "",
+       "maxhp": 178,
+       "name": "Sinistcha",
+       "pp": {
+        "protect": 7,
+        "ragepowder": 18,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Sinistcha",
+       "status": "fnt"
+      },
+      {
+       "ability": "sandstream",
+       "hp": 0,
+       "item": "tyranitarite",
+       "maxhp": 207,
+       "name": "Tyranitar",
+       "pp": {
+        "protect": 8,
+        "rest": 8
+       },
+       "slot": null,
+       "species": "Tyranitar-Mega",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move tailwind, move lowkick 2",
+   "move ironhead 1, move rest mega"
+  ],
+  [
+   "switch 3",
+   "switch 3"
+  ],
+  [
+   "move hypervoice mega, move lowkick 2",
+   "move ironhead 1, move ragepowder"
+  ],
+  [
+   "move hypervoice, move lowkick 1",
+   "move ironhead 1, move protect"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "move hypervoice, move kowtowcleave 1",
+   "move protect, move ragepowder"
+  ],
+  [
+   "move hypervoice, move kowtowcleave 1",
+   "move haze, pass"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "",
+   "terrainDuration": null,
+   "weather": "sandstorm",
+   "weatherDuration": 5
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "swiftswim",
+      "hp": 227,
+      "item": "",
+      "maxhp": 227,
+      "name": "Basculegion",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Basculegion",
+      "status": ""
+     },
+     {
+      "ability": "defiant",
+      "boosts": {},
+      "hp": 207,
+      "item": "",
+      "maxhp": 207,
+      "name": "Kingambit",
+      "pp": {
+       "kowtowcleave": 12,
+       "lowkick": 20,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Kingambit",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "moxie",
+      "canMega": true,
+      "hp": 202,
+      "item": "salamencite",
+      "maxhp": 202,
+      "name": "Salamence",
+      "pp": {
+       "hypervoice": 12,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Salamence",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "boosts": {},
+      "hp": 167,
+      "item": "focussash",
+      "maxhp": 167,
+      "name": "Whimsicott",
+      "pp": {
+       "rest": 8,
+       "tailwind": 16
+      },
+      "slot": 0,
+      "species": "Whimsicott",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "sandrush",
+      "boosts": {},
+      "hp": 217,
+      "item": "",
+      "maxhp": 217,
+      "name": "Excadrill",
+      "pp": {
+       "ironhead": 16,
+       "rest": 8
+      },
+      "slot": 0,
+      "species": "Excadrill",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "marvelscale",
+      "hp": 202,
+      "item": "sitrusberry",
+      "maxhp": 202,
+      "name": "Milotic",
+      "pp": {
+       "haze": 20,
+       "protect": 8,
+       "rest": 8,
+       "scald": 16
+      },
+      "slot": null,
+      "species": "Milotic",
+      "status": ""
+     },
+     {
+      "ability": "heatproof",
+      "hp": 178,
+      "item": "",
+      "maxhp": 178,
+      "name": "Sinistcha",
+      "pp": {
+       "protect": 8,
+       "ragepowder": 20,
+       "rest": 8
+      },
+      "slot": null,
+      "species": "Sinistcha",
+      "status": ""
+     },
+     {
+      "ability": "sandstream",
+      "boosts": {},
+      "canMega": true,
+      "hp": 207,
+      "item": "tyranitarite",
+      "maxhp": 207,
+      "name": "Tyranitar",
+      "pp": {
+       "protect": 8,
+       "rest": 8
+      },
+      "slot": 1,
+      "species": "Tyranitar",
+      "status": "",
+      "volatiles": {}
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "move hypervoice, move kowtowcleave 1",
+  "p2": "move protect, pass"
+ }
+}
