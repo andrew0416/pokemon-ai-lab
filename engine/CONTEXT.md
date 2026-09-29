@@ -13,6 +13,8 @@
 
 ## 현재 상태
 
+**R5d 좁은 확장 (2026-09-30):** 벤치의 미래예지 사용자를 임시 슬롯에 넣는 동안 실제 점유자의 Slot을 별도로 유지한다. Unnerve의 열매 차단은 현재 억제 상태를 반영한 실제 필드 뷰에서 판단하고, Cotton Down·Update·faint 이벤트는 실제 점유자를 지시열로 복원한 상태에서 실행한다. 이벤트가 새 cross-Pokémon 특성/도구를 만들면 다시 지원 검사하여 조용히 누락하지 않는다. 기존 `ab-future-sight-absent-user-two-occupants`와 `ab-future-sight-absent-user-cotton-down-displaced` Full oracle fixture는 변경하지 않고 parity/입력 및 결과 지시열 복원 회귀를 추가했다. 이는 일반적인 무슬롯 공격자 모델의 완성이 아니다. Battery·Ruin·Soul-Heart·Opportunist 등의 관련 점유자, 날씨 억제·Neutralizing Gas, 같은 편 대상 외에 자리가 없는 경우는 여전히 거부할 수 있다. 남은 거부의 새 Champions 합법 재현은 미감사이므로 `REFUSALS.md`는 unknown으로 남긴다(R5d-absent-user-no-seat).
+
 | 항목 | 상태 |
 |---|---|
 | `core/` Rust 골격 | `State<N>`, 되돌릴 수 있는 `Instruction`(apply/reverse), 필드·진영 효과 테이블, `SlotAction`, `Evaluator`. 2026-09-25 확장: `Slot`에 `Volatiles`(`volatile.rs`, 종류별 `{active, duration, counter}` 표)·`last_move`·`move_actions`, `Pokemon`에 `base_ability`·`last_item`, `Status::Fainted`(fnt), `State.result`(`BattleResult`), 파티 주소 `PokemonRef`. 명령은 상태·도구·특성·PP·휘발·턴·결과까지 되돌릴 수 있다. `State`는 `Eq + Hash`(결과 병합 키) |

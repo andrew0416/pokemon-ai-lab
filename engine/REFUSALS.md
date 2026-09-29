@@ -4,14 +4,13 @@
 
 범위: Champions 모드(Showdown `9e317a6`)에서 `isNonstandard`가 null인 종(메가 포함, 배틀 중 폼은 기본 종이 표준일 때만), 그 종의 특성(+심플빔·고민씨가 주는 심플·불면), `learnsets.ts`의 기술(+표준 플래그 기술·발버둥), 표준 도구. 테라·다이맥스·Z는 규칙셋이 막는다. 목록은 `refusals.universe.json`, 근거 검사는 아래 '근거'.
 
-- 거부 호출 53곳(함수 39개). 키 91개 = 호출에 쓰인 메시지 45개 + 다른 함수의 메시지를 전달하는 호출 6개 + 메시지 생산 함수(`producers`)의 메시지 40개.
-- 도달 가능 2개, 도달 불가능 89개, 미확인 0개.
+- 거부 호출 54곳(함수 40개). 키 91개 = 호출에 쓰인 메시지 45개 + 다른 함수의 메시지를 전달하는 호출 6개 + 메시지 생산 함수(`producers`)의 메시지 40개.
+- 도달 가능 1개, 도달 불가능 89개, 미확인 1개.
 
 ## 도달 가능 (Champions 표준 범위)
 
 | 키 | 지점 | 종류 | 재현 시나리오 | 오라클 결과 수 | 보드 | 이유 |
 |---|---|---|---|---|---|---|
-| `{} of {} hitting after its user left the field, {}` | moves.rs::place | mechanic | `ab-future-sight-absent-user-two-occupants` | full: 6 | R5c-future-move-absent-user-occupant | The benched user of a future move stands in for the hit in a position of its side (`moves::AbsentUser`): an empty one, else one whose occupant nothing in the hit asks for (`moves::occupant_matters`). Refused when every such occupant has ability or item handlers acting for other Pokémon (`onAny*`, `onAlly*`, `onFoe*`) in an event a future hit can run (Unnerve against the target's berry, the Ruin abilities, Battery, Opportunist, ...) or suppresses abilities or the weather, and when the target's Cotton Down would reach the displaced occupant (repro ab-future-sight-absent-user-cotton-down-displaced). The target handlers that act on the source (Innards Out, Gulp Missile, Rowap Berry) skip the inactive user as Showdown does. |
 | `switch_in_as: -> why` | switching.rs::switch_in_as | forward | `rr-rivalry-switch-in-undecided-gender` | full: 1 | R13-attract-gender | Forwards `switch_in_problem`: reachable only through its Rivalry gender message; the others are E1, E2, E3, E8. |
 
 ## 고친 거부 (소스에서 사라짐)
@@ -49,7 +48,7 @@
 
 ## 미확인
 
-없음.
+- `{} of {} hitting after its user left the field, {}` (moves.rs::place, moves.rs::with_real_occupant): R5d now supports the two former Full repros ab-future-sight-absent-user-two-occupants and ab-future-sight-absent-user-cotton-down-displaced: displaced Unnerve is read through a current effective-ability view, and Cotton Down/Update/faint events temporarily restore the real field. The general no-seat model remains incomplete: every available position may still hold a relevant onAny/onAlly/onFoe handler (Ruin abilities, Battery, Soul-Heart, Opportunist, etc.), weather suppression or Neutralizing Gas; no same-side position may be free of the target. An event that gives the displaced occupant a newly relevant ability or item is also refused before hiding it again. Core synthetic regression tests cover remaining refusal guards, including Trace copying Opportunist; a new Champions-legal scenario proving reachability of the remaining guard has not been audited, so this entry is unknown rather than retaining a now-passing repro. Target reactions Innards Out, Gulp Missile and Rowap Berry continue to ignore the inactive user.
 
 ## 도달 불가능 (이유별)
 
@@ -178,7 +177,7 @@
 |---|---|---|
 | R1-trace-seeking | — | `check_slot: -> mega::mega_target(mon)`<br>`Trace next to No Ability`<br>`Trace copying {} (cantsuppress: setAbility fails and Trace keeps seeking)`<br>`Trace copying {} ({})`<br>`{}: ability {} ({})` |
 | R5-future-move-edges | — | `{}: a multi-hit future move` |
-| R5c-future-move-absent-user-occupant | `{} of {} hitting after its user left the field, {}` | — |
+| R5d-absent-user-no-seat | — | `{} of {} hitting after its user left the field, {}` |
 | R8-encore-edges | — | `Transform by an encored Pokémon (the encored move leaves the move slots)` |
 | R10-once-per-battle-flags | — | `{}: Battle Bond (its once-per-battle `bondTriggered` is not in the state)` |
 | R11-item-restart | — | `Pickup restoring {} (its Start / End for a new holder)` |
@@ -194,7 +193,7 @@
 
 - **R21-copycat-called-moves**: Copycat calling a two-turn move (the caller becomes locked into the charge), a move that locks its user (lockedmove) or one that queues its own action (Mirror Coat's beforeTurnCallback, Chilly Reception's priorityChargeCallback) — shares moves::call_move with R14.
 - **R22-forced-eat-ignored-item**: Teatime / Stuff Cheeks (eatItem(true)) for a holder that ignores its item (Klutz, Magic Room): the Eat event is skipped, the berry still goes and EatItem still runs; eat_item_forced also never ran EatItem (Cheek Pouch, Cud Chew, Ripen): confirmed by the oracle and fixed in B35 (`oo-teatime-cheek-pouch`, `oo-teatime-cud-chew`, `oo-teatime-ripen`).
-- **R5c-future-move-absent-user-occupant**: A future move whose user left the field when every position of its side not holding the target holds a Pokémon whose ability or item acts for other Pokémon in an event the hit can run (onAny/onAlly/onFoe handlers other than switch-in, trapping, TryMove, redirection, side-hit, AfterMove, AfterMega; No Guard, Unaware, Damp and Friend Guard on a foe target exempt; Unnerve, Ruin abilities, Battery, Soul-Heart, Opportunist, ...) or suppresses abilities or the weather, or a target with Cotton Down while an occupant is out of its position: needs an attacker that is not in any slot — repros ab-future-sight-absent-user-two-occupants, ab-future-sight-absent-user-cotton-down-displaced (full). Narrowed by AB (wave 16): an empty or harmless position is chosen; Innards Out, Gulp Missile and Rowap Berry skip the inactive user (uu-future-sight-absent-user-unnerve now exact).
+- **R5d-absent-user-no-seat**: General future-move attacker identity outside every active slot remains open. The two observed Unnerve/Cotton Down cases now have exact-fixture and reversal tests, but other relevant occupied-field handlers remain fail-closed and their new legal repro is not yet audited; see the remaining refusal entry.
 
 ## 시나리오 로더 거부 (A4)
 

@@ -226,6 +226,10 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// The position a future move's benched user stands in for its hit (`moves::AbsentUser`):
     /// inactive in Showdown (`source.isActive` is false), which Red Card checks.
     pub absent_user: Option<SlotRef>,
+    /// The real slot displaced by that benched attacker, while a future hit is in flight.
+    /// Event handlers that explicitly support this overlay must see the real occupant;
+    /// all other field-wide dependencies remain guarded by `moves::occupant_matters`.
+    pub absent_occupant: Option<Box<crate::state::Slot>>,
     /// The move in progress is external (`move.isExternal`: Dancer's copy): no Pressure PP, and
     /// no Dancer after it.
     pub external_move: bool,
@@ -553,6 +557,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             unstarted: Vec::new(),
             queue_done: false,
             absent_user: None,
+            absent_occupant: None,
             external_move: false,
             called_move: None,
             called_suspension: None,
