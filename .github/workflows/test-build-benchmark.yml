@@ -1,0 +1,109 @@
+name: test build benchmark
+run-name: "test build benchmark · original vs bundled · cold and edited core"
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseline_sha:
+        description: "기존 테스트 구성의 전체 40자리 SHA"
+        required: true
+        default: "693cd58eba1803827d18bb9d5276c5a05396fe43"
+      candidate_sha:
+        description: "동일 엔진에 테스트 묶음만 적용한 전체 40자리 SHA"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engine-benchmark
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  RUSTFLAGS: "-Ctarget-cpu=x86-64"
+  CARGO_PROFILE_RELEASE_OPT_LEVEL: "3"
+  CARGO_PROFILE_RELEASE_DEBUG: "1"
+  CARGO_PROFILE_RELEASE_LTO: "off"
+  CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
+  LAB_ENGINE_FACTORED: "0"
+  PYTHONUTF8: "1"
+  PYTHONHASHSEED: "0"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout build comparison controller
+        uses: actions/checkout@v4
+        with:
+          path: controller
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate immutable source requests
+        env:
+          BASELINE_SHA: ${{ inputs.baseline_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, re
+          for name in ('BASELINE_SHA', 'CANDIDATE_SHA'):
+              if not re.fullmatch('[0-9a-f]{40}', os.environ[name]):
+                  raise ValueError('Full lowercase commit SHA required: '+name)
+          mapping=json.loads(pathlib.Path('controller/engine/benchmarks/test_bundles/mapping.json').read_text())
+          if mapping['source_sha'] != os.environ['BASELINE_SHA']:
+              raise ValueError('Mapping does not describe this baseline source')
+          result=pathlib.Path('ci-results')
+          result.mkdir()
+          request={name:os.environ[name] for name in ('BASELINE_SHA','CANDIDATE_SHA','GITHUB_SHA','GITHUB_RUN_ID','GITHUB_RUN_ATTEMPT')}
+          (result/'request.json').write_text(json.dumps(request,indent=2)+'\n')
+          PY
+      - name: Checkout original tests
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.baseline_sha }}
+          path: baseline
+          persist-credentials: false
+      - name: Checkout bundled tests
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          path: candidate
+          persist-credentials: false
+      - name: Install fixed Rust toolchain
+        uses: dtolnay/rust-toolchain@1.98.1
+      - name: Test comparison controller
+        run: python -m unittest discover -s controller/engine/benchmarks/test_bundles -p 'test_*.py' -v
+      - name: Compare all tests and cold versus edited-core build times
+        run: >-
+          python controller/engine/benchmarks/test_bundles/ci_compare.py
+          --baseline "$GITHUB_WORKSPACE/baseline"
+          --candidate "$GITHUB_WORKSPACE/candidate"
+          --mapping "$GITHUB_WORKSPACE/controller/engine/benchmarks/test_bundles/mapping.json"
+          --work-dir "$GITHUB_WORKSPACE/bundle-work"
+          --out-dir "$GITHUB_WORKSPACE/ci-results/test-bundles"
+      - name: Publish build comparison summary
+        if: always()
+        run: |
+          if [ -f ci-results/test-bundles/summary.md ]; then
+            cat ci-results/test-bundles/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Build comparison incomplete. Inspect the preserved logs.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-build-benchmark-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ci-results/
+          if-no-files-found: warn
+          retention-days: 7
+          compression-level: 6
