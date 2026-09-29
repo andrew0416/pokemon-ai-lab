@@ -22,7 +22,8 @@ TRUSTED_REPOSITORY = 'andrew0416/pokemon-ai-lab'
 TRUSTED_DEFAULT_BRANCH = 'lab-engine'
 LABELS = ('baseline', 'candidate')
 KEY_PREFIX = 'verified-build-v1-'
-CONTROLLER_FILES = ('ci.py', 'build_cache.py', 'harness.rs', 'run.py', 'suites.json', 'memory.py')
+CONTROLLER_FILES = ('ci.py', 'build_cache.py', 'dependency_target.py', 'harness.rs',
+                    'run.py', 'suites.json', 'memory.py')
 MAX_BUNDLE_FILES = 1000
 
 

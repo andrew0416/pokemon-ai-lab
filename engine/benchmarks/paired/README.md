@@ -69,8 +69,9 @@ Cargo.lock·각 package의 Cargo.toml·Cargo/toolchain 설정이 서로 다르�
 `smoke`는 설치 점검을 위해 core/search 라이브러리 테스트와 해당 oracle fixture가 속한
 `abilities_slow_start_truant` 회귀 검사로 제한한다. 전체 회귀 통과로 해석하지 않는다.
 첫 전체 검증은 빌드·테스트 때문에 수십 분 걸릴 수 있으며 측정 시간에는 포함하지 않는다.
-각 버전의 target 디렉터리는 새로 만든다. 캐시 적중 시에도 검증한 실행 파일과
-컴파일 지문만 새 target에 복원하며 이전 Cargo 중간 산출물을 섞지 않는다.
+각 버전의 target 디렉터리는 분리한다. 완성 빌드 캐시 적중 시에는 검증한 실행 파일과
+컴파일 지문만 새 target에 복원한다. 적중하지 않으면 외부 의존성의 컴파일 산출물을
+복원할 수 있으며, 이 경우 Cargo 빌드와 회귀 검사를 모두 현재 실행에서 수행한다.
 빌드 뒤 `release/.fingerprint/lab-engine-*/lib-lab_engine.json`과
 `test-lib-lab_engine.json` 원본·SHA·해석한 feature 목록을 artifact에 보존한다.
 두 종류의 컴파일 지문이 모두 있어야 하며, 실험 feature가 원본에서는 없고
@@ -124,6 +125,30 @@ GitHub 사용량 설정도 다시 확인한다.
 fingerprint와 출처 receipt를 묶어 보관한다. 전체 Cargo target 디렉터리나 성능 측정
 원자료는 캐시하지 않는다. 최초 실행은 캐시를 채우므로 재빌드 비용이 그대로 발생한다.
 
+이 완성 빌드 캐시는 **수정된 후보의 컴파일을 생략하는 기능이 아니다**. 동일 모드와
+controller에서 후보만 바뀌면 고정된 원본의 cache key는 유지될 수 있지만, 후보의
+소스 또는 빌드 조건이 달라지면 후보는 다시 빌드한다.
+
+이를 보완하는 두 번째 층은 `Swatinem/rust-cache`의 **외부 의존성 캐시**다. 원본·후보
+target을 분리하고 workspace crate, 도구 바이너리, incremental 산출물은 저장하지
+않는다. 소스 SHA를 dependency key에 넣지 않아 엔진 소스만 수정한 뒤에도 변경 없는
+라이브러리 컴파일을 재사용할 수 있다. toolchain, OS/arch, runner image, Cargo 설정과
+profile/flags, manifest/lock, 모드와 suite는 key를 구분한다. 의존성 캐시의 prefix
+복원은 빌드 보조 자료이며 완성 빌드의 exact-hit 증거로 취급하지 않는다.
+
+의존성 캐시를 사용한 버전은 `reused=false`이며 전체 Cargo test/build와 feature 검사를
+다시 수행한다. `*_DEPENDENCY_CACHE_READY=1`은 복원 action 완료 표식이며 실제 cache
+다운로드 성공을 보증하지 않는다. helper는 외부 의존성 재사용을 목표로 workspace
+fingerprint·테스트 실행 파일·링크가 섞인 target을 격리하지만 Cargo 지문의 정확성을
+완전히 인증하지는 않는다. Cargo가 허용된 입력을 재검사한다.
+완성 빌드 cache가 exact hit를 보고한 경우 의존성 복원은 생략하며,
+그 완성 bundle이 검증에 실패하면 의존성 도움 없이 새로 빌드한다.
+
+외부 의존성 캐시만으로 현재 약 20분의 컴파일이 사라진다는 근거는 없다. 기존 P8c는
+원본/후보에서 integration test 바이너리 184/185개를 실행했고, 같은 27개 package를
+컴파일하는 단일 observer 검사 target은 56.10초였다. 다수 테스트의 반복 최적화·링크가
+주요 원인이라는 가설은 다음 cold 빌드의 `--timings` HTML 기록으로 확인한다.
+
 복원은 GitHub의 exact cache-hit와 계산한 전체 key 일치가 모두 확인되고,
 묶음 내부의 파일 목록·경로·해시·feature·회귀 성공 기록을 검증한 경우에만 허용한다.
 소스와 빌드 조건을 담은 recipe가 다르거나 일부만 복원되면 새로 빌드한다.
@@ -145,7 +170,9 @@ GitHub 캐시는 동일 key를 덮어쓸 수 없으므로 손상된 exact hit는
 인해 항상 적중하는 것은 아니다. 캐시 용량 설정이나 유료 한도를 변경하지 않는다.
 
 근거: [GitHub cache 동작과 접근 범위](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching),
-[Cargo build cache 구조](https://doc.rust-lang.org/cargo/reference/build-cache.html).
+[Cargo build cache 구조](https://doc.rust-lang.org/cargo/reference/build-cache.html),
+[rust-cache 범위](https://github.com/Swatinem/rust-cache),
+[Cargo build timings](https://doc.rust-lang.org/cargo/reference/timings.html).
 
 ## 컨트롤러 검사
 

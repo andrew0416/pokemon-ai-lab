@@ -126,6 +126,38 @@ jobs:
           path: verified-build-cache/candidate
           key: ${{ steps.cache-plan.outputs.candidate_key }}
           enableCrossOsArchive: false
+      - name: Restore baseline dependency compilation cache
+        id: deps-baseline
+        if: inputs.build_cache && steps.cache-baseline.outputs.cache-hit != 'true'
+        continue-on-error: true
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-dependencies-v1
+          key: baseline-${{ inputs.candidate_feature }}-${{ inputs.suite }}
+          workspaces: baseline/engine -> ../../target-baseline
+          env-vars: ImageOS ImageVersion
+          cache-workspace-crates: false
+          cache-all-crates: false
+          cache-bin: false
+          cache-on-failure: false
+          save-if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'andrew0416/pokemon-ai-lab' && github.ref == 'refs/heads/lab-engine' }}
+      - name: Restore candidate dependency compilation cache
+        id: deps-candidate
+        if: inputs.build_cache && steps.cache-candidate.outputs.cache-hit != 'true'
+        continue-on-error: true
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-dependencies-v1
+          key: candidate-${{ inputs.candidate_feature }}-${{ inputs.suite }}
+          workspaces: candidate/engine -> ../../target-candidate
+          env-vars: ImageOS ImageVersion
+          cache-workspace-crates: false
+          cache-all-crates: false
+          cache-bin: false
+          cache-on-failure: false
+          save-if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'andrew0416/pokemon-ai-lab' && github.ref == 'refs/heads/lab-engine' }}
+      - name: Verify source inputs after dependency cache setup
+        run: python controller/engine/benchmarks/paired/ci.py verify-prepared --workspace "$GITHUB_WORKSPACE"
       - name: Test and build both versions before timing
         id: build
         env:
@@ -133,6 +165,10 @@ jobs:
           BASELINE_CACHE_MATCHED_KEY: ${{ steps.cache-baseline.outputs.cache-matched-key }}
           CANDIDATE_CACHE_HIT: ${{ steps.cache-candidate.outputs.cache-hit }}
           CANDIDATE_CACHE_MATCHED_KEY: ${{ steps.cache-candidate.outputs.cache-matched-key }}
+          BASELINE_DEPENDENCY_CACHE_READY: ${{ steps.deps-baseline.outcome == 'success' && '1' || '0' }}
+          BASELINE_DEPENDENCY_CACHE_HIT: ${{ steps.deps-baseline.outputs.cache-hit }}
+          CANDIDATE_DEPENDENCY_CACHE_READY: ${{ steps.deps-candidate.outcome == 'success' && '1' || '0' }}
+          CANDIDATE_DEPENDENCY_CACHE_HIT: ${{ steps.deps-candidate.outputs.cache-hit }}
         run: python controller/engine/benchmarks/paired/ci.py build --workspace "$GITHUB_WORKSPACE"
       - name: Save sealed baseline build bundle
         if: >-

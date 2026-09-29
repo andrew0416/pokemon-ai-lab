@@ -214,7 +214,80 @@ def build_commands(suite, selection, label):
     commands = tests + [
         ['cargo', 'build', '--locked', '--release', '-p', 'lab-search', '--example', 'ci_bench'],
     ]
-    return [argv + feature_args(selection, label) for argv in commands]
+    return [argv + ['--timings'] + feature_args(selection, label) for argv in commands]
+
+
+def verify_prepared(workspace):
+    """Detect source/lock mutation by cache actions after harness injection."""
+    result = workspace/'ci-results'
+    request = json.loads((result/'request.json').read_text(encoding='utf-8'))
+    provenance = json.loads((result/'provenance.json').read_text(encoding='utf-8'))
+    harness_hash = sha(Path(__file__).with_name('harness.rs'))
+    receipt = {'schema_version': 1, 'status': 'running', 'sources': {}}
+    receipt_path = result/'prepared-source-verification.json'
+    try:
+        if harness_hash != provenance['harness_sha256']:
+            raise ValueError('Controller harness changed after prepare')
+        for label in ('baseline', 'candidate'):
+            root = workspace/label
+            expected = provenance['sources'][label]
+            actual = output(['git', 'rev-parse', 'HEAD'], root)
+            if actual != expected['commit'] or actual != request[label + '_sha']:
+                raise ValueError(f'{label}: HEAD changed after prepare')
+            if output(['git', 'status', '--porcelain', '--untracked-files=no'], root):
+                raise ValueError(f'{label}: tracked source changed after prepare')
+            untracked = output(['git', 'ls-files', '--others', '--exclude-standard'], root).splitlines()
+            if untracked != ['engine/search/examples/ci_bench.rs']:
+                raise ValueError(f'{label}: unexpected untracked source after prepare')
+            observed = {
+                'lock_sha256': sha(root/'engine/Cargo.lock'),
+                'workspace_manifest_sha256': sha(root/'engine/Cargo.toml'),
+                'search_manifest_sha256': sha(root/'engine/search/Cargo.toml'),
+                'package_manifests': {name: sha(root/'engine'/name/'Cargo.toml')
+                                      for name in ('core', 'scenario', 'py')},
+                'cargo_configuration': {name: sha(root/name) for name in (
+                    '.cargo/config', '.cargo/config.toml', 'rust-toolchain', 'rust-toolchain.toml',
+                    'engine/.cargo/config', 'engine/.cargo/config.toml',
+                    'engine/rust-toolchain', 'engine/rust-toolchain.toml') if (root/name).is_file()}}
+            for key, value in observed.items():
+                if value != expected[key]:
+                    raise ValueError(f'{label}: {key} changed after prepare')
+            injected = root/'engine/search/examples/ci_bench.rs'
+            if injected.is_symlink() or sha(injected) != harness_hash:
+                raise ValueError(f'{label}: injected harness changed after prepare')
+            receipt['sources'][label] = {'commit': actual, **observed,
+                                         'harness_sha256': harness_hash}
+        receipt['status'] = 'success'
+    except Exception as error:
+        receipt.update(status='failed', error=f'{type(error).__name__}: {error}')
+        raise
+    finally:
+        receipt_path.write_text(json.dumps(receipt, indent=2)+'\n', encoding='utf-8')
+    return receipt
+
+
+def timing_snapshot(target):
+    folder = target/'cargo-timings'
+    if folder.is_symlink() or not folder.is_dir():
+        return {}
+    return {path.name: sha(path) for path in folder.glob('*.html')
+            if path.is_file() and not path.is_symlink()}
+
+
+def preserve_build_timings(workspace, label, before):
+    """Keep fresh Cargo compilation reports on both successful and failed builds."""
+    target = workspace/('target-' + label)
+    current = timing_snapshot(target)
+    files = []
+    for name, digest in sorted(current.items()):
+        if before.get(name) == digest:
+            continue
+        destination = workspace/'ci-results/build-timings'/label/name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(target/'cargo-timings'/name, destination)
+        files.append({'path': destination.relative_to(workspace/'ci-results').as_posix(),
+                      'sha256': digest})
+    return files
 
 
 def fingerprint_expectations(selection, label):
@@ -351,6 +424,7 @@ def validate_prepared_turn(workspace):
 def build(workspace):
     # Finish ALL tests/builds and verify actual compiler features before timing.
     import build_cache
+    import dependency_target
 
     result = workspace/'ci-results'
     request = json.loads((result/'request.json').read_text(encoding='utf-8'))
@@ -373,15 +447,16 @@ def build(workspace):
     for label in ('baseline', 'candidate'):
         env = os.environ.copy()
         target = workspace/('target-'+label)
-        if target.exists():
-            raise ValueError(f'{label}: target directory must be new to establish fresh build evidence')
+        dependency_seeded = dependency_target.prepare_target(workspace, label)
         env['CARGO_TARGET_DIR'] = str(target)
         reused = build_cache.restore(workspace, label)
         receipt = {'schema_version': 1, 'status': 'running', 'label': label,
                    'suite': request['suite'], 'selection': selection, 'reused': reused,
+                   'dependency_seeded': dependency_seeded,
                    'commands': [], 'log': label + '-build.log',
                    'feature_evidence': label + '-features.json'}
         receipt_path = result/(label + '-build-receipt.json')
+        timings_before = timing_snapshot(target) if not reused else {}
         try:
             if reused:
                 receipt['reused_from_run'] = json.loads(
@@ -418,6 +493,14 @@ def build(workspace):
             receipt.update(status='failed', error=f'{type(error).__name__}: {error}')
             receipt_path.write_text(json.dumps(receipt, indent=2)+'\n', encoding='utf-8')
             raise
+        finally:
+            if not reused:
+                try:
+                    receipt['cargo_timings'] = preserve_build_timings(workspace, label, timings_before)
+                except OSError as error:
+                    # Report artifact failures without replacing a Cargo error or retrying it.
+                    receipt['cargo_timings_error'] = f'{type(error).__name__}: {error}'
+                receipt_path.write_text(json.dumps(receipt, indent=2)+'\n', encoding='utf-8')
         if not reused:
             build_cache.seal(workspace, label, provenance['compiler_feature_evidence'][label])
         provenance.setdefault('build_cache', {})[label] = json.loads(
@@ -430,11 +513,11 @@ def build(workspace):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('stage', choices=('refs', 'prepare', 'build'))
+    parser.add_argument('stage', choices=('refs', 'prepare', 'verify-prepared', 'build'))
     parser.add_argument('--workspace', type=Path, required=True)
     args = parser.parse_args()
     try:
-        globals()[args.stage](args.workspace.resolve())
+        globals()[args.stage.replace('-', '_')](args.workspace.resolve())
     except Exception as error:
         result = args.workspace/'ci-results'
         result.mkdir(exist_ok=True)

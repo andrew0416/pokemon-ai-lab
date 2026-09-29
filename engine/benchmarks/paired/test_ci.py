@@ -69,9 +69,10 @@ class FeatureTests(unittest.TestCase):
             self.assertEqual(candidate, [argv + expected for argv in baseline])
             self.assertEqual(ci.build_commands(suite, 'none', 'candidate'), baseline)
         regression = ci.build_commands('narrow', 'hurt-readers', 'candidate')[0]
-        self.assertEqual(regression[:11], ['cargo', 'test', '--locked', '--release',
-                                         '-p', 'lab-engine', '-p', 'lab-scenario', '-p', 'lab-search',
-                                         '--features'])
+        self.assertEqual(regression[:10], ['cargo', 'test', '--locked', '--release',
+                                         '-p', 'lab-engine', '-p', 'lab-scenario', '-p', 'lab-search'])
+        self.assertEqual(regression.count('--timings'), 1)
+        self.assertEqual(regression[-2:], expected)
         self.assertNotIn('--lib', regression)
         with self.assertRaises(ValueError):
             ci.feature_args('unknown', 'candidate')
