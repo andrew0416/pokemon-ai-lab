@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "suites": {
+    "smoke": [
+      {
+        "name": "poison-heal",
+        "scenario": "engine/oracle/scenarios/u-poison-heal.json",
+        "position": "max"
+      }
+    ],
+    "narrow": [
+      {
+        "name": "coaching",
+        "scenario": "engine/oracle/scenarios/cc-lib-coaching-panda-vs-psy-sand-udon.json",
+        "position": "max"
+      },
+      {
+        "name": "sand",
+        "scenario": "engine/jobs/plan-20260926/gardevoir-vs-sand-owen.json",
+        "position": "1"
+      }
+    ]
+  }
+}

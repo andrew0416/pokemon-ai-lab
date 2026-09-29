@@ -1,0 +1,122 @@
+name: engine benchmark
+run-name: "engine benchmark · ${{ inputs.suite }} · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseline_sha:
+        description: "원본의 전체 40자리 커밋 SHA"
+        required: true
+        default: "929e6298c63ac8accada5bee51620c6804390b69"
+      candidate_sha:
+        description: "후보의 전체 40자리 커밋 SHA (비우면 실행 브랜치의 커밋)"
+        default: ""
+      suite:
+        description: "smoke: 동작 점검 / narrow: coaching·sand 깊이2"
+        type: choice
+        options: [narrow, smoke]
+        default: narrow
+      threads:
+        description: "양쪽에 동일하게 사용할 스레드 수"
+        type: choice
+        options: ["1", "2", "4"]
+        default: "1"
+      pairs:
+        description: "warmup 제외 A/B 쌍 수 (AB/BA 균형)"
+        type: choice
+        options: ["2", "6", "10", "20"]
+        default: "6"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engine-benchmark
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  RUSTFLAGS: "-Ctarget-cpu=x86-64"
+  CARGO_PROFILE_RELEASE_OPT_LEVEL: "3"
+  CARGO_PROFILE_RELEASE_DEBUG: "1"
+  CARGO_PROFILE_RELEASE_LTO: "off"
+  CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
+  LAB_ENGINE_FACTORED: "0"
+  PYTHONUTF8: "1"
+  PYTHONHASHSEED: "0"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+
+jobs:
+  paired:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout benchmark controller and shared fixtures
+        uses: actions/checkout@v4
+        with:
+          path: controller
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate request and resolve immutable commits
+        id: refs
+        env:
+          BASELINE_SHA: ${{ inputs.baseline_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          SUITE: ${{ inputs.suite }}
+          THREADS: ${{ inputs.threads }}
+          PAIRS: ${{ inputs.pairs }}
+        run: python controller/engine/benchmarks/paired/ci.py refs --workspace "$GITHUB_WORKSPACE"
+      - name: Checkout baseline
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.refs.outputs.baseline_sha }}
+          path: baseline
+          persist-credentials: false
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.refs.outputs.candidate_sha }}
+          path: candidate
+          persist-credentials: false
+      - name: Install fixed Rust toolchain
+        uses: dtolnay/rust-toolchain@1.98.1
+      - name: Test benchmark controller
+        run: python -m unittest discover -s controller/engine/benchmarks/paired -p "test_*.py" -v
+      - name: Record provenance and inject identical harness
+        run: python controller/engine/benchmarks/paired/ci.py prepare --workspace "$GITHUB_WORKSPACE"
+      - name: Test and build both versions before timing
+        run: python controller/engine/benchmarks/paired/ci.py build --workspace "$GITHUB_WORKSPACE"
+      - name: Warm up and measure alternating pairs
+        env:
+          SUITE: ${{ inputs.suite }}
+          THREADS: ${{ inputs.threads }}
+          PAIRS: ${{ inputs.pairs }}
+        run: >-
+          python controller/engine/benchmarks/paired/run.py
+          --baseline-exe "$GITHUB_WORKSPACE/target-baseline/release/examples/ci_bench"
+          --candidate-exe "$GITHUB_WORKSPACE/target-candidate/release/examples/ci_bench"
+          --suite "$SUITE" --threads "$THREADS" --pairs "$PAIRS"
+          --timeout 600 --out-dir "$GITHUB_WORKSPACE/ci-results/benchmark"
+      - name: Publish summary
+        if: always()
+        run: |
+          if [ -f ci-results/benchmark/summary.md ]; then
+            cat ci-results/benchmark/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Benchmark did not complete. Inspect the job logs and engine-benchmark artifact.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve logs and raw measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-benchmark-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ci-results/
+          if-no-files-found: warn
+          retention-days: 7
+          compression-level: 6
