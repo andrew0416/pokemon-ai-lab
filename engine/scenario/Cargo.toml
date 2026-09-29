@@ -1,4 +1,5 @@
 [package]
+autotests = false
 name = "lab-scenario"
 version.workspace = true
 edition.workspace = true
@@ -20,3 +21,45 @@ flate2 = "1"
 [[bench]]
 name = "turn"
 harness = false
+
+# Experiment: preserve tests while reducing integration-test executable count.
+
+[[test]]
+name = "bundle_scenario_01"
+path = "tests/bundle_scenario_01.rs"
+
+[[test]]
+name = "bundle_scenario_02"
+path = "tests/bundle_scenario_02.rs"
+
+[[test]]
+name = "bundle_scenario_03"
+path = "tests/bundle_scenario_03.rs"
+
+[[test]]
+name = "bundle_scenario_04"
+path = "tests/bundle_scenario_04.rs"
+
+[[test]]
+name = "bundle_scenario_05"
+path = "tests/bundle_scenario_05.rs"
+
+[[test]]
+name = "bundle_scenario_06"
+path = "tests/bundle_scenario_06.rs"
+
+[[test]]
+name = "ae_lab_check_timeout"
+path = "tests/ae_lab_check_timeout.rs"
+
+[[test]]
+name = "factored"
+path = "tests/factored.rs"
+
+[[test]]
+name = "lab_check_batch"
+path = "tests/lab_check_batch.rs"
+
+[[test]]
+name = "yy_position_hash"
+path = "tests/yy_position_hash.rs"
