@@ -12,9 +12,9 @@ on:
         description: "후보의 전체 40자리 커밋 SHA (비우면 실행 브랜치의 커밋)"
         default: ""
       candidate_feature:
-        description: "실험 모드: leaf-ending-states는 양쪽 P8g + 후보 P9"
+        description: "실험 모드: leaf-ending-states/P9 또는 prepared-turn/P8c (양쪽 P8g 공통)"
         type: choice
-        options: [none, hurt-readers, leaf-ending-states]
+        options: [none, hurt-readers, leaf-ending-states, prepared-turn]
         default: none
       suite:
         description: "smoke: 동작 점검 / narrow: coaching·sand 깊이2"
@@ -116,6 +116,26 @@ jobs:
             cat ci-results/benchmark/summary.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo 'Benchmark did not complete. Inspect the job logs and engine-benchmark artifact.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Measure peak RSS separately for PreparedTurn
+        if: success() && inputs.candidate_feature == 'prepared-turn'
+        env:
+          SUITE: ${{ inputs.suite }}
+          THREADS: ${{ inputs.threads }}
+        run: >-
+          python controller/engine/benchmarks/paired/memory.py
+          --baseline-exe "$GITHUB_WORKSPACE/target-baseline/release/examples/ci_bench"
+          --candidate-exe "$GITHUB_WORKSPACE/target-candidate/release/examples/ci_bench"
+          --suite "$SUITE" --threads "$THREADS" --timeout 600
+          --benchmark-dir "$GITHUB_WORKSPACE/ci-results/benchmark"
+          --out-dir "$GITHUB_WORKSPACE/ci-results/memory"
+      - name: Publish peak RSS summary
+        if: always() && inputs.candidate_feature == 'prepared-turn'
+        run: |
+          if [ -f ci-results/memory/summary.md ]; then
+            cat ci-results/memory/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Peak RSS pass did not complete; timing results alone do not establish memory impact.' >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Preserve logs and raw measurements
         if: always()

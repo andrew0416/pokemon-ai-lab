@@ -10,7 +10,7 @@
 |---|---|
 | baseline_sha | 저장소에 올라온 원본의 전체 40자리 커밋 SHA |
 | candidate_sha | 후보의 전체 SHA. 비우면 선택한 실행 브랜치의 커밋 |
-| candidate_feature | `none`(기본), `hurt-readers`(후보 P8g), `leaf-ending-states`(양쪽 P8g + 후보 P9) |
+| candidate_feature | `none`(기본), `hurt-readers`(후보 P8g), `leaf-ending-states`(양쪽 P8g + 후보 P9), `prepared-turn`(양쪽 P8g + 후보 P8c) |
 | suite | `smoke`: 작은 Harden/Poison Heal 국면의 동작 점검. `narrow`: coaching·sand 깊이 2 비교 |
 | threads | 양쪽 동일 1/2/4스레드. 러너 가용 CPU 수를 넘으면 거부 |
 | pairs | 각 국면에서 warmup을 제외한 쌍 수. 2/6/10/20, 기본 6 |
@@ -35,7 +35,26 @@ core/search의 P9 및 observer 선언·전달 관계와 default 비활성화를 
 두 버전의 core library/test 및 search library/test/공통 example 컴파일 지문을 보존하고,
 양쪽 P8g on, 원본 P9 off, 후보 P9 on, 양쪽 observer off를 확인한다.
 기존 평가기와 전체 출력 대조는 동일하다. 이 모드는 P8c와 결합하지 않는다.
-현재 하네스는 CPU/wall 시간을 수집하며 peak RSS를 수집하지 않는다.
+이 timing 하네스는 CPU/wall 시간을 수집한다. P9 모드에는 peak RSS 단계가 없다.
+
+P8c는 `candidate_feature=prepared-turn`으로 독립 비교한다. 원본은 P8g만,
+후보는 `lab-engine/experiment-hurt-readers,lab-search/experiment-prepared-turn`을 켠다.
+core/search의 prepared 및 observe feature 선언·전달 관계와 default 비활성화를 검사하고,
+실제 library/test/example fingerprint에서 양쪽 P8g, 후보만 P8c, 양쪽 observe off를 확인한다.
+원본에도 후보와 동일한 feature 선언만 넣으며 P9는 포함하지 않는다.
+공통 하네스의 Config literal에는 prepared feature가 켜진 경우에만
+`prepared_turn: true`를 명시한다. 다른 설정 필드는 이전과 같다. 이 feature 선언이 없는
+과거 커밋을 비교할 때는 Rust의 `unexpected_cfgs` 경고가 날 수 있으나 해당 필드는 제외된다.
+계측 기능이 필요한 후보의 새 `prepared_turn` 차등 테스트는 별도 target 디렉터리에서
+observe on으로 검증한다. 이 실행 파일과 컴파일 결과는 성능 측정에 사용하지 않는다.
+
+P8c의 CPU/wall 측정이 성공하면 `memory.py`로 별도의 peak RSS 검사를 수행한다.
+동일한 바이너리·입력·검색 설정에서 각 국면 2쌍 AB/BA(총 4회, narrow 전체 8회)를 실행하고
+GNU `/usr/bin/time`의 `%M` 값을 KiB 단위로 수집한다. 이 실행의 시간은 주 timing 통계에
+합치지 않는다. 전체 프로세스의 peak RSS이므로 엔진 할당량이나 RSS 적분과 다르다.
+타이밍 원자료의 성공·일정·파일 해시와 각 실행의 전체 출력 bits/작업량이 같아야 한다.
+RSS pass에는 warmup을 두지 않으며, 작은 차이는 allocator/OS 변동을 포함해 해석한다.
+`memory/` 아래 원자료·명령·해시·결과를 보존하고 실패 시에도 부분 결과를 남긴다.
 
 ## 비교 조건
 

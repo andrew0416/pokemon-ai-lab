@@ -15,8 +15,23 @@ import tomllib
 EXPERIMENT_FEATURE = 'experiment-hurt-readers'
 LEAF_FEATURE = 'experiment-leaf-ending-states'
 OBSERVER_FEATURE = 'experiment-leaf-ending-observer'
-FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states')
+PREPARED_FEATURE = 'experiment-prepared-turn'
+PREPARED_OBSERVER_FEATURE = 'experiment-prepared-turn-observe'
+FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn')
+EXPERIMENT_FEATURES = (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE,
+                       PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE)
 COMMAND_TIMEOUT_SECONDS = 2700
+PREPARED_TESTS = (
+    'matrix_reuses_real_validators_and_preserves_all_outcome_bits',
+    'invalid_pair_error_order_and_deferred_support_are_identical',
+    'snapshots_cannot_accept_a_stale_parent_or_ruleset',
+    'normalization_suspension_mega_and_transform_match',
+    'full_and_factored_paths_keep_single_turn_validation',
+    'search_values_strategies_counters_budgets_and_input_restoration_match',
+    'parent_error_priority_terminal_replacement_and_midturn_fallback_match',
+    'one_thread_exact_deep_and_deep_nash_reuse_validation',
+    'solver_full_factored_and_parallel_fallback_remains_identical',
+)
 
 
 def feature_args(selection, label):
@@ -24,10 +39,11 @@ def feature_args(selection, label):
         raise ValueError('Invalid candidate feature or build label')
     if label == 'candidate' and selection == 'hurt-readers':
         return ['--features', 'lab-engine/' + EXPERIMENT_FEATURE]
-    if selection == 'leaf-ending-states':
+    if selection in ('leaf-ending-states', 'prepared-turn'):
         features = 'lab-engine/' + EXPERIMENT_FEATURE
         if label == 'candidate':
-            features += ',lab-search/' + LEAF_FEATURE
+            selected = LEAF_FEATURE if selection == 'leaf-ending-states' else PREPARED_FEATURE
+            features += ',lab-search/' + selected
         return ['--features', features]
     return []
 
@@ -48,7 +64,7 @@ def reject_default_experiments(manifest, features):
     visited = set()
     while pending:
         feature = pending.pop()
-        if feature.rsplit('/', 1)[-1] in (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE):
+        if feature.rsplit('/', 1)[-1] in EXPERIMENT_FEATURES:
             raise ValueError(f'{manifest}: experiment feature must not be enabled by default')
         if feature not in visited:
             visited.add(feature)
@@ -58,7 +74,7 @@ def reject_default_experiments(manifest, features):
 def verify_feature_declaration(manifest, selection):
     features = read_features(manifest)
     declared = EXPERIMENT_FEATURE in features
-    if selection in ('hurt-readers', 'leaf-ending-states') and not declared:
+    if selection in ('hurt-readers', 'leaf-ending-states', 'prepared-turn') and not declared:
         raise ValueError(f'{manifest}: missing empty {EXPERIMENT_FEATURE} feature declaration')
     if declared and features[EXPERIMENT_FEATURE] != []:
         raise ValueError(f'{manifest}: {EXPERIMENT_FEATURE} must be an empty feature')
@@ -68,10 +84,18 @@ def verify_feature_declaration(manifest, selection):
 
 
 def verify_leaf_declarations(root):
+    return verify_bridge_declarations(root, LEAF_FEATURE, OBSERVER_FEATURE)
+
+
+def verify_prepared_declarations(root):
+    return verify_bridge_declarations(root, PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE)
+
+
+def verify_bridge_declarations(root, feature, observer):
     declarations = {
-        'core': {LEAF_FEATURE: [], OBSERVER_FEATURE: [LEAF_FEATURE]},
-        'search': {LEAF_FEATURE: ['lab-engine/' + LEAF_FEATURE],
-                   OBSERVER_FEATURE: [LEAF_FEATURE, 'lab-engine/' + OBSERVER_FEATURE]},
+        'core': {feature: [], observer: [feature]},
+        'search': {feature: ['lab-engine/' + feature],
+                   observer: [feature, 'lab-engine/' + observer]},
     }
     for package, expected in declarations.items():
         manifest = root/'engine'/package/'Cargo.toml'
@@ -162,6 +186,8 @@ def prepare(workspace):
                 'engine/rust-toolchain', 'engine/rust-toolchain.toml') if (root/name).is_file()}}
         if selection == 'leaf-ending-states':
             metadata['sources'][label]['leaf_declarations'] = verify_leaf_declarations(root)
+        elif selection == 'prepared-turn':
+            metadata['sources'][label]['prepared_declarations'] = verify_prepared_declarations(root)
     # A dependency/profile change needs a separately designed experiment.
     for key in ('lock_sha256', 'workspace_manifest_sha256', 'search_manifest_sha256',
                 'package_manifests', 'cargo_configuration'):
@@ -193,16 +219,23 @@ def build_commands(suite, selection, label):
 
 def preserve_fingerprints(workspace, label, selection):
     feature_args(selection, label)
+    hurt_active = selection in ('leaf-ending-states', 'prepared-turn') or (
+        label == 'candidate' and selection == 'hurt-readers')
+    leaf_active = selection == 'leaf-ending-states' and label == 'candidate'
+    prepared_active = selection == 'prepared-turn' and label == 'candidate'
+    bridge_expected = {LEAF_FEATURE: leaf_active, OBSERVER_FEATURE: False,
+                       PREPARED_FEATURE: prepared_active, PREPARED_OBSERVER_FEATURE: False}
+    packages = {'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json')}
+    expected = {'lab-engine': {EXPERIMENT_FEATURE: hurt_active, **bridge_expected}}
+    if selection in ('leaf-ending-states', 'prepared-turn'):
+        packages['lab-search'] = ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')
+        expected['lab-search'] = dict(bridge_expected)
+    return preserve_expected_fingerprints(workspace, label, packages, expected, hurt_active)
+
+
+def preserve_expected_fingerprints(workspace, label, packages, expected, hurt_active):
     target = workspace/('target-' + label)
     result = workspace/'ci-results'
-    hurt_active = selection == 'leaf-ending-states' or (label == 'candidate' and selection == 'hurt-readers')
-    leaf_active = selection == 'leaf-ending-states' and label == 'candidate'
-    packages = {'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json')}
-    expected = {'lab-engine': {EXPERIMENT_FEATURE: hurt_active,
-                              LEAF_FEATURE: leaf_active, OBSERVER_FEATURE: False}}
-    if selection == 'leaf-ending-states':
-        packages['lab-search'] = ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')
-        expected['lab-search'] = {LEAF_FEATURE: leaf_active, OBSERVER_FEATURE: False}
     evidence = {'expected_active': hurt_active, 'expected_by_package': expected,
                 'feature': EXPERIMENT_FEATURE, 'fingerprints': []}
     fingerprint_root = target/'release/.fingerprint'
@@ -240,6 +273,76 @@ def preserve_fingerprints(workspace, label, selection):
     return evidence
 
 
+def prepared_validation_command():
+    return ['cargo', 'test', '--locked', '--release', '-p', 'lab-search',
+            '--test', 'prepared_turn', '--features',
+            'lab-engine/' + EXPERIMENT_FEATURE + ',lab-search/' + PREPARED_OBSERVER_FEATURE]
+
+
+def validate_prepared_turn(workspace):
+    """Run observer-dependent differential tests outside both timing targets."""
+    result = workspace/'ci-results'
+    label = 'prepared-validation'
+    target = workspace/('target-' + label)
+    if target.exists():
+        raise ValueError('Prepared validation target directory must be new')
+    command = prepared_validation_command()
+    log_path = result/(label + '.log')
+    receipt_path = result/(label + '.json')
+    receipt = {'status': 'running', 'command': command, 'source': 'candidate',
+               'target_directory': str(target), 'log': log_path.name,
+               'per_command_timeout_seconds': COMMAND_TIMEOUT_SECONDS,
+               'expected_tests': list(PREPARED_TESTS)}
+
+    def save():
+        receipt_path.write_text(json.dumps(receipt, indent=2)+'\n', encoding='utf-8')
+
+    save()
+    try:
+        env = os.environ.copy()
+        env['CARGO_TARGET_DIR'] = str(target)
+        with log_path.open('w', encoding='utf-8') as log:
+            log.write('COMMAND '+json.dumps(command)+'\n')
+            log.flush()
+            print(f'{label}: {" ".join(command)}', flush=True)
+            proc = subprocess.Popen(command, cwd=workspace/'candidate/engine', env=env,
+                                    stdout=log, stderr=subprocess.STDOUT,
+                                    start_new_session=(os.name == 'posix'))
+            try:
+                proc.wait(timeout=COMMAND_TIMEOUT_SECONDS)
+            except subprocess.TimeoutExpired:
+                if os.name == 'posix':
+                    os.killpg(proc.pid, signal.SIGKILL)
+                else:
+                    proc.kill()
+                proc.wait()
+                raise RuntimeError('Prepared validation timed out; process group terminated')
+            receipt['returncode'] = proc.returncode
+        if proc.returncode:
+            raise RuntimeError(f'Prepared validation failed ({proc.returncode}); see artifact log')
+        log_text = log_path.read_text(encoding='utf-8')
+        passed = re.findall(r'^test (\S+) \.\.\. ok$', log_text, re.MULTILINE)
+        receipt['passed_tests'] = passed
+        if sorted(passed) != sorted(PREPARED_TESTS) or not re.search(
+                r'^test result: ok\. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out;',
+                log_text, re.MULTILINE):
+            raise ValueError('Prepared validation must execute all nine named tests, with none skipped')
+        bridge = {LEAF_FEATURE: False, OBSERVER_FEATURE: False,
+                  PREPARED_FEATURE: True, PREPARED_OBSERVER_FEATURE: True}
+        receipt['compiler_feature_evidence'] = preserve_expected_fingerprints(
+            workspace, label,
+            {'lab-engine': ('lib-lab_engine.json',),
+             'lab-search': ('lib-lab_search.json', 'test-integration-test-prepared_turn.json')},
+            {'lab-engine': {EXPERIMENT_FEATURE: True, **bridge}, 'lab-search': dict(bridge)}, True)
+        receipt['status'] = 'ok'
+        save()
+        return receipt
+    except Exception as error:
+        receipt.update(status='failed', error=f'{type(error).__name__}: {error}')
+        save()
+        raise
+
+
 def build(workspace):
     # Finish ALL tests/builds and verify actual compiler features before timing.
     result = workspace/'ci-results'
@@ -253,6 +356,8 @@ def build(workspace):
     plan = {'suite': request['suite'], 'candidate_feature': selection,
             'feature_args': expected_args, 'commands_by_version': commands_by_version,
             'per_command_timeout_seconds': COMMAND_TIMEOUT_SECONDS}
+    if selection == 'prepared-turn':
+        plan['prepared_validation_command'] = prepared_validation_command()
     (result/'test-plan.json').write_text(json.dumps(plan, indent=2)+'\n', encoding='utf-8')
     provenance = json.loads((result/'provenance.json').read_text(encoding='utf-8'))
     provenance['build_plan'] = plan
@@ -286,6 +391,9 @@ def build(workspace):
                     print((workspace/'ci-results'/f'{label}-build.log').read_text(encoding='utf-8')[-12000:])
                     raise RuntimeError(f'{label} build/test failed ({proc.returncode}); see artifact log')
         provenance['compiler_feature_evidence'][label] = preserve_fingerprints(workspace, label, selection)
+        (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
+    if selection == 'prepared-turn':
+        provenance['prepared_validation'] = validate_prepared_turn(workspace)
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
 
 

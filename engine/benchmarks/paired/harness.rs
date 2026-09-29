@@ -121,6 +121,8 @@ fn main() {
     // Depth 1 is the shallow matrix; the single DeepLevel above makes total depth 2.
     // A new Config field must be reviewed here; no changed default silently alters CI.
     let config = Config {
+        #[cfg(feature = "experiment-prepared-turn")]
+        prepared_turn: true,
         ruleset: Ruleset::CHAMPIONS_MC,
         us: SideId::One,
         depth: 1,
