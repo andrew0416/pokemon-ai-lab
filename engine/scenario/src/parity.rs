@@ -79,13 +79,18 @@ impl Comparison {
     }
 }
 
-/// Compares the engine's distribution with the oracle's.
+/// Compares the engine's distribution with the oracle's. Canonical-key iteration makes
+/// floating-point accumulation reproducible across independently seeded hash maps.
 pub fn compare(engine: &Distribution, oracle: &Distribution) -> Comparison {
     let mut only_engine: Vec<(&String, f64)> = Vec::new();
     let mut only_oracle: Vec<(&String, f64)> = Vec::new();
     let mut max_shared_diff = 0.0f64;
     let mut tv = 0.0;
-    for (k, &p) in engine {
+    let mut engine_entries: Vec<_> = engine.iter().collect();
+    let mut oracle_entries: Vec<_> = oracle.iter().collect();
+    engine_entries.sort_unstable_by(|a, b| a.0.cmp(b.0));
+    oracle_entries.sort_unstable_by(|a, b| a.0.cmp(b.0));
+    for (k, &p) in engine_entries {
         match oracle.get(k) {
             Some(&q) => {
                 max_shared_diff = max_shared_diff.max((p - q).abs());
@@ -97,7 +102,7 @@ pub fn compare(engine: &Distribution, oracle: &Distribution) -> Comparison {
             }
         }
     }
-    for (k, &q) in oracle {
+    for (k, &q) in oracle_entries {
         if !engine.contains_key(k) {
             only_oracle.push((k, q));
             tv += q / 2.0;
@@ -222,7 +227,10 @@ pub fn first_differences(
     let parse = |k: &str| -> Value { serde_json::from_str(k).expect("keys are JSON") };
     let closest = |target: &Value, pool: &Distribution| -> Vec<String> {
         let mut best: Option<Vec<String>> = None;
-        for k in pool.keys() {
+        // Equally close outcomes use the canonical-key order, never HashMap's random seed.
+        let mut keys: Vec<_> = pool.keys().collect();
+        keys.sort_unstable();
+        for k in keys {
             let d = json_diff(target, &parse(k), 64);
             if best.as_ref().is_none_or(|b| d.len() < b.len()) {
                 best = Some(d);
@@ -247,4 +255,77 @@ pub fn first_differences(
         return out;
     }
     Vec::new()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn comparison_is_bit_identical_across_hash_layouts() {
+        // Small terms near the rounding boundary exposed nondeterministic TV in V30.
+        // Both distributions have total mass one and deliberately disjoint supports.
+        let tiny = 2.0_f64.powi(-54);
+        let probabilities = [0.5, tiny, tiny, tiny, tiny, 0.5 - 4.0 * tiny];
+        let mut reference: Option<Comparison> = None;
+        for offset in 0..96 {
+            let mut engine = Distribution::with_capacity(offset);
+            let mut oracle = Distribution::with_capacity(96 - offset);
+            for j in 0..probabilities.len() {
+                let i = (j + offset) % probabilities.len();
+                engine.insert(value_key(&json!({"engine": i})), probabilities[i]);
+                oracle.insert(value_key(&json!({"oracle": i})), probabilities[i]);
+            }
+            let result = compare(&engine, &oracle);
+            assert!(!result.exact(1e-9));
+            assert!((result.tv - 1.0).abs() < 1e-14);
+            assert_eq!((result.only_engine.len(), result.only_oracle.len()), (6, 6));
+            if let Some(previous) = &reference {
+                assert_eq!(result.tv.to_bits(), previous.tv.to_bits());
+                assert_eq!(&result, previous);
+            } else {
+                reference = Some(result);
+            }
+        }
+    }
+
+    #[test]
+    fn equal_distance_diagnostics_choose_a_stable_canonical_outcome() {
+        let low = value_key(&json!({"hp": 10}));
+        let high = value_key(&json!({"hp": 20}));
+        let missing = value_key(&json!({"hp": 30}));
+        for capacity in 0..64 {
+            let mut engine = Distribution::with_capacity(capacity);
+            let mut oracle = Distribution::new();
+            for key in if capacity % 2 == 0 {
+                [&low, &high]
+            } else {
+                [&high, &low]
+            } {
+                engine.insert(key.clone(), 0.5);
+            }
+            oracle.insert(missing.clone(), 1.0);
+            let comparison = compare(&engine, &oracle);
+            assert_eq!(
+                first_differences(&comparison, &engine, &oracle, 5),
+                vec!["oracle→engine hp: 30 vs 10"]
+            );
+            assert!(first_differences(&comparison, &engine, &oracle, 0).is_empty());
+        }
+    }
+
+    #[test]
+    fn deterministic_diagnostics_preserve_probability_mismatch_checks() {
+        let a = value_key(&json!({"hp": 10}));
+        let b = value_key(&json!({"hp": 20}));
+        let engine = Distribution::from([(a.clone(), 0.75), (b.clone(), 0.25)]);
+        let oracle = Distribution::from([(a, 0.5), (b, 0.5)]);
+        let mismatch = compare(&engine, &oracle);
+        assert!(mismatch.only_engine.is_empty() && mismatch.only_oracle.is_empty());
+        assert_eq!(mismatch.tv, 0.25);
+        assert_eq!(mismatch.max_shared_diff, 0.25);
+        assert!(!mismatch.exact(1e-9));
+        assert!(compare(&engine, &engine).exact(0.0));
+    }
 }
