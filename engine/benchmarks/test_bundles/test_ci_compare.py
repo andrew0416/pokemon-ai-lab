@@ -1,6 +1,7 @@
 """Controller unit tests use inert fixtures and mocked subprocesses; never Cargo."""
 import argparse
 import copy
+import hashlib
 import importlib.util
 import json
 import os
@@ -52,6 +53,40 @@ class SourceFixture(unittest.TestCase):
 
 
 class SourceTests(SourceFixture):
+    def test_ci_mapping_must_hash_git_lf_bytes_without_runtime_newline_conversion(self):
+        # Reproduce CI4: the Windows archive used CRLF, while both Git checkouts
+        # contain identical LF blobs. Use explicit bytes on every test host.
+        lf = b'#[test]\nfn plain() {}\n'
+        crlf = lf.replace(b'\n', b'\r\n')
+        name = self.mapping_value["entries"][0]["original_path"]
+        for root in self.roots.values():
+            (root / name).write_bytes(lf)
+        archived_mapping = copy.deepcopy(self.mapping_value)
+        archived_mapping["entries"][0]["source_sha256"] = hashlib.sha256(crlf).hexdigest()
+        with self.assertRaisesRegex(ValueError, "Original test raw SHA-256.*first.rs"):
+            driver.validate_sources(self.roots, driver.Mapping(archived_mapping))
+
+        git_mapping = copy.deepcopy(archived_mapping)
+        git_mapping["entries"][0]["source_sha256"] = hashlib.sha256(lf).hexdigest()
+        inventories, _ = driver.validate_sources(self.roots, driver.Mapping(git_mapping))
+        for label, root in self.roots.items():
+            self.assertEqual((root / name).read_bytes(), lf)
+            self.assertEqual(inventories[label][name]["sha256"], hashlib.sha256(lf).hexdigest())
+
+        # The fix is the mapping data, never acceptance of alternative bytes.
+        for root in self.roots.values():
+            (root / name).write_bytes(crlf)
+        with self.assertRaisesRegex(ValueError, "Original test raw SHA-256"):
+            driver.validate_sources(self.roots, driver.Mapping(git_mapping))
+
+    def test_identical_changes_to_both_test_sources_cannot_bypass_mapping_identity(self):
+        name = self.mapping_value["entries"][0]["original_path"]
+        original = (self.roots["baseline"] / name).read_bytes()
+        for root in self.roots.values():
+            (root / name).write_bytes(original + b'// unexpected common modification\n')
+        with self.assertRaisesRegex(ValueError, "Original test raw SHA-256"):
+            driver.validate_sources(self.roots, self.mapping)
+
     def test_only_manifest_test_discovery_and_declared_wrappers_may_differ(self):
         inventories, difference = driver.validate_sources(self.roots, self.mapping)
         self.assertEqual(difference["changed"], ["engine/scenario/Cargo.toml"])

@@ -10,6 +10,18 @@ scenario 171개 파일을 6개 모듈 묶음으로 만들고 `yy_position_hash`,
 search의 9개 파일은 2개 묶음이 된다. 묶음은 원본 소스 bytes를 기준으로 균형을
 맞췄으며 이는 실제 컴파일 비용의 측정값이 아니다. mapping.json에 전체 대응을 둔다.
 
+CI의 `mapping.json`에서 `source_sha256`는 `source_sha`가 가리키는 **Git blob의 원문
+bytes**를 SHA-256으로 해시한 값이다. 첫 실행 `36590625809`는 Windows에서 만든
+보존용 snapshot의 CRLF 해시가 mapping에 들어 있어, 동일한 LF Git 원본 184개를
+전부 불일치로 거부했다. CI mapping만 `git cat-file blob <source_sha>:<original_path>`의
+원문으로 재생성했으며 이전 snapshot·mapping과 실패 artifact는 보존했다. 대응표의
+`source_hash_provenance`에 이전 mapping 해시와 재생성 근거를 기록한다. 묶음의 정적
+bytes 균형 값은 최초 snapshot 기준 그대로이며 컴파일 비용으로 해석하지 않는다.
+
+원본 테스트의 해시 검증에서 줄바꿈 변환이나 공백 정규화는 하지 않는다. 두 checkout의 기존 파일은
+여전히 bytes 단위로 동일해야 하며, 각 원본 테스트는 mapping의 raw SHA-256과도
+정확히 일치해야 한다. 같은 내용 변경을 양쪽에 넣어도 mapping gate가 거부한다.
+
 `test-build-benchmark.yml`을 full baseline/candidate SHA로 수동 실행한다.
 Python controller는 두 checkout을 별도 작업 디렉터리에 복사하며 원본을 수정하지
 않는다. generic x86-64, 고정 Rust 1.98.1, release opt-level 3, codegen-units 16,

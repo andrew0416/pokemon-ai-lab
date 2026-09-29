@@ -151,7 +151,9 @@ def validate_sources(roots, mapping):
     for item in mapping.original.values():
         name = item["original_path"]
         if before[name]["sha256"] != item["source_sha256"] or before[name] != after[name]:
-            raise ValueError("Original tests differ from mapping or between variants")
+            raise ValueError(f"Original test raw SHA-256 differs from mapping or between variants: {name}; "
+                             f"mapping={item['source_sha256']}, baseline={before[name]['sha256']}, "
+                             f"candidate={after[name]['sha256']}")
     for key, entries in mapping.candidate.items():
         if entries[0]["isolated"]:
             continue
