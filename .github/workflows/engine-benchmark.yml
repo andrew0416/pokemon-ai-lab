@@ -12,9 +12,9 @@ on:
         description: "후보의 전체 40자리 커밋 SHA (비우면 실행 브랜치의 커밋)"
         default: ""
       candidate_feature:
-        description: "후보에만 켤 보존된 실험 기능 (원본은 항상 추가 기능 없음)"
+        description: "실험 모드: leaf-ending-states는 양쪽 P8g + 후보 P9"
         type: choice
-        options: [none, hurt-readers]
+        options: [none, hurt-readers, leaf-ending-states]
         default: none
       suite:
         description: "smoke: 동작 점검 / narrow: coaching·sand 깊이2"

@@ -10,7 +10,7 @@
 |---|---|
 | baseline_sha | 저장소에 올라온 원본의 전체 40자리 커밋 SHA |
 | candidate_sha | 후보의 전체 SHA. 비우면 선택한 실행 브랜치의 커밋 |
-| candidate_feature | `none`(기본) 또는 `hurt-readers`. 후보에만 `lab-engine/experiment-hurt-readers`를 활성화 |
+| candidate_feature | `none`(기본), `hurt-readers`(후보 P8g), `leaf-ending-states`(양쪽 P8g + 후보 P9) |
 | suite | `smoke`: 작은 Harden/Poison Heal 국면의 동작 점검. `narrow`: coaching·sand 깊이 2 비교 |
 | threads | 양쪽 동일 1/2/4스레드. 러너 가용 CPU 수를 넘으면 거부 |
 | pairs | 각 국면에서 warmup을 제외한 쌍 수. 2/6/10/20, 기본 6 |
@@ -25,6 +25,17 @@
 default feature가 이를 직접 또는 간접으로 켜면 준비 단계에서 거부한다.
 원본에는 추가 feature 플래그를 주지 않는다. 후보의 **모든** Cargo 테스트·빌드 명령에만
 `--features lab-engine/experiment-hurt-readers`를 붙인다. `none`은 양쪽 모두 추가 플래그 없이 실행한다.
+
+P9의 추가 효과는 `candidate_feature=leaf-ending-states`로 측정한다. 원본은
+`--features lab-engine/experiment-hurt-readers`, 후보는
+`--features lab-engine/experiment-hurt-readers,lab-search/experiment-leaf-ending-states`를 쓴다.
+P8g 코드가 같은 두 커밋을 준비하고 원본에도 후보와 동일한 P9 feature 선언만 추가한다.
+원본의 P9 코드는 활성화하지 않으며 Cargo manifest/lock 동일성 검사는 그대로 유지한다.
+core/search의 P9 및 observer 선언·전달 관계와 default 비활성화를 검사한다.
+두 버전의 core library/test 및 search library/test/공통 example 컴파일 지문을 보존하고,
+양쪽 P8g on, 원본 P9 off, 후보 P9 on, 양쪽 observer off를 확인한다.
+기존 평가기와 전체 출력 대조는 동일하다. 이 모드는 P8c와 결합하지 않는다.
+현재 하네스는 CPU/wall 시간을 수집하며 peak RSS를 수집하지 않는다.
 
 ## 비교 조건
 

@@ -13,7 +13,9 @@ import tomllib
 
 
 EXPERIMENT_FEATURE = 'experiment-hurt-readers'
-FEATURE_CHOICES = ('none', 'hurt-readers')
+LEAF_FEATURE = 'experiment-leaf-ending-states'
+OBSERVER_FEATURE = 'experiment-leaf-ending-observer'
+FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states')
 COMMAND_TIMEOUT_SECONDS = 2700
 
 
@@ -22,10 +24,15 @@ def feature_args(selection, label):
         raise ValueError('Invalid candidate feature or build label')
     if label == 'candidate' and selection == 'hurt-readers':
         return ['--features', 'lab-engine/' + EXPERIMENT_FEATURE]
+    if selection == 'leaf-ending-states':
+        features = 'lab-engine/' + EXPERIMENT_FEATURE
+        if label == 'candidate':
+            features += ',lab-search/' + LEAF_FEATURE
+        return ['--features', features]
     return []
 
 
-def verify_feature_declaration(manifest, selection):
+def read_features(manifest):
     with manifest.open('rb') as stream:
         data = tomllib.load(stream)
     features = data.get('features', {})
@@ -33,22 +40,47 @@ def verify_feature_declaration(manifest, selection):
             not isinstance(values, list) or any(not isinstance(value, str) for value in values)
             for values in features.values()):
         raise ValueError(f'{manifest}: invalid Cargo features table')
-    declared = EXPERIMENT_FEATURE in features
-    if selection == 'hurt-readers' and not declared:
-        raise ValueError(f'{manifest}: missing empty {EXPERIMENT_FEATURE} feature declaration')
-    if declared and features[EXPERIMENT_FEATURE] != []:
-        raise ValueError(f'{manifest}: {EXPERIMENT_FEATURE} must be an empty feature')
+    return features
+
+
+def reject_default_experiments(manifest, features):
     pending = list(features.get('default', []))
     visited = set()
     while pending:
         feature = pending.pop()
-        if feature.rsplit('/', 1)[-1] == EXPERIMENT_FEATURE:
+        if feature.rsplit('/', 1)[-1] in (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE):
             raise ValueError(f'{manifest}: experiment feature must not be enabled by default')
         if feature not in visited:
             visited.add(feature)
             pending.extend(features.get(feature, []))
+
+
+def verify_feature_declaration(manifest, selection):
+    features = read_features(manifest)
+    declared = EXPERIMENT_FEATURE in features
+    if selection in ('hurt-readers', 'leaf-ending-states') and not declared:
+        raise ValueError(f'{manifest}: missing empty {EXPERIMENT_FEATURE} feature declaration')
+    if declared and features[EXPERIMENT_FEATURE] != []:
+        raise ValueError(f'{manifest}: {EXPERIMENT_FEATURE} must be an empty feature')
+    reject_default_experiments(manifest, features)
     return {'name': EXPERIMENT_FEATURE, 'declared_empty': declared,
             'default_activation': False}
+
+
+def verify_leaf_declarations(root):
+    declarations = {
+        'core': {LEAF_FEATURE: [], OBSERVER_FEATURE: [LEAF_FEATURE]},
+        'search': {LEAF_FEATURE: ['lab-engine/' + LEAF_FEATURE],
+                   OBSERVER_FEATURE: [LEAF_FEATURE, 'lab-engine/' + OBSERVER_FEATURE]},
+    }
+    for package, expected in declarations.items():
+        manifest = root/'engine'/package/'Cargo.toml'
+        features = read_features(manifest)
+        for name, values in expected.items():
+            if features.get(name) != values:
+                raise ValueError(f'{manifest}: unexpected {name} declaration or forwarding')
+        reject_default_experiments(manifest, features)
+    return declarations
 
 
 def sha(path):
@@ -128,6 +160,8 @@ def prepare(workspace):
                 '.cargo/config', '.cargo/config.toml', 'rust-toolchain', 'rust-toolchain.toml',
                 'engine/.cargo/config', 'engine/.cargo/config.toml',
                 'engine/rust-toolchain', 'engine/rust-toolchain.toml') if (root/name).is_file()}}
+        if selection == 'leaf-ending-states':
+            metadata['sources'][label]['leaf_declarations'] = verify_leaf_declarations(root)
     # A dependency/profile change needs a separately designed experiment.
     for key in ('lock_sha256', 'workspace_manifest_sha256', 'search_manifest_sha256',
                 'package_manifests', 'cargo_configuration'):
@@ -158,39 +192,51 @@ def build_commands(suite, selection, label):
 
 
 def preserve_fingerprints(workspace, label, selection):
+    feature_args(selection, label)
     target = workspace/('target-' + label)
     result = workspace/'ci-results'
-    evidence = {'expected_active': label == 'candidate' and selection == 'hurt-readers',
+    hurt_active = selection == 'leaf-ending-states' or (label == 'candidate' and selection == 'hurt-readers')
+    leaf_active = selection == 'leaf-ending-states' and label == 'candidate'
+    packages = {'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json')}
+    expected = {'lab-engine': {EXPERIMENT_FEATURE: hurt_active,
+                              LEAF_FEATURE: leaf_active, OBSERVER_FEATURE: False}}
+    if selection == 'leaf-ending-states':
+        packages['lab-search'] = ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')
+        expected['lab-search'] = {LEAF_FEATURE: leaf_active, OBSERVER_FEATURE: False}
+    evidence = {'expected_active': hurt_active, 'expected_by_package': expected,
                 'feature': EXPERIMENT_FEATURE, 'fingerprints': []}
     fingerprint_root = target/'release/.fingerprint'
-    for directory in sorted(fingerprint_root.glob('lab-engine-*')):
-        for name in ('lib-lab_engine.json', 'test-lib-lab_engine.json'):
-            source = directory/name
-            if not source.is_file():
-                continue
-            destination = result/'fingerprints'/label/directory.name/name
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, destination)
-            data = json.loads(source.read_text(encoding='utf-8'))
-            features = data.get('features')
-            if isinstance(features, str):
-                features = json.loads(features)
-            if not isinstance(features, list) or any(not isinstance(value, str) for value in features):
-                raise ValueError(f'{source}: Cargo fingerprint has no valid feature list')
-            evidence['fingerprints'].append({
-                'kind': name, 'features': features, 'sha256': sha(source),
-                'target_path': source.relative_to(target).as_posix(),
-                'artifact_path': destination.relative_to(result).as_posix(),
-            })
+    for package, names in packages.items():
+        for directory in sorted(fingerprint_root.glob(package + '-*')):
+            for name in names:
+                source = directory/name
+                if not source.is_file():
+                    continue
+                destination = result/'fingerprints'/label/directory.name/name
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source, destination)
+                data = json.loads(source.read_text(encoding='utf-8'))
+                features = data.get('features')
+                if isinstance(features, str):
+                    features = json.loads(features)
+                if not isinstance(features, list) or any(not isinstance(value, str) for value in features):
+                    raise ValueError(f'{source}: Cargo fingerprint has no valid feature list')
+                evidence['fingerprints'].append({
+                    'package': package, 'kind': name, 'features': features, 'sha256': sha(source),
+                    'target_path': source.relative_to(target).as_posix(),
+                    'artifact_path': destination.relative_to(result).as_posix(),
+                })
     # Write evidence before asserting, so a failed activation check remains inspectable.
     (result/f'{label}-features.json').write_text(json.dumps(evidence, indent=2)+'\n', encoding='utf-8')
-    kinds = {item['kind'] for item in evidence['fingerprints']}
-    if kinds != {'lib-lab_engine.json', 'test-lib-lab_engine.json'}:
-        raise ValueError(f'{label}: missing compiled lab-engine library/test fingerprints')
+    for package, names in packages.items():
+        kinds = {item['kind'] for item in evidence['fingerprints'] if item['package'] == package}
+        if kinds != set(names):
+            raise ValueError(f'{label}: missing compiled {package} fingerprints: {set(names) - kinds}')
     for item in evidence['fingerprints']:
-        if (EXPERIMENT_FEATURE in item['features']) != evidence['expected_active']:
-            raise ValueError(f'{label}: actual compiled feature activation differs from request: '
-                             f'{item["target_path"]}: {item["features"]}')
+        for feature, active in expected[item['package']].items():
+            if (feature in item['features']) != active:
+                raise ValueError(f'{label}: actual compiled feature activation differs from request: '
+                                 f'{item["target_path"]}: {item["features"]}')
     return evidence
 
 
