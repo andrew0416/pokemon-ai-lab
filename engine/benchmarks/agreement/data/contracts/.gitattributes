@@ -1,0 +1,3 @@
+# These generated inputs and their generator have byte hashes in provenance.
+*.json -text whitespace=cr-at-eol
+*.cjs -text whitespace=cr-at-eol

@@ -127,6 +127,131 @@ class ProbeContractTests(unittest.TestCase):
         self.assertFalse(result['successful'])
 
 
+def contract_output(contract="gender-mixture-v1"):
+    branches = [{"gender_assignment": sex, "setup_probability": 0.5, "normalized_weight": 0.5,
+                 "state_restored": True, "distribution": {"canonical-state": 1.0}}
+                for sex in ("M", "F")]
+    checks = {"expected_assignments": 2, "distinct_assignments": 2,
+              "uniform_weights": True, "matching_probability_mass": 1.0,
+              "all_states_restored": True}
+    value = {"schema_version": 1, "contract": contract, "status": "match",
+             "scope": "complete-weighted-gender-mixture", "generated_positions": 2,
+             "matching_positions": 2, "comparison": {"matches": True},
+             "checks": checks, "branches": branches, "engine_distribution": {"canonical-state": 1.0}}
+    if contract == "hidden-redirect-order-v1":
+        value["scope"] = "both-hidden-histories-with-independent-oracles"
+        checks.update(direct_oracle_histories=2, metamorphic_histories=0)
+        for slot, branch in enumerate(branches):
+            branch.update(recipient_slot=slot, validation="direct-oracle")
+    return value
+
+
+def scoped_turn_output():
+    rows = turn_output()
+    rows[0].update(schema_version=2, scenario="bb-choicelock-struggle.json", scope_policy="oracle-before-with-additional-observations")
+    rows[1].update(before={"turn": 2}, recorded_turn_choices={"p1": "move harden", "p2": "move harden"})
+    for row in rows[2:5]:
+        row["scope"] = "requested"
+    rows[2]["canonical_state"] = {"turn": 2}
+    rows[3]["hidden"] = {"status": "ok"}
+    scopes = {scope: {"positions": 0, "outcomes": 0, "errors": 0, "hidden_diagnostics": 0,
+                     "enumerations_restored": 0, "outcome_rollbacks": 0,
+                     "position_completions": 0, "empty_positions": 0, "status": "empty"}
+              for scope in ("requested", "additional", "global")}
+    scopes["requested"].update(positions=1, outcomes=1, enumerations_restored=1,
+                               outcome_rollbacks=1, position_completions=1, status="ok")
+    scopes["additional"].update(positions=1, errors=1, status="error")
+    rows.insert(-1, {"kind": "position", "position": 1, "scope": "additional", "canonical_state": {"turn": 3}})
+    rows.insert(-1, {"kind": "error", "position": 1, "scope": "additional", "stage": "decision",
+                     "category": "invalid", "message": '\"move harden\": empty slot', "input_restored": True,
+                     "expected_choice_rejection": True, "contract": "bb-choicelock-struggle"})
+    rows[-1].update(schema_version=2, positions=2, errors=1, success_scope="requested",
+                     all_positions_status="error", scopes=scopes, expected_choice_rejections=1,
+                     unexpected_additional_errors=0, selection={"mode": "canonical-before", "matched_parents": 1,
+                                                                "additional_parents": 1, "unclassified_parents": 0})
+    return rows
+
+
+class SpecialContractTests(unittest.TestCase):
+    def test_only_four_provenanced_oracle_fixtures_select_special_semantics(self):
+        self.assertEqual(controller.ORACLE_CONTRACTS, {
+            "rr-attract-undecided-gender": "gender-mixture-v1",
+            "rr-cute-charm-undecided-gender": "gender-mixture-v1",
+            "rr-rivalry-undecided-gender": "gender-mixture-v1",
+            "ss-redirect-tie-hidden-order": "hidden-redirect-order-v1"})
+        root = controller.HERE.parents[1] / "oracle"
+        for stem in controller.ORACLE_CONTRACTS:
+            report = controller.read(root / "expected" / (stem + ".turn.json"))
+            self.assertEqual(Path(report["scenario"]).stem, stem)
+            self.assertTrue((root / "scenarios" / (stem + ".json")).is_file())
+        alternate = controller.read(controller.HERE / "data/contracts/ss-redirect-tie-hidden-order-rod-a.turn.json")
+        original = controller.read(root / "expected/ss-redirect-tie-hidden-order.turn.json")
+        self.assertEqual(alternate["before"], original["before"])
+        self.assertEqual(alternate["showdownCommit"], original["showdownCommit"])
+        self.assertTrue(alternate["exact"])
+        derived = controller.read(controller.HERE / "data/contracts/ss-redirect-tie-hidden-order-rod-a.json")
+        source = controller.read(root / "scenarios/ss-redirect-tie-hidden-order.json")
+        self.assertEqual(derived.pop("seed"), [2, 2, 3, 4])
+        self.assertEqual(derived, source)
+        self.assertNotEqual(alternate["outcomes"][0]["state"], original["outcomes"][0]["state"])
+
+    def test_complete_special_contracts_pass_but_ambiguous_does_not(self):
+        for contract in set(controller.ORACLE_CONTRACTS.values()):
+            value = contract_output(contract)
+            controller.validate_oracle_contract(value, contract)
+            value["status"] = "ambiguous"
+            with self.assertRaises(ValueError):
+                controller.validate_oracle_contract(value, contract)
+
+    def test_oracle_contract_missing_branch_weight_identity_or_restore_fails(self):
+        for change in (lambda v: v.update(contract="other"),
+                       lambda v: v["branches"].pop(),
+                       lambda v: v["branches"][0].update(state_restored=False),
+                       lambda v: v["branches"][0].update(normalized_weight=0.75),
+                       lambda v: v["branches"][0].update(distribution={"a": float("nan")}),
+                       lambda v: v["branches"][0].update(gender_assignment="F"),
+                       lambda v: v["comparison"].update(matches=False)):
+            value = contract_output()
+            change(value)
+            with self.assertRaises(ValueError):
+                controller.validate_oracle_contract(value, "gender-mixture-v1")
+        value = contract_output("hidden-redirect-order-v1")
+        value["checks"].update(direct_oracle_histories=1, metamorphic_histories=1)
+        with self.assertRaises(ValueError):
+            controller.validate_oracle_contract(value, "hidden-redirect-order-v1")
+
+    def test_requested_scope_success_keeps_additional_error_visible(self):
+        result = controller.validate_probe("turn", scoped_turn_output())
+        self.assertTrue(result["successful"])
+        self.assertEqual(result["success_scope"], "requested")
+        self.assertEqual(result["last"]["errors"], 1)
+        self.assertEqual(result["coverage"]["all_positions_status"], "error")
+        self.assertEqual(result["coverage"]["expected_choice_rejections"], 1)
+
+    def test_unknown_additional_error_is_complete_but_not_successful(self):
+        rows = scoped_turn_output()
+        rows[-2].update(expected_choice_rejection=False, contract=None, message="unknown new engine error")
+        rows[-1].update(status="error", expected_choice_rejections=0, unexpected_additional_errors=1)
+        result = controller.validate_probe("turn", rows)
+        self.assertTrue(result["complete"])
+        self.assertFalse(result["successful"])
+
+    def test_scope_misclassification_missing_records_and_fake_expected_errors_fail_closed(self):
+        changes = [lambda r: r[2].update(canonical_state={"turn": 99}),
+                   lambda r: r[-2].update(message="different error"),
+                   lambda r: r[-2].update(contract="unknown-fixture"),
+                   lambda r: r[-2].update(input_restored=False),
+                   lambda r: r[-1]["scopes"]["additional"].update(errors=0),
+                   lambda r: r[-1].update(all_positions_status="ok"),
+                   lambda r: r[-1].update(expected_choice_rejections=0),
+                   lambda r: r.pop(3), lambda r: r.pop(4), lambda r: r.pop()]
+        for change in changes:
+            rows = scoped_turn_output()
+            change(rows)
+            with self.assertRaises(ValueError):
+                controller.validate_probe("turn", rows)
+
+
 class ExtractionAndTimeoutTests(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()

@@ -1,0 +1,118 @@
+{
+ "description": "SS B45a: a hidden-state limit of canonical states. The two Snorlax (same Speed) switch out for two Manectric (Lightning Rod, same Speed) in the setup turn: the switch actions tie, so which Manectric's ability state started first (Showdown `abilityState.effectOrder`, engine `Slot::ability_order`) is a coin the canonical state does not show. Jolteon's Thunderbolt at p1a is then drawn by the earlier one (`compareRedirectOrder`: priority, Speed, effectOrder). The oracle's fixed seed takes one branch of the setup turn; the engine keeps both positions (same canonical state), 1/2 each.",
+ "format": "gen9championsdoublescustomgame",
+ "p1": {
+  "team": [
+   {
+    "name": "Lax A",
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Curse"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Lax B",
+    "species": "Snorlax",
+    "item": "",
+    "ability": "Thick Fat",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Protect",
+     "Curse"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Rod A",
+    "species": "Manectric",
+    "item": "",
+    "ability": "Lightning Rod",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Howl",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "name": "Rod B",
+    "species": "Manectric",
+    "item": "",
+    "ability": "Lightning Rod",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Howl",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "1234"
+ },
+ "p2": {
+  "team": [
+   {
+    "species": "Jolteon",
+    "item": "",
+    "ability": "Volt Absorb",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Thunderbolt",
+     "Protect"
+    ],
+    "level": 50
+   },
+   {
+    "species": "Umbreon",
+    "item": "",
+    "ability": "Inner Focus",
+    "nature": "Serious",
+    "evs": {
+     "hp": 32
+    },
+    "moves": [
+     "Calm Mind",
+     "Protect"
+    ],
+    "level": 50
+   }
+  ],
+  "order": "12"
+ },
+ "setupTurns": [
+  [
+   "switch 3, switch 4",
+   "move protect, move calmmind"
+  ]
+ ],
+ "turn": {
+  "p1": "move howl, move howl",
+  "p2": "move thunderbolt 1, move calmmind"
+ },
+ "seed": [
+  2,
+  2,
+  3,
+  4
+ ]
+}

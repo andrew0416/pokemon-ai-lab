@@ -1,0 +1,341 @@
+{
+ "scenario": "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.json",
+ "mode": "full",
+ "exact": true,
+ "showdownCommit": "9e317a666d9fd250f36f494778e843141f09bdba",
+ "branches": 1576,
+ "distinctOutcomes": 1,
+ "totalProbability": 1,
+ "before": {
+  "schema": 1,
+  "turn": 2,
+  "ended": false,
+  "winner": "",
+  "field": {
+   "weather": "",
+   "weatherDuration": null,
+   "terrain": "",
+   "terrainDuration": null,
+   "pseudoWeather": {}
+  },
+  "sides": [
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Lax A",
+      "species": "Snorlax",
+      "hp": 267,
+      "maxhp": 267,
+      "status": "",
+      "item": "",
+      "ability": "thickfat",
+      "slot": null,
+      "pp": {
+       "protect": 8,
+       "curse": 12
+      }
+     },
+     {
+      "name": "Lax B",
+      "species": "Snorlax",
+      "hp": 267,
+      "maxhp": 267,
+      "status": "",
+      "item": "",
+      "ability": "thickfat",
+      "slot": null,
+      "pp": {
+       "protect": 8,
+       "curse": 12
+      }
+     },
+     {
+      "name": "Rod A",
+      "species": "Manectric",
+      "hp": 177,
+      "maxhp": 177,
+      "status": "",
+      "item": "",
+      "ability": "lightningrod",
+      "slot": 0,
+      "pp": {
+       "howl": 20,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     },
+     {
+      "name": "Rod B",
+      "species": "Manectric",
+      "hp": 177,
+      "maxhp": 177,
+      "status": "",
+      "item": "",
+      "ability": "lightningrod",
+      "slot": 1,
+      "pp": {
+       "howl": 20,
+       "protect": 8
+      },
+      "boosts": {},
+      "volatiles": {}
+     }
+    ]
+   },
+   {
+    "request": "move",
+    "conditions": {},
+    "slotConditions": [
+     {},
+     {}
+    ],
+    "pokemon": [
+     {
+      "name": "Jolteon",
+      "species": "Jolteon",
+      "hp": 172,
+      "maxhp": 172,
+      "status": "",
+      "item": "",
+      "ability": "voltabsorb",
+      "slot": 0,
+      "pp": {
+       "thunderbolt": 16,
+       "protect": 7
+      },
+      "boosts": {},
+      "volatiles": {
+       "stall": {
+        "duration": 1,
+        "counter": 3
+       }
+      },
+      "lastMove": "protect"
+     },
+     {
+      "name": "Umbreon",
+      "species": "Umbreon",
+      "hp": 202,
+      "maxhp": 202,
+      "status": "",
+      "item": "",
+      "ability": "innerfocus",
+      "slot": 1,
+      "pp": {
+       "calmmind": 19,
+       "protect": 8
+      },
+      "boosts": {
+       "spa": 1,
+       "spd": 1
+      },
+      "volatiles": {},
+      "lastMove": "calmmind"
+     }
+    ]
+   }
+  ]
+ },
+ "outcomes": [
+  {
+   "p": 1,
+   "branches": 8,
+   "state": {
+    "schema": 1,
+    "turn": 3,
+    "ended": false,
+    "winner": "",
+    "field": {
+     "weather": "",
+     "weatherDuration": null,
+     "terrain": "",
+     "terrainDuration": null,
+     "pseudoWeather": {}
+    },
+    "sides": [
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Lax A",
+        "species": "Snorlax",
+        "hp": 267,
+        "maxhp": 267,
+        "status": "",
+        "item": "",
+        "ability": "thickfat",
+        "slot": null,
+        "pp": {
+         "protect": 8,
+         "curse": 12
+        }
+       },
+       {
+        "name": "Lax B",
+        "species": "Snorlax",
+        "hp": 267,
+        "maxhp": 267,
+        "status": "",
+        "item": "",
+        "ability": "thickfat",
+        "slot": null,
+        "pp": {
+         "protect": 8,
+         "curse": 12
+        }
+       },
+       {
+        "name": "Rod A",
+        "species": "Manectric",
+        "hp": 177,
+        "maxhp": 177,
+        "status": "",
+        "item": "",
+        "ability": "lightningrod",
+        "slot": 0,
+        "pp": {
+         "howl": 19,
+         "protect": 8
+        },
+        "boosts": {
+         "atk": 2,
+         "spa": 1
+        },
+        "volatiles": {},
+        "lastMove": "howl"
+       },
+       {
+        "name": "Rod B",
+        "species": "Manectric",
+        "hp": 177,
+        "maxhp": 177,
+        "status": "",
+        "item": "",
+        "ability": "lightningrod",
+        "slot": 1,
+        "pp": {
+         "howl": 19,
+         "protect": 8
+        },
+        "boosts": {
+         "atk": 2
+        },
+        "volatiles": {},
+        "lastMove": "howl"
+       }
+      ]
+     },
+     {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+       {},
+       {}
+      ],
+      "pokemon": [
+       {
+        "name": "Jolteon",
+        "species": "Jolteon",
+        "hp": 172,
+        "maxhp": 172,
+        "status": "",
+        "item": "",
+        "ability": "voltabsorb",
+        "slot": 0,
+        "pp": {
+         "thunderbolt": 15,
+         "protect": 7
+        },
+        "boosts": {},
+        "volatiles": {},
+        "lastMove": "thunderbolt"
+       },
+       {
+        "name": "Umbreon",
+        "species": "Umbreon",
+        "hp": 202,
+        "maxhp": 202,
+        "status": "",
+        "item": "",
+        "ability": "innerfocus",
+        "slot": 1,
+        "pp": {
+         "calmmind": 18,
+         "protect": 8
+        },
+        "boosts": {
+         "spa": 2,
+         "spd": 2
+        },
+        "volatiles": {},
+        "lastMove": "calmmind"
+       }
+      ]
+     }
+    ]
+   },
+   "log": [
+    "|move|p2a: Jolteon|Thunderbolt|p1a: Rod A",
+    "|-ability|p1a: Rod A|Lightning Rod|boost",
+    "|-boost|p1a: Rod A|spa|1",
+    "|move|p1b: Rod B|Howl|p1b: Rod B|[spread] p1a,p1b",
+    "|-boost|p1a: Rod A|atk|1",
+    "|-boost|p1b: Rod B|atk|1",
+    "|move|p1a: Rod A|Howl|p1a: Rod A|[spread] p1a,p1b",
+    "|-boost|p1a: Rod A|atk|1",
+    "|-boost|p1b: Rod B|atk|1",
+    "|move|p2b: Umbreon|Calm Mind|p2b: Umbreon",
+    "|-boost|p2b: Umbreon|spa|1",
+    "|-boost|p2b: Umbreon|spd|1",
+    "|upkeep",
+    "|turn|3"
+   ],
+   "trace": {
+    "mode": "full",
+    "collapse": false,
+    "nominal": true,
+    "prefix": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  }
+ ]
+}

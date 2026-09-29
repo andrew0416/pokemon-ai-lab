@@ -38,3 +38,39 @@ of all game rules. A successful comparison establishes agreement on the
 reported inputs and configurations only. Python bindings, future mechanics,
 all possible hidden states, and combinations of independent optimizations
 still require their own validation.
+
+## Explicit fixture contracts (follow-up to run 36633204923)
+
+The original run and its failed final gate remain unchanged. A new frozen plan
+keeps the same case IDs and denominator, but selects these contracts before any
+variant executes:
+
+- Three `rr-*-undecided-gender` reports are complete uniform gender mixtures.
+  `ci_agreement_oracle` checks every one of the `2^k` assignments and its weight,
+  applies/reverses each turn, and compares the weighted canonical distribution.
+  Duplicate, missing, unresolved, or incorrectly weighted genders fail the case.
+- `ss-redirect-tie-hidden-order` contains two equally probable hidden ability
+  orders with identical canonical before states. Both histories are checked
+  separately against independent full Showdown enumerations. The existing
+  report covers Rod B; `data/contracts/ss-redirect-tie-hidden-order-rod-a.*`
+  covers Rod A after changing only the setup PRNG seed. Its generator and
+  provenance record the pinned Showdown revision, seed trials and file hashes.
+  This is not an assumed symmetry and does not replace the original report.
+- Five fixture turn probes (`bb-choicelock-struggle`, `red-card-drag-update`,
+  `hyper-beam-recharge`, `u-truant-recharge`, `nn-pressure-locked-outrage`) use
+  their existing report's `before` to identify the requested parents. Every
+  other setup parent is still executed with the original choice and retained
+  as additional evidence. Schema 2 records counts, restoration, errors and
+  status separately for requested/additional/global scopes. Only the known
+  exact out-of-domain choice errors in additional parents are classified as
+  expected rejections. A new error, unsupported rule, failed restoration,
+  missing parent, incomplete output or empty enumeration cannot pass.
+
+Oracle contract records retain every per-history canonical distribution and
+probability; agreement comparisons include those records. Scoped turn stream
+hashes still include all additional outcomes and rejected choices. Summary
+fields `oracle_contracts` and `scoped_turn_coverage` make the validation scope
+visible: success of a requested fixture turn does not claim that its recorded
+choice is valid for every other setup outcome. Normal oracle/turn cases keep
+their previous comparator and version-1 probe contract. The two Future Sight
+unsupported scenarios are not converted into successful contracts here.

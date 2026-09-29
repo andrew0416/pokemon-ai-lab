@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "source_scenario": "engine/oracle/scenarios/ss-redirect-tie-hidden-order.json",
+  "source_scenario_sha256": "5061af028432005b50050b35daaacbeb6c01a36e9fbc93c95d41b6ac124b1797",
+  "derivation": "Only the Showdown PRNG seed is changed. The alternate setup history is independently enumerated by the pinned Showdown simulator; no Rust outputs are used.",
+  "changes": {
+    "seed": [
+      2,
+      2,
+      3,
+      4
+    ]
+  },
+  "trials": [
+    {
+      "seed": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "recipient": "Rod B",
+      "outcomes": 1,
+      "branches": 1576
+    },
+    {
+      "seed": [
+        2,
+        2,
+        3,
+        4
+      ],
+      "recipient": "Rod A",
+      "outcomes": 1,
+      "branches": 1576
+    }
+  ],
+  "oracle_script_sha256": "4ecf21103d769c7fc4c0b442f6095ffcc6b0d03bbd810ed02f1ef4f2c3280dee",
+  "showdown_commit": "9e317a666d9fd250f36f494778e843141f09bdba",
+  "scenario_sha256": "ad68ade77446c1efb30511fac0bc8e76f5b9b3b9546a0e5f85eb1c95a521394d",
+  "report_sha256": "057ee51a8d4e2965ff1594f5235f3e3f98f3326be959e31ed28e1fe0a4318648",
+  "generator_sha256": "756f41f8731664f821b667c2637456a903d5f51edd7857e9750a91a785dd7a11"
+}
