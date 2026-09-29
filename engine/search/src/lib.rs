@@ -45,6 +45,7 @@ pub mod model;
 pub mod nash;
 #[cfg(feature = "scenario")]
 pub mod node;
+mod prepared;
 #[cfg(feature = "scenario")]
 pub mod rollout;
 pub mod solve;
