@@ -12,9 +12,9 @@ on:
         description: "후보의 전체 40자리 커밋 SHA (비우면 실행 브랜치의 커밋)"
         default: ""
       candidate_feature:
-        description: "실험 모드: leaf-ending-states/P9 또는 prepared-turn/P8c (양쪽 P8g 공통)"
+        description: "실험 모드: P9 / P8c / compact-volatiles(P10), 양쪽 P8g 공통"
         type: choice
-        options: [none, hurt-readers, leaf-ending-states, prepared-turn]
+        options: [none, hurt-readers, leaf-ending-states, prepared-turn, compact-volatiles]
         default: none
       suite:
         description: "smoke: 동작 점검 / narrow: coaching·sand 깊이2"
@@ -170,6 +170,12 @@ jobs:
           CANDIDATE_DEPENDENCY_CACHE_READY: ${{ steps.deps-candidate.outcome == 'success' && '1' || '0' }}
           CANDIDATE_DEPENDENCY_CACHE_HIT: ${{ steps.deps-candidate.outputs.cache-hit }}
         run: python controller/engine/benchmarks/paired/ci.py build --workspace "$GITHUB_WORKSPACE"
+      - name: Validate compact Volatiles baseline, enabled and disabled contracts
+        if: success() && inputs.candidate_feature == 'compact-volatiles'
+        run: >-
+          python controller/engine/benchmarks/paired/compact_probe.py
+          --workspace "$GITHUB_WORKSPACE"
+          --out-dir "$GITHUB_WORKSPACE/ci-results/compact-validation"
       - name: Save sealed baseline build bundle
         if: >-
           success() && inputs.build_cache &&
@@ -217,8 +223,8 @@ jobs:
           else
             echo 'Benchmark did not complete. Inspect the job logs and engine-benchmark artifact.' >> "$GITHUB_STEP_SUMMARY"
           fi
-      - name: Measure peak RSS separately for PreparedTurn
-        if: success() && inputs.candidate_feature == 'prepared-turn'
+      - name: Measure peak RSS separately
+        if: success() && (inputs.candidate_feature == 'prepared-turn' || inputs.candidate_feature == 'compact-volatiles')
         env:
           SUITE: ${{ inputs.suite }}
           THREADS: ${{ inputs.threads }}
@@ -230,7 +236,7 @@ jobs:
           --benchmark-dir "$GITHUB_WORKSPACE/ci-results/benchmark"
           --out-dir "$GITHUB_WORKSPACE/ci-results/memory"
       - name: Publish peak RSS summary
-        if: always() && inputs.candidate_feature == 'prepared-turn'
+        if: always() && (inputs.candidate_feature == 'prepared-turn' || inputs.candidate_feature == 'compact-volatiles')
         run: |
           if [ -f ci-results/memory/summary.md ]; then
             cat ci-results/memory/summary.md >> "$GITHUB_STEP_SUMMARY"

@@ -10,7 +10,7 @@
 |---|---|
 | baseline_sha | 저장소에 올라온 원본의 전체 40자리 커밋 SHA |
 | candidate_sha | 후보의 전체 SHA. 비우면 선택한 실행 브랜치의 커밋 |
-| candidate_feature | `none`(기본), `hurt-readers`(후보 P8g), `leaf-ending-states`(양쪽 P8g + 후보 P9), `prepared-turn`(양쪽 P8g + 후보 P8c) |
+| candidate_feature | `none`(기본), `hurt-readers`(후보 P8g), `leaf-ending-states`(양쪽 P8g + 후보 P9), `prepared-turn`(양쪽 P8g + 후보 P8c), `compact-volatiles`(양쪽 P8g + 후보 P10) |
 | suite | `smoke`: 작은 Harden/Poison Heal 국면의 동작 점검. `narrow`: coaching·sand 깊이 2 비교 |
 | threads | 양쪽 동일 1/2/4스레드. 러너 가용 CPU 수를 넘으면 거부 |
 | pairs | 각 국면에서 warmup을 제외한 쌍 수. 2/6/10/20, 기본 6 |
@@ -48,13 +48,28 @@ core/search의 prepared 및 observe feature 선언·전달 관계와 default 비
 계측 기능이 필요한 후보의 새 `prepared_turn` 차등 테스트는 별도 target 디렉터리에서
 observe on으로 검증한다. 이 실행 파일과 컴파일 결과는 성능 측정에 사용하지 않는다.
 
-P8c의 CPU/wall 측정이 성공하면 `memory.py`로 별도의 peak RSS 검사를 수행한다.
+P8c 또는 P10의 CPU/wall 측정이 성공하면 `memory.py`로 별도의 peak RSS 검사를 수행한다.
 동일한 바이너리·입력·검색 설정에서 각 국면 2쌍 AB/BA(총 4회, narrow 전체 8회)를 실행하고
 GNU `/usr/bin/time`의 `%M` 값을 KiB 단위로 수집한다. 이 실행의 시간은 주 timing 통계에
 합치지 않는다. 전체 프로세스의 peak RSS이므로 엔진 할당량이나 RSS 적분과 다르다.
 타이밍 원자료의 성공·일정·파일 해시와 각 실행의 전체 출력 bits/작업량이 같아야 한다.
 RSS pass에는 warmup을 두지 않으며, 작은 차이는 allocator/OS 변동을 포함해 해석한다.
 `memory/` 아래 원자료·명령·해시·결과를 보존하고 실패 시에도 부분 결과를 남긴다.
+
+P10은 `candidate_feature=compact-volatiles`, `suite=narrow`로 독립 비교한다.
+양쪽 P8g를 켜고 후보만 `lab-engine/experiment-compact-volatiles`를 추가한다.
+이 feature는 core의 빈 선언이며 search bridge가 없다. core와 search의 실제 컴파일
+지문을 각각 검사하여 core에서 후보만 compact on, 양쪽 P9/P8c/observer off를 확인한다.
+캐시 적중 여부와 관계없이 `compact_probe.py`가 원본·후보 on·후보 off를 세 개의
+새 target에서 빌드하고, 동일한 56행 논리 JSONL을 byte 단위로 비교한다. off에서는
+기존 `Copy` 및 공개 tuple API 검사도 실행한다. 타입 크기는 별도 `--layout` 결과이며
+heap 사용량이나 RSS로 해석하지 않는다. probe와 off 검사 target은 측정용 target과 분리된다.
+
+P10 비교용 두 커밋에는 CI4에서 검증한 동일 테스트 묶음을 적용한다. integration
+실행 파일은 184→12개지만 기존 검사 본문은 유지한다. 묶음 내부 공유 상태의 영향을
+제한하도록 P10의 전체 회귀는 `--test-threads=1`로 실행한다. compact 전용 추가 core
+검사는 후보에서만 존재한다. smoke의 개별 target 이름과 혼동하지 않도록 이 모드는
+narrow만 허용한다. 기본 엔진의 테스트 구성을 바꾸거나 P9/P8c를 합친 비교가 아니다.
 
 ## 비교 조건
 
@@ -144,10 +159,12 @@ fingerprint·테스트 실행 파일·링크가 섞인 target을 격리하지만
 완성 빌드 cache가 exact hit를 보고한 경우 의존성 복원은 생략하며,
 그 완성 bundle이 검증에 실패하면 의존성 도움 없이 새로 빌드한다.
 
-외부 의존성 캐시만으로 현재 약 20분의 컴파일이 사라진다는 근거는 없다. 기존 P8c는
-원본/후보에서 integration test 바이너리 184/185개를 실행했고, 같은 27개 package를
-컴파일하는 단일 observer 검사 target은 56.10초였다. 다수 테스트의 반복 최적화·링크가
-주요 원인이라는 가설은 다음 cold 빌드의 `--timings` HTML 기록으로 확인한다.
+CI4의 단일 실험(run 36592430942)에서는 동일한 integration 테스트를 184→12개
+실행 파일로 묶자 cold 빌드가 1144.020→162.454초, 기존 target을 유지한 core 수정 후
+재빌드가 1141.786→158.681초로 줄었다. 양쪽 모두 동일 1238개 검사를 통과했다.
+재빌드는 외부 의존성 산출물 33개를 재사용하면서도 모든 테스트 실행 파일을 다시
+컴파일했다. 이 수치는 해당 빌드 구성의 관측이며 다른 수정·기기 또는 엔진 실행
+속도의 향상률로 일반화하지 않는다.
 
 복원은 GitHub의 exact cache-hit와 계산한 전체 key 일치가 모두 확인되고,
 묶음 내부의 파일 목록·경로·해시·feature·회귀 성공 기록을 검증한 경우에만 허용한다.

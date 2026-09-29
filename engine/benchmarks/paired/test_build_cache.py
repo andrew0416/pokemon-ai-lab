@@ -365,6 +365,33 @@ class CacheRecipeInputTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Injected harness differs"):
             cache.make_recipe(self.root, "baseline")
 
+    def test_compact_probe_identity_is_mode_scoped_and_cannot_use_stale_cache(self):
+        probe = self.root / "baseline" / cache.COMPACT_PROBE_PATH
+        probe.parent.mkdir(parents=True)
+        for name in cache.COMPACT_CONTROLLER_FILES:
+            (self.controller / name).write_bytes(name.encode() + b" immutable controller\n")
+        original = (self.controller / "compact_probe.rs").read_bytes()
+        probe.write_bytes(original)
+        self.untracked.append(cache.COMPACT_PROBE_PATH)
+        with self.assertRaisesRegex(ValueError, "unexpected untracked"):
+            cache.make_recipe(self.root, "baseline")
+        request_path = self.root / "ci-results/request.json"
+        request = read_json(request_path)
+        request["candidate_feature"] = "compact-volatiles"
+        write_json(request_path, request)
+        first = cache.make_recipe(self.root, "baseline")
+        self.assertEqual(first["source"]["compact_probe_sha256"], digest(probe))
+        self.assertEqual(first["identity"]["build_driver"]["compact_probe.rs"], digest(probe))
+        probe.write_bytes(original + b" unexpected\n")
+        with self.assertRaisesRegex(ValueError, "Injected compact probe differs"):
+            cache.make_recipe(self.root, "baseline")
+        (self.controller / "compact_probe.rs").write_bytes(probe.read_bytes())
+        self.assertNotEqual(cache.recipe_key(first), cache.recipe_key(cache.make_recipe(self.root, "baseline")))
+        helper = self.controller / "compact_probe.py"
+        previous = cache.recipe_key(cache.make_recipe(self.root, "baseline"))
+        helper.write_bytes(helper.read_bytes() + b" changed gate\n")
+        self.assertNotEqual(previous, cache.recipe_key(cache.make_recipe(self.root, "baseline")))
+
 
 class CacheRuntimeBoundaryTests(unittest.TestCase):
     def test_unsupported_runtime_or_compiler_overrides_disable_identity_before_tool_probes(self):

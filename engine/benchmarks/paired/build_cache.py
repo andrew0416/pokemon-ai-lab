@@ -24,6 +24,8 @@ LABELS = ('baseline', 'candidate')
 KEY_PREFIX = 'verified-build-v1-'
 CONTROLLER_FILES = ('ci.py', 'build_cache.py', 'dependency_target.py', 'harness.rs',
                     'run.py', 'suites.json', 'memory.py')
+COMPACT_CONTROLLER_FILES = ('compact_probe.py', 'compact_probe.rs')
+COMPACT_PROBE_PATH = 'engine/scenario/examples/ci_compact_probe.rs'
 MAX_BUNDLE_FILES = 1000
 
 
@@ -209,7 +211,11 @@ def make_recipe(workspace, label):
         raise ValueError('Tracked source changed since preparation')
     untracked = subprocess.check_output(
         ['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=root, timeout=30)
-    if set(filter(None, untracked.decode('utf-8').split('\0'))) - {'engine/search/examples/ci_bench.rs'}:
+    compact = request['candidate_feature'] == 'compact-volatiles'
+    allowed_untracked = {'engine/search/examples/ci_bench.rs'}
+    if compact:
+        allowed_untracked.add(COMPACT_PROBE_PATH)
+    if set(filter(None, untracked.decode('utf-8').split('\0'))) - allowed_untracked:
         raise ValueError('Source contains unexpected untracked files')
     names = subprocess.check_output(['git', 'ls-files', '-z'], cwd=root, timeout=30)
     files = {}
@@ -223,7 +229,8 @@ def make_recipe(workspace, label):
         files[name] = digest(path)
     harness = root/'engine/search/examples/ci_bench.rs'
     controller = Path(__file__).resolve().parent
-    driver = {name: digest(controller/name) for name in CONTROLLER_FILES}
+    controller_files = CONTROLLER_FILES + (COMPACT_CONTROLLER_FILES if compact else ())
+    driver = {name: digest(controller/name) for name in controller_files}
     workflow = controller.parents[2]/'.github/workflows/engine-benchmark.yml'
     driver['.github/workflows/engine-benchmark.yml'] = digest(workflow)
     _, inputs = run.load_cases(request['suite'], root=controller.parents[2])
@@ -231,12 +238,21 @@ def make_recipe(workspace, label):
                      for path in inputs}
     if digest(harness) != driver['harness.rs']:
         raise ValueError('Injected harness differs from the controller source')
+    probe_identity = {}
+    if compact:
+        probe = root/COMPACT_PROBE_PATH
+        if (probe.is_symlink() or not probe.is_file()
+                or not probe.resolve().is_relative_to(root.resolve())
+                or digest(probe) != driver['compact_probe.rs']):
+            raise ValueError('Injected compact probe differs from the controller source')
+        probe_identity = {'compact_probe_sha256': digest(probe)}
     packages, expected, hurt_active = ci.fingerprint_expectations(
         request['candidate_feature'], label)
     return {'schema_version': SCHEMA_VERSION, 'label': label, 'suite': request['suite'],
             'selection': request['candidate_feature'],
             'source': {'sha': source_sha, 'tracked_files_sha256': hashlib.sha256(canonical(files)).hexdigest(),
                        'tracked_file_count': len(files), 'harness_sha256': digest(harness),
+                       **probe_identity,
                        'lock_sha256': digest(root/'engine/Cargo.lock'),
                        'cargo_configuration': _cargo_configuration(root)},
             'commands': ci.build_commands(request['suite'], request['candidate_feature'], label),

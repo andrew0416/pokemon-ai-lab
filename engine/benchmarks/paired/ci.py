@@ -17,9 +17,11 @@ LEAF_FEATURE = 'experiment-leaf-ending-states'
 OBSERVER_FEATURE = 'experiment-leaf-ending-observer'
 PREPARED_FEATURE = 'experiment-prepared-turn'
 PREPARED_OBSERVER_FEATURE = 'experiment-prepared-turn-observe'
-FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn')
+COMPACT_FEATURE = 'experiment-compact-volatiles'
+COMPACT_PROBE_PATH = 'engine/scenario/examples/ci_compact_probe.rs'
+FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles')
 EXPERIMENT_FEATURES = (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE,
-                       PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE)
+                       PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE, COMPACT_FEATURE)
 COMMAND_TIMEOUT_SECONDS = 2700
 PREPARED_TESTS = (
     'matrix_reuses_real_validators_and_preserves_all_outcome_bits',
@@ -39,6 +41,11 @@ def feature_args(selection, label):
         raise ValueError('Invalid candidate feature or build label')
     if label == 'candidate' and selection == 'hurt-readers':
         return ['--features', 'lab-engine/' + EXPERIMENT_FEATURE]
+    if selection == 'compact-volatiles':
+        features = 'lab-engine/' + EXPERIMENT_FEATURE
+        if label == 'candidate':
+            features += ',lab-engine/' + COMPACT_FEATURE
+        return ['--features', features]
     if selection in ('leaf-ending-states', 'prepared-turn'):
         features = 'lab-engine/' + EXPERIMENT_FEATURE
         if label == 'candidate':
@@ -74,7 +81,7 @@ def reject_default_experiments(manifest, features):
 def verify_feature_declaration(manifest, selection):
     features = read_features(manifest)
     declared = EXPERIMENT_FEATURE in features
-    if selection in ('hurt-readers', 'leaf-ending-states', 'prepared-turn') and not declared:
+    if selection in ('hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles') and not declared:
         raise ValueError(f'{manifest}: missing empty {EXPERIMENT_FEATURE} feature declaration')
     if declared and features[EXPERIMENT_FEATURE] != []:
         raise ValueError(f'{manifest}: {EXPERIMENT_FEATURE} must be an empty feature')
@@ -89,6 +96,33 @@ def verify_leaf_declarations(root):
 
 def verify_prepared_declarations(root):
     return verify_bridge_declarations(root, PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE)
+
+
+def verify_compact_declarations(root):
+    core_manifest = root/'engine/core/Cargo.toml'
+    verify_feature_declaration(core_manifest, 'compact-volatiles')
+    core = read_features(core_manifest)
+    if core.get(COMPACT_FEATURE) != []:
+        raise ValueError(f'{core_manifest}: {COMPACT_FEATURE} must be declared empty')
+    reject_default_experiments(core_manifest, core)
+    search_manifest = root/'engine/search/Cargo.toml'
+    search = read_features(search_manifest)
+    if COMPACT_FEATURE in search or any(
+            value.rsplit('/', 1)[-1] == COMPACT_FEATURE for values in search.values() for value in values):
+        raise ValueError(f'{search_manifest}: compact mode must not declare a search feature or forwarding')
+    reject_default_experiments(search_manifest, search)
+    return {'core': {COMPACT_FEATURE: []}, 'search_forwarding': False,
+            'default_activation': False}
+
+
+def injected_sources(selection):
+    """The only controller files allowed to be added to each prepared checkout."""
+    if selection not in FEATURE_CHOICES:
+        raise ValueError('Invalid candidate feature')
+    files = {'engine/search/examples/ci_bench.rs': Path(__file__).with_name('harness.rs')}
+    if selection == 'compact-volatiles':
+        files[COMPACT_PROBE_PATH] = Path(__file__).with_name('compact_probe.rs')
+    return files
 
 
 def verify_bridge_declarations(root, feature, observer):
@@ -130,6 +164,8 @@ def refs(workspace):
     pairs = int(os.environ['PAIRS'])
     if suite not in ('smoke', 'narrow') or threads not in (1, 2, 4):
         raise ValueError('Invalid suite or thread count')
+    if candidate_feature == 'compact-volatiles' and suite != 'narrow':
+        raise ValueError('compact-volatiles requires the full narrow regression suite')
     if pairs < 2 or pairs > 20 or pairs % 2:
         raise ValueError('pairs must be even, from 2 through 20')
     cpus = len(os.sched_getaffinity(0)) if hasattr(os, 'sched_getaffinity') else os.cpu_count()
@@ -156,7 +192,9 @@ def prepare(workspace):
                                    for label in ('baseline', 'candidate')}:
         raise ValueError('Requested feature arguments do not match the explicit selection')
     harness = Path(__file__).with_name('harness.rs')
+    injections = injected_sources(selection)
     metadata['harness_sha256'] = sha(harness)
+    metadata['injected_source_sha256'] = {name: sha(source) for name, source in injections.items()}
     metadata['rustc'] = output(['rustc', '-Vv'])
     metadata['cargo'] = output(['cargo', '-V'])
     metadata['build_environment'] = {key: value for key, value in sorted(os.environ.items())
@@ -170,9 +208,10 @@ def prepare(workspace):
             raise ValueError(f'{label} checkout does not match requested SHA')
         if output(['git', 'status', '--porcelain'], root):
             raise ValueError(f'{label} checkout is not clean before harness injection')
-        destination = root/'engine/search/examples/ci_bench.rs'
-        if destination.exists():
-            raise ValueError('Reserved example ci_bench.rs already exists in source revision')
+        for name in injections:
+            destination = root/name
+            if destination.exists() or destination.is_symlink():
+                raise ValueError(f'Reserved injected example already exists in source revision: {name}')
         metadata['sources'][label] = {
             'commit': actual, 'lock_sha256': sha(root/'engine/Cargo.lock'),
             'experiment_feature': verify_feature_declaration(root/'engine/core/Cargo.toml', selection),
@@ -188,21 +227,26 @@ def prepare(workspace):
             metadata['sources'][label]['leaf_declarations'] = verify_leaf_declarations(root)
         elif selection == 'prepared-turn':
             metadata['sources'][label]['prepared_declarations'] = verify_prepared_declarations(root)
+        elif selection == 'compact-volatiles':
+            metadata['sources'][label]['compact_declarations'] = verify_compact_declarations(root)
     # A dependency/profile change needs a separately designed experiment.
     for key in ('lock_sha256', 'workspace_manifest_sha256', 'search_manifest_sha256',
                 'package_manifests', 'cargo_configuration'):
         if metadata['sources']['baseline'][key] != metadata['sources']['candidate'][key]:
             raise ValueError(f'Baseline/candidate differ in {key}; strict source-only benchmark refused')
     for label in ('baseline', 'candidate'):
-        destination = workspace/label/'engine/search/examples/ci_bench.rs'
-        destination.parent.mkdir(exist_ok=True)
-        shutil.copyfile(harness, destination)
+        for name, source in injections.items():
+            destination = workspace/label/name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, destination)
     (result/'provenance.json').write_text(json.dumps(metadata, indent=2)+'\n', encoding='utf-8')
 
 
 def build_commands(suite, selection, label):
     if suite not in ('smoke', 'narrow'):
         raise ValueError('Invalid benchmark suite')
+    if selection == 'compact-volatiles' and suite != 'narrow':
+        raise ValueError('compact-volatiles requires the full narrow regression suite')
     tests = [['cargo', 'test', '--locked', '--release', '-p', 'lab-engine', '-p', 'lab-scenario', '-p', 'lab-search']]
     if suite == 'smoke':
         # Infrastructure checks need the harness and its fixture, not every oracle binary.
@@ -214,7 +258,9 @@ def build_commands(suite, selection, label):
     commands = tests + [
         ['cargo', 'build', '--locked', '--release', '-p', 'lab-search', '--example', 'ci_bench'],
     ]
-    return [argv + ['--timings'] + feature_args(selection, label) for argv in commands]
+    return [argv + ['--timings'] + feature_args(selection, label) +
+            (['--', '--test-threads=1'] if selection == 'compact-volatiles' and argv[1] == 'test' else [])
+            for argv in commands]
 
 
 def verify_prepared(workspace):
@@ -223,11 +269,17 @@ def verify_prepared(workspace):
     request = json.loads((result/'request.json').read_text(encoding='utf-8'))
     provenance = json.loads((result/'provenance.json').read_text(encoding='utf-8'))
     harness_hash = sha(Path(__file__).with_name('harness.rs'))
+    selection = request.get('candidate_feature', 'none')
+    injections = injected_sources(selection)
     receipt = {'schema_version': 1, 'status': 'running', 'sources': {}}
     receipt_path = result/'prepared-source-verification.json'
     try:
         if harness_hash != provenance['harness_sha256']:
             raise ValueError('Controller harness changed after prepare')
+        injection_hashes = {name: sha(source) for name, source in injections.items()}
+        if (selection == 'compact-volatiles' or 'injected_source_sha256' in provenance) and (
+                injection_hashes != provenance.get('injected_source_sha256')):
+            raise ValueError('Controller injected source changed after prepare')
         for label in ('baseline', 'candidate'):
             root = workspace/label
             expected = provenance['sources'][label]
@@ -237,7 +289,7 @@ def verify_prepared(workspace):
             if output(['git', 'status', '--porcelain', '--untracked-files=no'], root):
                 raise ValueError(f'{label}: tracked source changed after prepare')
             untracked = output(['git', 'ls-files', '--others', '--exclude-standard'], root).splitlines()
-            if untracked != ['engine/search/examples/ci_bench.rs']:
+            if sorted(untracked) != sorted(injections):
                 raise ValueError(f'{label}: unexpected untracked source after prepare')
             observed = {
                 'lock_sha256': sha(root/'engine/Cargo.lock'),
@@ -252,11 +304,13 @@ def verify_prepared(workspace):
             for key, value in observed.items():
                 if value != expected[key]:
                     raise ValueError(f'{label}: {key} changed after prepare')
-            injected = root/'engine/search/examples/ci_bench.rs'
-            if injected.is_symlink() or sha(injected) != harness_hash:
-                raise ValueError(f'{label}: injected harness changed after prepare')
+            for name, expected_hash in injection_hashes.items():
+                injected = root/name
+                if injected.is_symlink() or sha(injected) != expected_hash:
+                    raise ValueError(f'{label}: injected source changed after prepare: {name}')
             receipt['sources'][label] = {'commit': actual, **observed,
-                                         'harness_sha256': harness_hash}
+                                         'harness_sha256': harness_hash,
+                                         'injected_source_sha256': injection_hashes}
         receipt['status'] = 'success'
     except Exception as error:
         receipt.update(status='failed', error=f'{type(error).__name__}: {error}')
@@ -292,7 +346,7 @@ def preserve_build_timings(workspace, label, before):
 
 def fingerprint_expectations(selection, label):
     feature_args(selection, label)
-    hurt_active = selection in ('leaf-ending-states', 'prepared-turn') or (
+    hurt_active = selection in ('leaf-ending-states', 'prepared-turn', 'compact-volatiles') or (
         label == 'candidate' and selection == 'hurt-readers')
     leaf_active = selection == 'leaf-ending-states' and label == 'candidate'
     prepared_active = selection == 'prepared-turn' and label == 'candidate'
@@ -300,9 +354,12 @@ def fingerprint_expectations(selection, label):
                        PREPARED_FEATURE: prepared_active, PREPARED_OBSERVER_FEATURE: False}
     packages = {'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json')}
     expected = {'lab-engine': {EXPERIMENT_FEATURE: hurt_active, **bridge_expected}}
-    if selection in ('leaf-ending-states', 'prepared-turn'):
+    if selection in ('leaf-ending-states', 'prepared-turn', 'compact-volatiles'):
         packages['lab-search'] = ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')
         expected['lab-search'] = dict(bridge_expected)
+    if selection == 'compact-volatiles':
+        expected['lab-engine'][COMPACT_FEATURE] = label == 'candidate'
+        expected['lab-search'].update({EXPERIMENT_FEATURE: False, COMPACT_FEATURE: False})
     return packages, expected, hurt_active
 
 
