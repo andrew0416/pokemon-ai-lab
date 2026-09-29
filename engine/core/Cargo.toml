@@ -18,3 +18,5 @@ harness = false
 
 [features]
 experiment-hurt-readers = []
+experiment-prepared-turn = []
+experiment-prepared-turn-observe = ["experiment-prepared-turn"]

@@ -14,6 +14,8 @@ path = "src/lib.rs"
 # `default-features = false`.
 [features]
 default = ["cli"]
+experiment-prepared-turn = ["lab-engine/experiment-prepared-turn"]
+experiment-prepared-turn-observe = ["experiment-prepared-turn", "lab-engine/experiment-prepared-turn-observe"]
 # `node`: positions stepped by choice strings over the scenario loader (the Python API's core,
 # `engine/py`).
 scenario = ["lab-scenario", "serde_json"]
