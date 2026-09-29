@@ -58,16 +58,19 @@ RSS pass에는 warmup을 두지 않으며, 작은 차이는 allocator/OS 변동�
 
 ## 비교 조건
 
-한 job의 같은 VM에서 두 버전을 별도 target 디렉터리에 빌드한다.
+두 버전을 별도 target 디렉터리에 준비하고 한 job의 같은 VM에서 측정한다.
+아래 검증된 빌드 캐시가 적중한 경우 과거 빌드 산출물을 사용했다는 출처를 별도로 기록한다.
 Rust 1.98.1, `cargo --locked`, generic x86-64(AVX2 필수 아님), 동일 release 설정을 쓴다.
 Cargo.lock·각 package의 Cargo.toml·Cargo/toolchain 설정이 서로 다르면 의존성·빌드 설정 변화가 섞이므로 거부한다.
 다른 Rust API를 쓰는 과거/미래 커밋은 공통 하네스 빌드가 실패할 수 있다.
 
-`narrow`는 두 버전의 core/scenario/search 전체 테스트와 모든 빌드가 성공한 뒤 측정한다.
+`narrow`는 두 버전의 core/scenario/search 전체 테스트와 모든 빌드의 성공 증거를 확인한 뒤 측정한다.
+캐시 적중 시 동일 조건의 과거 회귀 성공 증거를 재사용하며 현재 run에서 새로 실행한 테스트로 집계하지 않는다.
 `smoke`는 설치 점검을 위해 core/search 라이브러리 테스트와 해당 oracle fixture가 속한
 `abilities_slow_start_truant` 회귀 검사로 제한한다. 전체 회귀 통과로 해석하지 않는다.
 첫 전체 검증은 빌드·테스트 때문에 수십 분 걸릴 수 있으며 측정 시간에는 포함하지 않는다.
-각 버전의 target 디렉터리는 새로 만들어 이전 컴파일 결과와 섞이지 않게 한다.
+각 버전의 target 디렉터리는 새로 만든다. 캐시 적중 시에도 검증한 실행 파일과
+컴파일 지문만 새 target에 복원하며 이전 Cargo 중간 산출물을 섞지 않는다.
 빌드 뒤 `release/.fingerprint/lab-engine-*/lib-lab_engine.json`과
 `test-lib-lab_engine.json` 원본·SHA·해석한 feature 목록을 artifact에 보존한다.
 두 종류의 컴파일 지문이 모두 있어야 하며, 실험 feature가 원본에서는 없고
@@ -113,6 +116,36 @@ hosted runner의 CPU 모델은 실행마다 바뀔 수 있으므로 다른 실�
 동시 실행 요청이 쌓이면 GitHub concurrency 정책에 따라 오래된 대기 요청이 교체될 수 있다.
 실행 중인 작업은 새 요청으로 취소하지 않는다. 저장소 공개 여부·요금 정책이 바뀌면
 GitHub 사용량 설정도 다시 확인한다.
+
+## 검증된 빌드 캐시
+
+수동 실행의 `build_cache` 옵션을 끄면 기존의 새 빌드 경로를 사용한다. 켜면
+원본·후보 각각의 완성된 `ci_bench` 실행 파일, 성공한 회귀 로그, 실제 Cargo feature
+fingerprint와 출처 receipt를 묶어 보관한다. 전체 Cargo target 디렉터리나 성능 측정
+원자료는 캐시하지 않는다. 최초 실행은 캐시를 채우므로 재빌드 비용이 그대로 발생한다.
+
+복원은 GitHub의 exact cache-hit와 계산한 전체 key 일치가 모두 확인되고,
+묶음 내부의 파일 목록·경로·해시·feature·회귀 성공 기록을 검증한 경우에만 허용한다.
+소스와 빌드 조건을 담은 recipe가 다르거나 일부만 복원되면 새로 빌드한다.
+입력에는 소스 commit/내용, 주입 하네스, toolchain·빌드 옵션·명령, 시스템 ABI와
+controller 식별 정보가 포함된다. baseline/candidate를 따로 식별하고 observer 검증은
+별도 target에서 매번 수행한다. 조건이 바뀐 바이너리를 재사용하지 않는다.
+
+적중 시 과거 회귀 결과의 재사용 출처를 artifact에 기록한다. 시간·CPU·peak RSS와
+그 출력·작업량 검사는 매번 새 프로세스로 수행한다. 한쪽만 적중해도 두 버전 모두
+같은 CPU 범용 빌드 조건과 현재 VM의 warmup·측정 일정을 적용한다.
+
+캐시 서비스의 장애·누락·손상은 새 빌드로 대체한다. 실제 컴파일이나 테스트 실패는
+실패로 처리한다. 저장은 신뢰된 저장소의 `lab-engine`에서 수동 실행하고 빌드·회귀·
+feature 검증과 봉인이 끝난 묶음에만 허용한다. 파일 해시는 손상 검사이며 작성자 인증
+서명이 아니다. cache 서비스의 저장소·브랜치 권한 경계를 전제로 한다.
+
+GitHub 캐시는 동일 key를 덮어쓸 수 없으므로 손상된 exact hit는 해당 실행에서 새로
+빌드해 사용해도 자동으로 원격 캐시를 고치지 않는다. 또한 branch scope와 만료·퇴거로
+인해 항상 적중하는 것은 아니다. 캐시 용량 설정이나 유료 한도를 변경하지 않는다.
+
+근거: [GitHub cache 동작과 접근 범위](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching),
+[Cargo build cache 구조](https://doc.rust-lang.org/cargo/reference/build-cache.html).
 
 ## 컨트롤러 검사
 

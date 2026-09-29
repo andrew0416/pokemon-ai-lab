@@ -217,7 +217,7 @@ def build_commands(suite, selection, label):
     return [argv + feature_args(selection, label) for argv in commands]
 
 
-def preserve_fingerprints(workspace, label, selection):
+def fingerprint_expectations(selection, label):
     feature_args(selection, label)
     hurt_active = selection in ('leaf-ending-states', 'prepared-turn') or (
         label == 'candidate' and selection == 'hurt-readers')
@@ -230,6 +230,11 @@ def preserve_fingerprints(workspace, label, selection):
     if selection in ('leaf-ending-states', 'prepared-turn'):
         packages['lab-search'] = ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')
         expected['lab-search'] = dict(bridge_expected)
+    return packages, expected, hurt_active
+
+
+def preserve_fingerprints(workspace, label, selection):
+    packages, expected, hurt_active = fingerprint_expectations(selection, label)
     return preserve_expected_fingerprints(workspace, label, packages, expected, hurt_active)
 
 
@@ -345,6 +350,8 @@ def validate_prepared_turn(workspace):
 
 def build(workspace):
     # Finish ALL tests/builds and verify actual compiler features before timing.
+    import build_cache
+
     result = workspace/'ci-results'
     request = json.loads((result/'request.json').read_text(encoding='utf-8'))
     selection = request['candidate_feature']
@@ -369,28 +376,52 @@ def build(workspace):
         if target.exists():
             raise ValueError(f'{label}: target directory must be new to establish fresh build evidence')
         env['CARGO_TARGET_DIR'] = str(target)
-        with (workspace/'ci-results'/f'{label}-build.log').open('w', encoding='utf-8') as log:
-            for argv in commands_by_version[label]:
-                print(f'{label}: {" ".join(argv)}', flush=True)
-                log.write('COMMAND '+json.dumps(argv)+'\n')
-                log.flush()
-                proc = subprocess.Popen(argv, cwd=workspace/label/'engine', env=env,
-                                        stdout=log, stderr=subprocess.STDOUT,
-                                        start_new_session=(os.name == 'posix'))
-                try:
-                    proc.wait(timeout=COMMAND_TIMEOUT_SECONDS)
-                except subprocess.TimeoutExpired:
-                    if os.name == 'posix':
-                        os.killpg(proc.pid, signal.SIGKILL)
-                    else:
-                        proc.kill()
-                    proc.wait()
-                    raise RuntimeError(f'{label} build/test timed out; process group terminated')
-                if proc.returncode:
-                    log.flush()
-                    print((workspace/'ci-results'/f'{label}-build.log').read_text(encoding='utf-8')[-12000:])
-                    raise RuntimeError(f'{label} build/test failed ({proc.returncode}); see artifact log')
-        provenance['compiler_feature_evidence'][label] = preserve_fingerprints(workspace, label, selection)
+        reused = build_cache.restore(workspace, label)
+        receipt = {'schema_version': 1, 'status': 'running', 'label': label,
+                   'suite': request['suite'], 'selection': selection, 'reused': reused,
+                   'commands': [], 'log': label + '-build.log',
+                   'feature_evidence': label + '-features.json'}
+        receipt_path = result/(label + '-build-receipt.json')
+        try:
+            if reused:
+                receipt['reused_from_run'] = json.loads(
+                    (result/('cache-' + label + '.json')).read_text(encoding='utf-8'))['reused_from_run']
+                print(f'{label}: reused verified executable; regressions were run in '
+                      f'{receipt["reused_from_run"]["run_id"]}', flush=True)
+            else:
+                with (result/f'{label}-build.log').open('w', encoding='utf-8') as log:
+                    for argv in commands_by_version[label]:
+                        print(f'{label}: {" ".join(argv)}', flush=True)
+                        log.write('COMMAND '+json.dumps(argv)+'\n')
+                        log.flush()
+                        proc = subprocess.Popen(argv, cwd=workspace/label/'engine', env=env,
+                                                stdout=log, stderr=subprocess.STDOUT,
+                                                start_new_session=(os.name == 'posix'))
+                        try:
+                            proc.wait(timeout=COMMAND_TIMEOUT_SECONDS)
+                        except subprocess.TimeoutExpired:
+                            if os.name == 'posix':
+                                os.killpg(proc.pid, signal.SIGKILL)
+                            else:
+                                proc.kill()
+                            proc.wait()
+                            raise RuntimeError(f'{label} build/test timed out; process group terminated')
+                        receipt['commands'].append({'argv': argv, 'returncode': proc.returncode})
+                        if proc.returncode:
+                            log.flush()
+                            print((result/f'{label}-build.log').read_text(encoding='utf-8')[-12000:])
+                            raise RuntimeError(f'{label} build/test failed ({proc.returncode}); see artifact log')
+            provenance['compiler_feature_evidence'][label] = preserve_fingerprints(workspace, label, selection)
+            receipt['status'] = 'success'
+            receipt_path.write_text(json.dumps(receipt, indent=2)+'\n', encoding='utf-8')
+        except Exception as error:
+            receipt.update(status='failed', error=f'{type(error).__name__}: {error}')
+            receipt_path.write_text(json.dumps(receipt, indent=2)+'\n', encoding='utf-8')
+            raise
+        if not reused:
+            build_cache.seal(workspace, label, provenance['compiler_feature_evidence'][label])
+        provenance.setdefault('build_cache', {})[label] = json.loads(
+            (result/('cache-' + label + '.json')).read_text(encoding='utf-8'))
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
     if selection == 'prepared-turn':
         provenance['prepared_validation'] = validate_prepared_turn(workspace)

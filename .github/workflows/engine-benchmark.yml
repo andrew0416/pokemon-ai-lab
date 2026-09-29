@@ -31,6 +31,10 @@ on:
         type: choice
         options: ["2", "6", "10", "20"]
         default: "6"
+      build_cache:
+        description: "동일 조건의 검증된 실행 파일·과거 회귀 기록 재사용 (실측은 항상 새 실행)"
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -53,6 +57,9 @@ env:
   PYTHONHASHSEED: "0"
   OPENBLAS_NUM_THREADS: "1"
   OMP_NUM_THREADS: "1"
+  BUILD_CACHE_ENABLED: ${{ inputs.build_cache && '1' || '0' }}
+  BUILD_CACHE_ALLOW_SAVE: ${{ inputs.build_cache && github.event_name == 'workflow_dispatch' && github.repository == 'andrew0416/pokemon-ai-lab' && github.ref == 'refs/heads/lab-engine' && '1' || '0' }}
+  BUILD_CACHE_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
 
 jobs:
   paired:
@@ -96,8 +103,65 @@ jobs:
         run: python -m unittest discover -s controller/engine/benchmarks/paired -p "test_*.py" -v
       - name: Record provenance and inject identical harness
         run: python controller/engine/benchmarks/paired/ci.py prepare --workspace "$GITHUB_WORKSPACE"
+      - name: Compute exact verified-build cache identities
+        id: cache-plan
+        if: inputs.build_cache
+        continue-on-error: true
+        run: python controller/engine/benchmarks/paired/build_cache.py plan --workspace "$GITHUB_WORKSPACE"
+      - name: Restore verified baseline build bundle
+        id: cache-baseline
+        if: inputs.build_cache && steps.cache-plan.outputs.baseline_key != ''
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: verified-build-cache/baseline
+          key: ${{ steps.cache-plan.outputs.baseline_key }}
+          enableCrossOsArchive: false
+      - name: Restore verified candidate build bundle
+        id: cache-candidate
+        if: inputs.build_cache && steps.cache-plan.outputs.candidate_key != ''
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: verified-build-cache/candidate
+          key: ${{ steps.cache-plan.outputs.candidate_key }}
+          enableCrossOsArchive: false
       - name: Test and build both versions before timing
+        id: build
+        env:
+          BASELINE_CACHE_HIT: ${{ steps.cache-baseline.outputs.cache-hit }}
+          BASELINE_CACHE_MATCHED_KEY: ${{ steps.cache-baseline.outputs.cache-matched-key }}
+          CANDIDATE_CACHE_HIT: ${{ steps.cache-candidate.outputs.cache-hit }}
+          CANDIDATE_CACHE_MATCHED_KEY: ${{ steps.cache-candidate.outputs.cache-matched-key }}
         run: python controller/engine/benchmarks/paired/ci.py build --workspace "$GITHUB_WORKSPACE"
+      - name: Save sealed baseline build bundle
+        if: >-
+          success() && inputs.build_cache &&
+          github.event_name == 'workflow_dispatch' &&
+          github.repository == 'andrew0416/pokemon-ai-lab' &&
+          github.ref == 'refs/heads/lab-engine' &&
+          steps.cache-baseline.outputs.cache-hit != 'true' &&
+          steps.build.outputs.baseline_cache_sealed == 'true'
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: verified-build-cache/baseline
+          key: ${{ steps.cache-plan.outputs.baseline_key }}
+          enableCrossOsArchive: false
+      - name: Save sealed candidate build bundle
+        if: >-
+          success() && inputs.build_cache &&
+          github.event_name == 'workflow_dispatch' &&
+          github.repository == 'andrew0416/pokemon-ai-lab' &&
+          github.ref == 'refs/heads/lab-engine' &&
+          steps.cache-candidate.outputs.cache-hit != 'true' &&
+          steps.build.outputs.candidate_cache_sealed == 'true'
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: verified-build-cache/candidate
+          key: ${{ steps.cache-plan.outputs.candidate_key }}
+          enableCrossOsArchive: false
       - name: Warm up and measure alternating pairs
         env:
           SUITE: ${{ inputs.suite }}
