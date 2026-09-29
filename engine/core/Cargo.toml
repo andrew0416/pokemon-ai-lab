@@ -15,3 +15,6 @@ smallvec = { version = "1.13", features = ["const_generics"] }
 [[bench]]
 name = "damage"
 harness = false
+
+[features]
+experiment-hurt-readers = []
