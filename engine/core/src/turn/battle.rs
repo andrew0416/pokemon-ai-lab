@@ -377,7 +377,124 @@ impl HistoryReaders {
 
     /// Who needs `hurtThisTurn` recorded ([`HistoryReaders::hurt_this_turn`],
     /// [`HistoryReaders::hurt_of_holders`]).
+    #[cfg(not(feature = "experiment-hurt-readers"))]
     fn hurt_readers<const N: usize>(state: &State<N>) -> (bool, bool) {
+        use crate::dex::moves as m;
+        let exits = |a: AbilityId| a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT;
+        let moves_ability = |a: AbilityId| {
+            [
+                abilities::TRACE,
+                abilities::RECEIVER,
+                abilities::POWER_OF_ALCHEMY,
+                abilities::WANDERING_SPIRIT,
+                abilities::IMPOSTER,
+            ]
+            .contains(&a)
+        };
+        let mons = || state.sides.iter().flat_map(|side| side.party.iter());
+        let known = |mon: &crate::state::Pokemon| {
+            let own = mon.transformed.map(|base| base.moves);
+            mon.moves
+                .iter()
+                .chain(own.iter().flatten())
+                .map(|s| s.id)
+                .collect::<Vec<_>>()
+        };
+        let mega_abilities = |mon: &crate::state::Pokemon| {
+            mons()
+                .filter_map(|holder| {
+                    crate::gimmick::mega_evolution(mon.untransformed_species(), holder.item)
+                })
+                .flat_map(|mega| mega.data().abilities.iter().copied())
+                .collect::<Vec<_>>()
+        };
+        let assurance = mons().any(|mon| known(mon).contains(&m::ASSURANCE));
+        let holders = mons().any(|mon| {
+            exits(mon.ability)
+                || exits(mon.base_ability)
+                || mega_abilities(mon).into_iter().any(exits)
+        });
+        let transfer = mons().any(|mon| {
+            known(mon).iter().any(|id| {
+                [
+                    m::SKILL_SWAP,
+                    m::ROLE_PLAY,
+                    m::DOODLE,
+                    m::ENTRAINMENT,
+                    m::TRANSFORM,
+                ]
+                .contains(id)
+            }) || moves_ability(mon.ability)
+                || moves_ability(mon.base_ability)
+                || mega_abilities(mon).into_iter().any(moves_ability)
+        });
+        (assurance || (holders && transfer), holders)
+    }
+
+    #[cfg(feature = "experiment-hurt-readers")]
+    fn hurt_readers<const N: usize>(state: &State<N>) -> (bool, bool) {
+        use crate::dex::moves as m;
+        let exits = |a: AbilityId| matches!(a, abilities::EMERGENCY_EXIT | abilities::WIMP_OUT);
+        let moves_ability = |a: AbilityId| {
+            matches!(
+                a,
+                abilities::TRACE
+                    | abilities::RECEIVER
+                    | abilities::POWER_OF_ALCHEMY
+                    | abilities::WANDERING_SPIRIT
+                    | abilities::IMPOSTER
+            )
+        };
+        let mons = || state.sides.iter().flat_map(|side| side.party.iter());
+        // Only these items can yield a mega_evolution. Keep both sides and the entire
+        // party: the stone's holder need not be the Pokemon whose ability is considered.
+        let stones: super::Small<ItemId, 12> = mons()
+            .map(|holder| holder.item)
+            .filter(|item| !item.data().mega_stone.is_empty())
+            .collect();
+        let (mut assurance, mut holders, mut transfer) = (false, false, false);
+        for mon in mons() {
+            if !assurance || !transfer {
+                for slot in mon
+                    .moves
+                    .iter()
+                    .chain(mon.transformed.iter().flat_map(|base| base.moves.iter()))
+                {
+                    assurance |= slot.id == m::ASSURANCE;
+                    transfer |= matches!(
+                        slot.id,
+                        m::SKILL_SWAP | m::ROLE_PLAY | m::DOODLE | m::ENTRAINMENT | m::TRANSFORM
+                    );
+                }
+            }
+            holders |= exits(mon.ability) || exits(mon.base_ability);
+            transfer |= moves_ability(mon.ability) || moves_ability(mon.base_ability);
+            // These predicates are battle-wide: H and T may occur on different mons.
+            // Assurance alone cannot return, since the second result still depends on H.
+            if holders && (assurance || transfer) {
+                return (true, true);
+            }
+            if !stones.is_empty() && (!holders || !transfer) {
+                let species = mon.untransformed_species();
+                for &stone in &stones {
+                    if let Some(mega) = crate::gimmick::mega_evolution(species, stone) {
+                        for ability in mega.data().abilities {
+                            holders |= exits(ability);
+                            transfer |= moves_ability(ability);
+                        }
+                    }
+                }
+            }
+            if holders && (assurance || transfer) {
+                return (true, true);
+            }
+        }
+        (assurance || (holders && transfer), holders)
+    }
+
+    #[cfg(test)]
+    #[cfg(feature = "experiment-hurt-readers")]
+    fn original_hurt_readers<const N: usize>(state: &State<N>) -> (bool, bool) {
         use crate::dex::moves as m;
         let exits = |a: AbilityId| a == abilities::EMERGENCY_EXIT || a == abilities::WIMP_OUT;
         let moves_ability = |a: AbilityId| {
@@ -2510,5 +2627,219 @@ pub(crate) fn terrain_from(value: u8) -> Terrain {
         v if v == Terrain::Misty as u8 => Terrain::Misty,
         v if v == Terrain::Psychic as u8 => Terrain::Psychic,
         _ => Terrain::None,
+    }
+}
+
+#[cfg(test)]
+#[cfg(feature = "experiment-hurt-readers")]
+mod hurt_readers_experiment_tests {
+    use super::*;
+    use crate::dex::{moves as m, species as sp};
+    use crate::state::{MoveSlot, TransformBase};
+
+    fn check<const N: usize>(state: &State<N>, expected: (bool, bool)) {
+        assert_eq!(HistoryReaders::original_hurt_readers(state), expected);
+        assert_eq!(HistoryReaders::hurt_readers(state), expected);
+    }
+
+    fn truth_table<const N: usize>() {
+        for bits in 0..8 {
+            for location in 0..12 {
+                let mut state = State::<N>::default();
+                let (a, h, t) = (bits & 1 != 0, bits & 2 != 0, bits & 4 != 0);
+                if a {
+                    state.sides[0].party[0].moves[0] = MoveSlot::full(m::ASSURANCE);
+                }
+                if h {
+                    state.sides[location / 6].party[location % 6].ability = abilities::WIMP_OUT;
+                }
+                if t {
+                    state.sides[1].party[5].moves[3] = MoveSlot::full(m::SKILL_SWAP);
+                }
+                check(&state, (a || h && t, h));
+            }
+        }
+    }
+
+    #[test]
+    fn global_truth_table_and_all_party_positions_singles_doubles() {
+        truth_table::<1>();
+        truth_table::<2>();
+    }
+
+    #[test]
+    fn current_and_original_moves_ignore_pp_disabled_hp_and_slots() {
+        for id in [
+            m::ASSURANCE,
+            m::SKILL_SWAP,
+            m::ROLE_PLAY,
+            m::DOODLE,
+            m::ENTRAINMENT,
+            m::TRANSFORM,
+        ] {
+            for original in [false, true] {
+                for side in 0..2 {
+                    for party in 0..6 {
+                        for move_index in 0..4 {
+                            let mut state = State::<2>::default();
+                            let mon = &mut state.sides[side].party[party];
+                            mon.status = Status::Fainted; // HP0 and no active slot
+                            let slot = MoveSlot {
+                                id,
+                                pp: 0,
+                                disabled: true,
+                            };
+                            if original {
+                                let mut base = TransformBase::default();
+                                base.moves[move_index] = slot;
+                                mon.transformed = Some(base);
+                            } else {
+                                mon.moves[move_index] = slot;
+                            }
+                            check(&state, (id == m::ASSURANCE, false));
+                            state.sides[1 - side].party[0].base_ability = abilities::EMERGENCY_EXIT;
+                            check(&state, (true, true));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn both_ability_fields_and_every_transfer_ability() {
+        for exit in [abilities::EMERGENCY_EXIT, abilities::WIMP_OUT] {
+            for transfer in [
+                abilities::TRACE,
+                abilities::RECEIVER,
+                abilities::POWER_OF_ALCHEMY,
+                abilities::WANDERING_SPIRIT,
+                abilities::IMPOSTER,
+            ] {
+                for exit_base in [false, true] {
+                    for transfer_base in [false, true] {
+                        let mut state = State::<2>::default();
+                        let mon = &mut state.sides[1].party[5];
+                        if exit_base {
+                            mon.base_ability = exit;
+                        } else {
+                            mon.ability = exit;
+                        }
+                        check(&state, (false, true));
+                        let mon = &mut state.sides[0].party[0];
+                        if transfer_base {
+                            mon.base_ability = transfer;
+                        } else {
+                            mon.ability = transfer;
+                        }
+                        check(&state, (true, true));
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn mega_stones_anywhere_and_exact_untransformed_species() {
+        for current in [sp::ALAKAZAM, sp::ALAKAZAM_MEGA, sp::DITTO] {
+            for original in [
+                None,
+                Some(sp::ALAKAZAM),
+                Some(sp::ALAKAZAM_MEGA),
+                Some(sp::DITTO),
+            ] {
+                for item in [
+                    ItemId::NONE,
+                    items::LEFTOVERS,
+                    items::ALAKAZITE,
+                    items::CHARIZARDITE_X,
+                ] {
+                    for holder in 0..12 {
+                        let mut state = State::<2>::default();
+                        state.sides[0].party[0].species = current;
+                        state.sides[0].party[0].transformed =
+                            original.map(|species| TransformBase {
+                                species,
+                                ..Default::default()
+                            });
+                        state.sides[1].party[4].ability = abilities::EMERGENCY_EXIT;
+                        state.sides[holder / 6].party[holder % 6].item = item;
+                        state.sides[holder / 6].party[holder % 6].status = Status::Fainted;
+                        let trace =
+                            original.unwrap_or(current) == sp::ALAKAZAM && item == items::ALAKAZITE;
+                        check(&state, (trace, true));
+                    }
+                }
+            }
+        }
+        let mut state = State::<1>::default();
+        for side in &mut state.sides {
+            for mon in &mut side.party {
+                mon.item = items::ALAKAZITE;
+            }
+        }
+        state.sides[0].party[5].species = sp::ALAKAZAM;
+        state.sides[1].party[5].base_ability = abilities::WIMP_OUT;
+        check(&state, (true, true)); // capacity12, duplicated compatible stones
+    }
+
+    #[test]
+    fn deterministic_sparse_differential_mixed_state_matrix() {
+        let mut seed = 0x8942_d237_b814_a719u64;
+        let mut next = || {
+            seed ^= seed << 13;
+            seed ^= seed >> 7;
+            seed ^= seed << 17;
+            seed
+        };
+        for case in 0..4096 {
+            let mut state = State::<2>::default();
+            for side in &mut state.sides {
+                for mon in &mut side.party {
+                    mon.species = [sp::DITTO, sp::ALAKAZAM, sp::ALAKAZAM_MEGA][next() as usize % 3];
+                    mon.item = [
+                        ItemId::NONE,
+                        items::LEFTOVERS,
+                        items::ALAKAZITE,
+                        items::CHARIZARDITE_X,
+                    ][next() as usize % 4];
+                    let abilities = [
+                        AbilityId::default(),
+                        abilities::WIMP_OUT,
+                        abilities::TRACE,
+                        abilities::IMPOSTER,
+                    ];
+                    mon.ability = if next() % 16 == 0 {
+                        abilities[next() as usize % 4]
+                    } else {
+                        AbilityId::default()
+                    };
+                    mon.base_ability = if next() % 16 == 0 {
+                        abilities[next() as usize % 4]
+                    } else {
+                        AbilityId::default()
+                    };
+                    for slot in &mut mon.moves {
+                        slot.id = if next() % 32 == 0 {
+                            [m::ASSURANCE, m::ROLE_PLAY][next() as usize % 2]
+                        } else {
+                            MoveId::default()
+                        };
+                    }
+                    if next() % 4 == 0 {
+                        mon.transformed = Some(TransformBase {
+                            species: [sp::DITTO, sp::ALAKAZAM][next() as usize % 2],
+                            moves: mon.moves,
+                        });
+                        mon.moves = Default::default();
+                    }
+                }
+            }
+            assert_eq!(
+                HistoryReaders::hurt_readers(&state),
+                HistoryReaders::original_hurt_readers(&state),
+                "case {case}"
+            );
+        }
     }
 }
