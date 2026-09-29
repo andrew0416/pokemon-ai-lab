@@ -9,6 +9,46 @@ import shutil
 import signal
 import subprocess
 import sys
+import tomllib
+
+
+EXPERIMENT_FEATURE = 'experiment-hurt-readers'
+FEATURE_CHOICES = ('none', 'hurt-readers')
+COMMAND_TIMEOUT_SECONDS = 2700
+
+
+def feature_args(selection, label):
+    if selection not in FEATURE_CHOICES or label not in ('baseline', 'candidate'):
+        raise ValueError('Invalid candidate feature or build label')
+    if label == 'candidate' and selection == 'hurt-readers':
+        return ['--features', 'lab-engine/' + EXPERIMENT_FEATURE]
+    return []
+
+
+def verify_feature_declaration(manifest, selection):
+    with manifest.open('rb') as stream:
+        data = tomllib.load(stream)
+    features = data.get('features', {})
+    if not isinstance(features, dict) or any(
+            not isinstance(values, list) or any(not isinstance(value, str) for value in values)
+            for values in features.values()):
+        raise ValueError(f'{manifest}: invalid Cargo features table')
+    declared = EXPERIMENT_FEATURE in features
+    if selection == 'hurt-readers' and not declared:
+        raise ValueError(f'{manifest}: missing empty {EXPERIMENT_FEATURE} feature declaration')
+    if declared and features[EXPERIMENT_FEATURE] != []:
+        raise ValueError(f'{manifest}: {EXPERIMENT_FEATURE} must be an empty feature')
+    pending = list(features.get('default', []))
+    visited = set()
+    while pending:
+        feature = pending.pop()
+        if feature.rsplit('/', 1)[-1] == EXPERIMENT_FEATURE:
+            raise ValueError(f'{manifest}: experiment feature must not be enabled by default')
+        if feature not in visited:
+            visited.add(feature)
+            pending.extend(features.get(feature, []))
+    return {'name': EXPERIMENT_FEATURE, 'declared_empty': declared,
+            'default_activation': False}
 
 
 def sha(path):
@@ -28,6 +68,8 @@ def refs(workspace):
         if not re.fullmatch('[0-9a-fA-F]{40}', value):
             raise ValueError('Use a complete 40-character commit SHA from this repository.')
     suite = os.environ['SUITE']
+    candidate_feature = os.environ.get('CANDIDATE_FEATURE', 'none')
+    feature_args(candidate_feature, 'candidate')
     threads = int(os.environ['THREADS'])
     pairs = int(os.environ['PAIRS'])
     if suite not in ('smoke', 'narrow') or threads not in (1, 2, 4):
@@ -40,7 +82,10 @@ def refs(workspace):
     metadata = {'baseline_sha': baseline.lower(), 'candidate_sha': candidate.lower(),
                 'workflow_sha': os.environ['GITHUB_SHA'], 'suite': suite, 'threads': threads,
                 'pairs': pairs, 'run_id': os.environ['GITHUB_RUN_ID'],
-                'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'], 'available_cpus': cpus}
+                'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'], 'available_cpus': cpus,
+                'candidate_feature': candidate_feature,
+                'feature_args': {label: feature_args(candidate_feature, label)
+                                 for label in ('baseline', 'candidate')}}
     (result/'request.json').write_text(json.dumps(metadata, indent=2)+'\n', encoding='utf-8')
     with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as stream:
         for key in ('baseline_sha', 'candidate_sha'):
@@ -50,6 +95,10 @@ def refs(workspace):
 def prepare(workspace):
     result = workspace/'ci-results'
     metadata = json.loads((result/'request.json').read_text(encoding='utf-8'))
+    selection = metadata['candidate_feature']
+    if metadata['feature_args'] != {label: feature_args(selection, label)
+                                   for label in ('baseline', 'candidate')}:
+        raise ValueError('Requested feature arguments do not match the explicit selection')
     harness = Path(__file__).with_name('harness.rs')
     metadata['harness_sha256'] = sha(harness)
     metadata['rustc'] = output(['rustc', '-Vv'])
@@ -70,6 +119,7 @@ def prepare(workspace):
             raise ValueError('Reserved example ci_bench.rs already exists in source revision')
         metadata['sources'][label] = {
             'commit': actual, 'lock_sha256': sha(root/'engine/Cargo.lock'),
+            'experiment_feature': verify_feature_declaration(root/'engine/core/Cargo.toml', selection),
             'workspace_manifest_sha256': sha(root/'engine/Cargo.toml'),
             'search_manifest_sha256': sha(root/'engine/search/Cargo.toml'),
             'package_manifests': {name: sha(root/'engine'/name/'Cargo.toml')
@@ -90,27 +140,86 @@ def prepare(workspace):
     (result/'provenance.json').write_text(json.dumps(metadata, indent=2)+'\n', encoding='utf-8')
 
 
-def build(workspace):
-    # Finish ALL tests/builds before any benchmark process is launched.
-    request = json.loads((workspace/'ci-results/request.json').read_text(encoding='utf-8'))
+def build_commands(suite, selection, label):
+    if suite not in ('smoke', 'narrow'):
+        raise ValueError('Invalid benchmark suite')
     tests = [['cargo', 'test', '--locked', '--release', '-p', 'lab-engine', '-p', 'lab-scenario', '-p', 'lab-search']]
-    if request['suite'] == 'smoke':
+    if suite == 'smoke':
         # Infrastructure checks need the harness and its fixture, not every oracle binary.
         # Actual candidate comparisons (narrow) retain the full regression gate above.
         tests = [
             ['cargo', 'test', '--locked', '--release', '-p', 'lab-engine', '-p', 'lab-search', '--lib'],
             ['cargo', 'test', '--locked', '--release', '-p', 'lab-scenario', '--test', 'abilities_slow_start_truant'],
         ]
-    (workspace/'ci-results/test-plan.json').write_text(
-        json.dumps({'suite': request['suite'], 'commands_per_version': tests}, indent=2)+'\n', encoding='utf-8')
+    commands = tests + [
+        ['cargo', 'build', '--locked', '--release', '-p', 'lab-search', '--example', 'ci_bench'],
+    ]
+    return [argv + feature_args(selection, label) for argv in commands]
+
+
+def preserve_fingerprints(workspace, label, selection):
+    target = workspace/('target-' + label)
+    result = workspace/'ci-results'
+    evidence = {'expected_active': label == 'candidate' and selection == 'hurt-readers',
+                'feature': EXPERIMENT_FEATURE, 'fingerprints': []}
+    fingerprint_root = target/'release/.fingerprint'
+    for directory in sorted(fingerprint_root.glob('lab-engine-*')):
+        for name in ('lib-lab_engine.json', 'test-lib-lab_engine.json'):
+            source = directory/name
+            if not source.is_file():
+                continue
+            destination = result/'fingerprints'/label/directory.name/name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, destination)
+            data = json.loads(source.read_text(encoding='utf-8'))
+            features = data.get('features')
+            if isinstance(features, str):
+                features = json.loads(features)
+            if not isinstance(features, list) or any(not isinstance(value, str) for value in features):
+                raise ValueError(f'{source}: Cargo fingerprint has no valid feature list')
+            evidence['fingerprints'].append({
+                'kind': name, 'features': features, 'sha256': sha(source),
+                'target_path': source.relative_to(target).as_posix(),
+                'artifact_path': destination.relative_to(result).as_posix(),
+            })
+    # Write evidence before asserting, so a failed activation check remains inspectable.
+    (result/f'{label}-features.json').write_text(json.dumps(evidence, indent=2)+'\n', encoding='utf-8')
+    kinds = {item['kind'] for item in evidence['fingerprints']}
+    if kinds != {'lib-lab_engine.json', 'test-lib-lab_engine.json'}:
+        raise ValueError(f'{label}: missing compiled lab-engine library/test fingerprints')
+    for item in evidence['fingerprints']:
+        if (EXPERIMENT_FEATURE in item['features']) != evidence['expected_active']:
+            raise ValueError(f'{label}: actual compiled feature activation differs from request: '
+                             f'{item["target_path"]}: {item["features"]}')
+    return evidence
+
+
+def build(workspace):
+    # Finish ALL tests/builds and verify actual compiler features before timing.
+    result = workspace/'ci-results'
+    request = json.loads((result/'request.json').read_text(encoding='utf-8'))
+    selection = request['candidate_feature']
+    commands_by_version = {label: build_commands(request['suite'], selection, label)
+                           for label in ('baseline', 'candidate')}
+    expected_args = {label: feature_args(selection, label) for label in commands_by_version}
+    if request['feature_args'] != expected_args:
+        raise ValueError('Requested feature arguments do not match the explicit selection')
+    plan = {'suite': request['suite'], 'candidate_feature': selection,
+            'feature_args': expected_args, 'commands_by_version': commands_by_version,
+            'per_command_timeout_seconds': COMMAND_TIMEOUT_SECONDS}
+    (result/'test-plan.json').write_text(json.dumps(plan, indent=2)+'\n', encoding='utf-8')
+    provenance = json.loads((result/'provenance.json').read_text(encoding='utf-8'))
+    provenance['build_plan'] = plan
+    provenance['compiler_feature_evidence'] = {}
+    (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
     for label in ('baseline', 'candidate'):
         env = os.environ.copy()
-        env['CARGO_TARGET_DIR'] = str(workspace/('target-'+label))
-        commands = tests + [
-            ['cargo', 'build', '--locked', '--release', '-p', 'lab-search', '--example', 'ci_bench'],
-        ]
+        target = workspace/('target-'+label)
+        if target.exists():
+            raise ValueError(f'{label}: target directory must be new to establish fresh build evidence')
+        env['CARGO_TARGET_DIR'] = str(target)
         with (workspace/'ci-results'/f'{label}-build.log').open('w', encoding='utf-8') as log:
-            for argv in commands:
+            for argv in commands_by_version[label]:
                 print(f'{label}: {" ".join(argv)}', flush=True)
                 log.write('COMMAND '+json.dumps(argv)+'\n')
                 log.flush()
@@ -118,7 +227,7 @@ def build(workspace):
                                         stdout=log, stderr=subprocess.STDOUT,
                                         start_new_session=(os.name == 'posix'))
                 try:
-                    proc.wait(timeout=1800)
+                    proc.wait(timeout=COMMAND_TIMEOUT_SECONDS)
                 except subprocess.TimeoutExpired:
                     if os.name == 'posix':
                         os.killpg(proc.pid, signal.SIGKILL)
@@ -130,6 +239,8 @@ def build(workspace):
                     log.flush()
                     print((workspace/'ci-results'/f'{label}-build.log').read_text(encoding='utf-8')[-12000:])
                     raise RuntimeError(f'{label} build/test failed ({proc.returncode}); see artifact log')
+        provenance['compiler_feature_evidence'][label] = preserve_fingerprints(workspace, label, selection)
+        (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
 
 
 def main():

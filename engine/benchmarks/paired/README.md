@@ -10,6 +10,7 @@
 |---|---|
 | baseline_sha | 저장소에 올라온 원본의 전체 40자리 커밋 SHA |
 | candidate_sha | 후보의 전체 SHA. 비우면 선택한 실행 브랜치의 커밋 |
+| candidate_feature | `none`(기본) 또는 `hurt-readers`. 후보에만 `lab-engine/experiment-hurt-readers`를 활성화 |
 | suite | `smoke`: 작은 Harden/Poison Heal 국면의 동작 점검. `narrow`: coaching·sand 깊이 2 비교 |
 | threads | 양쪽 동일 1/2/4스레드. 러너 가용 CPU 수를 넘으면 거부 |
 | pairs | 각 국면에서 warmup을 제외한 쌍 수. 2/6/10/20, 기본 6 |
@@ -19,7 +20,11 @@
 이후 서로 다른 원본/후보 SHA와 `narrow`, 6쌍 이상으로 비교한다.
 후보 코드가 로컬 실험 폴더에만 있으면 실행할 수 없다. 먼저 별도 후보 브랜치에 필요한
 변경을 올려야 한다. 이 설정은 P8g/P8ha를 엔진에 채택하거나 두 후보를 결합하지 않는다.
-feature가 필요한 후보는 해당 feature를 명시적으로 켜는 별도 실험 설정이 필요하다.
+보존된 P8g 후보를 측정할 때는 `candidate_feature=hurt-readers`를 명시한다.
+원본·후보의 core manifest에는 동일한 빈 `experiment-hurt-readers = []` 선언이 있어야 하며,
+default feature가 이를 직접 또는 간접으로 켜면 준비 단계에서 거부한다.
+원본에는 추가 feature 플래그를 주지 않는다. 후보의 **모든** Cargo 테스트·빌드 명령에만
+`--features lab-engine/experiment-hurt-readers`를 붙인다. `none`은 양쪽 모두 추가 플래그 없이 실행한다.
 
 ## 비교 조건
 
@@ -32,6 +37,12 @@ Cargo.lock·각 package의 Cargo.toml·Cargo/toolchain 설정이 서로 다르�
 `smoke`는 설치 점검을 위해 core/search 라이브러리 테스트와 해당 oracle fixture가 속한
 `abilities_slow_start_truant` 회귀 검사로 제한한다. 전체 회귀 통과로 해석하지 않는다.
 첫 전체 검증은 빌드·테스트 때문에 수십 분 걸릴 수 있으며 측정 시간에는 포함하지 않는다.
+각 버전의 target 디렉터리는 새로 만들어 이전 컴파일 결과와 섞이지 않게 한다.
+빌드 뒤 `release/.fingerprint/lab-engine-*/lib-lab_engine.json`과
+`test-lib-lab_engine.json` 원본·SHA·해석한 feature 목록을 artifact에 보존한다.
+두 종류의 컴파일 지문이 모두 있어야 하며, 실험 feature가 원본에서는 없고
+`hurt-readers` 후보에서는 실제로 활성화된 것을 확인해야 측정을 시작한다.
+명령에 플래그를 적었다는 사실만으로 활성화를 인정하지 않는다.
 공통 `harness.rs`를 각 checkout의 `engine/search/examples/ci_bench.rs`에 복사하여
 동일 하네스를 빌드한다. 측정할 엔진 함수는 수정하지 않는다.
 양쪽 모두 **controller(워크플로 실행 커밋)의 같은 시나리오와 팀 파일**을 읽는다.
@@ -58,6 +69,8 @@ Actions 실행 요약과 `engine-benchmark-<run-id>-<attempt>` artifact를 확�
 artifact는 7일간 보관하므로 필요한 실험 결과는 만료 전에 내려받는다.
 실패 시에도 생성된 요청·빌드 로그·원자료를 가능한 범위에서 업로드한다.
 CPU/OS·Rust·커밋·입력·바이너리 해시, warmup과 각 실행의 stdout/stderr를 보존한다.
+`request.json`에는 기능 선택, `test-plan.json`과 `provenance.json`에는 버전별 정확한 Cargo 명령을,
+`fingerprints/`와 `<baseline|candidate>-features.json`에는 실제 컴파일 기능 증거를 남긴다.
 CPU 시간은 Linux의 순차 child resource usage이며 wall 시간과 별도로 읽는다.
 
 중앙값과 인접 쌍별 후보/원본 비율·범위를 함께 본다. 변동과 겹치는 작은 차이는 보류한다.
@@ -65,7 +78,8 @@ CPU 시간은 Linux의 순차 child resource usage이며 wall 시간과 별도�
 hosted runner의 CPU 모델은 실행마다 바뀔 수 있으므로 다른 실행의 절대 시간을 직접
 대조하지 않는다. 최종 채택 전 실제 사용할 PC에서도 확인한다.
 
-한 작업은 최대 90분, 개별 측정은 최대 600초다. 같은 워크플로는 한 번에 하나 실행한다.
+한 작업은 최대 120분, 각 빌드·테스트 명령은 최대 2700초(45분), 개별 측정은 최대 600초다.
+같은 워크플로는 한 번에 하나 실행한다.
 동시 실행 요청이 쌓이면 GitHub concurrency 정책에 따라 오래된 대기 요청이 교체될 수 있다.
 실행 중인 작업은 새 요청으로 취소하지 않는다. 저장소 공개 여부·요금 정책이 바뀌면
 GitHub 사용량 설정도 다시 확인한다.

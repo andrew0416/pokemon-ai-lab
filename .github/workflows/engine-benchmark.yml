@@ -1,5 +1,5 @@
 name: engine benchmark
-run-name: "engine benchmark · ${{ inputs.suite }} · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
+run-name: "engine benchmark · ${{ inputs.candidate_feature }} · ${{ inputs.suite }} · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
 
 on:
   workflow_dispatch:
@@ -11,6 +11,11 @@ on:
       candidate_sha:
         description: "후보의 전체 40자리 커밋 SHA (비우면 실행 브랜치의 커밋)"
         default: ""
+      candidate_feature:
+        description: "후보에만 켤 보존된 실험 기능 (원본은 항상 추가 기능 없음)"
+        type: choice
+        options: [none, hurt-readers]
+        default: none
       suite:
         description: "smoke: 동작 점검 / narrow: coaching·sand 깊이2"
         type: choice
@@ -52,7 +57,7 @@ env:
 jobs:
   paired:
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - name: Checkout benchmark controller and shared fixtures
         uses: actions/checkout@v4
@@ -68,6 +73,7 @@ jobs:
         env:
           BASELINE_SHA: ${{ inputs.baseline_sha }}
           CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          CANDIDATE_FEATURE: ${{ inputs.candidate_feature }}
           SUITE: ${{ inputs.suite }}
           THREADS: ${{ inputs.threads }}
           PAIRS: ${{ inputs.pairs }}
