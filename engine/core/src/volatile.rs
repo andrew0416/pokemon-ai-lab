@@ -1177,8 +1177,14 @@ impl VolatileState {
 }
 
 /// All volatiles of one slot.
+#[cfg(not(feature = "experiment-compact-volatiles"))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Volatiles(pub [VolatileState; VOLATILE_COUNT]);
+
+#[cfg(feature = "experiment-compact-volatiles")]
+mod compact;
+#[cfg(feature = "experiment-compact-volatiles")]
+pub use compact::Volatiles;
 
 const _: () = assert!(VOLATILE_COUNT < u8::MAX as usize, "indices hash as u8");
 
@@ -1188,6 +1194,7 @@ const _: () = assert!(VOLATILE_COUNT < u8::MAX as usize, "indices hash as u8");
 /// derived one (the search keys caches by hash values alone), but the ~110 unset entries per slot
 /// no longer dominate the cost of hashing a state (the turn enumeration merges identical positions
 /// by hashing whole states; Opus GG).
+#[cfg(not(feature = "experiment-compact-volatiles"))]
 impl std::hash::Hash for Volatiles {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         for (i, v) in self.0.iter().enumerate() {
@@ -1201,12 +1208,14 @@ impl std::hash::Hash for Volatiles {
 }
 
 /// Manual: `Default` is only derived for arrays of up to 32 elements.
+#[cfg(not(feature = "experiment-compact-volatiles"))]
 impl Default for Volatiles {
     fn default() -> Self {
         Volatiles([VolatileState::NONE; VOLATILE_COUNT])
     }
 }
 
+#[cfg(not(feature = "experiment-compact-volatiles"))]
 impl Volatiles {
     pub fn get(&self, volatile: Volatile) -> VolatileState {
         self.0[volatile as usize]
@@ -1237,6 +1246,18 @@ impl Volatiles {
 mod tests {
     use super::*;
     use crate::dex::moves;
+
+    #[cfg(not(feature = "experiment-compact-volatiles"))]
+    #[test]
+    fn default_storage_keeps_copy_and_public_tuple_api() {
+        fn requires_copy<T: Copy>() {}
+        requires_copy::<Volatiles>();
+        let mut values = Volatiles([VolatileState::NONE; VOLATILE_COUNT]);
+        values.0[Volatile::Protect as usize].active = true;
+        let copied = values;
+        assert_eq!(values, copied);
+        assert!(values.has(Volatile::Protect));
+    }
 
     #[test]
     fn ids_match_the_dex_conditions() {

@@ -323,10 +323,15 @@ fn slot_hash(s: SlotRef, slot: &Slot) -> u64 {
     for (k, boost) in boosts.iter().enumerate() {
         h = h.wrapping_add(slot_cell(s, S_BOOST + k as u64, boost));
     }
+    #[cfg(not(feature = "experiment-compact-volatiles"))]
     for (k, v) in volatiles.0.iter().enumerate() {
         if *v != VolatileState::NONE {
             h = h.wrapping_add(volatile_cell(s, k, v));
         }
+    }
+    #[cfg(feature = "experiment-compact-volatiles")]
+    for (k, v) in volatiles.non_none() {
+        h = h.wrapping_add(volatile_cell(s, k, v));
     }
     h
 }
@@ -906,6 +911,62 @@ mod tests {
         e.side_mut(SideId::One).slots[0].boosts[1] = 1;
         assert_ne!(d.position_hash(), e.position_hash());
         assert_eq!(base.position_hash(), base.clone().position_hash());
+    }
+
+    /// A dense shadow supplies all registered cells, including inactive payloads. Check both
+    /// the sparse full-hash reader and instruction deltas across overflow, edits and undo.
+    #[cfg(feature = "experiment-compact-volatiles")]
+    #[test]
+    fn compact_volatile_cells_preserve_position_hash_and_instruction_undo() {
+        use crate::volatile::VOLATILE_COUNT;
+
+        let mut state = doubles_with_leads();
+        let start = state.clone();
+        let start_hash = start.position_hash();
+        let slot = SlotRef {
+            side: SideId::One,
+            slot: 0,
+        };
+        let mut dense = [VolatileState::NONE; VOLATILE_COUNT];
+        let mut instructions = Vec::new();
+        let mut hash = start_hash;
+        for pass in 0..3 {
+            for (index, volatile) in Volatile::ALL.into_iter().enumerate().rev() {
+                let new = if pass == 1 && index % 2 == 0 {
+                    VolatileState::NONE
+                } else {
+                    VolatileState {
+                        active: (index + pass) % 3 == 0,
+                        counter: index as u16 + 1,
+                        hidden: pass as u8,
+                        ..VolatileState::NONE
+                    }
+                };
+                let instruction = Instruction::SetVolatile {
+                    target: slot,
+                    volatile,
+                    old: dense[index],
+                    new,
+                };
+                dense[index] = new;
+                hash = hash.wrapping_add(state.apply_hashed(&instruction));
+                let expected = dense.iter().enumerate().fold(start_hash, |h, (i, value)| {
+                    h.wrapping_add(volatile_cell(slot, i, value))
+                });
+                assert_eq!(hash, expected);
+                assert_eq!(state.position_hash(), expected);
+                assert_eq!(state.slot(slot).volatiles.get(volatile), new);
+                instructions.push(instruction);
+            }
+        }
+        for instruction in instructions.iter().rev() {
+            let before = state.instruction_hash(instruction);
+            state.reverse_one(instruction);
+            hash = hash.wrapping_add(state.instruction_hash(instruction).wrapping_sub(before));
+            assert_eq!(hash, state.position_hash());
+        }
+        assert_eq!(state, start);
+        assert_eq!(hash, start_hash);
     }
 
     /// A position map finds keys by their hash and tells apart keys that share one.
