@@ -1,0 +1,121 @@
+name: engine agreement
+run-name: "engine agreement · 1781 positions · P8g P9 P8c P10"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engine-agreement
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  RUSTFLAGS: "-Ctarget-cpu=x86-64"
+  CARGO_PROFILE_RELEASE_OPT_LEVEL: "3"
+  CARGO_PROFILE_RELEASE_DEBUG: "1"
+  CARGO_PROFILE_RELEASE_LTO: "off"
+  CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
+  RUST_MIN_STACK: "16777216"
+  LAB_ENGINE_FACTORED: "0"
+  RAYON_NUM_THREADS: "2"
+  PYTHONUTF8: "1"
+  PYTHONHASHSEED: "0"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test evaluation controller
+        run: python -m unittest discover -s engine/benchmarks/agreement -p 'test_*.py' -v
+      - name: Immutable source matrix
+        id: matrix
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          variants = json.loads(Path('engine/benchmarks/agreement/variants.json').read_text())['variants']
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('value=' + json.dumps({'include': variants}, separators=(',', ':')) + '\n')
+          PY
+  evaluate:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - name: Shared controller and frozen corpus
+        uses: actions/checkout@v4
+        with:
+          path: controller
+          persist-credentials: false
+      - name: Immutable engine source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@1.98.1
+      - name: Verify corpus and make identical case plan
+        run: python controller/engine/benchmarks/agreement/run.py plan --out case-plan.json
+      - name: Build and verify actual features
+        run: python controller/engine/benchmarks/agreement/run.py prepare --source source --out results/${{ matrix.id }} --variant ${{ matrix.id }}
+      - name: Fresh oracle and differential outputs
+        run: python controller/engine/benchmarks/agreement/run.py evaluate --source source --out results/${{ matrix.id }} --variant ${{ matrix.id }} --plan case-plan.json
+      - name: Preserve complete and partial evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agreement-${{ matrix.id }}
+          path: |
+            results/${{ matrix.id }}/
+            case-plan.json
+          if-no-files-found: error
+          retention-days: 30
+  compare:
+    needs: evaluate
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: agreement-*
+          path: downloaded
+      - name: Compare all declared cases and retain missing cases as failures
+        run: python engine/benchmarks/agreement/run.py compare --results downloaded --out agreement-summary.json
+      - name: Preserve comparison
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agreement-summary
+          path: agreement-summary.json
+          if-no-files-found: warn
+          retention-days: 30
