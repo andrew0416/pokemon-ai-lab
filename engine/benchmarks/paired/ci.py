@@ -92,11 +92,21 @@ def prepare(workspace):
 
 def build(workspace):
     # Finish ALL tests/builds before any benchmark process is launched.
+    request = json.loads((workspace/'ci-results/request.json').read_text(encoding='utf-8'))
+    tests = [['cargo', 'test', '--locked', '--release', '-p', 'lab-engine', '-p', 'lab-scenario', '-p', 'lab-search']]
+    if request['suite'] == 'smoke':
+        # Infrastructure checks need the harness and its fixture, not every oracle binary.
+        # Actual candidate comparisons (narrow) retain the full regression gate above.
+        tests = [
+            ['cargo', 'test', '--locked', '--release', '-p', 'lab-engine', '-p', 'lab-search', '--lib'],
+            ['cargo', 'test', '--locked', '--release', '-p', 'lab-scenario', '--test', 'abilities_slow_start_truant'],
+        ]
+    (workspace/'ci-results/test-plan.json').write_text(
+        json.dumps({'suite': request['suite'], 'commands_per_version': tests}, indent=2)+'\n', encoding='utf-8')
     for label in ('baseline', 'candidate'):
         env = os.environ.copy()
         env['CARGO_TARGET_DIR'] = str(workspace/('target-'+label))
-        commands = [
-            ['cargo', 'test', '--locked', '--release', '-p', 'lab-engine', '-p', 'lab-scenario', '-p', 'lab-search'],
+        commands = tests + [
             ['cargo', 'build', '--locked', '--release', '-p', 'lab-search', '--example', 'ci_bench'],
         ]
         with (workspace/'ci-results'/f'{label}-build.log').open('w', encoding='utf-8') as log:

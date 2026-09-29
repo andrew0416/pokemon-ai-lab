@@ -28,7 +28,10 @@ Rust 1.98.1, `cargo --locked`, generic x86-64(AVX2 필수 아님), 동일 releas
 Cargo.lock·각 package의 Cargo.toml·Cargo/toolchain 설정이 서로 다르면 의존성·빌드 설정 변화가 섞이므로 거부한다.
 다른 Rust API를 쓰는 과거/미래 커밋은 공통 하네스 빌드가 실패할 수 있다.
 
-두 버전의 core/scenario/search 테스트와 모든 빌드가 성공한 뒤 측정을 시작한다.
+`narrow`는 두 버전의 core/scenario/search 전체 테스트와 모든 빌드가 성공한 뒤 측정한다.
+`smoke`는 설치 점검을 위해 core/search 라이브러리 테스트와 해당 oracle fixture가 속한
+`abilities_slow_start_truant` 회귀 검사로 제한한다. 전체 회귀 통과로 해석하지 않는다.
+첫 전체 검증은 빌드·테스트 때문에 수십 분 걸릴 수 있으며 측정 시간에는 포함하지 않는다.
 공통 `harness.rs`를 각 checkout의 `engine/search/examples/ci_bench.rs`에 복사하여
 동일 하네스를 빌드한다. 측정할 엔진 함수는 수정하지 않는다.
 양쪽 모두 **controller(워크플로 실행 커밋)의 같은 시나리오와 팀 파일**을 읽는다.
