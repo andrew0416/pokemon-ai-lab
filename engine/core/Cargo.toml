@@ -18,3 +18,5 @@ harness = false
 
 [features]
 experiment-hurt-readers = []
+# P10: opt-in sparse storage; dense Volatiles remains the default representation.
+experiment-compact-volatiles = []
