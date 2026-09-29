@@ -18,3 +18,6 @@ harness = false
 
 [features]
 experiment-hurt-readers = []
+# P9 isolated experiment. Neither feature is enabled by default.
+experiment-leaf-ending-states = []
+experiment-leaf-ending-observer = ["experiment-leaf-ending-states"]

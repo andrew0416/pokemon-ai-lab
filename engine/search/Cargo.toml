@@ -18,6 +18,9 @@ default = ["cli"]
 # `engine/py`).
 scenario = ["lab-scenario", "serde_json"]
 cli = ["scenario"]
+# P9 only: read completed flat turn endings at Next::Depth(0).
+experiment-leaf-ending-states = ["lab-engine/experiment-leaf-ending-states"]
+experiment-leaf-ending-observer = ["experiment-leaf-ending-states", "lab-engine/experiment-leaf-ending-observer"]
 
 [dependencies]
 lab-engine = { path = "../core" }
