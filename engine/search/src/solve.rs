@@ -33,6 +33,9 @@ use crate::game::{self, Decision, Pruning};
 use crate::nash::{self, Equilibrium, Matrix};
 use crate::tt::{self, DeepTable, TranspositionTable};
 
+#[cfg(feature = "experiment-leaf-ending-states")]
+mod leaf_endings;
+
 /// What a chance node continues into: the maximin tree with `depth` turns left, or a fixed
 /// plan (`Solver::evaluate_plan`) at its next entry. (Children worth their own equilibrium,
 /// with only the `Config::outcome_cap` most probable outcomes, are valued in batches by
@@ -566,13 +569,13 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         alpha: f32,
         beta: f32,
     ) -> Result<f32, SearchError> {
+        if depth == 0 {
+            return self.depth_zero_value(state, suspension);
+        }
         self.nodes += 1;
         let decision = game::decision(state, suspension)?;
         if let Decision::Over(result) = decision {
             return Ok(self.terminal(result, depth));
-        }
-        if depth == 0 {
-            return Ok(self.leaf(state));
         }
         let them = self.config.us.other();
         let ours = self.choices(state, decision, self.config.us)?;
@@ -621,6 +624,21 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         Ok(best)
     }
 
+    /// Shared horizon semantics for the reversible and borrowed-state paths. Do not resume
+    /// or replace here: depth zero still validates the decision, then prefers terminal values.
+    fn depth_zero_value(
+        &mut self,
+        state: &State<N>,
+        suspension: Option<&Suspension>,
+    ) -> Result<f32, SearchError> {
+        self.nodes += 1;
+        let decision = game::decision(state, suspension)?;
+        if let Decision::Over(result) = decision {
+            return Ok(self.terminal(result, 0));
+        }
+        Ok(self.leaf(state))
+    }
+
     /// The value of the chance node after both sides chose `pair`.
     #[allow(clippy::too_many_arguments)]
     fn chance(
@@ -640,6 +658,12 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         }
         self.turns += 1;
         let started = Instant::now();
+        #[cfg(feature = "experiment-leaf-ending-states")]
+        if let Some(value) =
+            self.try_leaf_endings(state, decision, pair, next, alpha, beta, started)
+        {
+            return value;
+        }
         let transitions = game::transitions(
             state,
             self.config.ruleset,
@@ -662,6 +686,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             Chance::Worst => {
                 let mut worst = f32::INFINITY;
                 for outcome in &outcomes {
+                    #[cfg(all(test, feature = "experiment-leaf-ending-states"))]
+                    leaf_endings::tests::record_apply();
                     state.apply(&outcome.instructions);
                     let v = self.continue_at(
                         state,
@@ -671,6 +697,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                         beta.min(worst),
                     );
                     state.reverse(&outcome.instructions);
+                    #[cfg(all(test, feature = "experiment-leaf-ending-states"))]
+                    leaf_endings::tests::record_reverse();
                     let v = v?;
                     if v.is_nan() {
                         return Ok(f32::NAN);
@@ -691,6 +719,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                     let rest = (remaining - p).max(0.0);
                     let lo = ((alpha as f64 - (sum + rest * BOUND as f64)) / p).max(-BOUND as f64);
                     let hi = ((beta as f64 - (sum - rest * BOUND as f64)) / p).min(BOUND as f64);
+                    #[cfg(all(test, feature = "experiment-leaf-ending-states"))]
+                    leaf_endings::tests::record_apply();
                     state.apply(&outcome.instructions);
                     let v = self.continue_at(
                         state,
@@ -700,6 +730,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                         hi as f32,
                     );
                     state.reverse(&outcome.instructions);
+                    #[cfg(all(test, feature = "experiment-leaf-ending-states"))]
+                    leaf_endings::tests::record_reverse();
                     let v = v?;
                     if v.is_nan() {
                         return Ok(f32::NAN);

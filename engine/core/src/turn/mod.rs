@@ -21,6 +21,8 @@ mod conditions;
 pub mod coverage;
 mod diff;
 mod field_events;
+#[cfg(feature = "experiment-leaf-ending-states")]
+mod final_states;
 mod forme;
 mod frontier;
 mod history;
@@ -64,6 +66,10 @@ pub(crate) type Small<T, const K: usize> = smallvec::SmallVec<[T; K]>;
 pub(crate) type Slots = Small<SlotRef, 6>;
 
 pub use branch::RollMode;
+#[cfg(feature = "experiment-leaf-ending-observer")]
+pub use final_states::observer as final_state_observer;
+#[cfg(feature = "experiment-leaf-ending-states")]
+pub use final_states::{try_enumerate_turn_final_states, FinalStates};
 pub use frontier::{Factored, FactoredOptions, FactoredOutcome, FactoredScope};
 use order::{
     ORDER_BEFORE_TURN, ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_PRIORITY_CHARGE,
@@ -864,10 +870,15 @@ fn outcomes<const N: usize, P>(
     endings
         .iter_mut()
         .flatten()
-        .map(|(end, pending, probability, _)| Outcome {
-            probability: *probability,
-            instructions: diff::instructions(start, end),
-            suspension: pending.take().map(&suspend),
+        .map(|(end, pending, probability, _)| {
+            let instructions = diff::instructions(start, end);
+            #[cfg(feature = "experiment-leaf-ending-observer")]
+            final_states::observer::materialized(instructions.len());
+            Outcome {
+                probability: *probability,
+                instructions,
+                suspension: pending.take().map(&suspend),
+            }
         })
         .collect()
 }
