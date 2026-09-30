@@ -1,0 +1,13 @@
+# P16: checkpoint scratch reuse on R1
+
+The `nash-scratch` mode compares the same frozen engine SHA. Both arms enable R1's P8g/P8c/P9/P10/P8d/P13 runtime features; only the candidate enables the search-only, default-OFF `experiment-nash-scratch`. P8e/P8f/P11/P12/P14/P15 and all diagnostic observers are disabled during timing. R1 membership and production defaults are unchanged.
+
+The workflow requires a fresh exact 6,184-case two-variant agreement first, including the existing oracle, legality and P8c/P9 activation contracts. Then both arms run full release regressions and the existing 9 standalone plus 9 combined prepared-turn tests. Cached dependency compilation is allowed; completed build receipts cannot skip fresh tests or activation gates.
+
+Six bounded debug configurations cover dense/compact observer OFF/ON and compact uninstrumented OFF/ON. Each runs the new isolated `nash_scratch` integration target (3,073 exact matrix records, 296 malformed/panic records and a nine-case scoped allocator subprocess) and the unchanged `borrowed_child_keys` public 47-record proof. The independent P16 observer adds one named test on the four observer axes. These are correctness/allocation checks, not local performance measurements.
+
+The two compact observer arms build a release example with both P16 and P13 diagnostic observers. Its analysis and configuration body is identical to the frozen timing harness. Actual coaching/sand outputs, integer work, floating bits and restoration must match byte for byte. P16 solve/checkpoint/iteration counts and P13 borrowed-key work must agree. Baseline checkpoint allocations must equal `(2q,q,q)` for normalization/evaluation scratch/output materializations; candidate must equal `(0,0,solve_calls)`. An output materialization represents an Equilibrium's two strategy vectors. `solve_reduced`'s final full-matrix evaluation is outside these counters.
+
+Only after these gates, observer-free binaries execute ten alternating AB/BA pairs per fixture after warmup, one thread, generic x86-64. RSS is measured separately with two pairs. The legacy three-way compact representation test and the direct common-feature exact-output compact probe are retained; P16 has no instruction-representation exception.
+
+Every new injected source, validation driver, source pin, compiled feature closure and fixture identity is bound to the build recipe. Unknown experiment features, missing named tests, altered allocation equations, output differences or incomplete evidence fail closed. Python synthetic tests are controller checks; the actual source-log compatibility receipt separately documents parsing real completed source evidence. CI still has to execute default-CLI release builds and real coaching/sand activation.

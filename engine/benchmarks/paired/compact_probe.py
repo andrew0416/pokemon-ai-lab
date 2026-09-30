@@ -227,7 +227,9 @@ def validate_independent_candidate(workspace, out_dir, selection, receipt, save)
     if selection not in ci.STRICT_MODES:
         raise ValueError('Invalid independent candidate representation comparison')
     comparison = {'selection': selection, 'variants': {}, 'performance_measurement': False,
-                  'scope': ('R1 old4+D+P13 common; candidate adds only P14; exact raw output'
+                  'scope': ('R1 common; candidate adds search-only P16; exact raw output'
+                            if selection == ci.NASH_MODE else
+                            'R1 old4+D+P13 common; candidate adds only P14; exact raw output'
                             if selection == ci.R1_MATRIX_MODE else
                             'R1 old4+D+P13 common; candidate adds only P15; exact raw output'
                             if selection == ci.PL_MODE else
