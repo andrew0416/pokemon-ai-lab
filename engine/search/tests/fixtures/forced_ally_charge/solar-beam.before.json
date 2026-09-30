@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "turn": 2,
+  "ended": false,
+  "winner": "",
+  "field": {
+    "weather": "sandstorm",
+    "weatherDuration": 4,
+    "terrain": "",
+    "terrainDuration": null,
+    "pseudoWeather": {}
+  },
+  "sides": [
+    {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+        {},
+        {}
+      ],
+      "pokemon": [
+        {
+          "name": "Gholdengo",
+          "species": "Gholdengo",
+          "hp": 191,
+          "maxhp": 191,
+          "status": "",
+          "item": "airballoon",
+          "ability": "goodasgold",
+          "slot": null,
+          "pp": {
+            "makeitrain": 8,
+            "shadowball": 16,
+            "recover": 8,
+            "nastyplot": 20
+          }
+        },
+        {
+          "name": "Hippowdon",
+          "species": "Hippowdon",
+          "hp": 215,
+          "maxhp": 215,
+          "status": "",
+          "item": "sitrusberry",
+          "ability": "sandstream",
+          "slot": 1,
+          "pp": {
+            "earthquake": 12,
+            "yawn": 11,
+            "whirlwind": 20,
+            "stealthrock": 20
+          },
+          "boosts": {},
+          "volatiles": {},
+          "lastMove": "yawn"
+        },
+        {
+          "name": "Primarina",
+          "species": "Primarina",
+          "hp": 187,
+          "maxhp": 187,
+          "status": "",
+          "item": "leftovers",
+          "ability": "torrent",
+          "slot": 0,
+          "pp": {
+            "sparklingaria": 12,
+            "moonblast": 16,
+            "calmmind": 20,
+            "aquajet": 20
+          },
+          "boosts": {},
+          "volatiles": {}
+        },
+        {
+          "name": "Salamence",
+          "species": "Salamence-Mega",
+          "hp": 0,
+          "maxhp": 191,
+          "status": "",
+          "item": "salamencite",
+          "ability": "aerilate",
+          "slot": null,
+          "pp": {
+            "doubleedge": 16,
+            "earthquake": 12,
+            "dragondance": 19,
+            "roost": 8
+          }
+        }
+      ]
+    },
+    {
+      "request": "move",
+      "conditions": {},
+      "slotConditions": [
+        {},
+        {}
+      ],
+      "pokemon": [
+        {
+          "name": "Baxcalibur",
+          "species": "Baxcalibur-Mega",
+          "hp": 180,
+          "maxhp": 191,
+          "status": "",
+          "item": "baxcalibrite",
+          "ability": "thermalexchange",
+          "slot": 0,
+          "pp": {
+            "glaiverush": 8,
+            "iciclecrash": 11,
+            "iceshard": 20,
+            "dragondance": 20
+          },
+          "boosts": {
+            "atk": -1
+          },
+          "volatiles": {
+            "yawn": {
+              "duration": 1
+            }
+          },
+          "lastMove": "iciclecrash"
+        },
+        {
+          "name": "Charizard",
+          "species": "Charizard",
+          "hp": 148,
+          "maxhp": 157,
+          "status": "",
+          "item": "charizarditey",
+          "ability": "blaze",
+          "slot": 1,
+          "pp": {
+            "weatherball": 12,
+            "solarbeam": 11,
+            "airslash": 16,
+            "roost": 8
+          },
+          "boosts": {
+            "atk": -1
+          },
+          "volatiles": {
+            "solarbeam": {},
+            "twoturnmove": {
+              "duration": 1,
+              "move": "solarbeam"
+            }
+          },
+          "lastMove": "solarbeam"
+        },
+        {
+          "name": "Empoleon",
+          "species": "Empoleon",
+          "hp": 191,
+          "maxhp": 191,
+          "status": "",
+          "item": "sitrusberry",
+          "ability": "competitive",
+          "slot": null,
+          "pp": {
+            "icebeam": 12,
+            "flipturn": 20,
+            "yawn": 12,
+            "stealthrock": 20
+          }
+        },
+        {
+          "name": "Toxapex",
+          "species": "Toxapex",
+          "hp": 157,
+          "maxhp": 157,
+          "status": "",
+          "item": "leftovers",
+          "ability": "regenerator",
+          "slot": null,
+          "pp": {
+            "recover": 8,
+            "toxicspikes": 20,
+            "haze": 20,
+            "infestation": 20
+          }
+        }
+      ]
+    }
+  ]
+}

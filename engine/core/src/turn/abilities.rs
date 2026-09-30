@@ -2041,7 +2041,7 @@ pub(crate) fn try_eat_item<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) ->
         ]
         .contains(&b.ability(foe))
             && !b.occupant(foe).is_some_and(|p| b.unstarted.contains(&p))
-    });
+    }) || super::moves::AbsentUser::displaced_unnerve(b, eater);
     !pending && !unnerved
 }
 
