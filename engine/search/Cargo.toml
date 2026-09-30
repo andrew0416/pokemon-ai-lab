@@ -15,6 +15,9 @@ path = "src/lib.rs"
 # `default-features = false`.
 [features]
 default = ["cli"]
+# P16 runtime and diagnostic counters are independent, both default OFF.
+experiment-nash-scratch = []
+experiment-nash-scratch-observer = []
 experiment-prepared-turn = ["lab-engine/experiment-prepared-turn"]
 experiment-prepared-turn-observe = ["experiment-prepared-turn", "lab-engine/experiment-prepared-turn-observe"]
 # `node`: positions stepped by choice strings over the scenario loader (the Python API's core,
@@ -76,3 +79,7 @@ path = "tests/prepared_turn.rs"
 [[test]]
 name = "borrowed_child_keys"
 path = "tests/borrowed_child_keys.rs"
+
+[[test]]
+name = "nash_scratch"
+path = "tests/nash_scratch.rs"

@@ -62,9 +62,12 @@ pub struct Equilibrium {
 
 /// Solves `matrix` by RM+ (Tammelin 2014) with linear averaging, stopping after
 /// `max_iterations` or once the exploitability falls under `tolerance`.
+#[cfg(not(feature = "experiment-nash-scratch"))]
 pub fn solve(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibrium {
     let (n, m) = (matrix.rows, matrix.cols);
     assert!(n > 0 && m > 0, "an empty game");
+    #[cfg(feature = "experiment-nash-scratch-observer")]
+    scratch_observer::update(|c| c.solve_calls += 1);
     // The payoffs widened once (the loop below reads them 2 × iterations times); every sum
     // runs in the same order as a cell-by-cell pass, so the result is bit-identical to it.
     let values: Vec<f64> = matrix.values.iter().map(|&v| f64::from(v)).collect();
@@ -80,6 +83,8 @@ pub fn solve(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibr
     let mut result = None;
     for t in 1..=max_iterations.max(1) {
         iterations = t;
+        #[cfg(feature = "experiment-nash-scratch-observer")]
+        scratch_observer::update(|c| c.iterations += 1);
         strategy_into(&row_regret, &mut rows);
         strategy_into(&col_regret, &mut cols);
         // Expected payoffs of each pure action against the other player's current strategy.
@@ -109,6 +114,8 @@ pub fn solve(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibr
             col_sum[c] += weight * cols[c];
         }
         if t % 16 == 0 || t == max_iterations {
+            #[cfg(feature = "experiment-nash-scratch-observer")]
+            scratch_observer::checkpoint(false);
             let eq = evaluate(matrix, &normalized(&row_sum), &normalized(&col_sum), t);
             let done = eq.exploitability <= tolerance;
             result = Some(eq);
@@ -118,6 +125,8 @@ pub fn solve(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibr
         }
     }
     result.unwrap_or_else(|| {
+        #[cfg(feature = "experiment-nash-scratch-observer")]
+        scratch_observer::checkpoint(false);
         evaluate(
             matrix,
             &normalized(&row_sum),
@@ -125,6 +134,123 @@ pub fn solve(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibr
             iterations,
         )
     })
+}
+
+/// RM+ with checkpoint storage reused; arithmetic and stopping policy match the baseline.
+#[cfg(feature = "experiment-nash-scratch")]
+pub fn solve(matrix: &Matrix, max_iterations: usize, tolerance: f32) -> Equilibrium {
+    let (n, m) = (matrix.rows, matrix.cols);
+    assert!(n > 0 && m > 0, "an empty game");
+    #[cfg(feature = "experiment-nash-scratch-observer")]
+    scratch_observer::update(|c| c.solve_calls += 1);
+    // The payoffs widened once (the loop below reads them 2 × iterations times); every sum
+    // runs in the same order as a cell-by-cell pass, so the result is bit-identical to it.
+    let values: Vec<f64> = matrix.values.iter().map(|&v| f64::from(v)).collect();
+    let mut row_regret = vec![0.0f64; n];
+    let mut col_regret = vec![0.0f64; m];
+    let mut row_sum = vec![0.0f64; n];
+    let mut col_sum = vec![0.0f64; m];
+    let mut rows = vec![0.0f64; n];
+    let mut cols = vec![0.0f64; m];
+    let mut row_util = vec![0.0f64; n];
+    let mut col_util = vec![0.0f64; m];
+    let mut iterations = 0;
+    let mut result = None;
+    for t in 1..=max_iterations.max(1) {
+        iterations = t;
+        #[cfg(feature = "experiment-nash-scratch-observer")]
+        scratch_observer::update(|c| c.iterations += 1);
+        strategy_into(&row_regret, &mut rows);
+        strategy_into(&col_regret, &mut cols);
+        // Expected payoffs of each pure action against the other player's current strategy.
+        col_util.fill(0.0);
+        for ((util, &p), row) in row_util.iter_mut().zip(&rows).zip(values.chunks_exact(m)) {
+            let mut acc = 0.0f64;
+            for ((cu, &q), &v) in col_util.iter_mut().zip(&cols).zip(row) {
+                acc += q * v;
+                *cu += p * v;
+            }
+            *util = acc;
+        }
+        let row_value: f64 = (0..n).map(|r| rows[r] * row_util[r]).sum();
+        let col_value: f64 = (0..m).map(|c| cols[c] * col_util[c]).sum();
+        for r in 0..n {
+            row_regret[r] = (row_regret[r] + row_util[r] - row_value).max(0.0);
+        }
+        for c in 0..m {
+            // The column player minimizes.
+            col_regret[c] = (col_regret[c] + col_value - col_util[c]).max(0.0);
+        }
+        let weight = t as f64;
+        for r in 0..n {
+            row_sum[r] += weight * rows[r];
+        }
+        for c in 0..m {
+            col_sum[c] += weight * cols[c];
+        }
+        if t % 16 == 0 || t == max_iterations {
+            normalized_into(&row_sum, &mut rows);
+            normalized_into(&col_sum, &mut cols);
+            let scalars = evaluate_into(matrix, &rows, &cols, &mut col_util);
+            #[cfg(feature = "experiment-nash-scratch-observer")]
+            scratch_observer::checkpoint(true);
+            // Compare the same rounded f32, not the f64 intermediate.
+            let done = scalars.1 <= tolerance;
+            result = Some(scalars);
+            if done {
+                break;
+            }
+        }
+    }
+    let (value, exploitability) = result.unwrap_or_else(|| {
+        // max_iterations=0 still runs one iteration and uses this fallback.
+        normalized_into(&row_sum, &mut rows);
+        normalized_into(&col_sum, &mut cols);
+        let scalars = evaluate_into(matrix, &rows, &cols, &mut col_util);
+        #[cfg(feature = "experiment-nash-scratch-observer")]
+        scratch_observer::checkpoint(true);
+        scalars
+    });
+    #[cfg(feature = "experiment-nash-scratch-observer")]
+    scratch_observer::update(|c| c.output_materializations += 1);
+    Equilibrium {
+        rows: rows.iter().map(|&p| p as f32).collect(),
+        cols: cols.iter().map(|&p| p as f32).collect(),
+        value,
+        exploitability,
+        iterations,
+    }
+}
+
+/// The checkpoint strategies overwrite buffers whose iteration values are no longer used.
+#[cfg(feature = "experiment-nash-scratch")]
+fn normalized_into(sum: &[f64], out: &mut [f64]) {
+    // Identical sum/division/uniform operations to normalized, with owned storage reused.
+    strategy_into(sum, out);
+}
+
+/// Same arithmetic and row/column order as evaluate; only its storage ownership differs.
+#[cfg(feature = "experiment-nash-scratch")]
+fn evaluate_into(matrix: &Matrix, rows: &[f64], cols: &[f64], col_util: &mut [f64]) -> (f32, f32) {
+    let m = matrix.cols;
+    let mut value = 0.0f64;
+    let mut row_best = f64::NEG_INFINITY;
+    let mut col_best = f64::INFINITY;
+    col_util.fill(0.0);
+    for (&p, row) in rows.iter().zip(matrix.values.chunks_exact(m)) {
+        let mut util = 0.0;
+        for ((cu, &q), &v) in col_util.iter_mut().zip(cols).zip(row) {
+            let v = f64::from(v);
+            util += q * v;
+            *cu += p * v;
+        }
+        value += p * util;
+        row_best = row_best.max(util);
+    }
+    for &util in col_util.iter() {
+        col_best = col_best.min(util);
+    }
+    (value as f32, ((row_best - value) + (value - col_best)).max(0.0) as f32)
 }
 
 /// The rows and columns that survive iterated weak dominance (board S24d): a row is removed
@@ -214,6 +340,7 @@ fn strategy_into(regret: &[f64], out: &mut [f64]) {
     }
 }
 
+#[cfg(any(not(feature = "experiment-nash-scratch"), test))]
 fn normalized(sum: &[f64]) -> Vec<f64> {
     let total: f64 = sum.iter().sum();
     if total <= 0.0 {
@@ -462,3 +589,6 @@ mod tests {
         }
     }
 }
+
+#[cfg(feature = "experiment-nash-scratch-observer")]
+pub mod scratch_observer;
