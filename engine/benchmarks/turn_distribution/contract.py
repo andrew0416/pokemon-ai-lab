@@ -10,7 +10,7 @@ SOURCE_SHA='a4a881420ca35335c6e0ac4c73fd9e686dd617c0'
 SOURCE_FILES={'engine/scenario/src/bin/lab-distribution-bench.rs': '8b04912f6494a3617d8956299ae6cfb9191221d46027e6d2c46df72c9d588e1a'}
 CORPUS_PATH='engine/benchmarks/turn_distribution/corpus/manifest.json'
 CORPUS_SHA='16410bfd800213a7af9f9fd896d5a8e4fb7da39b0a0912192263c1a7625272ec'
-COUNT=16
+COUNT=500
 SAMPLE_COUNTS=(16,64,256)
 CORE_FEATURES=tuple('experiment-'+name for name in ('hurt-readers','prepared-turn','leaf-ending-states',
     'compact-volatiles','replay-action-keys','borrowed-child-keys'))

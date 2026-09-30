@@ -1,8 +1,8 @@
-name: R1 turn distribution pilot
-run-name: "R1 turn distribution · frozen prefix16"
+name: R1 turn distribution full500
+run-name: "R1 turn distribution · frozen full500"
 on:
   push:
-    branches: [codex/table2-turn-pilot-20261001]
+    branches: [codex/table2-turn-full500-20261001]
 permissions:
   contents: read
 concurrency:
@@ -25,7 +25,7 @@ env:
   OPENBLAS_NUM_THREADS: "1"
   OMP_NUM_THREADS: "1"
 jobs:
-  pilot:
+  full500:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
@@ -61,13 +61,13 @@ jobs:
           save-if: false
       - name: Fresh benchmark correctness tests and exact compiled feature proof
         run: python controller/engine/benchmarks/turn_distribution/ci.py build --workspace "$GITHUB_WORKSPACE"
-      - name: Measure all frozen prefix16 cases with explicit resource bounds
+      - name: Measure all frozen 500 cases with explicit resource bounds
         run: python controller/engine/benchmarks/turn_distribution/run_distribution.py --workspace "$GITHUB_WORKSPACE"
       - name: Preserve successful and failed raw evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: engine-turn-distribution-prefix16-${{ github.run_id }}-${{ github.run_attempt }}
+          name: engine-turn-distribution-full500-${{ github.run_id }}-${{ github.run_attempt }}
           path: turn-distribution-results/
           if-no-files-found: warn
           retention-days: 30

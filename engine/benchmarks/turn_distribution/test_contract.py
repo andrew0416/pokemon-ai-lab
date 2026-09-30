@@ -30,8 +30,8 @@ def value():
         sample_policy='seed prefixes',probability_policy='1e-9 tolerance and normalization',execution_policy='no warmup')
 def records():
     return [dict(id=f'opening-{i:04d}',description={'status':'ok'},
-        measurement={'status':'ok' if i<16 else 'not_selected','process':{'wall_seconds':2}},
-        **({'value':value()} if i<16 else {})) for i in range(500)]
+        measurement={'status':'ok' if i<c.COUNT else 'not_selected','process':{'wall_seconds':2}},
+        **({'value':value()} if i<c.COUNT else {})) for i in range(500)]
 
 class ContractTests(unittest.TestCase):
     def test_complete_result(self):c.result(value(),plan(),CASE)
@@ -77,14 +77,17 @@ class ContractTests(unittest.TestCase):
                 with self.assertRaises(ValueError):c.safe_file(root,path)
 
 class SummaryTests(unittest.TestCase):
-    def test_complete_prefix_is_not_claimed_as_500_results(self):
-        s=run.summary(records());self.assertTrue(s['complete']);self.assertEqual(s['requested_cases'],16)
+    def test_only_complete500_has_full500_metrics(self):
+        s=run.summary(records());self.assertTrue(s['complete']);self.assertEqual(s['requested_cases'],500)
         self.assertEqual(s['requested_descriptions'],500);self.assertEqual(s['corpus_cases'],500)
-        self.assertEqual(s['official_metrics']['samples']['16']['kernel_ns_opening_mean']['n'],16)
-        self.assertEqual(s['full500_budget_estimate']['linear_measurement_seconds_from_prefix'],1000)
-        self.assertFalse(s['full500_budget_estimate']['guaranteed'])
+        self.assertEqual(s['official_metrics']['samples']['16']['kernel_ns_opening_mean']['n'],500)
+        self.assertEqual(s['process_measurement_wall_seconds_sum'],1000)
+        partial=records()
+        for row in partial[16:]:row['measurement']={'status':'not_selected'}
+        self.assertFalse(run.summary(partial)['complete'])
+        self.assertIsNone(run.summary(partial)['official_metrics'])
     def test_any_plan_or_measurement_failure_forbids_complete_metrics(self):
-        for where,index,status in (('description',499,'timeout'),('measurement',15,'rss_limit'),
+        for where,index,status in (('description',499,'timeout'),('measurement',499,'rss_limit'),
                                    ('measurement',0,'nonzero_exit'),('measurement',0,'pending')):
             data=records();data[index][where]['status']=status;s=run.summary(data)
             self.assertFalse(s['complete']);self.assertIsNone(s['official_metrics'])

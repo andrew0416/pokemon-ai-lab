@@ -11,12 +11,12 @@ import ci
 import contract as c
 import process_run
 
-def summary(records,requested=16):
+def summary(records,requested=c.COUNT):
     c.require(len(records)==500 and [r['id'] for r in records]==[f'opening-{i:04d}' for i in range(500)],'Incomplete or reordered ledger')
     desc=Counter(r['description']['status'] for r in records)
     selected=records[:requested];status=Counter(r['measurement']['status'] for r in selected)
     complete=desc=={'ok':500} and status=={'ok':requested}
-    result={'schema':1,'complete':complete,'scope':'fixed prefix pilot, not all 500 measured',
+    result={'schema':1,'complete':complete,'scope':'all 500 frozen openings measured on one runner',
         'endpoint_scope':'next decision boundary; intermediate switch suspensions retained (not every case is end-of-turn)',
         'requested_cases':requested,'corpus_cases':500,'requested_descriptions':500,
         'description_status_counts':dict(desc),'measurement_status_counts':dict(status),
@@ -45,9 +45,7 @@ def summary(records,requested=16):
                 for key in ('coverage','tv','outside_reference_mass','unique_states')}
     result['official_metrics']=metrics
     seconds=sum(r['measurement']['process']['wall_seconds'] for r in selected)
-    result['full500_budget_estimate']={'linear_measurement_seconds_from_prefix':seconds/requested*500,
-        'guaranteed':False,'reference_tail_risk_not_bounded_by_prefix':True,
-        'per_case_cap_seconds':60,'worst_case_measurement_process_budget_seconds':500*60}
+    result['process_measurement_wall_seconds_sum']=seconds
     return result
 
 def run(workspace):
