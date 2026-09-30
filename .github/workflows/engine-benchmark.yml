@@ -1,38 +1,26 @@
-name: engine benchmark
-run-name: "engine benchmark · ${{ inputs.candidate_feature }} · ${{ inputs.suite }} · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
+name: engine speed matrix
+run-name: "engine speed · P8g P9 P8c P10 · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
 
 on:
   workflow_dispatch:
     inputs:
-      baseline_sha:
-        description: "원본의 전체 40자리 커밋 SHA"
-        required: true
-        default: "929e6298c63ac8accada5bee51620c6804390b69"
-      candidate_sha:
-        description: "후보의 전체 40자리 커밋 SHA (비우면 실행 브랜치의 커밋)"
-        default: ""
-      candidate_feature:
-        description: "실험 모드: P9 / P8c / compact-volatiles(P10), 양쪽 P8g 공통"
-        type: choice
-        options: [none, hurt-readers, leaf-ending-states, prepared-turn, compact-volatiles]
-        default: none
       suite:
-        description: "smoke: 동작 점검 / narrow: coaching·sand 깊이2"
+        description: "coaching·sand 깊이 2 속도 비교"
         type: choice
-        options: [narrow, smoke]
+        options: [narrow]
         default: narrow
       threads:
-        description: "양쪽에 동일하게 사용할 스레드 수"
+        description: "각 A/B 쌍의 동일 스레드 수"
         type: choice
         options: ["1", "2", "4"]
         default: "1"
       pairs:
-        description: "warmup 제외 A/B 쌍 수 (AB/BA 균형)"
+        description: "국면별 warmup 제외 AB/BA 쌍 수"
         type: choice
-        options: ["2", "6", "10", "20"]
-        default: "6"
+        options: ["6", "10", "20"]
+        default: "10"
       build_cache:
-        description: "동일 조건의 검증된 실행 파일·과거 회귀 기록 재사용 (실측은 항상 새 실행)"
+        description: "검증된 빌드·의존성 캐시 복원; 시간 측정은 항상 새 실행"
         type: boolean
         default: true
 
@@ -53,6 +41,7 @@ env:
   CARGO_PROFILE_RELEASE_LTO: "off"
   CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
   LAB_ENGINE_FACTORED: "0"
+  RUST_TEST_THREADS: "1"
   PYTHONUTF8: "1"
   PYTHONHASHSEED: "0"
   OPENBLAS_NUM_THREADS: "1"
@@ -63,6 +52,24 @@ env:
 
 jobs:
   paired:
+    name: speed ${{ matrix.id }}
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - id: p8g
+            feature: hurt-readers
+            source_sha: e0b4b4fc5a2973b59e0f1e4acea360ce875d381e
+          - id: p9
+            feature: leaf-ending-states
+            source_sha: 90ed6185dc8eeb6cae139fc9ecdec7fd2dec95eb
+          - id: p8c
+            feature: prepared-turn
+            source_sha: 5c3d6f11da15e85ab3dd49b97e7e40b85b67bac0
+          - id: p10
+            feature: compact-volatiles
+            source_sha: 829bbeace408766ed2e44ca47c08d863c0f3bb57
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -78,9 +85,9 @@ jobs:
       - name: Validate request and resolve immutable commits
         id: refs
         env:
-          BASELINE_SHA: ${{ inputs.baseline_sha }}
-          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
-          CANDIDATE_FEATURE: ${{ inputs.candidate_feature }}
+          BASELINE_SHA: ${{ matrix.source_sha }}
+          CANDIDATE_SHA: ${{ matrix.source_sha }}
+          CANDIDATE_FEATURE: ${{ matrix.feature }}
           SUITE: ${{ inputs.suite }}
           THREADS: ${{ inputs.threads }}
           PAIRS: ${{ inputs.pairs }}
@@ -133,7 +140,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           prefix-key: engine-dependencies-v1
-          key: baseline-${{ inputs.candidate_feature }}-${{ inputs.suite }}
+          key: baseline-${{ matrix.feature }}-${{ inputs.suite }}
           workspaces: baseline/engine -> ../../target-baseline
           env-vars: ImageOS ImageVersion
           cache-workspace-crates: false
@@ -148,7 +155,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           prefix-key: engine-dependencies-v1
-          key: candidate-${{ inputs.candidate_feature }}-${{ inputs.suite }}
+          key: candidate-${{ matrix.feature }}-${{ inputs.suite }}
           workspaces: candidate/engine -> ../../target-candidate
           env-vars: ImageOS ImageVersion
           cache-workspace-crates: false
@@ -171,7 +178,7 @@ jobs:
           CANDIDATE_DEPENDENCY_CACHE_HIT: ${{ steps.deps-candidate.outputs.cache-hit }}
         run: python controller/engine/benchmarks/paired/ci.py build --workspace "$GITHUB_WORKSPACE"
       - name: Validate compact Volatiles baseline, enabled and disabled contracts
-        if: success() && inputs.candidate_feature == 'compact-volatiles'
+        if: success() && matrix.feature == 'compact-volatiles'
         run: >-
           python controller/engine/benchmarks/paired/compact_probe.py
           --workspace "$GITHUB_WORKSPACE"
@@ -224,7 +231,7 @@ jobs:
             echo 'Benchmark did not complete. Inspect the job logs and engine-benchmark artifact.' >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Measure peak RSS separately
-        if: success() && (inputs.candidate_feature == 'prepared-turn' || inputs.candidate_feature == 'compact-volatiles')
+        if: success() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles')
         env:
           SUITE: ${{ inputs.suite }}
           THREADS: ${{ inputs.threads }}
@@ -236,7 +243,7 @@ jobs:
           --benchmark-dir "$GITHUB_WORKSPACE/ci-results/benchmark"
           --out-dir "$GITHUB_WORKSPACE/ci-results/memory"
       - name: Publish peak RSS summary
-        if: always() && (inputs.candidate_feature == 'prepared-turn' || inputs.candidate_feature == 'compact-volatiles')
+        if: always() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles')
         run: |
           if [ -f ci-results/memory/summary.md ]; then
             cat ci-results/memory/summary.md >> "$GITHUB_STEP_SUMMARY"
@@ -247,7 +254,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: engine-benchmark-${{ github.run_id }}-${{ github.run_attempt }}
+          name: engine-speed-${{ matrix.id }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ci-results/
           if-no-files-found: warn
           retention-days: 7
