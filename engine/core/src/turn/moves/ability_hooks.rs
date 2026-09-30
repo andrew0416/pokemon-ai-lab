@@ -590,13 +590,16 @@ pub(super) fn on_damaging_hit<const N: usize>(
         a if a == abilities::COTTON_DOWN => {
             let mut drop = NO_BOOSTS;
             drop[4] = -1;
-            // A future move's user hitting from the bench is not active (`AbsentUser` refuses
-            // the hit when an occupant left its position for it).
-            for other in b.all_alive() {
-                if other != holder && b.absent_user != Some(other) {
-                    b.boost_by(other, &drop, Some(holder), BoostEffect::Ability(a));
+            // The benched attacker is not active. Restore the real field for the whole
+            // event, including boost blockers, reactive abilities/items and their order.
+            super::AbsentUser::with_real_occupant(b, holder, |b| {
+                for other in b.all_alive() {
+                    if other != holder && b.absent_user != Some(other) {
+                        b.boost_by(other, &drop, Some(holder), BoostEffect::Ability(a));
+                    }
                 }
-            }
+                Ok(())
+            })?;
         }
         // Gooey, Tangling Hair: contact: `this.boost({spe: -1}, source, target, null, true)`.
         a if a == abilities::GOOEY || a == abilities::TANGLING_HAIR => {
