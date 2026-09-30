@@ -24,6 +24,9 @@ cli = ["scenario"]
 # P9 only: read completed flat turn endings at Next::Depth(0).
 experiment-leaf-ending-states = ["lab-engine/experiment-leaf-ending-states"]
 experiment-leaf-ending-observer = ["experiment-leaf-ending-states", "lab-engine/experiment-leaf-ending-observer"]
+# P13 runtime and observer are independently opt-in so OFF/ON captures can be audited.
+experiment-borrowed-child-keys = ["lab-engine/experiment-borrowed-child-keys"]
+experiment-borrowed-child-keys-observer = []
 
 [dependencies]
 lab-engine = { path = "../core" }
@@ -69,3 +72,7 @@ path = "tests/bundle_search_02.rs"
 [[test]]
 name = "prepared_turn"
 path = "tests/prepared_turn.rs"
+
+[[test]]
+name = "borrowed_child_keys"
+path = "tests/borrowed_child_keys.rs"

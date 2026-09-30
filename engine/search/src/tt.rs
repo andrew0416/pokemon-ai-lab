@@ -54,7 +54,43 @@ pub trait TableKey: Eq {
 
 impl<const N: usize> TableKey for PositionKey<N> {
     fn index(&self) -> u64 {
-        key_hash(self.0.position_hash(), &self.1)
+        #[cfg(not(feature = "experiment-borrowed-child-keys"))]
+        {
+            key_hash(self.0.position_hash(), &self.1)
+        }
+        #[cfg(feature = "experiment-borrowed-child-keys")]
+        {
+            position_index(&self.0, self.1.as_ref())
+        }
+    }
+}
+
+/// Shared by owned and borrowed one-turn keys. State's exhaustive position hash
+/// and Suspension's complete Hash/Eq remain the identity contract.
+#[cfg(feature = "experiment-borrowed-child-keys")]
+pub(crate) fn position_index<const N: usize>(
+    state: &State<N>,
+    suspension: Option<&Suspension>,
+) -> u64 {
+    key_hash(state.position_hash(), &suspension)
+}
+
+#[cfg(feature = "experiment-borrowed-child-keys")]
+impl<const N: usize> Table<PositionKey<N>> {
+    pub(crate) fn get_borrowed_at(
+        &self,
+        index: u64,
+        state: &State<N>,
+        suspension: Option<&Suspension>,
+    ) -> Option<f32> {
+        if !self.enabled {
+            return None;
+        }
+        self.entries
+            .get_matching(index, |(stored, rest)| {
+                stored == state && rest.as_ref() == suspension
+            })
+            .copied()
     }
 }
 
@@ -69,6 +105,10 @@ pub struct Table<K> {
     capacity: usize,
     enabled: bool,
 }
+
+#[cfg(all(test, feature = "experiment-borrowed-child-keys"))]
+#[path = "tt_borrowed_tests.rs"]
+mod borrowed_tests;
 
 impl<K: TableKey> Table<K> {
     pub fn new(enabled: bool, capacity: usize) -> Self {

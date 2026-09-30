@@ -37,6 +37,21 @@ use crate::tt::{self, DeepTable, TranspositionTable};
 #[cfg(feature = "experiment-leaf-ending-states")]
 mod leaf_endings;
 
+#[cfg(any(
+    feature = "experiment-borrowed-child-keys",
+    feature = "experiment-borrowed-child-keys-observer"
+))]
+mod child_keys;
+#[cfg(feature = "experiment-borrowed-child-keys")]
+use child_keys::ChildSeen;
+#[cfg(not(feature = "experiment-borrowed-child-keys"))]
+type ChildSeen<const N: usize> = HashMap<tt::PositionKey<N>, usize>;
+#[cfg(feature = "experiment-borrowed-child-keys-observer")]
+pub use child_keys::observer as child_keys_observer;
+
+#[cfg(all(test, feature = "experiment-borrowed-child-keys-observer"))]
+mod child_keys_tests;
+
 /// What a chance node continues into: the maximin tree with `depth` turns left, or a fixed
 /// plan (`Solver::evaluate_plan`) at its next entry. (Children worth their own equilibrium,
 /// with only the `Config::outcome_cap` most probable outcomes, are valued in batches by
@@ -1666,7 +1681,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         // One slot per child occurrence (a repeat within the batch points at the first).
         let mut slots: Vec<Option<Result<f32, SearchError>>> = Vec::new();
         let mut jobs: Vec<(usize, ChildJob<N>)> = Vec::new();
-        let mut seen: HashMap<tt::PositionKey<N>, usize> = HashMap::new();
+        let mut seen: ChildSeen<N> = ChildSeen::new();
         for &pair in pairs {
             if let Some(max) = self.config.max_turns {
                 if self.turns >= max {
@@ -1715,44 +1730,14 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                         slots.push(Some(value));
                         slots.len() - 1
                     }
-                    Ok(child_decision) => {
-                        let key = if self.tt.enabled() {
-                            Some((state.clone(), outcome.suspension.clone()))
-                        } else {
-                            None
-                        };
-                        let known = key.as_ref().and_then(|key| {
-                            self.tt
-                                .get(key)
-                                .map(|v| {
-                                    slots.push(Some(Ok(v)));
-                                    slots.len() - 1
-                                })
-                                .or_else(|| seen.get(key).copied())
-                        });
-                        match known {
-                            Some(slot) => {
-                                self.stats.tt_hits += 1;
-                                slot
-                            }
-                            None => {
-                                if let Some(key) = key {
-                                    self.stats.tt_misses += 1;
-                                    seen.insert(key, slots.len());
-                                }
-                                slots.push(None);
-                                jobs.push((
-                                    slots.len() - 1,
-                                    ChildJob {
-                                        state: state.clone(),
-                                        suspension: outcome.suspension.clone(),
-                                        decision: child_decision,
-                                    },
-                                ));
-                                slots.len() - 1
-                            }
-                        }
-                    }
+                    Ok(child_decision) => self.queue_child(
+                        state,
+                        outcome.suspension.as_ref(),
+                        child_decision,
+                        &mut slots,
+                        &mut jobs,
+                        &mut seen,
+                    ),
                 };
                 state.reverse(&outcome.instructions);
                 refs.push((outcome.probability, slot));
@@ -1816,6 +1801,106 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             out.push(value);
         }
         Ok(out)
+    }
+
+    /// Registers a one-turn child without changing slot order or TT policy.
+    #[inline]
+    fn queue_child(
+        &mut self,
+        state: &State<N>,
+        suspension: Option<&Suspension>,
+        decision: Decision,
+        slots: &mut Vec<Option<Result<f32, SearchError>>>,
+        jobs: &mut Vec<(usize, ChildJob<N>)>,
+        seen: &mut ChildSeen<N>,
+    ) -> usize {
+        #[cfg(not(feature = "experiment-borrowed-child-keys"))]
+        {
+            let key = if self.tt.enabled() {
+                #[cfg(feature = "experiment-borrowed-child-keys-observer")]
+                child_keys::observe(|counts| counts.key_captures += 1);
+                Some((state.clone(), suspension.cloned()))
+            } else {
+                None
+            };
+            let known = key.as_ref().and_then(|key| {
+                self.tt
+                    .get(key)
+                    .map(|v| {
+                        slots.push(Some(Ok(v)));
+                        slots.len() - 1
+                    })
+                    .or_else(|| {
+                        let found = seen.get(key).copied();
+                        #[cfg(feature = "experiment-borrowed-child-keys-observer")]
+                        if found.is_some() {
+                            child_keys::observe(|counts| counts.seen_hits += 1);
+                        }
+                        found
+                    })
+            });
+            match known {
+                Some(slot) => {
+                    self.stats.tt_hits += 1;
+                    slot
+                }
+                None => {
+                    if let Some(key) = key {
+                        self.stats.tt_misses += 1;
+                        seen.insert(key, slots.len());
+                    }
+                    slots.push(None);
+                    #[cfg(feature = "experiment-borrowed-child-keys-observer")]
+                    child_keys::observe(|counts| counts.job_captures += 1);
+                    jobs.push((
+                        slots.len() - 1,
+                        ChildJob {
+                            state: state.clone(),
+                            suspension: suspension.cloned(),
+                            decision,
+                        },
+                    ));
+                    slots.len() - 1
+                }
+            }
+        }
+        #[cfg(feature = "experiment-borrowed-child-keys")]
+        {
+            let index = if self.tt.enabled() {
+                let index = tt::position_index(state, suspension);
+                #[cfg(feature = "experiment-borrowed-child-keys-observer")]
+                child_keys::observe(|counts| counts.borrowed_queries += 1);
+                if let Some(value) = self.tt.get_borrowed_at(index, state, suspension) {
+                    self.stats.tt_hits += 1;
+                    slots.push(Some(Ok(value)));
+                    return slots.len() - 1;
+                }
+                if let Some(slot) = seen.find(index, state, suspension, jobs) {
+                    self.stats.tt_hits += 1;
+                    return slot;
+                }
+                self.stats.tt_misses += 1;
+                Some(index)
+            } else {
+                None
+            };
+            let slot = slots.len();
+            slots.push(None);
+            #[cfg(feature = "experiment-borrowed-child-keys-observer")]
+            child_keys::observe(|counts| counts.job_captures += 1);
+            jobs.push((
+                slot,
+                ChildJob {
+                    state: state.clone(),
+                    suspension: suspension.cloned(),
+                    decision,
+                },
+            ));
+            if let Some(index) = index {
+                seen.insert(index, jobs.len() - 1);
+            }
+            slot
+        }
     }
 
     /// Each child's one-turn equilibrium value ([`Solver::nash_value`] without the table),
@@ -2267,30 +2352,72 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         if let Decision::Over(result) = decision {
             return Ok(self.terminal(result, 0));
         }
-        let key = if self.tt.enabled() {
-            let key = (state.clone(), suspension.cloned());
-            if let Some(v) = self.tt.get(&key) {
-                self.stats.tt_hits += 1;
-                return Ok(v);
+        #[cfg(not(feature = "experiment-borrowed-child-keys"))]
+        {
+            let key = if self.tt.enabled() {
+                #[cfg(feature = "experiment-borrowed-child-keys-observer")]
+                child_keys::observe(|counts| counts.key_captures += 1);
+                let key = (state.clone(), suspension.cloned());
+                if let Some(v) = self.tt.get(&key) {
+                    self.stats.tt_hits += 1;
+                    return Ok(v);
+                }
+                self.stats.tt_misses += 1;
+                Some(key)
+            } else {
+                None
+            };
+            #[cfg(feature = "experiment-borrowed-child-keys-observer")]
+            child_keys::observe(|counts| counts.job_captures += 1);
+            let job = ChildJob {
+                state: state.clone(),
+                suspension: suspension.cloned(),
+                decision,
+            };
+            let value = self
+                .solve_children(&[(0, job)])
+                .pop()
+                .expect("one job, one value")?;
+            if let Some(key) = key {
+                self.tt.insert(key, value);
             }
-            self.stats.tt_misses += 1;
-            Some(key)
-        } else {
-            None
-        };
-        let job = ChildJob {
-            state: state.clone(),
-            suspension: suspension.cloned(),
-            decision,
-        };
-        let value = self
-            .solve_children(&[(0, job)])
-            .pop()
-            .expect("one job, one value")?;
-        if let Some(key) = key {
-            self.tt.insert(key, value);
+            Ok(value)
         }
-        Ok(value)
+        #[cfg(feature = "experiment-borrowed-child-keys")]
+        {
+            if self.tt.enabled() {
+                #[cfg(feature = "experiment-borrowed-child-keys-observer")]
+                child_keys::observe(|counts| counts.borrowed_queries += 1);
+                if let Some(value) = self.tt.get_borrowed_at(
+                    tt::position_index(state, suspension),
+                    state,
+                    suspension,
+                ) {
+                    self.stats.tt_hits += 1;
+                    return Ok(value);
+                }
+                self.stats.tt_misses += 1;
+            }
+            #[cfg(feature = "experiment-borrowed-child-keys-observer")]
+            child_keys::observe(|counts| counts.job_captures += 1);
+            let jobs = [(
+                0,
+                ChildJob {
+                    state: state.clone(),
+                    suspension: suspension.cloned(),
+                    decision,
+                },
+            )];
+            let value = self
+                .solve_children(&jobs)
+                .pop()
+                .expect("one job, one value")?;
+            if self.tt.enabled() {
+                let [(_, job)] = jobs;
+                self.tt.insert((job.state, job.suspension), value);
+            }
+            Ok(value)
+        }
     }
 
     /// Two turns deep, approximately: the root matrix with leaf values orders our choices

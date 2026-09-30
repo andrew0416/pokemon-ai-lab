@@ -611,6 +611,17 @@ impl<K: Eq, V> PositionMap<K, V> {
             .map(|(_, v)| v)
     }
 
+    /// Finds a borrowed query in the supplied hash bucket. The caller must compare
+    /// the complete key: a hash collision alone is never equality.
+    #[cfg(feature = "experiment-borrowed-child-keys")]
+    pub fn get_matching(&self, hash: u64, mut matches: impl FnMut(&K) -> bool) -> Option<&V> {
+        self.buckets
+            .get(&hash)?
+            .iter()
+            .find(|(key, _)| matches(key))
+            .map(|(_, value)| value)
+    }
+
     /// Stores `value` for `key` (hash `hash`); returns the value it replaces.
     pub fn insert(&mut self, hash: u64, key: K, value: V) -> Option<V> {
         let bucket = self.buckets.entry(hash).or_default();
