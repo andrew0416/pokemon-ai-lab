@@ -1,0 +1,25 @@
+{
+  "source": "https://pokepast.es/b4465e52a2df6d1e",
+  "retrieved": "2026-09-20",
+  "format": "doubles",
+  "regulation": "M-C",
+  "source_kind": "published paste",
+  "sp_public": true,
+  "ivs_public": false,
+  "source_warning": "Preserve original footer labels; compare dated M-C listing and legality.",
+  "listing": "https://www.championsdex.app/teams/community-mc9",
+  "normalization": [
+    "Whitespace normalized for Showdown import; source.txt preserved.",
+    "Displayed Mega form normalized to base: Baxcalibur-Mega",
+    "Displayed Mega form normalized to base: Froslass-Mega"
+  ],
+  "validation_format": "gen9championsvgc2026regmc",
+  "validation_errors": [],
+  "status": "validated",
+  "simulation_ready": true,
+  "engine_defaults": "Level 50; omitted IVs use engine defaults, not publicly verified IVs. Missing SP must not be treated as an authored zero-investment spread.",
+  "tags": [
+    "snow-or-froslass",
+    "grassy-terrain"
+  ]
+}

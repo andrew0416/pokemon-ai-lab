@@ -1,0 +1,74 @@
+name: R1 turn distribution pilot
+run-name: "R1 turn distribution · frozen prefix16"
+on:
+  push:
+    branches: [codex/table2-turn-pilot-20261001]
+permissions:
+  contents: read
+concurrency:
+  group: engine-turn-distribution
+  cancel-in-progress: false
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  RUSTFLAGS: "-Ctarget-cpu=x86-64"
+  CARGO_PROFILE_RELEASE_OPT_LEVEL: "3"
+  CARGO_PROFILE_RELEASE_DEBUG: "1"
+  CARGO_PROFILE_RELEASE_LTO: "off"
+  CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
+  RAYON_NUM_THREADS: "1"
+  RUST_MIN_STACK: "16777216"
+  RUST_TEST_THREADS: "1"
+  PYTHONUTF8: "1"
+  PYTHONHASHSEED: "0"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+jobs:
+  pilot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Frozen controller and corpus
+        uses: actions/checkout@v4
+        with:
+          path: controller
+          persist-credentials: false
+      - name: Frozen R1 benchmark source
+        uses: actions/checkout@v4
+        with:
+          ref: a4a881420ca35335c6e0ac4c73fd9e686dd617c0
+          path: source
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@1.98.1
+      - name: Test measurement controller
+        run: python -m unittest discover -s controller/engine/benchmarks/turn_distribution -p 'test_*.py' -v
+      - name: Verify exact source and corpus
+        run: python controller/engine/benchmarks/turn_distribution/ci.py prepare --workspace "$GITHUB_WORKSPACE"
+      - name: Restore dependency compilation only
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-turn-distribution-deps-v1
+          workspaces: source/engine -> ../../target-distribution
+          cache-workspace-crates: false
+          cache-all-crates: false
+          cache-bin: false
+          cache-on-failure: false
+          save-if: false
+      - name: Fresh benchmark correctness tests and exact compiled feature proof
+        run: python controller/engine/benchmarks/turn_distribution/ci.py build --workspace "$GITHUB_WORKSPACE"
+      - name: Measure all frozen prefix16 cases with explicit resource bounds
+        run: python controller/engine/benchmarks/turn_distribution/run_distribution.py --workspace "$GITHUB_WORKSPACE"
+      - name: Preserve successful and failed raw evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-turn-distribution-prefix16-${{ github.run_id }}-${{ github.run_attempt }}
+          path: turn-distribution-results/
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 6

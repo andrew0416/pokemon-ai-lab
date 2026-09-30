@@ -1,0 +1,386 @@
+{
+  "description": "Frozen random opening opening-0009; simulation defaults retained, not original author claims.",
+  "format": "gen9championsvgc2026regmc",
+  "p1": {
+    "team": [
+      {
+        "name": "",
+        "species": "Salamence",
+        "item": "Salamencite",
+        "ability": "Intimidate",
+        "gender": "",
+        "nature": "Naive",
+        "evs": {
+          "hp": 0,
+          "atk": 30,
+          "def": 0,
+          "spa": 7,
+          "spd": 0,
+          "spe": 29
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Double-Edge",
+          "Hyper Voice",
+          "Tailwind",
+          "Protect"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Indeedee",
+        "item": "Choice Scarf",
+        "ability": "Psychic Surge",
+        "gender": "M",
+        "nature": "Modest",
+        "evs": {
+          "hp": 2,
+          "atk": 0,
+          "def": 0,
+          "spa": 32,
+          "spd": 0,
+          "spe": 32
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Expanding Force",
+          "Psychic",
+          "Dazzling Gleam",
+          "Trick"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Sneasler",
+        "item": "Psychic Seed",
+        "ability": "Unburden",
+        "gender": "",
+        "nature": "Jolly",
+        "evs": {
+          "hp": 30,
+          "atk": 21,
+          "def": 0,
+          "spa": 0,
+          "spd": 0,
+          "spe": 15
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Close Combat",
+          "Dire Claw",
+          "Protect",
+          "Swords Dance"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Gholdengo",
+        "item": "Life Orb",
+        "ability": "Good as Gold",
+        "gender": "",
+        "nature": "Modest",
+        "evs": {
+          "hp": 2,
+          "atk": 0,
+          "def": 0,
+          "spa": 32,
+          "spd": 0,
+          "spe": 32
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Protect",
+          "Make It Rain",
+          "Shadow Ball",
+          "Nasty Plot"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Tyranitar",
+        "item": "Tyranitarite",
+        "ability": "Sand Stream",
+        "gender": "",
+        "nature": "Adamant",
+        "evs": {
+          "hp": 27,
+          "atk": 26,
+          "def": 1,
+          "spa": 0,
+          "spd": 0,
+          "spe": 12
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Rock Slide",
+          "Knock Off",
+          "Low Kick",
+          "Protect"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Excadrill",
+        "item": "Focus Sash",
+        "ability": "Sand Rush",
+        "gender": "",
+        "nature": "Adamant",
+        "evs": {
+          "hp": 2,
+          "atk": 32,
+          "def": 0,
+          "spa": 0,
+          "spd": 0,
+          "spe": 32
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "High Horsepower",
+          "Iron Head",
+          "Rock Slide",
+          "Protect"
+        ]
+      }
+    ],
+    "order": "4632"
+  },
+  "p2": {
+    "team": [
+      {
+        "name": "",
+        "species": "Rillaboom",
+        "item": "Miracle Seed",
+        "ability": "Grassy Surge",
+        "gender": "",
+        "nature": "Adamant",
+        "evs": {
+          "hp": 14,
+          "atk": 32,
+          "def": 1,
+          "spa": 0,
+          "spd": 1,
+          "spe": 18
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Fake Out",
+          "Wood Hammer",
+          "High Horsepower",
+          "Grassy Glide"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Kingambit",
+        "item": "Black Glasses",
+        "ability": "Defiant",
+        "gender": "",
+        "nature": "Adamant",
+        "evs": {
+          "hp": 32,
+          "atk": 32,
+          "def": 1,
+          "spa": 0,
+          "spd": 0,
+          "spe": 1
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Swords Dance",
+          "Kowtow Cleave",
+          "Sucker Punch",
+          "Protect"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Sneasler",
+        "item": "Focus Sash",
+        "ability": "Unburden",
+        "gender": "",
+        "nature": "Naive",
+        "evs": {
+          "hp": 0,
+          "atk": 32,
+          "def": 2,
+          "spa": 0,
+          "spd": 0,
+          "spe": 32
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Fake Out",
+          "Close Combat",
+          "Dire Claw",
+          "Coaching"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Baxcalibur",
+        "item": "Baxcalibrite",
+        "ability": "Thermal Exchange",
+        "gender": "",
+        "nature": "Adamant",
+        "evs": {
+          "hp": 32,
+          "atk": 16,
+          "def": 1,
+          "spa": 0,
+          "spd": 4,
+          "spe": 13
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Scale Shot",
+          "Icicle Crash",
+          "Ice Shard",
+          "Protect"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Froslass",
+        "item": "Froslassite",
+        "ability": "Cursed Body",
+        "gender": "F",
+        "nature": "Timid",
+        "evs": {
+          "hp": 25,
+          "atk": 0,
+          "def": 0,
+          "spa": 0,
+          "spd": 14,
+          "spe": 27
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Blizzard",
+          "Aurora Veil",
+          "Shadow Ball",
+          "Protect"
+        ]
+      },
+      {
+        "name": "",
+        "species": "Basculegion",
+        "item": "Life Orb",
+        "ability": "Adaptability",
+        "gender": "M",
+        "nature": "Adamant",
+        "evs": {
+          "hp": 4,
+          "atk": 28,
+          "def": 13,
+          "spa": 0,
+          "spd": 0,
+          "spe": 21
+        },
+        "ivs": {
+          "hp": 31,
+          "atk": 31,
+          "def": 31,
+          "spa": 31,
+          "spd": 31,
+          "spe": 31
+        },
+        "level": 50,
+        "moves": [
+          "Wave Crash",
+          "Last Respects",
+          "Aqua Jet",
+          "Protect"
+        ]
+      }
+    ],
+    "order": "5623"
+  }
+}
