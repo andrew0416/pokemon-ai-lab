@@ -211,7 +211,7 @@ def make_recipe(workspace, label):
         raise ValueError('Tracked source changed since preparation')
     untracked = subprocess.check_output(
         ['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=root, timeout=30)
-    compact = request['candidate_feature'] in ('compact-volatiles', 'all-optimizations', *ci.P8DEF_MODES)
+    compact = request['candidate_feature'] in ('compact-volatiles', 'all-optimizations', *ci.STRICT_MODES)
     allowed_untracked = {'engine/search/examples/ci_bench.rs'}
     if compact:
         allowed_untracked.add(COMPACT_PROBE_PATH)
@@ -230,6 +230,8 @@ def make_recipe(workspace, label):
     harness = root/'engine/search/examples/ci_bench.rs'
     controller = Path(__file__).resolve().parent
     controller_files = CONTROLLER_FILES + (COMPACT_CONTROLLER_FILES if compact else ())
+    if request['candidate_feature'] == ci.INLINE_MODE:
+        controller_files += ('inline_runstart.py',)
     driver = {name: digest(controller/name) for name in controller_files}
     workflow = controller.parents[2]/'.github/workflows/engine-benchmark.yml'
     driver['.github/workflows/engine-benchmark.yml'] = digest(workflow)
@@ -521,9 +523,9 @@ def restore(workspace, label):
     try:
         import ci
         request_path = workspace/'ci-results/request.json'
-        if request_path.is_file() and json.loads(request_path.read_text(encoding='utf-8')).get('candidate_feature') in ci.P8DEF_MODES:
+        if request_path.is_file() and json.loads(request_path.read_text(encoding='utf-8')).get('candidate_feature') in ci.STRICT_MODES:
             _diagnostic(workspace, label, status='fresh-regressions-required', reused=False, sealed=False,
-                        reason='P8d/e/f comparisons require both complete regression arms fresh in this run')
+                        reason='Experimental comparisons require both complete regression arms fresh in this run')
             return False
         entry = _current_plan(workspace, label)
         prefix = label.upper()
