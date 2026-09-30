@@ -1,5 +1,5 @@
-name: engine P8d versus P8d P8e P8f
-run-name: "engine speed · old4 + D vs old4 + D E F · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
+name: engine P12 volatile hash update
+run-name: "engine speed · old4+D vs old4+D+P12 · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
 
 on:
   workflow_dispatch:
@@ -29,10 +29,11 @@ permissions:
   actions: read
 
 concurrency:
-  group: engine-benchmark
+  group: engine-benchmark-p12
   cancel-in-progress: false
 
 env:
+  AGREEMENT_VARIANTS_FILE: p12-variants.json
   CARGO_TERM_COLOR: never
   CARGO_INCREMENTAL: "0"
   CARGO_BUILD_JOBS: "2"
@@ -52,9 +53,11 @@ env:
   BUILD_CACHE_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
 
 jobs:
-  agreement_evidence:
+  agreement_plan:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -62,54 +65,105 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Test exact prior accuracy gate
-        run: python -m unittest discover -s engine/benchmarks/p8d_vs_p8def -p 'test_*.py' -v
-      - name: Verify prior runs, artifacts and unchanged source contracts
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: python engine/benchmarks/p8d_vs_p8def/prior_agreement.py --remote
-      - name: Download immutable D accuracy summary
-        uses: actions/download-artifact@v4
+      - name: Test evaluation controller
+        run: AGREEMENT_VARIANTS_FILE=variants.json python -m unittest discover -s engine/benchmarks/agreement -p 'test_*.py' -v
+      - name: Verify P12 feature and source contract
+        run: python engine/benchmarks/agreement/p12_contract.py --variants engine/benchmarks/agreement/p12-variants.json
+      - name: Immutable P12 source matrix
+        id: matrix
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          variants = json.loads(Path('engine/benchmarks/agreement/p12-variants.json').read_text())['variants']
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('value=' + json.dumps({'include': variants}, separators=(',', ':')) + '\n')
+          PY
+  agreement_evaluate:
+    needs: agreement_plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      RAYON_NUM_THREADS: "2"
+      RUST_MIN_STACK: "16777216"
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.agreement_plan.outputs.matrix) }}
+    steps:
+      - name: Shared controller and frozen corpus
+        uses: actions/checkout@v4
         with:
-          github-token: ${{ github.token }}
-          run-id: 36681590730
-          name: agreement-summary
-          path: prior-agreement/d
-      - name: Download immutable DEF accuracy summary
-        uses: actions/download-artifact@v4
+          path: controller
+          persist-credentials: false
+      - name: Immutable engine source
+        uses: actions/checkout@v4
         with:
-          github-token: ${{ github.token }}
-          run-id: 36698588329
-          name: agreement-summary
-          path: prior-agreement/def
-      - name: Verify both pinned 6184-case summaries and shared baseline contract
-        run: >-
-          python engine/benchmarks/p8d_vs_p8def/prior_agreement.py --summaries
-          prior-agreement/d/agreement-summary.json
-          prior-agreement/def/agreement-summary.json
-      - name: Preserve exact prior accuracy receipt and summaries
+          ref: ${{ matrix.sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@1.98.1
+      - name: Verify corpus and make identical case plan
+        run: |
+          python controller/engine/benchmarks/agreement/run.py plan --out case-plan.json
+          python controller/engine/benchmarks/agreement/p12_contract.py --plan case-plan.json
+      - name: Build and verify all actual features
+        run: python controller/engine/benchmarks/agreement/run.py prepare --source source --out results/${{ matrix.id }} --variant ${{ matrix.id }}
+      - name: Fresh oracle and differential outputs
+        run: python controller/engine/benchmarks/agreement/run.py evaluate --source source --out results/${{ matrix.id }} --variant ${{ matrix.id }} --plan case-plan.json
+      - name: Preserve complete and partial correctness evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: prior-agreement-receipt
+          name: agreement-${{ matrix.id }}
           path: |
-            prior-agreement/
-            prior-agreement-receipt.json
-            prior-agreement-remote.json
+            results/${{ matrix.id }}/
+            case-plan.json
           if-no-files-found: error
+          retention-days: 30
+  agreement_compare:
+    needs: agreement_evaluate
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: agreement-*
+          path: downloaded
+      - name: Compare every declared case with strict oracle and legality contracts
+        run: |
+          python engine/benchmarks/agreement/run.py compare --results downloaded --out agreement-summary.json
+          python engine/benchmarks/agreement/p12_contract.py --summary agreement-summary.json
+      - name: Preserve complete comparison
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agreement-summary
+          path: agreement-summary.json
+          if-no-files-found: warn
           retention-days: 30
 
   paired:
-    needs: agreement_evidence
+    needs: agreement_compare
     name: speed ${{ matrix.id }}
     strategy:
       fail-fast: false
       max-parallel: 1
       matrix:
         include:
-          - id: p8d-vs-p8def
-            feature: p8d-vs-p8def
-            source_sha: 048e4748e8854dac5eb511a358cc2f8c38c9dc29
+          - id: volatile-hash-update
+            feature: volatile-hash-update
+            source_sha: 7d8ce88a1ada063f3e11def6122ff86b846f309e
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -208,6 +262,7 @@ jobs:
       - name: Test and build both versions before timing
         id: build
         env:
+          RUST_MIN_STACK: "16777216"
           BASELINE_CACHE_HIT: ${{ steps.cache-baseline.outputs.cache-hit }}
           BASELINE_CACHE_MATCHED_KEY: ${{ steps.cache-baseline.outputs.cache-matched-key }}
           CANDIDATE_CACHE_HIT: ${{ steps.cache-candidate.outputs.cache-hit }}
@@ -218,7 +273,7 @@ jobs:
           CANDIDATE_DEPENDENCY_CACHE_HIT: ${{ steps.deps-candidate.outputs.cache-hit }}
         run: python controller/engine/benchmarks/paired/ci.py build --workspace "$GITHUB_WORKSPACE"
       - name: Validate compact Volatiles baseline, enabled and disabled contracts
-        if: success() && (matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","p8d-vs-p8def"]'), matrix.feature))
+        if: success() && (matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","volatile-hash-update"]'), matrix.feature))
         run: >-
           python controller/engine/benchmarks/paired/compact_probe.py
           --workspace "$GITHUB_WORKSPACE"
@@ -271,7 +326,7 @@ jobs:
             echo 'Benchmark did not complete. Inspect the job logs and engine-benchmark artifact.' >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Measure peak RSS separately
-        if: success() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","p8d-vs-p8def"]'), matrix.feature))
+        if: success() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","volatile-hash-update"]'), matrix.feature))
         env:
           SUITE: ${{ inputs.suite }}
           THREADS: ${{ inputs.threads }}
@@ -283,7 +338,7 @@ jobs:
           --benchmark-dir "$GITHUB_WORKSPACE/ci-results/benchmark"
           --out-dir "$GITHUB_WORKSPACE/ci-results/memory"
       - name: Publish peak RSS summary
-        if: always() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","p8d-vs-p8def"]'), matrix.feature))
+        if: always() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","volatile-hash-update"]'), matrix.feature))
         run: |
           if [ -f ci-results/memory/summary.md ]; then
             cat ci-results/memory/summary.md >> "$GITHUB_STEP_SUMMARY"
