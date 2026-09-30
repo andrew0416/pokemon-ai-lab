@@ -37,6 +37,11 @@ use crate::tt::{self, DeepTable, TranspositionTable};
 #[cfg(feature = "experiment-leaf-ending-states")]
 mod leaf_endings;
 
+#[cfg(feature = "experiment-matrix-pass-through-observer")]
+pub mod matrix_pass_through_observer;
+#[cfg(test)]
+mod matrix_pass_through_tests;
+
 /// What a chance node continues into: the maximin tree with `depth` turns left, or a fixed
 /// plan (`Solver::evaluate_plan`) at its next entry. (Children worth their own equilibrium,
 /// with only the `Config::outcome_cap` most probable outcomes, are valued in batches by
@@ -987,6 +992,24 @@ impl<const N: usize> LazyGame<N> {
         }
     }
 
+    /// P14b: only dimensions survive this full-game filter. The values have already been
+    /// collected with the original known-cell expect, before any shortcut is considered.
+    fn full_matrix_parts(&self, values: Vec<f32>) -> (usize, usize, Vec<f32>) {
+        #[cfg(feature = "experiment-matrix-pass-through-observer")]
+        matrix_pass_through_observer::update(|c| c.b_calls += 1);
+        #[cfg(feature = "experiment-matrix-pass-through")]
+        if complete_no_nan(self.ours.len(), self.theirs.len(), &values) {
+            #[cfg(feature = "experiment-matrix-pass-through-observer")]
+            matrix_pass_through_observer::update(|c| c.b_passthrough += 1);
+            return (self.ours.len(), self.theirs.len(), values);
+        }
+        #[cfg(feature = "experiment-matrix-pass-through-observer")]
+        matrix_pass_through_observer::update(|c| c.b_fallback += 1);
+        let (ours, theirs, values, _, _) =
+            drop_unevaluable(self.ours.clone(), self.theirs.clone(), values);
+        (ours.len(), theirs.len(), values)
+    }
+
     /// The next step once every requested cell is known.
     fn step(&self, dominance: bool) -> Step {
         let m = self.theirs.len();
@@ -1004,16 +1027,15 @@ impl<const N: usize> LazyGame<N> {
                 .iter()
                 .map(|v| v.expect("a full game knows every cell"))
                 .collect();
-            let (ours, theirs, values, _, _) =
-                drop_unevaluable(self.ours.clone(), self.theirs.clone(), values);
-            if ours.is_empty() || theirs.is_empty() {
+            let (rows, cols, values) = self.full_matrix_parts(values);
+            if rows == 0 || cols == 0 {
                 return Step {
                     outcome: StepOutcome::Value(f32::NAN),
                     solved: None,
                     exploitability: f32::NAN,
                 };
             }
-            let matrix = Matrix::new(ours.len(), theirs.len(), values);
+            let matrix = Matrix::new(rows, cols, values);
             let eq = if dominance {
                 nash::solve_reduced(&matrix, 20_000, 0.01)
             } else {
@@ -2770,6 +2792,13 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     }
 }
 
+/// Dimension mismatch retains the legacy fallback, including its possible panic or
+/// ignored trailing values. Infinity is evaluable here: only NaN requests filtering.
+#[cfg(any(feature = "experiment-matrix-pass-through", test))]
+fn complete_no_nan(rows: usize, cols: usize, values: &[f32]) -> bool {
+    rows.checked_mul(cols) == Some(values.len()) && values.iter().all(|value| !value.is_nan())
+}
+
 /// Removes their replies (columns) with an unevaluable cell, then our choices (rows) still
 /// holding one. Returns the kept choices, the dense matrix and how many were dropped.
 #[allow(clippy::type_complexity)]
@@ -2778,6 +2807,16 @@ fn drop_unevaluable<const N: usize>(
     theirs: Vec<Choice<N>>,
     values: Vec<f32>,
 ) -> (Vec<Choice<N>>, Vec<Choice<N>>, Vec<f32>, usize, usize) {
+    #[cfg(feature = "experiment-matrix-pass-through-observer")]
+    matrix_pass_through_observer::update(|c| c.a_calls += 1);
+    #[cfg(feature = "experiment-matrix-pass-through")]
+    if complete_no_nan(ours.len(), theirs.len(), &values) {
+        #[cfg(feature = "experiment-matrix-pass-through-observer")]
+        matrix_pass_through_observer::update(|c| c.a_passthrough += 1);
+        return (ours, theirs, values, 0, 0);
+    }
+    #[cfg(feature = "experiment-matrix-pass-through-observer")]
+    matrix_pass_through_observer::update(|c| c.a_fallback += 1);
     let (n, m) = (ours.len(), theirs.len());
     let keep_col: Vec<bool> = (0..m)
         .map(|c| (0..n).all(|r| !values[r * m + c].is_nan()))

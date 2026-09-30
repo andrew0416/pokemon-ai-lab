@@ -15,6 +15,10 @@ path = "src/lib.rs"
 # `default-features = false`.
 [features]
 default = ["cli"]
+# P14: preserve owned matrices and skip full-game choice clones when no cell is NaN.
+experiment-matrix-pass-through = []
+# Independent work counters for OFF/ON logic runs; absent from timing builds.
+experiment-matrix-pass-through-observer = []
 experiment-prepared-turn = ["lab-engine/experiment-prepared-turn"]
 experiment-prepared-turn-observe = ["experiment-prepared-turn", "lab-engine/experiment-prepared-turn-observe"]
 # `node`: positions stepped by choice strings over the scenario loader (the Python API's core,
@@ -69,3 +73,7 @@ path = "tests/bundle_search_02.rs"
 [[test]]
 name = "prepared_turn"
 path = "tests/prepared_turn.rs"
+
+[[test]]
+name = "matrix_pass_through"
+path = "tests/matrix_pass_through.rs"
