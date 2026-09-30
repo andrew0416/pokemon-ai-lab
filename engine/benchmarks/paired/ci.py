@@ -20,7 +20,7 @@ PREPARED_OBSERVER_FEATURE = 'experiment-prepared-turn-observe'
 COMPACT_FEATURE = 'experiment-compact-volatiles'
 COMPACT_PROBE_PATH = 'engine/scenario/examples/ci_compact_probe.rs'
 FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles',
-                   'all-optimizations', 'replay-action-keys', 'slot-diff', 'stats-off-cost', 'p8def-combined', 'p8d-vs-p8def')
+                   'all-optimizations', 'replay-action-keys', 'slot-diff', 'stats-off-cost', 'p8def-combined', 'p8d-vs-p8def', 'borrowed-child-keys')
 EXPERIMENT_FEATURES = (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE,
                        PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE, COMPACT_FEATURE)
 NEW_MODES = ('replay-action-keys', 'slot-diff', 'stats-off-cost')
@@ -28,9 +28,14 @@ P8DEF_COMBINED = 'p8def-combined'
 P8D_VS_P8DEF = 'p8d-vs-p8def'
 COMBINED_NEW_MODES = (P8DEF_COMBINED, P8D_VS_P8DEF)
 P8DEF_MODES = (*NEW_MODES, *COMBINED_NEW_MODES)
+BORROWED_MODE = 'borrowed-child-keys'
+BORROWED_FEATURE = 'experiment-borrowed-child-keys'
+BORROWED_OBSERVER = BORROWED_FEATURE + '-observer'
+STRICT_MODES = (*P8DEF_MODES, BORROWED_MODE)
 NEW_FEATURES = {mode: 'experiment-' + mode for mode in NEW_MODES}
 NEW_OBSERVERS = {mode: feature + '-observer' for mode, feature in NEW_FEATURES.items()}
-ALL_EXPERIMENT_FEATURES = (*EXPERIMENT_FEATURES, *NEW_FEATURES.values(), *NEW_OBSERVERS.values())
+ALL_EXPERIMENT_FEATURES = (*EXPERIMENT_FEATURES, *NEW_FEATURES.values(), *NEW_OBSERVERS.values(),
+                           BORROWED_FEATURE, BORROWED_OBSERVER)
 PACKAGE_BASE_FEATURES = {'lab-engine': set(), 'lab-scenario': set(),
                          'lab-search': {'cli', 'default', 'lab-scenario', 'scenario', 'serde_json'}}
 # Filled from the implemented engine's exact Rust test registration before dispatch.
@@ -85,6 +90,11 @@ def new_runtime_modes(selection, label):
 def feature_args(selection, label):
     if selection not in FEATURE_CHOICES or label not in ('baseline', 'candidate'):
         raise ValueError('Invalid candidate feature or build label')
+    if selection == BORROWED_MODE:
+        features = feature_args(P8D_VS_P8DEF, 'baseline')[1]
+        if label == 'candidate':
+            features += ',lab-search/' + BORROWED_FEATURE
+        return ['--features', features]
     if selection in P8DEF_MODES:
         features = feature_args('all-optimizations', 'candidate')[1]
         features += ''.join(',lab-engine/' + NEW_FEATURES[mode]
@@ -214,8 +224,10 @@ def injected_sources(selection):
     if selection not in FEATURE_CHOICES:
         raise ValueError('Invalid candidate feature')
     files = {'engine/search/examples/ci_bench.rs': Path(__file__).with_name('harness.rs')}
-    if selection in ('compact-volatiles', 'all-optimizations', *P8DEF_MODES):
+    if selection in ('compact-volatiles', 'all-optimizations', *STRICT_MODES):
         files[COMPACT_PROBE_PATH] = Path(__file__).with_name('compact_probe.rs')
+    if selection == BORROWED_MODE:
+        files['engine/search/examples/ci_borrowed_child_keys_observer.rs'] = Path(__file__).with_name('borrowed_child_keys_probe.rs')
     return files
 
 
@@ -258,10 +270,14 @@ def refs(workspace):
     pairs = int(os.environ['PAIRS'])
     if suite not in ('smoke', 'narrow') or threads not in (1, 2, 4):
         raise ValueError('Invalid suite or thread count')
-    if candidate_feature in ('compact-volatiles', 'all-optimizations', *P8DEF_MODES) and suite != 'narrow':
+    if candidate_feature in ('compact-volatiles', 'all-optimizations', *STRICT_MODES) and suite != 'narrow':
         raise ValueError(f'{candidate_feature} requires the full narrow regression suite')
-    if candidate_feature in ('all-optimizations', *P8DEF_MODES) and baseline.lower() != candidate.lower():
+    if candidate_feature in ('all-optimizations', *STRICT_MODES) and baseline.lower() != candidate.lower():
         raise ValueError(f'{candidate_feature} requires the same source SHA with features off/on')
+    if candidate_feature == BORROWED_MODE:
+        from borrowed_child_keys import SOURCE_SHA
+        if baseline.lower() != SOURCE_SHA or threads != 1 or pairs != 10:
+            raise ValueError('P13 requires frozen source, one thread and ten pairs')
     if pairs < 2 or pairs > 20 or pairs % 2:
         raise ValueError('pairs must be even, from 2 through 20')
     cpus = len(os.sched_getaffinity(0)) if hasattr(os, 'sched_getaffinity') else os.cpu_count()
@@ -284,7 +300,7 @@ def prepare(workspace):
     result = workspace/'ci-results'
     metadata = json.loads((result/'request.json').read_text(encoding='utf-8'))
     selection = metadata['candidate_feature']
-    if selection in ('all-optimizations', *P8DEF_MODES) and metadata['baseline_sha'] != metadata['candidate_sha']:
+    if selection in ('all-optimizations', *STRICT_MODES) and metadata['baseline_sha'] != metadata['candidate_sha']:
         raise ValueError(f'{selection} requires the same source SHA with features off/on')
     if metadata['feature_args'] != {label: feature_args(selection, label)
                                    for label in ('baseline', 'candidate')}:
@@ -321,17 +337,21 @@ def prepare(workspace):
                 '.cargo/config', '.cargo/config.toml', 'rust-toolchain', 'rust-toolchain.toml',
                 'engine/.cargo/config', 'engine/.cargo/config.toml',
                 'engine/rust-toolchain', 'engine/rust-toolchain.toml') if (root/name).is_file()}}
-        if selection in ('leaf-ending-states', 'all-optimizations', *P8DEF_MODES):
+        if selection in ('leaf-ending-states', 'all-optimizations', *STRICT_MODES):
             metadata['sources'][label]['leaf_declarations'] = verify_leaf_declarations(root)
-        if selection in ('prepared-turn', 'all-optimizations', *P8DEF_MODES):
+        if selection in ('prepared-turn', 'all-optimizations', *STRICT_MODES):
             metadata['sources'][label]['prepared_declarations'] = verify_prepared_declarations(root)
-        if selection in ('compact-volatiles', 'all-optimizations', *P8DEF_MODES):
+        if selection in ('compact-volatiles', 'all-optimizations', *STRICT_MODES):
             metadata['sources'][label]['compact_declarations'] = verify_compact_declarations(root)
         if selection in NEW_MODES:
             metadata['sources'][label]['independent_candidate_declarations'] = verify_new_declarations(root, selection)
         elif selection in COMBINED_NEW_MODES:
             metadata['sources'][label]['combined_candidate_declarations'] = {
                 mode: verify_new_declarations(root, mode) for mode in NEW_MODES}
+        elif selection == BORROWED_MODE:
+            import borrowed_child_keys
+            metadata['sources'][label]['borrowed_child_keys_declarations'] = borrowed_child_keys.verify_declarations(root)
+            metadata['sources'][label]['replay_declarations'] = verify_new_declarations(root, 'replay-action-keys')
     # A dependency/profile change needs a separately designed experiment.
     for key in ('lock_sha256', 'workspace_manifest_sha256', 'search_manifest_sha256',
                 'package_manifests', 'cargo_configuration'):
@@ -348,7 +368,7 @@ def prepare(workspace):
 def build_commands(suite, selection, label):
     if suite not in ('smoke', 'narrow'):
         raise ValueError('Invalid benchmark suite')
-    if selection in ('compact-volatiles', 'all-optimizations', *P8DEF_MODES) and suite != 'narrow':
+    if selection in ('compact-volatiles', 'all-optimizations', *STRICT_MODES) and suite != 'narrow':
         raise ValueError(f'{selection} requires the full narrow regression suite')
     tests = [['cargo', 'test', '--locked', '--release', '-p', 'lab-engine', '-p', 'lab-scenario', '-p', 'lab-search']]
     if suite == 'smoke':
@@ -362,7 +382,7 @@ def build_commands(suite, selection, label):
         ['cargo', 'build', '--locked', '--release', '-p', 'lab-search', '--example', 'ci_bench'],
     ]
     return [argv + ['--timings'] + feature_args(selection, label) +
-            (['--', '--test-threads=1'] if selection in ('compact-volatiles', 'all-optimizations', *P8DEF_MODES) and argv[1] == 'test' else [])
+            (['--', '--test-threads=1'] if selection in ('compact-volatiles', 'all-optimizations', *STRICT_MODES) and argv[1] == 'test' else [])
             for argv in commands]
 
 
@@ -377,7 +397,7 @@ def verify_prepared(workspace):
     receipt = {'schema_version': 1, 'status': 'running', 'sources': {}}
     receipt_path = result/'prepared-source-verification.json'
     try:
-        if selection in P8DEF_MODES or provenance.get('candidate_feature') in P8DEF_MODES:
+        if selection in STRICT_MODES or provenance.get('candidate_feature') in STRICT_MODES:
             declared = {label: feature_args(selection, label) for label in ('baseline', 'candidate')}
             if (request.get('candidate_feature') != provenance.get('candidate_feature')
                     or request.get('feature_args') != declared or provenance.get('feature_args') != declared
@@ -386,7 +406,7 @@ def verify_prepared(workspace):
         if harness_hash != provenance['harness_sha256']:
             raise ValueError('Controller harness changed after prepare')
         injection_hashes = {name: sha(source) for name, source in injections.items()}
-        if (selection in ('compact-volatiles', 'all-optimizations', *P8DEF_MODES) or 'injected_source_sha256' in provenance) and (
+        if (selection in ('compact-volatiles', 'all-optimizations', *STRICT_MODES) or 'injected_source_sha256' in provenance) and (
                 injection_hashes != provenance.get('injected_source_sha256')):
             raise ValueError('Controller injected source changed after prepare')
         for label in ('baseline', 'candidate'):
@@ -455,14 +475,19 @@ def preserve_build_timings(workspace, label, before):
 
 def fingerprint_expectations(selection, label):
     feature_args(selection, label)
-    if selection in P8DEF_MODES:
+    if selection in STRICT_MODES:
         core = {name: False for name in ALL_EXPERIMENT_FEATURES}
         core.update({EXPERIMENT_FEATURE: True, PREPARED_FEATURE: True,
                      LEAF_FEATURE: True, COMPACT_FEATURE: True})
-        for mode in new_runtime_modes(selection, label):
+        modes = ('replay-action-keys',) if selection == BORROWED_MODE else new_runtime_modes(selection, label)
+        for mode in modes:
             core[NEW_FEATURES[mode]] = True
+        if selection == BORROWED_MODE:
+            core[BORROWED_FEATURE] = label == 'candidate'
         search = {name: False for name in ALL_EXPERIMENT_FEATURES}
         search.update({PREPARED_FEATURE: True, LEAF_FEATURE: True})
+        if selection == BORROWED_MODE:
+            search[BORROWED_FEATURE] = label == 'candidate'
         return ({'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json'),
                  'lab-search': ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')},
                 {'lab-engine': core, 'lab-search': search}, True)
@@ -509,19 +534,23 @@ def validate_strict_feature_closure(package, features, expected):
         raise ValueError('actual compiled feature activation differs from exact package closure')
 
 
-def preserve_expected_fingerprints(workspace, label, packages, expected, hurt_active):
+def preserve_expected_fingerprints(workspace, label, packages, expected, hurt_active, profile="release"):
+    if profile not in ("release", "debug"): raise ValueError("Unsupported fingerprint profile")
     target = workspace/('target-' + label)
     result = workspace/'ci-results'
     evidence = {'expected_active': hurt_active, 'expected_by_package': expected,
                 'feature': EXPERIMENT_FEATURE, 'fingerprints': []}
-    fingerprint_root = target/'release/.fingerprint'
+    if profile != 'release': evidence['profile'] = profile
+    fingerprint_root = target/profile/'.fingerprint'
     for package, names in packages.items():
         for directory in sorted(fingerprint_root.glob(package + '-*')):
             for name in names:
                 source = directory/name
                 if not source.is_file():
                     continue
-                destination = result/'fingerprints'/label/directory.name/name
+                destination = result/'fingerprints'/label
+                if profile != 'release': destination = destination/profile
+                destination = destination/directory.name/name
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(source, destination)
                 data = json.loads(source.read_text(encoding='utf-8'))
@@ -536,7 +565,7 @@ def preserve_expected_fingerprints(workspace, label, packages, expected, hurt_ac
                     'artifact_path': destination.relative_to(result).as_posix(),
                 })
     # Write evidence before asserting, so a failed activation check remains inspectable.
-    (result/f'{label}-features.json').write_text(json.dumps(evidence, indent=2)+'\n', encoding='utf-8')
+    (result/(f'{label}-features.json' if profile == 'release' else f'{label}-debug-features.json')).write_text(json.dumps(evidence, indent=2)+'\n', encoding='utf-8')
     for package, names in packages.items():
         kinds = {item['kind'] for item in evidence['fingerprints'] if item['package'] == package}
         if kinds != set(names):
@@ -553,7 +582,7 @@ def preserve_expected_fingerprints(workspace, label, packages, expected, hurt_ac
 
 
 def prepared_validation_command(selection='prepared-turn'):
-    if selection in ('all-optimizations', *P8DEF_MODES):
+    if selection in ('all-optimizations', *STRICT_MODES):
         features = (feature_args(selection, 'candidate')[1] + ',lab-search/' + PREPARED_OBSERVER_FEATURE
                     + ',lab-search/' + OBSERVER_FEATURE)
         return ['cargo', 'test', '--locked', '--release', '-p', 'lab-search',
@@ -568,7 +597,7 @@ def prepared_validation_command(selection='prepared-turn'):
 def validate_prepared_turn(workspace, selection='prepared-turn'):
     """Run observer-dependent differential tests outside both timing targets."""
     result = workspace/'ci-results'
-    label = 'prepared-combined-validation' if selection in ('all-optimizations', *P8DEF_MODES) else 'prepared-validation'
+    label = 'prepared-combined-validation' if selection in ('all-optimizations', *STRICT_MODES) else 'prepared-validation'
     target = workspace/('target-' + label)
     if target.exists():
         raise ValueError('Prepared validation target directory must be new')
@@ -616,12 +645,12 @@ def validate_prepared_turn(workspace, selection='prepared-turn'):
         bridge = {LEAF_FEATURE: False, OBSERVER_FEATURE: False,
                   PREPARED_FEATURE: True, PREPARED_OBSERVER_FEATURE: True}
         expected = {'lab-engine': {EXPERIMENT_FEATURE: True, **bridge}, 'lab-search': dict(bridge)}
-        if selection in ('all-optimizations', *P8DEF_MODES):
+        if selection in ('all-optimizations', *STRICT_MODES):
             _, expected, _ = fingerprint_expectations(selection, 'candidate')
             for package in expected:
                 expected[package][PREPARED_OBSERVER_FEATURE] = True
                 expected[package][OBSERVER_FEATURE] = True
-        elif (result/'request.json').is_file() and json.loads((result/'request.json').read_text(encoding='utf-8')).get('candidate_feature') in P8DEF_MODES:
+        elif (result/'request.json').is_file() and json.loads((result/'request.json').read_text(encoding='utf-8')).get('candidate_feature') in STRICT_MODES:
             for package in expected:
                 expected[package] = {**{name: False for name in ALL_EXPERIMENT_FEATURES}, **expected[package]}
         receipt['selection'] = selection
@@ -759,7 +788,7 @@ def build(workspace):
     result = workspace/'ci-results'
     request = json.loads((result/'request.json').read_text(encoding='utf-8'))
     selection = request['candidate_feature']
-    if selection in P8DEF_MODES and request['baseline_sha'] != request['candidate_sha']:
+    if selection in STRICT_MODES and request['baseline_sha'] != request['candidate_sha']:
         raise ValueError(f'{selection} requires the same source SHA with features off/on')
     commands_by_version = {label: build_commands(request['suite'], selection, label)
                            for label in ('baseline', 'candidate')}
@@ -769,15 +798,17 @@ def build(workspace):
     plan = {'suite': request['suite'], 'candidate_feature': selection,
             'feature_args': expected_args, 'commands_by_version': commands_by_version,
             'per_command_timeout_seconds': COMMAND_TIMEOUT_SECONDS}
-    if selection in ('prepared-turn', 'all-optimizations', *P8DEF_MODES):
+    if selection in ('prepared-turn', 'all-optimizations', *STRICT_MODES):
         plan['prepared_validation_command'] = prepared_validation_command()
-    if selection in ('all-optimizations', *P8DEF_MODES):
+    if selection in ('all-optimizations', *STRICT_MODES):
         plan['combined_prepared_validation_command'] = prepared_validation_command(selection)
     if selection in NEW_MODES:
         plan['independent_observer_validation_commands'] = new_observer_validation_commands(selection)
     elif selection in COMBINED_NEW_MODES:
         plan['combined_new_observer_validation_commands'] = {
             mode: new_observer_validation_commands(mode, runtime_selection=selection) for mode in NEW_MODES}
+    if selection == BORROWED_MODE:
+        plan['borrowed_child_keys_validation'] = 'fresh common5 dense/compact named tests, allocator, exact OFF/ON records and public search activation'
     (result/'test-plan.json').write_text(json.dumps(plan, indent=2)+'\n', encoding='utf-8')
     provenance = json.loads((result/'provenance.json').read_text(encoding='utf-8'))
     provenance['build_plan'] = plan
@@ -845,10 +876,10 @@ def build(workspace):
         provenance.setdefault('build_cache', {})[label] = json.loads(
             (result/('cache-' + label + '.json')).read_text(encoding='utf-8'))
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
-    if selection in ('prepared-turn', 'all-optimizations', *P8DEF_MODES):
+    if selection in ('prepared-turn', 'all-optimizations', *STRICT_MODES):
         provenance['prepared_validation'] = validate_prepared_turn(workspace)
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
-    if selection in ('all-optimizations', *P8DEF_MODES):
+    if selection in ('all-optimizations', *STRICT_MODES):
         provenance['combined_prepared_validation'] = validate_prepared_turn(workspace, selection)
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
     if selection in NEW_MODES:
@@ -861,6 +892,10 @@ def build(workspace):
                 workspace, mode, runtime_selection=selection)
             (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
 
+    if selection == BORROWED_MODE:
+        import borrowed_child_keys
+        provenance['borrowed_child_keys_validation'] = borrowed_child_keys.validate(workspace)
+        (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
 
 def main():
     parser = argparse.ArgumentParser()

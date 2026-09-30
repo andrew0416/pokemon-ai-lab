@@ -177,7 +177,7 @@ def _run(argv, cwd, env, stem, timeout, commands, save):
 
 def _fingerprints(workspace, label, compact, off_guard):
     request = json.loads((workspace/'ci-results/request.json').read_text(encoding='utf-8'))
-    known = ci.ALL_EXPERIMENT_FEATURES if request.get('candidate_feature') in ci.P8DEF_MODES else ci.EXPERIMENT_FEATURES
+    known = ci.ALL_EXPERIMENT_FEATURES if request.get('candidate_feature') in ci.STRICT_MODES else ci.EXPERIMENT_FEATURES
     expected = {feature: False for feature in known}
     expected.update({HURT: True, COMPACT: compact})
     kinds = ['lib-lab_engine.json']
@@ -224,10 +224,12 @@ def slot_diff_semantic_output(path, selection):
 
 
 def validate_independent_candidate(workspace, out_dir, selection, receipt, save):
-    if selection not in ci.P8DEF_MODES:
+    if selection not in ci.STRICT_MODES:
         raise ValueError('Invalid independent candidate representation comparison')
     comparison = {'selection': selection, 'variants': {}, 'performance_measurement': False,
-                  'scope': ('all four validated runtime flags and P8d common; candidate adds only P8e/P8f'
+                  'scope': ('all four validated runtime flags and P8d common; candidate adds only P13; exact raw output'
+                            if selection == ci.BORROWED_MODE else
+                            'all four validated runtime flags and P8d common; candidate adds only P8e/P8f'
                             if selection == ci.P8D_VS_P8DEF else
                             'all four validated runtime flags common; all three new runtime flags on candidate'
                             if selection == ci.P8DEF_COMBINED else
@@ -301,7 +303,7 @@ def validate_compact(workspace, out_dir):
     save()
     try:
         request = json.loads((workspace/'ci-results/request.json').read_text(encoding='utf-8'))
-        if request['candidate_feature'] not in ('compact-volatiles', 'all-optimizations', *ci.P8DEF_MODES):
+        if request['candidate_feature'] not in ('compact-volatiles', 'all-optimizations', *ci.STRICT_MODES):
             raise ValueError('Compact gate requires compact-volatiles or all-optimizations mode')
         receipt['selection'] = request['candidate_feature']
         receipt['isolated_feature_scope'] = 'hurt-readers common; compact on/off; leaf/prepared/observers off'
@@ -328,7 +330,7 @@ def validate_compact(workspace, out_dir):
             if os.path.lexists(target):
                 raise ValueError(f'Compact target must be fresh: {target}')
             environment(target)
-        if request['candidate_feature'] in ci.P8DEF_MODES:
+        if request['candidate_feature'] in ci.STRICT_MODES:
             for tree in ('baseline', 'candidate'):
                 if os.path.lexists(workspace/('target-' + request['candidate_feature'] + '-probe-' + tree)):
                     raise ValueError('Independent representation targets must be fresh')
@@ -369,7 +371,7 @@ def validate_compact(workspace, out_dir):
             raise ValueError('Default-off layout differs from baseline')
         if variants['baseline']['layout'] == variants['candidate-on']['layout']:
             raise ValueError('Compact-on layout did not differ despite requested activation')
-        if request['candidate_feature'] in ci.P8DEF_MODES:
+        if request['candidate_feature'] in ci.STRICT_MODES:
             validate_independent_candidate(workspace, out_dir, request['candidate_feature'], receipt, save)
         if sources != {tree: _source_hashes(workspace/tree) for tree in sources}:
             raise ValueError('Sources or fixture inputs changed during compact validation')

@@ -27,6 +27,7 @@ import time
 from combined_contract import validate_activation_probe, validate_precedence
 from p8def_contract import comparison_equal as independent_comparison_equal, turn_state_digest
 import p8def_combined_contract as p8def_combined
+import p13_contract as p13
 
 HERE = Path(__file__).resolve().parent
 
@@ -118,9 +119,10 @@ def git(root, *args):
 
 
 def variant(name):
-    document = read(HERE / "variants.json")
-    if is_p8def_combined(document):
-        p8def_combined.validate_variants(document)
+    document = read(HERE / os.environ.get("AGREEMENT_VARIANTS_FILE", "variants.json"))
+    contract = experiment_contract(document)
+    if contract:
+        contract.validate_variants(document)
     return next(v for v in document["variants"] if v["id"] == name)
 
 
@@ -128,7 +130,15 @@ def is_p8def_combined(document):
     return any(v.get("id") == p8def_combined.CANDIDATE for v in document["variants"])
 
 
+def experiment_contract(document):
+    if any(v.get("id") == p13.CANDIDATE for v in document["variants"]):
+        return p13
+    return p8def_combined if is_p8def_combined(document) else None
+
+
 def comparison_equal(v, kind, candidate, original):
+    if v.get("id") == p13.CANDIDATE:
+        return p13.comparison_equal(v, kind, candidate, original)
     if v.get("id") == p8def_combined.CANDIDATE:
         return p8def_combined.comparison_equal(v, kind, candidate, original)
     return independent_comparison_equal(v, kind, candidate, original)
@@ -473,6 +483,7 @@ def expected_features(v):
     }
     for name in ("replay-action-keys", "slot-diff", "stats-off-cost"):
         closures["lab-engine/experiment-" + name] = ({"experiment-" + name}, set())
+    closures["lab-search/experiment-borrowed-child-keys"] = ({"experiment-borrowed-child-keys"}, {"experiment-borrowed-child-keys"})
     for feature in requested:
         if feature not in closures:
             raise ValueError("Unrecognized agreement feature: " + feature)
@@ -729,8 +740,9 @@ def evaluate(args):
     # Job plan is frozen before any variant is run and shared byte-for-byte.
     out = args.out.resolve()
     plan_data = read(args.plan)
-    if args.variant in ("base", p8def_combined.CANDIDATE) and is_p8def_combined(read(HERE / "variants.json")):
-        p8def_combined.validate_plan(plan_data)
+    contract = experiment_contract(read(HERE / os.environ.get("AGREEMENT_VARIANTS_FILE", "variants.json")))
+    if contract:
+        contract.validate_plan(plan_data)
     jobs = plan_data["jobs"]
     for relative, h in plan_data["inputs"].items():
         assert sha(relative) == h, relative
@@ -770,10 +782,10 @@ def evaluate(args):
 
 
 def compare(args):
-    document = read(HERE / "variants.json")
-    combined = is_p8def_combined(document)
-    if combined:
-        p8def_combined.validate_variants(document)
+    document = read(HERE / os.environ.get("AGREEMENT_VARIANTS_FILE", "variants.json"))
+    contract = experiment_contract(document)
+    if contract:
+        contract.validate_variants(document)
     variants = document["variants"]
     plans = list(args.results.rglob("case-plan.json"))
     errors, by_variant, results = [], {}, {}
@@ -783,9 +795,9 @@ def compare(args):
         errors.append("missing or conflicting frozen case plans")
     if plans:
         plan_data = read(plans[0])
-        if combined:
+        if contract:
             try:
-                p8def_combined.validate_plan(plan_data)
+                contract.validate_plan(plan_data)
             except (ValueError, KeyError, TypeError) as error:
                 errors.append("combined case plan: " + str(error))
         declared = plan_data["jobs"]
@@ -885,9 +897,9 @@ def compare(args):
         c["equal_error"] == 0 for c in summary["comparisons"].values())
     summary["activation_passed"] = len(results) == len(variants) and all(a.get("passed") for a in summary["activation"].values())
     summary["complete"] = summary["all_requested_successful"] and summary["activation_passed"]
-    if combined:
+    if contract:
         try:
-            p8def_combined.validate_summary(summary)
+            contract.validate_summary(summary)
         except (ValueError, KeyError, TypeError) as error:
             errors.append("combined summary contract: " + str(error))
             summary["complete"] = False
