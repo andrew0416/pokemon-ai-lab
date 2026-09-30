@@ -28,6 +28,7 @@ from combined_contract import validate_activation_probe, validate_precedence
 from p8def_contract import comparison_equal as independent_comparison_equal, turn_state_digest
 import p8def_combined_contract as p8def_combined
 import p13_contract as p13
+import p14_contract as p14
 
 HERE = Path(__file__).resolve().parent
 
@@ -131,12 +132,16 @@ def is_p8def_combined(document):
 
 
 def experiment_contract(document):
+    if any(v.get("id") == p14.CANDIDATE for v in document["variants"]):
+        return p14
     if any(v.get("id") == p13.CANDIDATE for v in document["variants"]):
         return p13
     return p8def_combined if is_p8def_combined(document) else None
 
 
 def comparison_equal(v, kind, candidate, original):
+    if v.get("id") == p14.CANDIDATE:
+        return p14.comparison_equal(v, kind, candidate, original)
     if v.get("id") == p13.CANDIDATE:
         return p13.comparison_equal(v, kind, candidate, original)
     if v.get("id") == p8def_combined.CANDIDATE:
@@ -484,6 +489,7 @@ def expected_features(v):
     for name in ("replay-action-keys", "slot-diff", "stats-off-cost"):
         closures["lab-engine/experiment-" + name] = ({"experiment-" + name}, set())
     closures["lab-search/experiment-borrowed-child-keys"] = ({"experiment-borrowed-child-keys"}, {"experiment-borrowed-child-keys"})
+    closures["lab-search/experiment-matrix-pass-through"] = (set(), {"experiment-matrix-pass-through"})
     for feature in requested:
         if feature not in closures:
             raise ValueError("Unrecognized agreement feature: " + feature)

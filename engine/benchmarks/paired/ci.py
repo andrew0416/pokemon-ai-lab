@@ -20,7 +20,7 @@ PREPARED_OBSERVER_FEATURE = 'experiment-prepared-turn-observe'
 COMPACT_FEATURE = 'experiment-compact-volatiles'
 COMPACT_PROBE_PATH = 'engine/scenario/examples/ci_compact_probe.rs'
 FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles',
-                   'all-optimizations', 'replay-action-keys', 'slot-diff', 'stats-off-cost', 'p8def-combined', 'p8d-vs-p8def', 'borrowed-child-keys')
+                   'all-optimizations', 'replay-action-keys', 'slot-diff', 'stats-off-cost', 'p8def-combined', 'p8d-vs-p8def', 'borrowed-child-keys', 'matrix-pass-through')
 EXPERIMENT_FEATURES = (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE,
                        PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE, COMPACT_FEATURE)
 NEW_MODES = ('replay-action-keys', 'slot-diff', 'stats-off-cost')
@@ -31,11 +31,14 @@ P8DEF_MODES = (*NEW_MODES, *COMBINED_NEW_MODES)
 BORROWED_MODE = 'borrowed-child-keys'
 BORROWED_FEATURE = 'experiment-borrowed-child-keys'
 BORROWED_OBSERVER = BORROWED_FEATURE + '-observer'
-STRICT_MODES = (*P8DEF_MODES, BORROWED_MODE)
+MATRIX_MODE = 'matrix-pass-through'
+MATRIX_FEATURE = 'experiment-matrix-pass-through'
+MATRIX_OBSERVER = MATRIX_FEATURE + '-observer'
+STRICT_MODES = (*P8DEF_MODES, BORROWED_MODE, MATRIX_MODE)
 NEW_FEATURES = {mode: 'experiment-' + mode for mode in NEW_MODES}
 NEW_OBSERVERS = {mode: feature + '-observer' for mode, feature in NEW_FEATURES.items()}
 ALL_EXPERIMENT_FEATURES = (*EXPERIMENT_FEATURES, *NEW_FEATURES.values(), *NEW_OBSERVERS.values(),
-                           BORROWED_FEATURE, BORROWED_OBSERVER)
+                           BORROWED_FEATURE, BORROWED_OBSERVER, MATRIX_FEATURE, MATRIX_OBSERVER)
 PACKAGE_BASE_FEATURES = {'lab-engine': set(), 'lab-scenario': set(),
                          'lab-search': {'cli', 'default', 'lab-scenario', 'scenario', 'serde_json'}}
 # Filled from the implemented engine's exact Rust test registration before dispatch.
@@ -90,6 +93,11 @@ def new_runtime_modes(selection, label):
 def feature_args(selection, label):
     if selection not in FEATURE_CHOICES or label not in ('baseline', 'candidate'):
         raise ValueError('Invalid candidate feature or build label')
+    if selection == MATRIX_MODE:
+        features = feature_args(P8D_VS_P8DEF, 'baseline')[1]
+        if label == 'candidate':
+            features += ',lab-search/' + MATRIX_FEATURE
+        return ['--features', features]
     if selection == BORROWED_MODE:
         features = feature_args(P8D_VS_P8DEF, 'baseline')[1]
         if label == 'candidate':
@@ -228,6 +236,8 @@ def injected_sources(selection):
         files[COMPACT_PROBE_PATH] = Path(__file__).with_name('compact_probe.rs')
     if selection == BORROWED_MODE:
         files['engine/search/examples/ci_borrowed_child_keys_observer.rs'] = Path(__file__).with_name('borrowed_child_keys_probe.rs')
+    if selection == MATRIX_MODE:
+        files['engine/search/examples/ci_matrix_pass_through_observer.rs'] = Path(__file__).with_name('matrix_pass_through_probe.rs')
     return files
 
 
@@ -278,6 +288,10 @@ def refs(workspace):
         from borrowed_child_keys import SOURCE_SHA
         if baseline.lower() != SOURCE_SHA or threads != 1 or pairs != 10:
             raise ValueError('P13 requires frozen source, one thread and ten pairs')
+    if candidate_feature == MATRIX_MODE:
+        from matrix_pass_through import SOURCE_SHA
+        if baseline.lower() != SOURCE_SHA or threads != 1 or pairs != 10:
+            raise ValueError('P14 requires frozen source, one thread and ten pairs')
     if pairs < 2 or pairs > 20 or pairs % 2:
         raise ValueError('pairs must be even, from 2 through 20')
     cpus = len(os.sched_getaffinity(0)) if hasattr(os, 'sched_getaffinity') else os.cpu_count()
@@ -348,6 +362,10 @@ def prepare(workspace):
         elif selection in COMBINED_NEW_MODES:
             metadata['sources'][label]['combined_candidate_declarations'] = {
                 mode: verify_new_declarations(root, mode) for mode in NEW_MODES}
+        elif selection == MATRIX_MODE:
+            import matrix_pass_through
+            metadata['sources'][label]['matrix_pass_through_declarations'] = matrix_pass_through.verify_declarations(root)
+            metadata['sources'][label]['replay_declarations'] = verify_new_declarations(root, 'replay-action-keys')
         elif selection == BORROWED_MODE:
             import borrowed_child_keys
             metadata['sources'][label]['borrowed_child_keys_declarations'] = borrowed_child_keys.verify_declarations(root)
@@ -479,7 +497,7 @@ def fingerprint_expectations(selection, label):
         core = {name: False for name in ALL_EXPERIMENT_FEATURES}
         core.update({EXPERIMENT_FEATURE: True, PREPARED_FEATURE: True,
                      LEAF_FEATURE: True, COMPACT_FEATURE: True})
-        modes = ('replay-action-keys',) if selection == BORROWED_MODE else new_runtime_modes(selection, label)
+        modes = ('replay-action-keys',) if selection in (BORROWED_MODE, MATRIX_MODE) else new_runtime_modes(selection, label)
         for mode in modes:
             core[NEW_FEATURES[mode]] = True
         if selection == BORROWED_MODE:
@@ -488,6 +506,8 @@ def fingerprint_expectations(selection, label):
         search.update({PREPARED_FEATURE: True, LEAF_FEATURE: True})
         if selection == BORROWED_MODE:
             search[BORROWED_FEATURE] = label == 'candidate'
+        if selection == MATRIX_MODE:
+            search[MATRIX_FEATURE] = label == 'candidate'
         return ({'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json'),
                  'lab-search': ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')},
                 {'lab-engine': core, 'lab-search': search}, True)
@@ -809,6 +829,8 @@ def build(workspace):
             mode: new_observer_validation_commands(mode, runtime_selection=selection) for mode in NEW_MODES}
     if selection == BORROWED_MODE:
         plan['borrowed_child_keys_validation'] = 'fresh common5 dense/compact named tests, allocator, exact OFF/ON records and public search activation'
+    if selection == MATRIX_MODE:
+        plan['matrix_pass_through_validation'] = 'fresh common5 dense/compact bit-exact matrix, allocator and public search activation proof'
     (result/'test-plan.json').write_text(json.dumps(plan, indent=2)+'\n', encoding='utf-8')
     provenance = json.loads((result/'provenance.json').read_text(encoding='utf-8'))
     provenance['build_plan'] = plan
@@ -895,6 +917,11 @@ def build(workspace):
     if selection == BORROWED_MODE:
         import borrowed_child_keys
         provenance['borrowed_child_keys_validation'] = borrowed_child_keys.validate(workspace)
+        (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
+
+    if selection == MATRIX_MODE:
+        import matrix_pass_through
+        provenance['matrix_pass_through_validation'] = matrix_pass_through.validate(workspace)
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
 
 def main():

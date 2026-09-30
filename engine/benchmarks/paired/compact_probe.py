@@ -227,7 +227,9 @@ def validate_independent_candidate(workspace, out_dir, selection, receipt, save)
     if selection not in ci.STRICT_MODES:
         raise ValueError('Invalid independent candidate representation comparison')
     comparison = {'selection': selection, 'variants': {}, 'performance_measurement': False,
-                  'scope': ('all four validated runtime flags and P8d common; candidate adds only P13; exact raw output'
+                  'scope': ('all four validated runtime flags and P8d common; candidate adds only P14; exact raw output'
+                            if selection == ci.MATRIX_MODE else
+                            'all four validated runtime flags and P8d common; candidate adds only P13; exact raw output'
                             if selection == ci.BORROWED_MODE else
                             'all four validated runtime flags and P8d common; candidate adds only P8e/P8f'
                             if selection == ci.P8D_VS_P8DEF else
