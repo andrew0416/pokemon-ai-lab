@@ -1,0 +1,31 @@
+{
+  "agreement_run": "36633204923",
+  "files": [
+    {
+      "sha256": "ed69d052aaf54a0a9d569f4babd10108f0498cd40a2047e6cb5d01d2de1b064c",
+      "transformation": "none; exact source bytes",
+      "file": "electro-shot.scenario.json",
+      "source": "agreement-20260930/plan-check-v2/corpus-plain/v2/dbl-kickoff-aveornot-vs-kickoff-balmung.b.random.g001.s18.json"
+    },
+    {
+      "sha256": "38d6637542193e6246a5e2fa7033e5b3575f7ad5f540917d956b666611e63b32",
+      "transformation": "none; exact source bytes",
+      "file": "electro-shot.before.json",
+      "source": "agreement-20260930/plan-check-v2/corpus-plain/v2/dbl-kickoff-aveornot-vs-kickoff-balmung.b.random.g001.s18.before.json"
+    },
+    {
+      "sha256": "b6bc5706064945d307b9fa63abbd31e492db3b1c130f66be549682e77a91f51f",
+      "transformation": "none; exact source bytes",
+      "file": "solar-beam.scenario.json",
+      "source": "agreement-20260930/plan-check-v2/corpus-plain/v2/mech-masagon-lucario-salamence-vs-mutsu-baxcalibur.a.random.g001.s02.json"
+    },
+    {
+      "sha256": "f4ea0fcb18c8648bc8778f9222dce0f16526858d4c2a9c6f68a5a82f924edbde",
+      "transformation": "none; exact source bytes",
+      "file": "solar-beam.before.json",
+      "source": "agreement-20260930/plan-check-v2/corpus-plain/v2/mech-masagon-lucario-salamence-vs-mutsu-baxcalibur.a.random.g001.s02.before.json"
+    }
+  ],
+  "schema": 1,
+  "purpose": "Regression cases for forced ally-target charge pruning; original corpus preserved"
+}

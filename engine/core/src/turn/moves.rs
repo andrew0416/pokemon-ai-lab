@@ -5,6 +5,9 @@
 mod ability_hooks;
 mod handlers;
 
+#[cfg(test)]
+mod absent_user_tests;
+
 use handlers::HitResult;
 pub(crate) use handlers::{
     called_after_move_checked, set_types, sleep_talk_calls, trick_item_start, trick_moves_item,
@@ -458,7 +461,7 @@ pub(crate) fn priority_charge_move<const N: usize>(
 /// 0, no ModifyType / ModifyMove: Mold Breaker and Scrappy do not apply; Normalize's owner's hit
 /// is Normal) with the source as the user: its current stats, boosts, ability and item if it is
 /// on the field (Showdown ignores an inactive source's ability and item and uses its stored
-/// stats; that case is unsupported). No PP, BeforeMove or AfterMoveSecondarySelf; only Life
+/// stats; see `AbsentUser` for the supported field overlays). No PP, BeforeMove or AfterMoveSecondarySelf; only Life
 /// Orb's recoil follows, for an active holder, whether or not the move hit. Eject Button ignores
 /// future moves (the hit loop skips it); Red Card (its drag would wait for the end of the
 /// residual) on the target is unsupported.
@@ -533,13 +536,20 @@ pub(crate) fn future_move_hit<const N: usize>(
         parental_bond: false,
     });
     b.move_self_switch = false;
-    if let HitOutcome::Suspended(_) =
-        try_spread_move_hit(b, user, &mut mv, smallvec::smallvec![slot], false)?
-    {
-        return Err(b.unsupported(format!("{}: a multi-hit future move", data.name)));
-    }
+    let result = try_spread_move_hit(b, user, &mut mv, smallvec::smallvec![slot], false);
     if let Some(absent) = absent {
         absent.remove(b);
+    }
+    match result {
+        Ok(HitOutcome::Finished { .. }) => {}
+        Ok(HitOutcome::Suspended(_)) => {
+            b.active_move = None;
+            return Err(b.unsupported(format!("{}: a multi-hit future move", data.name)));
+        }
+        Err(error) => {
+            b.active_move = None;
+            return Err(error);
+        }
     }
     // `if (data.source.isActive && data.source.hasItem('lifeorb'))` its
     // `onAfterMoveSecondarySelf`: `source !== target`, not a status move, no `forceSwitchFlag`.
@@ -571,13 +581,13 @@ pub(crate) fn future_move_hit<const N: usize>(
 /// meanwhile while Showdown keeps it active (an ally of the inactive user: `findEventHandlers`
 /// runs the `onAlly`/`onAny`/`onFoe` handlers of `target.alliesAndSelf()` and `target.foes()`
 /// even for an inactive target when the source is active, and the reverse), so the hit is
-/// refused when every such occupant [`occupant_matters`], and when the target's Cotton Down
-/// (every active Pokémon but the target) would have reached a displaced occupant.
+/// refused when every such occupant [`occupant_matters`]. Two field events explicitly see
+/// the real occupant: Unnerve reads its current effective ability through a restored view,
+/// and Cotton Down and Update restore the real field for their entire events. This is not a general
+/// virtual-attacker representation: other cross-Pokémon dependencies remain refused.
 pub(crate) struct AbsentUser {
     slot: SlotRef,
     source: PokemonRef,
-    /// The position's slot state before the user took it.
-    saved_slot: crate::state::Slot,
     /// The user itself before (ability and item cleared, anything the hit changed).
     saved_mon: crate::state::Pokemon,
 }
@@ -622,6 +632,15 @@ fn occupant_matters<const N: usize>(
         a if a == abilities::DAMP => event == "Damage",
         a if a == abilities::FRIEND_GUARD => {
             event == "ModifyDamage" && target.side != occupant.side
+        }
+        a if [
+            abilities::UNNERVE,
+            abilities::AS_ONE_GLASTRIER,
+            abilities::AS_ONE_SPECTRIER,
+        ]
+        .contains(&a) =>
+        {
+            event == "TryEatItem"
         }
         _ => false,
     };
@@ -684,18 +703,6 @@ impl AbsentUser {
                 format!("whose position holds {} with {what}", name(b, occupant)),
             );
         };
-        // Cotton Down boosts every active Pokémon but its holder: a displaced occupant too.
-        if b.ability(target) == abilities::COTTON_DOWN {
-            if let Some(occupant) = b.alive(slot) {
-                return refuse(
-                    b,
-                    format!(
-                        "on a target with Cotton Down while {} is out of its position",
-                        name(b, occupant)
-                    ),
-                );
-            }
-        }
         let saved_slot = b.state.slot(slot).clone();
         let saved_mon = b.mon(source).clone();
         b.apply(Instruction::Switch {
@@ -718,24 +725,122 @@ impl AbsentUser {
             });
         }
         b.absent_user = Some(slot);
+        b.absent_occupant = Some(Box::new(saved_slot));
         Ok(AbsentUser {
             slot,
             source,
-            saved_slot,
             saved_mon,
         })
+    }
+
+    /// Unnerve's boolean `onFoeTryEatItem` for the real occupant hidden by the attacker.
+    /// Evaluate suppression against the current field, not a cached pre-hit ability: a Gas
+    /// holder can have fainted, and Gastro Acid, transformation and Ability Shield matter.
+    /// This slow shadow is limited to future hits with a displaced Unnerve-like holder.
+    pub(crate) fn displaced_unnerve<const N: usize>(b: &Battle<'_, N>, eater: SlotRef) -> bool {
+        let (Some(slot), Some(saved)) = (b.absent_user, b.absent_occupant.as_deref()) else {
+            return false;
+        };
+        let Some(party) = saved.party_index.filter(|_| slot.side != eater.side) else {
+            return false;
+        };
+        let occupant = PokemonRef {
+            side: slot.side,
+            party,
+        };
+        let abilities = [
+            abilities::UNNERVE,
+            abilities::AS_ONE_GLASTRIER,
+            abilities::AS_ONE_SPECTRIER,
+        ];
+        if !b.mon(occupant).is_alive()
+            || b.unstarted.contains(&occupant)
+            || !abilities.contains(&b.mon(occupant).ability)
+        {
+            return false;
+        }
+        let mut field = b.state.clone();
+        *field.slot_mut(slot) = saved.clone();
+        abilities.contains(&ability_events::effective_ability(&field, slot))
+    }
+
+    /// Run a field-wide event with the actual active occupant in place. Keep every change
+    /// to that occupant (boosts, volatiles, history, switch flags and party data), then restore
+    /// the inactive attacker's temporary slot. Neither swap dispatches switch-in/out events.
+    pub(crate) fn with_real_occupant<const N: usize, R>(
+        b: &mut Battle<'_, N>,
+        target: SlotRef,
+        event: impl FnOnce(&mut Battle<'_, N>) -> Result<R, TurnError>,
+    ) -> Result<R, TurnError> {
+        let Some(slot) = b.absent_user.take() else {
+            return event(b);
+        };
+        let real = b.absent_occupant.take().expect("a placed user's real slot");
+        let temporary = b.state.slot(slot).clone();
+        Self::set_slot(b, slot, &real);
+        let result = event(b);
+        // Update can change an ability (seeking Trace), and an event can change an item.
+        // Do not hide a newly relevant cross-Pokémon handler for the rest of the hit.
+        // Keep the original event error first, and inspect the actual target's side
+        // (Friend Guard is harmless for a foe target, but not for an ally target).
+        let refusal = if result.is_ok() {
+            b.alive(slot).and_then(|occupant| {
+                occupant_matters(b, occupant, target).map(|what| {
+                    let active = b.active_move.expect("an absent user's active future hit");
+                    let why = format!(
+                        "whose position now holds {} with {what}",
+                        b.mon(occupant).species.data().name,
+                    );
+                    b.unsupported(format!(
+                        "{} of {} hitting after its user left the field, {why}",
+                        active.id.data().name,
+                        b.mon(active.pokemon).species.data().name,
+                    ))
+                })
+            })
+        } else {
+            None
+        };
+        let changed = Box::new(b.state.slot(slot).clone());
+        Self::set_slot(b, slot, &temporary);
+        b.absent_occupant = Some(changed);
+        b.absent_user = Some(slot);
+        match refusal {
+            Some(error) => Err(error),
+            None => result,
+        }
+    }
+
+    /// Transport a whole slot through reversible instructions. `diff::slot_changes` writes
+    /// active volatiles; this temporary overlay also preserves inactive non-NONE payloads.
+    fn set_slot<const N: usize>(b: &mut Battle<'_, N>, slot: SlotRef, to: &crate::state::Slot) {
+        if b.state.slot(slot) == to {
+            return;
+        }
+        let mut changes = Vec::new();
+        super::diff::slot_changes(&mut changes, slot, b.state.slot(slot), to);
+        for volatile in Volatile::ALL {
+            let value = to.volatiles.get(volatile);
+            if !value.active && value != crate::volatile::VolatileState::NONE {
+                changes.push(Instruction::SetVolatile {
+                    target: slot,
+                    volatile,
+                    old: crate::volatile::VolatileState::NONE,
+                    new: value,
+                });
+            }
+        }
+        for instruction in changes {
+            b.apply(instruction);
+        }
     }
 
     /// The position and the user back as they were before [`AbsentUser::place`].
     fn remove<const N: usize>(self, b: &mut Battle<'_, N>) {
         b.absent_user = None;
+        let saved_slot = b.absent_occupant.take().expect("a placed user's real slot");
+        Self::set_slot(b, self.slot, &saved_slot);
         let mut undo = Vec::new();
-        super::diff::slot_changes(
-            &mut undo,
-            self.slot,
-            b.state.slot(self.slot),
-            &self.saved_slot,
-        );
         super::diff::pokemon_changes(&mut undo, self.source, b.mon(self.source), &self.saved_mon);
         for instruction in undo {
             b.apply(instruction);
@@ -2998,12 +3103,15 @@ fn hit_loop_rest<const N: usize>(
     ended_by_miss: bool,
 ) -> Result<HitOutcome, TurnError> {
     let smart = progress.smart;
+    // A future hit has exactly one target; targetless ordinary moves never use the overlay.
+    debug_assert!(b.absent_user.is_none() || !progress.targets.is_empty());
+    let future_target = progress.targets.first().copied().unwrap_or(user);
     if !ended_by_miss {
         let hit = progress.hit;
         let hit_ok = results.iter().any(|r| r.ok());
         // `eachEvent('Update')` after the hit's damage (berries eat before faints are
         // processed).
-        super::update::update_event(b)?;
+        AbsentUser::with_real_occupant(b, future_target, super::update::update_event)?;
         let mut targets = progress.targets.clone();
         targets.retain(|&mut t| b.alive(t).is_some());
         let single = progress.targets.len() == 1;
@@ -3028,7 +3136,9 @@ fn hit_loop_rest<const N: usize>(
     }
     // The loop ended: `faintMessages(false, false, !pokemon.hp)`, recoil, AfterMoveSecondary.
     let user_fainted = b.alive(user).is_none();
-    b.faint_messages(user_fainted)?;
+    // Faint/End handlers (notably a fainted Gas holder restarting abilities) also see
+    // the real field; the benched source must not acquire an active AfterFaint handler.
+    AbsentUser::with_real_occupant(b, future_target, |b| b.faint_messages(user_fainted))?;
     let total = progress.total_damage;
     // `if (move.totalDamage) this.applyRecoilDamage(move.totalDamage, move, pokemon)`: Struggle's
     // `directDamage` (which no Damage handler sees: Rock Head, Magic Guard, Endure, Sturdy) or
@@ -3077,7 +3187,7 @@ fn hit_loop_rest<const N: usize>(
     // move thaws a frozen target (`frz`'s handler), Anger Shell / Berserk, the target's item
     // (Kee / Maranga Berry, Eject Button, Red Card). The damage a target took is its last
     // `attackedBy` entry, or `move.totalDamage` for a multi-hit move.
-    super::update::update_event(b)?;
+    AbsentUser::with_real_occupant(b, future_target, super::update::update_event)?;
     if !ability_hooks::sheer_force_skips(b, user, mv) {
         // `targetsCopy.filter(val => !!val)`: not a target its substitute shielded. With
         // `smartTarget`, `targetsCopy` is every target again, shielded or not, each with its own

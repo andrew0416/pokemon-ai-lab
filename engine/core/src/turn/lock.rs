@@ -67,6 +67,12 @@ pub(crate) fn queued_move_id<const N: usize>(state: &State<N>, slot: SlotRef, in
 }
 
 /// What the Pokémon at `slot` is locked into, if anything.
+///
+/// This is a forced-action contract: for a living, acting slot, `legal_joint_actions`
+/// offers one normalized action when this returns `Some`. Search preserves that action
+/// under pruning, including a saved ally target. New forced-move mechanics must use this
+/// path and retain the contract. Restrictions that still let the player choose a target
+/// (Encore, Choice Lock) belong in move availability, not here.
 pub fn locked_move<const N: usize>(state: &State<N>, slot: SlotRef) -> Option<Locked> {
     let volatiles = &state.slot(slot).volatiles;
     if volatiles.has(Volatile::MustRecharge) {
