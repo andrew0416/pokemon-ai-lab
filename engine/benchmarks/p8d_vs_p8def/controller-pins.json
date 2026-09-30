@@ -1,0 +1,313 @@
+{
+  "schema": 1,
+  "source_sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+  "controllers": {
+    "d": {
+      "head_sha": "6dcc56a6398702c2281019dd00fe5ee4eb7a2019",
+      "agreement_tree": "b4aa78d915264b53ed1516adcc221bca324b4544",
+      "files": {
+        "engine/benchmarks/agreement/README.md": {
+          "sha256": "9d5f795673d473b26ec6cdecf460ce857d0ce5afc627db42a12dd7052f11d0fc",
+          "git_blob": "03d66ed2014a75948bfb828dbde1e336188cd5a9"
+        },
+        "engine/benchmarks/agreement/activation_probe.rs": {
+          "sha256": "5d69107632682cdd3d70dee7661f58cc01343a5b96808f2272bc4c2254a8dc7b",
+          "git_blob": "2766770961d9320fed7e82b290c35800c1ff8107"
+        },
+        "engine/benchmarks/agreement/combined_contract.py": {
+          "sha256": "caaaa03abab6da3b6cdae2312602573e67937dac08e8227eae41f1ef162c0d42",
+          "git_blob": "5f4c2e7bc6c18971e502589547a4e751ca78bee4"
+        },
+        "engine/benchmarks/agreement/data/contracts/.gitattributes": {
+          "sha256": "059435b26a18ac0005dc4e4f78aae363ce0a4c9c34323539b76a852dc89a8681",
+          "git_blob": "9a9d4edc2e8c4194b90310c2fb9e62e4b518ce9b"
+        },
+        "engine/benchmarks/agreement/data/contracts/generate-redirect.cjs": {
+          "sha256": "756f41f8731664f821b667c2637456a903d5f51edd7857e9750a91a785dd7a11",
+          "git_blob": "c4ae81711cc95fa5ca473e4eb4e5d81a5d437b4f"
+        },
+        "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.json": {
+          "sha256": "ad68ade77446c1efb30511fac0bc8e76f5b9b3b9546a0e5f85eb1c95a521394d",
+          "git_blob": "5b95bbbd70bbac58be045b4e72f75131393b1714"
+        },
+        "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.provenance.json": {
+          "sha256": "c14674754fb169eb022cbeb3dc45340816ae3c3d0c558b085328845b0b720d3d",
+          "git_blob": "3c13d16b9b10fdf18436b3641eb15ee7040de3f0"
+        },
+        "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.turn.json": {
+          "sha256": "057ee51a8d4e2965ff1594f5235f3e3f98f3326be959e31ed28e1fe0a4318648",
+          "git_blob": "28ba92e060b22fb74e2e2a7270abe14d3a29bf26"
+        },
+        "engine/benchmarks/agreement/data/corpus-manifest.json": {
+          "sha256": "30367306d7125b41185e7af5c2b154cb72e22eb861260d5bff95a89b2cdcaf9e",
+          "git_blob": "ffdbce564c2a14afa51513aa3a5fc23c4668f429"
+        },
+        "engine/benchmarks/agreement/data/corpus.tar.gz": {
+          "sha256": "27aefcba3fce289c7712905b85b14d4ab4a108a74cd7846bc9aaa1f115c23727",
+          "git_blob": "392d22746efd452e20a2d574ba5fd4e46208dede"
+        },
+        "engine/benchmarks/agreement/data/search-selection.json": {
+          "sha256": "2707407bf7175354aeb61cc1cf6f15a3b56d77756288230a646c0037fa04fd50",
+          "git_blob": "44f8cf097a80cc3f4fe42a001fb8e55d1b4cc4f8"
+        },
+        "engine/benchmarks/agreement/fix-provenance-20260930.json": {
+          "sha256": "63a808cb6e7da005ab39b7adb339ab8cf929097825d13d45be54ad56b27e3185",
+          "git_blob": "82976a21f4abf8095bc85057487003fb14b1c386"
+        },
+        "engine/benchmarks/agreement/oracle_probe.rs": {
+          "sha256": "a913a51e7c3eeb21390cd5eef8bb43fbb4bc0873d575defc9817e5904ccc9771",
+          "git_blob": "05193de3c0355c8dcf8920edd83a3cd6ec9d0eaf"
+        },
+        "engine/benchmarks/agreement/p8def_contract.py": {
+          "sha256": "f1cd4eb9d32a5796ddd96e005ce6ee518399bb18fdfdd542b0a09ee8fff9e194",
+          "git_blob": "f55989522e51ae71f9b02342c363493548503d9f"
+        },
+        "engine/benchmarks/agreement/pack_corpus.py": {
+          "sha256": "d0304b66ddb5f2762b5405aa2fd7ef01b9c3e028e912c01cf104abceb0ca24e7",
+          "git_blob": "cef9fa0025d45a69a9a02e030c24742ad97d3df8"
+        },
+        "engine/benchmarks/agreement/run.py": {
+          "sha256": "41858f57b7a5d536be2140aa0e1edac28668ef24923f0f90d05b69abd476e473",
+          "git_blob": "fe31e80095dda28e6233b4595df328947eb2161d"
+        },
+        "engine/benchmarks/agreement/search_probe.rs": {
+          "sha256": "dca5da5d9d88a0431b82a56093b4e8478dfde3fab2b5a6aa3018ef88d52165f7",
+          "git_blob": "cc367635986ea8619c835a41f3a741fff5af5890"
+        },
+        "engine/benchmarks/agreement/test_combined.py": {
+          "sha256": "771b7b1aed3540bcb354da17e1d7cdad7870e20e780f3156959561ec18d4d5cf",
+          "git_blob": "354d577d3d03f72e95e73a614b71431f3df40cd4"
+        },
+        "engine/benchmarks/agreement/test_p8def.py": {
+          "sha256": "feb78f9d3d9ecdd8379900a3f4a977386f52e9ab8c0f55c3c19b111d81317c18",
+          "git_blob": "b1cf7e750538b35aaafa1b3e041119c5264c623b"
+        },
+        "engine/benchmarks/agreement/test_pack_corpus.py": {
+          "sha256": "96b79a04df16e85d4852195a574fd120f96ce4767603c7dc316ceb85844515e0",
+          "git_blob": "7ab1348ee0e4f6bbeb0ef5be96390c971b3b4f2a"
+        },
+        "engine/benchmarks/agreement/test_run.py": {
+          "sha256": "18d8324328065b56adc77a87be37c5f4cc0f0d919eb38b7bdfb3af5c6b926973",
+          "git_blob": "e8be6f0fc768ba0e4ca36e873ae13d276fe68487"
+        },
+        "engine/benchmarks/agreement/turn_probe.rs": {
+          "sha256": "4f8eb7e41754be8e362ee7065af345c7b9f83e074896566b32eda04721f4c8c6",
+          "git_blob": "0f45fdb30c124650b79c03e120b6bcbc96a13941"
+        },
+        "engine/benchmarks/agreement/variants.json": {
+          "sha256": "a2d489336dbd8132ba4af59e13af5b6cb7197e6b36b6e0ac540d02b6d94bd976",
+          "git_blob": "aa7a34ebe64b9222d809a82232f60b0670e6044c"
+        }
+      },
+      "variants": {
+        "schema": 1,
+        "variants": [
+          {
+            "id": "base",
+            "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+            "features": [
+              "lab-engine/experiment-compact-volatiles",
+              "lab-engine/experiment-hurt-readers",
+              "lab-search/experiment-leaf-ending-observer",
+              "lab-search/experiment-prepared-turn-observe"
+            ],
+            "compare_to": null
+          },
+          {
+            "id": "p8d",
+            "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+            "features": [
+              "lab-engine/experiment-compact-volatiles",
+              "lab-engine/experiment-hurt-readers",
+              "lab-search/experiment-leaf-ending-observer",
+              "lab-search/experiment-prepared-turn-observe",
+              "lab-engine/experiment-replay-action-keys"
+            ],
+            "compare_to": "base",
+            "comparison_contract": "exact-v1"
+          },
+          {
+            "id": "p8e",
+            "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+            "features": [
+              "lab-engine/experiment-compact-volatiles",
+              "lab-engine/experiment-hurt-readers",
+              "lab-search/experiment-leaf-ending-observer",
+              "lab-search/experiment-prepared-turn-observe",
+              "lab-engine/experiment-slot-diff"
+            ],
+            "compare_to": "base",
+            "comparison_contract": "state-equivalent-slot-diff-v1"
+          },
+          {
+            "id": "p8f",
+            "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+            "features": [
+              "lab-engine/experiment-compact-volatiles",
+              "lab-engine/experiment-hurt-readers",
+              "lab-search/experiment-leaf-ending-observer",
+              "lab-search/experiment-prepared-turn-observe",
+              "lab-engine/experiment-stats-off-cost"
+            ],
+            "compare_to": "base",
+            "comparison_contract": "exact-v1"
+          }
+        ]
+      }
+    },
+    "def": {
+      "head_sha": "7bfb3380cc12439d368a4a288d00fe1269c00455",
+      "agreement_tree": "22b1ff155ef7bf707341faec1f0db795611bf93a",
+      "files": {
+        "engine/benchmarks/agreement/README.md": {
+          "sha256": "54057234f3551bd9f4b227adf6a3d1c3f00fc0c41fa9d3e566653709e972917e",
+          "git_blob": "bf0b3c9c035cde07b49d501fc0070c381c174d3d"
+        },
+        "engine/benchmarks/agreement/activation_probe.rs": {
+          "sha256": "5d69107632682cdd3d70dee7661f58cc01343a5b96808f2272bc4c2254a8dc7b",
+          "git_blob": "2766770961d9320fed7e82b290c35800c1ff8107"
+        },
+        "engine/benchmarks/agreement/combined_contract.py": {
+          "sha256": "caaaa03abab6da3b6cdae2312602573e67937dac08e8227eae41f1ef162c0d42",
+          "git_blob": "5f4c2e7bc6c18971e502589547a4e751ca78bee4"
+        },
+        "engine/benchmarks/agreement/data/contracts/.gitattributes": {
+          "sha256": "059435b26a18ac0005dc4e4f78aae363ce0a4c9c34323539b76a852dc89a8681",
+          "git_blob": "9a9d4edc2e8c4194b90310c2fb9e62e4b518ce9b"
+        },
+        "engine/benchmarks/agreement/data/contracts/generate-redirect.cjs": {
+          "sha256": "756f41f8731664f821b667c2637456a903d5f51edd7857e9750a91a785dd7a11",
+          "git_blob": "c4ae81711cc95fa5ca473e4eb4e5d81a5d437b4f"
+        },
+        "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.json": {
+          "sha256": "ad68ade77446c1efb30511fac0bc8e76f5b9b3b9546a0e5f85eb1c95a521394d",
+          "git_blob": "5b95bbbd70bbac58be045b4e72f75131393b1714"
+        },
+        "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.provenance.json": {
+          "sha256": "c14674754fb169eb022cbeb3dc45340816ae3c3d0c558b085328845b0b720d3d",
+          "git_blob": "3c13d16b9b10fdf18436b3641eb15ee7040de3f0"
+        },
+        "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.turn.json": {
+          "sha256": "057ee51a8d4e2965ff1594f5235f3e3f98f3326be959e31ed28e1fe0a4318648",
+          "git_blob": "28ba92e060b22fb74e2e2a7270abe14d3a29bf26"
+        },
+        "engine/benchmarks/agreement/data/corpus-manifest.json": {
+          "sha256": "30367306d7125b41185e7af5c2b154cb72e22eb861260d5bff95a89b2cdcaf9e",
+          "git_blob": "ffdbce564c2a14afa51513aa3a5fc23c4668f429"
+        },
+        "engine/benchmarks/agreement/data/corpus.tar.gz": {
+          "sha256": "27aefcba3fce289c7712905b85b14d4ab4a108a74cd7846bc9aaa1f115c23727",
+          "git_blob": "392d22746efd452e20a2d574ba5fd4e46208dede"
+        },
+        "engine/benchmarks/agreement/data/search-selection.json": {
+          "sha256": "2707407bf7175354aeb61cc1cf6f15a3b56d77756288230a646c0037fa04fd50",
+          "git_blob": "44f8cf097a80cc3f4fe42a001fb8e55d1b4cc4f8"
+        },
+        "engine/benchmarks/agreement/fix-provenance-20260930.json": {
+          "sha256": "63a808cb6e7da005ab39b7adb339ab8cf929097825d13d45be54ad56b27e3185",
+          "git_blob": "82976a21f4abf8095bc85057487003fb14b1c386"
+        },
+        "engine/benchmarks/agreement/oracle_probe.rs": {
+          "sha256": "a913a51e7c3eeb21390cd5eef8bb43fbb4bc0873d575defc9817e5904ccc9771",
+          "git_blob": "05193de3c0355c8dcf8920edd83a3cd6ec9d0eaf"
+        },
+        "engine/benchmarks/agreement/p8def_combined_contract.py": {
+          "sha256": "fa947574f62932e99450e8ebf8e8069e66878573ccb03162f5d1820193bd8421",
+          "git_blob": "8fa9f7272f0e45a93cf5ab8693fd2a7e0ddd3368"
+        },
+        "engine/benchmarks/agreement/p8def_contract.py": {
+          "sha256": "f1cd4eb9d32a5796ddd96e005ce6ee518399bb18fdfdd542b0a09ee8fff9e194",
+          "git_blob": "f55989522e51ae71f9b02342c363493548503d9f"
+        },
+        "engine/benchmarks/agreement/pack_corpus.py": {
+          "sha256": "d0304b66ddb5f2762b5405aa2fd7ef01b9c3e028e912c01cf104abceb0ca24e7",
+          "git_blob": "cef9fa0025d45a69a9a02e030c24742ad97d3df8"
+        },
+        "engine/benchmarks/agreement/run.py": {
+          "sha256": "be55f17257dc01bdef43cbcf131c0360c24246d8c9e4dd9d32dca5fb87dfb02b",
+          "git_blob": "a628485528935f5e8a32a515a7a30c4b1be187d9"
+        },
+        "engine/benchmarks/agreement/search_probe.rs": {
+          "sha256": "dca5da5d9d88a0431b82a56093b4e8478dfde3fab2b5a6aa3018ef88d52165f7",
+          "git_blob": "cc367635986ea8619c835a41f3a741fff5af5890"
+        },
+        "engine/benchmarks/agreement/test_combined.py": {
+          "sha256": "771b7b1aed3540bcb354da17e1d7cdad7870e20e780f3156959561ec18d4d5cf",
+          "git_blob": "354d577d3d03f72e95e73a614b71431f3df40cd4"
+        },
+        "engine/benchmarks/agreement/test_p8def.py": {
+          "sha256": "feb78f9d3d9ecdd8379900a3f4a977386f52e9ab8c0f55c3c19b111d81317c18",
+          "git_blob": "b1cf7e750538b35aaafa1b3e041119c5264c623b"
+        },
+        "engine/benchmarks/agreement/test_p8def_combined.py": {
+          "sha256": "a442ee5dafbcddfbec7e9d6e0bfed3c0ac88405c5a289327c5803c85a135c026",
+          "git_blob": "97528de3b6419ce207a2bcbc49d5581056361fe1"
+        },
+        "engine/benchmarks/agreement/test_pack_corpus.py": {
+          "sha256": "96b79a04df16e85d4852195a574fd120f96ce4767603c7dc316ceb85844515e0",
+          "git_blob": "7ab1348ee0e4f6bbeb0ef5be96390c971b3b4f2a"
+        },
+        "engine/benchmarks/agreement/test_run.py": {
+          "sha256": "18d8324328065b56adc77a87be37c5f4cc0f0d919eb38b7bdfb3af5c6b926973",
+          "git_blob": "e8be6f0fc768ba0e4ca36e873ae13d276fe68487"
+        },
+        "engine/benchmarks/agreement/turn_probe.rs": {
+          "sha256": "4f8eb7e41754be8e362ee7065af345c7b9f83e074896566b32eda04721f4c8c6",
+          "git_blob": "0f45fdb30c124650b79c03e120b6bcbc96a13941"
+        },
+        "engine/benchmarks/agreement/variants.json": {
+          "sha256": "34f517a410cb948499646675ed7cab8e663faf3610bc6039e9643a5eb0dd4ad1",
+          "git_blob": "8da714311794e5141e3aab35cd85b58757ecccab"
+        }
+      },
+      "variants": {
+        "schema": 1,
+        "variants": [
+          {
+            "id": "base",
+            "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+            "features": [
+              "lab-engine/experiment-compact-volatiles",
+              "lab-engine/experiment-hurt-readers",
+              "lab-search/experiment-leaf-ending-observer",
+              "lab-search/experiment-prepared-turn-observe"
+            ],
+            "compare_to": null
+          },
+          {
+            "id": "p8def_combined",
+            "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+            "features": [
+              "lab-engine/experiment-compact-volatiles",
+              "lab-engine/experiment-hurt-readers",
+              "lab-search/experiment-leaf-ending-observer",
+              "lab-search/experiment-prepared-turn-observe",
+              "lab-engine/experiment-replay-action-keys",
+              "lab-engine/experiment-slot-diff",
+              "lab-engine/experiment-stats-off-cost"
+            ],
+            "compare_to": "base",
+            "comparison_contract": "state-equivalent-slot-diff-v1"
+          }
+        ]
+      }
+    }
+  },
+  "shared_frozen_paths": [
+    "engine/benchmarks/agreement/activation_probe.rs",
+    "engine/benchmarks/agreement/combined_contract.py",
+    "engine/benchmarks/agreement/data/contracts/.gitattributes",
+    "engine/benchmarks/agreement/data/contracts/generate-redirect.cjs",
+    "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.json",
+    "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.provenance.json",
+    "engine/benchmarks/agreement/data/contracts/ss-redirect-tie-hidden-order-rod-a.turn.json",
+    "engine/benchmarks/agreement/data/corpus-manifest.json",
+    "engine/benchmarks/agreement/data/corpus.tar.gz",
+    "engine/benchmarks/agreement/data/search-selection.json",
+    "engine/benchmarks/agreement/oracle_probe.rs",
+    "engine/benchmarks/agreement/p8def_contract.py",
+    "engine/benchmarks/agreement/pack_corpus.py",
+    "engine/benchmarks/agreement/search_probe.rs",
+    "engine/benchmarks/agreement/turn_probe.rs"
+  ]
+}

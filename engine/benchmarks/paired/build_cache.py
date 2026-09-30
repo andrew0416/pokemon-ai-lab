@@ -523,7 +523,7 @@ def restore(workspace, label):
         request_path = workspace/'ci-results/request.json'
         if request_path.is_file() and json.loads(request_path.read_text(encoding='utf-8')).get('candidate_feature') in ci.P8DEF_MODES:
             _diagnostic(workspace, label, status='fresh-regressions-required', reused=False, sealed=False,
-                        reason='Independent candidates rerun both complete regression arms in this run')
+                        reason='P8d/e/f comparisons require both complete regression arms fresh in this run')
             return False
         entry = _current_plan(workspace, label)
         prefix = label.upper()

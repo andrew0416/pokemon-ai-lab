@@ -20,12 +20,14 @@ PREPARED_OBSERVER_FEATURE = 'experiment-prepared-turn-observe'
 COMPACT_FEATURE = 'experiment-compact-volatiles'
 COMPACT_PROBE_PATH = 'engine/scenario/examples/ci_compact_probe.rs'
 FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles',
-                   'all-optimizations', 'replay-action-keys', 'slot-diff', 'stats-off-cost', 'p8def-combined')
+                   'all-optimizations', 'replay-action-keys', 'slot-diff', 'stats-off-cost', 'p8def-combined', 'p8d-vs-p8def')
 EXPERIMENT_FEATURES = (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE,
                        PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE, COMPACT_FEATURE)
 NEW_MODES = ('replay-action-keys', 'slot-diff', 'stats-off-cost')
 P8DEF_COMBINED = 'p8def-combined'
-P8DEF_MODES = (*NEW_MODES, P8DEF_COMBINED)
+P8D_VS_P8DEF = 'p8d-vs-p8def'
+COMBINED_NEW_MODES = (P8DEF_COMBINED, P8D_VS_P8DEF)
+P8DEF_MODES = (*NEW_MODES, *COMBINED_NEW_MODES)
 NEW_FEATURES = {mode: 'experiment-' + mode for mode in NEW_MODES}
 NEW_OBSERVERS = {mode: feature + '-observer' for mode, feature in NEW_FEATURES.items()}
 ALL_EXPERIMENT_FEATURES = (*EXPERIMENT_FEATURES, *NEW_FEATURES.values(), *NEW_OBSERVERS.values())
@@ -72,14 +74,21 @@ PREPARED_TESTS = (
 )
 
 
+def new_runtime_modes(selection, label):
+    if selection not in P8DEF_MODES or label not in ('baseline', 'candidate'):
+        raise ValueError('Invalid P8d/e/f selection or build label')
+    if label == 'baseline':
+        return ('replay-action-keys',) if selection == P8D_VS_P8DEF else ()
+    return NEW_MODES if selection in COMBINED_NEW_MODES else (selection,)
+
+
 def feature_args(selection, label):
     if selection not in FEATURE_CHOICES or label not in ('baseline', 'candidate'):
         raise ValueError('Invalid candidate feature or build label')
     if selection in P8DEF_MODES:
         features = feature_args('all-optimizations', 'candidate')[1]
-        if label == 'candidate':
-            features += ''.join(',lab-engine/' + NEW_FEATURES[mode]
-                                for mode in (NEW_MODES if selection == P8DEF_COMBINED else (selection,)))
+        features += ''.join(',lab-engine/' + NEW_FEATURES[mode]
+                            for mode in new_runtime_modes(selection, label))
         return ['--features', features]
     if selection == 'all-optimizations':
         if label == 'baseline':
@@ -320,7 +329,7 @@ def prepare(workspace):
             metadata['sources'][label]['compact_declarations'] = verify_compact_declarations(root)
         if selection in NEW_MODES:
             metadata['sources'][label]['independent_candidate_declarations'] = verify_new_declarations(root, selection)
-        elif selection == P8DEF_COMBINED:
+        elif selection in COMBINED_NEW_MODES:
             metadata['sources'][label]['combined_candidate_declarations'] = {
                 mode: verify_new_declarations(root, mode) for mode in NEW_MODES}
     # A dependency/profile change needs a separately designed experiment.
@@ -450,8 +459,8 @@ def fingerprint_expectations(selection, label):
         core = {name: False for name in ALL_EXPERIMENT_FEATURES}
         core.update({EXPERIMENT_FEATURE: True, PREPARED_FEATURE: True,
                      LEAF_FEATURE: True, COMPACT_FEATURE: True})
-        for mode in (NEW_MODES if selection == P8DEF_COMBINED else (selection,)):
-            core[NEW_FEATURES[mode]] = label == 'candidate'
+        for mode in new_runtime_modes(selection, label):
+            core[NEW_FEATURES[mode]] = True
         search = {name: False for name in ALL_EXPERIMENT_FEATURES}
         search.update({PREPARED_FEATURE: True, LEAF_FEATURE: True})
         return ({'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json'),
@@ -631,7 +640,7 @@ def validate_prepared_turn(workspace, selection='prepared-turn'):
 
 
 def observer_runtime_selection(selection, runtime_selection):
-    if selection not in NEW_MODES or runtime_selection not in (None, selection, P8DEF_COMBINED):
+    if selection not in NEW_MODES or runtime_selection not in (None, selection, *COMBINED_NEW_MODES):
         raise ValueError('Invalid observer runtime selection')
     return runtime_selection or selection
 
@@ -664,7 +673,7 @@ def validate_new_observer(workspace, selection, *, runtime_selection=None):
     runtime_selection = observer_runtime_selection(selection, runtime_selection)
     commands = new_observer_validation_commands(selection, runtime_selection=runtime_selection)
     result = workspace/'ci-results'
-    label = (P8DEF_COMBINED + '-' if runtime_selection == P8DEF_COMBINED else '') + selection + '-observer-validation'
+    label = (runtime_selection + '-' if runtime_selection in COMBINED_NEW_MODES else '') + selection + '-observer-validation'
     target = workspace/('target-' + label)
     if os.path.lexists(target):
         raise ValueError('Independent observer target directory must be new')
@@ -766,7 +775,7 @@ def build(workspace):
         plan['combined_prepared_validation_command'] = prepared_validation_command(selection)
     if selection in NEW_MODES:
         plan['independent_observer_validation_commands'] = new_observer_validation_commands(selection)
-    elif selection == P8DEF_COMBINED:
+    elif selection in COMBINED_NEW_MODES:
         plan['combined_new_observer_validation_commands'] = {
             mode: new_observer_validation_commands(mode, runtime_selection=selection) for mode in NEW_MODES}
     (result/'test-plan.json').write_text(json.dumps(plan, indent=2)+'\n', encoding='utf-8')
@@ -845,7 +854,7 @@ def build(workspace):
     if selection in NEW_MODES:
         provenance['independent_observer_validation'] = validate_new_observer(workspace, selection)
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
-    elif selection == P8DEF_COMBINED:
+    elif selection in COMBINED_NEW_MODES:
         provenance['combined_new_observer_validation'] = {}
         for mode in NEW_MODES:
             provenance['combined_new_observer_validation'][mode] = validate_new_observer(

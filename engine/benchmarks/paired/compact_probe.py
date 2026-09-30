@@ -197,8 +197,8 @@ def slot_diff_semantic_output(path, selection):
     other fields. The Rust probe itself still applies/reverses every instruction
     and asserts complete state restoration and incremental-hash consistency.
     """
-    if selection not in ('slot-diff', ci.P8DEF_COMBINED):
-        raise ValueError('Instruction representation exemption is only valid for slot-diff or p8def-combined')
+    if selection not in ('slot-diff', *ci.COMBINED_NEW_MODES):
+        raise ValueError('Instruction representation exemption is only valid for slot-diff or explicit combined P8d/e/f modes')
     validate_output(path)
     rows = [_json(line) for line in path.read_text(encoding='utf-8').splitlines()]
     removed = 0
@@ -227,7 +227,9 @@ def validate_independent_candidate(workspace, out_dir, selection, receipt, save)
     if selection not in ci.P8DEF_MODES:
         raise ValueError('Invalid independent candidate representation comparison')
     comparison = {'selection': selection, 'variants': {}, 'performance_measurement': False,
-                  'scope': ('all four validated runtime flags common; all three new runtime flags on candidate'
+                  'scope': ('all four validated runtime flags and P8d common; candidate adds only P8e/P8f'
+                            if selection == ci.P8D_VS_P8DEF else
+                            'all four validated runtime flags common; all three new runtime flags on candidate'
                             if selection == ci.P8DEF_COMBINED else
                             'all four validated core runtime flags common; exactly one new candidate flag'),
                   'raw_outputs_retained': True}
@@ -262,7 +264,7 @@ def validate_independent_candidate(workspace, out_dir, selection, receipt, save)
         _run([str(binary), str(workspace/'baseline/engine')], cwd, env, folder/'probe',
              600, receipt['commands'], save)
         item['output'] = validate_output(folder/'probe.stdout')
-        if selection in ('slot-diff', ci.P8DEF_COMBINED):
+        if selection in ('slot-diff', *ci.COMBINED_NEW_MODES):
             item['semantic_output'] = slot_diff_semantic_output(folder/'probe.stdout', selection)
         _run([str(binary), '--layout'], cwd, env, folder/'layout', 60, receipt['commands'], save)
         item['layout'] = validate_layout(folder/'layout.stdout')
@@ -270,7 +272,7 @@ def validate_independent_candidate(workspace, out_dir, selection, receipt, save)
     before = (out_dir/'independent-candidate/baseline/probe.stdout').read_bytes()
     after = (out_dir/'independent-candidate/candidate/probe.stdout').read_bytes()
     comparison['complete_jsonl_byte_equal'] = before == after
-    if selection in ('slot-diff', ci.P8DEF_COMBINED):
+    if selection in ('slot-diff', *ci.COMBINED_NEW_MODES):
         outputs = [comparison['variants'][tree]['semantic_output'] for tree in ('baseline', 'candidate')]
         if outputs[0] != outputs[1]:
             raise ValueError('Slot-diff complete semantic probe outputs differ beyond instruction representation')
