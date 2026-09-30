@@ -177,7 +177,7 @@ def _run(argv, cwd, env, stem, timeout, commands, save):
 
 def _fingerprints(workspace, label, compact, off_guard):
     request = json.loads((workspace/'ci-results/request.json').read_text(encoding='utf-8'))
-    known = ci.ALL_EXPERIMENT_FEATURES if request.get('candidate_feature') in ci.NEW_MODES else ci.EXPERIMENT_FEATURES
+    known = ci.ALL_EXPERIMENT_FEATURES if request.get('candidate_feature') in ci.P8DEF_MODES else ci.EXPERIMENT_FEATURES
     expected = {feature: False for feature in known}
     expected.update({HURT: True, COMPACT: compact})
     kinds = ['lib-lab_engine.json']
@@ -197,8 +197,8 @@ def slot_diff_semantic_output(path, selection):
     other fields. The Rust probe itself still applies/reverses every instruction
     and asserts complete state restoration and incremental-hash consistency.
     """
-    if selection != 'slot-diff':
-        raise ValueError('Instruction representation exemption is only valid for slot-diff')
+    if selection not in ('slot-diff', ci.P8DEF_COMBINED):
+        raise ValueError('Instruction representation exemption is only valid for slot-diff or p8def-combined')
     validate_output(path)
     rows = [_json(line) for line in path.read_text(encoding='utf-8').splitlines()]
     removed = 0
@@ -224,10 +224,12 @@ def slot_diff_semantic_output(path, selection):
 
 
 def validate_independent_candidate(workspace, out_dir, selection, receipt, save):
-    if selection not in ci.NEW_MODES:
+    if selection not in ci.P8DEF_MODES:
         raise ValueError('Invalid independent candidate representation comparison')
     comparison = {'selection': selection, 'variants': {}, 'performance_measurement': False,
-                  'scope': 'all four validated core runtime flags common; exactly one new candidate flag',
+                  'scope': ('all four validated runtime flags common; all three new runtime flags on candidate'
+                            if selection == ci.P8DEF_COMBINED else
+                            'all four validated core runtime flags common; exactly one new candidate flag'),
                   'raw_outputs_retained': True}
     receipt['independent_candidate_comparison'] = comparison
     for tree in ('baseline', 'candidate'):
@@ -260,7 +262,7 @@ def validate_independent_candidate(workspace, out_dir, selection, receipt, save)
         _run([str(binary), str(workspace/'baseline/engine')], cwd, env, folder/'probe',
              600, receipt['commands'], save)
         item['output'] = validate_output(folder/'probe.stdout')
-        if selection == 'slot-diff':
+        if selection in ('slot-diff', ci.P8DEF_COMBINED):
             item['semantic_output'] = slot_diff_semantic_output(folder/'probe.stdout', selection)
         _run([str(binary), '--layout'], cwd, env, folder/'layout', 60, receipt['commands'], save)
         item['layout'] = validate_layout(folder/'layout.stdout')
@@ -268,7 +270,7 @@ def validate_independent_candidate(workspace, out_dir, selection, receipt, save)
     before = (out_dir/'independent-candidate/baseline/probe.stdout').read_bytes()
     after = (out_dir/'independent-candidate/candidate/probe.stdout').read_bytes()
     comparison['complete_jsonl_byte_equal'] = before == after
-    if selection == 'slot-diff':
+    if selection in ('slot-diff', ci.P8DEF_COMBINED):
         outputs = [comparison['variants'][tree]['semantic_output'] for tree in ('baseline', 'candidate')]
         if outputs[0] != outputs[1]:
             raise ValueError('Slot-diff complete semantic probe outputs differ beyond instruction representation')
@@ -297,7 +299,7 @@ def validate_compact(workspace, out_dir):
     save()
     try:
         request = json.loads((workspace/'ci-results/request.json').read_text(encoding='utf-8'))
-        if request['candidate_feature'] not in ('compact-volatiles', 'all-optimizations', *ci.NEW_MODES):
+        if request['candidate_feature'] not in ('compact-volatiles', 'all-optimizations', *ci.P8DEF_MODES):
             raise ValueError('Compact gate requires compact-volatiles or all-optimizations mode')
         receipt['selection'] = request['candidate_feature']
         receipt['isolated_feature_scope'] = 'hurt-readers common; compact on/off; leaf/prepared/observers off'
@@ -324,7 +326,7 @@ def validate_compact(workspace, out_dir):
             if os.path.lexists(target):
                 raise ValueError(f'Compact target must be fresh: {target}')
             environment(target)
-        if request['candidate_feature'] in ci.NEW_MODES:
+        if request['candidate_feature'] in ci.P8DEF_MODES:
             for tree in ('baseline', 'candidate'):
                 if os.path.lexists(workspace/('target-' + request['candidate_feature'] + '-probe-' + tree)):
                     raise ValueError('Independent representation targets must be fresh')
@@ -365,7 +367,7 @@ def validate_compact(workspace, out_dir):
             raise ValueError('Default-off layout differs from baseline')
         if variants['baseline']['layout'] == variants['candidate-on']['layout']:
             raise ValueError('Compact-on layout did not differ despite requested activation')
-        if request['candidate_feature'] in ci.NEW_MODES:
+        if request['candidate_feature'] in ci.P8DEF_MODES:
             validate_independent_candidate(workspace, out_dir, request['candidate_feature'], receipt, save)
         if sources != {tree: _source_hashes(workspace/tree) for tree in sources}:
             raise ValueError('Sources or fixture inputs changed during compact validation')

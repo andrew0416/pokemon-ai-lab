@@ -3,12 +3,31 @@
 This evaluates correctness, not speed. No elapsed-time performance claim is
 derived from simultaneous GitHub jobs. Production engine code is unchanged.
 
-Eight immutable builds cover the pre-P8g feature-off baseline, P8g, and P9/P8c/P10
-individually enabled and disabled with P8g held constant. See `variants.json`.
-The independent candidates are not silently combined. P9/P8c observer features
-are enabled only to demonstrate that their optimized paths actually execute;
-observer records are excluded from logical-output equality and retained as
-separate evidence. All builds use generic x86-64, with no AVX2 requirement.
+Two fresh builds compare `base` (old4 enabled: hurt readers, prepared turn,
+leaf ending, compact volatiles) against `p8def_combined` (old4 plus replay action
+keys, Slot diff, and stats-off cost all enabled together). Both use immutable
+source `048e4748e8854dac5eb511a358cc2f8c38c9dc29`. Prepared/leaf observer features
+and their activation controls are required on both sides. P11 and all other
+experiment features are excluded. See `variants.json` and
+`p8def_combined_contract.py`. All builds use generic x86-64.
+
+The unchanged 6,184-case plan executes 3,056 oracle, 2,808 turn, and 320 search
+cases independently for each build. Prior independent P8d/e/f results are not
+combined into a verdict. The only representation exception is the existing
+P8e `state-equivalent-slot-diff-v1` contract: turn **outcome** instruction text
+is removed from the canonical semantic digest after the unchanged probe has
+validated apply/reverse and incremental hashes. Every other field, record,
+probability bit, order, state, hidden payload, and error remains compared.
+Search output and oracle semantics retain their original exact contracts.
+Original turn streams remain compressed and accompanied by raw SHA-256 and
+byte counts. The summary retains `raw_turn_different_ids` and matching
+`raw_turn_differences` rows containing both sides' raw SHA/byte evidence.
+
+The contract CLI accepts `--variants variants.json`, `--plan case-plan.json`,
+and `--summary agreement-summary.json`, separately or together. `run.py`
+routes this two-variant comparison to the combined validator as well, so
+missing denominators or detailed activation evidence cannot pass its final
+summary. Observer diagnostics remain separate from logical output equality.
 
 The original Showdown corpus contains 1,781 position IDs, 2,052 reports and six
 explicitly excluded stale pins. IDs are not synonymous with unique states.
@@ -36,8 +55,8 @@ source, feature and binary fingerprints accompany the fresh result records.
 The historical corpus is a regression dataset, not an unseen held-out proof
 of all game rules. A successful comparison establishes agreement on the
 reported inputs and configurations only. Python bindings, future mechanics,
-all possible hidden states, and combinations of independent optimizations
-still require their own validation.
+all possible hidden states, and other feature combinations still require
+their own validation.
 
 ## Explicit fixture contracts (follow-up to run 36633204923)
 

@@ -25,7 +25,8 @@ import tarfile
 import time
 
 from combined_contract import validate_activation_probe, validate_precedence
-from p8def_contract import comparison_equal, turn_state_digest
+from p8def_contract import comparison_equal as independent_comparison_equal, turn_state_digest
+import p8def_combined_contract as p8def_combined
 
 HERE = Path(__file__).resolve().parent
 
@@ -117,7 +118,20 @@ def git(root, *args):
 
 
 def variant(name):
-    return next(v for v in read(HERE / "variants.json")["variants"] if v["id"] == name)
+    document = read(HERE / "variants.json")
+    if is_p8def_combined(document):
+        p8def_combined.validate_variants(document)
+    return next(v for v in document["variants"] if v["id"] == name)
+
+
+def is_p8def_combined(document):
+    return any(v.get("id") == p8def_combined.CANDIDATE for v in document["variants"])
+
+
+def comparison_equal(v, kind, candidate, original):
+    if v.get("id") == p8def_combined.CANDIDATE:
+        return p8def_combined.comparison_equal(v, kind, candidate, original)
+    return independent_comparison_equal(v, kind, candidate, original)
 
 
 def semantic_oracle(verdict):
@@ -715,6 +729,8 @@ def evaluate(args):
     # Job plan is frozen before any variant is run and shared byte-for-byte.
     out = args.out.resolve()
     plan_data = read(args.plan)
+    if args.variant in ("base", p8def_combined.CANDIDATE) and is_p8def_combined(read(HERE / "variants.json")):
+        p8def_combined.validate_plan(plan_data)
     jobs = plan_data["jobs"]
     for relative, h in plan_data["inputs"].items():
         assert sha(relative) == h, relative
@@ -754,7 +770,11 @@ def evaluate(args):
 
 
 def compare(args):
-    variants = read(HERE / "variants.json")["variants"]
+    document = read(HERE / "variants.json")
+    combined = is_p8def_combined(document)
+    if combined:
+        p8def_combined.validate_variants(document)
+    variants = document["variants"]
     plans = list(args.results.rglob("case-plan.json"))
     errors, by_variant, results = [], {}, {}
     expected_ids, expected_kinds = set(), {}
@@ -762,7 +782,13 @@ def compare(args):
     if len(plan_hashes) != 1:
         errors.append("missing or conflicting frozen case plans")
     if plans:
-        declared = read(plans[0])["jobs"]
+        plan_data = read(plans[0])
+        if combined:
+            try:
+                p8def_combined.validate_plan(plan_data)
+            except (ValueError, KeyError, TypeError) as error:
+                errors.append("combined case plan: " + str(error))
+        declared = plan_data["jobs"]
         expected_ids = {j["id"] for j in declared}
         expected_kinds = {j["id"]: j["kind"] for j in declared}
         if len(expected_ids) != len(declared):
@@ -822,7 +848,7 @@ def compare(args):
         if not v["compare_to"]:
             continue
         counts = {"equal_success": 0, "equal_error": 0, "different": 0, "uncompared": 0}
-        details, per_kind, representation_differences = [], {}, []
+        details, per_kind, representation_differences, representation_evidence = [], {}, [], []
         base = by_variant[v["compare_to"]]
         for key in sorted(expected_ids):
             candidate, original = by_variant[v["id"]].get(key), base.get(key)
@@ -837,6 +863,9 @@ def compare(args):
                 status = "equal_success" if same and candidate.get("successful") and original.get("successful") else ("equal_error" if same else "different")
             if kind == "turn" and candidate and original and candidate.get("sha256") != original.get("sha256"):
                 representation_differences.append(key)
+                representation_evidence.append({"id": key,
+                    "baseline_sha256": original.get("sha256"), "candidate_sha256": candidate.get("sha256"),
+                    "baseline_stdout_bytes": original.get("stdout_bytes"), "candidate_stdout_bytes": candidate.get("stdout_bytes")})
             counts[status] += 1
             pc = per_kind.setdefault(kind, {"equal_success": 0, "equal_error": 0, "different": 0, "uncompared": 0})
             pc[status] += 1
@@ -846,7 +875,8 @@ def compare(args):
         summary["comparisons"][v["id"]] = {"baseline": v["compare_to"], **counts,
                                                "by_kind": per_kind, "details": details,
                                                "comparison_contract": v.get("comparison_contract", "exact-v1"),
-                                               "raw_turn_different_ids": representation_differences}
+                                               "raw_turn_different_ids": representation_differences,
+                                               "raw_turn_differences": representation_evidence}
         summary["differential_complete"] &= counts["different"] == 0 and counts["uncompared"] == 0
     summary["oracle_all_match"] = bool(expected_ids) and all(
         set(counts) == {"match"} and counts["match"] == sum(k == "oracle" for k in expected_kinds.values())
@@ -855,6 +885,12 @@ def compare(args):
         c["equal_error"] == 0 for c in summary["comparisons"].values())
     summary["activation_passed"] = len(results) == len(variants) and all(a.get("passed") for a in summary["activation"].values())
     summary["complete"] = summary["all_requested_successful"] and summary["activation_passed"]
+    if combined:
+        try:
+            p8def_combined.validate_summary(summary)
+        except (ValueError, KeyError, TypeError) as error:
+            errors.append("combined summary contract: " + str(error))
+            summary["complete"] = False
     write(args.out, summary)
     print(json.dumps({k: v for k, v in summary.items() if k != "comparisons"}, indent=2))
     return 0 if summary["complete"] else 1

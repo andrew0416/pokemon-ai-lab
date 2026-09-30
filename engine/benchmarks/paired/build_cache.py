@@ -211,7 +211,7 @@ def make_recipe(workspace, label):
         raise ValueError('Tracked source changed since preparation')
     untracked = subprocess.check_output(
         ['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=root, timeout=30)
-    compact = request['candidate_feature'] in ('compact-volatiles', 'all-optimizations', *ci.NEW_MODES)
+    compact = request['candidate_feature'] in ('compact-volatiles', 'all-optimizations', *ci.P8DEF_MODES)
     allowed_untracked = {'engine/search/examples/ci_bench.rs'}
     if compact:
         allowed_untracked.add(COMPACT_PROBE_PATH)
@@ -521,7 +521,7 @@ def restore(workspace, label):
     try:
         import ci
         request_path = workspace/'ci-results/request.json'
-        if request_path.is_file() and json.loads(request_path.read_text(encoding='utf-8')).get('candidate_feature') in ci.NEW_MODES:
+        if request_path.is_file() and json.loads(request_path.read_text(encoding='utf-8')).get('candidate_feature') in ci.P8DEF_MODES:
             _diagnostic(workspace, label, status='fresh-regressions-required', reused=False, sealed=False,
                         reason='Independent candidates rerun both complete regression arms in this run')
             return False
