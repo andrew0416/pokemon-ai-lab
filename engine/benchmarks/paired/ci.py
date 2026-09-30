@@ -20,7 +20,7 @@ PREPARED_OBSERVER_FEATURE = 'experiment-prepared-turn-observe'
 COMPACT_FEATURE = 'experiment-compact-volatiles'
 COMPACT_PROBE_PATH = 'engine/scenario/examples/ci_compact_probe.rs'
 FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles',
-                   'all-optimizations', 'replay-action-keys', 'slot-diff', 'stats-off-cost', 'p8def-combined', 'p8d-vs-p8def', 'borrowed-child-keys', 'matrix-pass-through', 'prepared-leaf')
+                   'all-optimizations', 'replay-action-keys', 'slot-diff', 'stats-off-cost', 'p8def-combined', 'p8d-vs-p8def', 'borrowed-child-keys', 'matrix-pass-through', 'prepared-leaf', 'r1-matrix-pass-through')
 EXPERIMENT_FEATURES = (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE,
                        PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE, COMPACT_FEATURE)
 NEW_MODES = ('replay-action-keys', 'slot-diff', 'stats-off-cost')
@@ -37,7 +37,8 @@ MATRIX_OBSERVER = MATRIX_FEATURE + '-observer'
 PL_MODE = 'prepared-leaf'
 PL_FEATURE = 'experiment-prepared-leaf'
 PL_OBSERVER = PL_FEATURE + '-observer'
-STRICT_MODES = (*P8DEF_MODES, BORROWED_MODE, MATRIX_MODE, PL_MODE)
+R1_MATRIX_MODE = 'r1-matrix-pass-through'
+STRICT_MODES = (*P8DEF_MODES, BORROWED_MODE, MATRIX_MODE, PL_MODE, R1_MATRIX_MODE)
 NEW_FEATURES = {mode: 'experiment-' + mode for mode in NEW_MODES}
 NEW_OBSERVERS = {mode: feature + '-observer' for mode, feature in NEW_FEATURES.items()}
 ALL_EXPERIMENT_FEATURES = (*EXPERIMENT_FEATURES, *NEW_FEATURES.values(), *NEW_OBSERVERS.values(),
@@ -96,6 +97,11 @@ def new_runtime_modes(selection, label):
 def feature_args(selection, label):
     if selection not in FEATURE_CHOICES or label not in ('baseline', 'candidate'):
         raise ValueError('Invalid candidate feature or build label')
+    if selection == R1_MATRIX_MODE:
+        features = feature_args(BORROWED_MODE, 'candidate')[1]
+        if label == 'candidate':
+            features += ',lab-search/' + MATRIX_FEATURE
+        return ['--features', features]
     if selection == PL_MODE:
         features = feature_args(BORROWED_MODE, 'candidate')[1]
         if label == 'candidate':
@@ -248,6 +254,8 @@ def injected_sources(selection):
         files['engine/search/examples/ci_matrix_pass_through_observer.rs'] = Path(__file__).with_name('matrix_pass_through_probe.rs')
     if selection == PL_MODE:
         files['engine/search/examples/ci_prepared_leaf_observer.rs'] = Path(__file__).with_name('prepared_leaf_probe.rs')
+    if selection == R1_MATRIX_MODE:
+        files['engine/search/examples/ci_r1_matrix_pass_through_observer.rs'] = Path(__file__).with_name('r1_matrix_pass_through_probe.rs')
     return files
 
 
@@ -306,6 +314,10 @@ def refs(workspace):
         from prepared_leaf import SOURCE_SHA
         if baseline.lower() != SOURCE_SHA or threads != 1 or pairs != 10:
             raise ValueError('P15 requires frozen source, one thread and ten pairs')
+    if candidate_feature == R1_MATRIX_MODE:
+        from r1_matrix_pass_through import SOURCE_SHA
+        if baseline.lower() != SOURCE_SHA or threads != 1 or pairs != 10:
+            raise ValueError('R1/P14 requires frozen source, one thread and ten pairs')
     if pairs < 2 or pairs > 20 or pairs % 2:
         raise ValueError('pairs must be even, from 2 through 20')
     cpus = len(os.sched_getaffinity(0)) if hasattr(os, 'sched_getaffinity') else os.cpu_count()
@@ -376,6 +388,10 @@ def prepare(workspace):
         elif selection in COMBINED_NEW_MODES:
             metadata['sources'][label]['combined_candidate_declarations'] = {
                 mode: verify_new_declarations(root, mode) for mode in NEW_MODES}
+        elif selection == R1_MATRIX_MODE:
+            import r1_matrix_pass_through
+            metadata['sources'][label]['r1_matrix_declarations'] = r1_matrix_pass_through.verify_declarations(root)
+            metadata['sources'][label]['replay_declarations'] = verify_new_declarations(root, 'replay-action-keys')
         elif selection == PL_MODE:
             import prepared_leaf
             metadata['sources'][label]['prepared_leaf_declarations'] = prepared_leaf.verify_declarations(root)
@@ -515,20 +531,20 @@ def fingerprint_expectations(selection, label):
         core = {name: False for name in ALL_EXPERIMENT_FEATURES}
         core.update({EXPERIMENT_FEATURE: True, PREPARED_FEATURE: True,
                      LEAF_FEATURE: True, COMPACT_FEATURE: True})
-        modes = ('replay-action-keys',) if selection in (BORROWED_MODE, MATRIX_MODE, PL_MODE) else new_runtime_modes(selection, label)
+        modes = ('replay-action-keys',) if selection in (BORROWED_MODE, MATRIX_MODE, PL_MODE, R1_MATRIX_MODE) else new_runtime_modes(selection, label)
         for mode in modes:
             core[NEW_FEATURES[mode]] = True
-        if selection in (BORROWED_MODE, PL_MODE):
-            core[BORROWED_FEATURE] = selection == PL_MODE or label == 'candidate'
+        if selection in (BORROWED_MODE, PL_MODE, R1_MATRIX_MODE):
+            core[BORROWED_FEATURE] = selection in (PL_MODE, R1_MATRIX_MODE) or label == 'candidate'
         if selection == PL_MODE:
             core[PL_FEATURE] = label == 'candidate'
         search = {name: False for name in ALL_EXPERIMENT_FEATURES}
         search.update({PREPARED_FEATURE: True, LEAF_FEATURE: True})
-        if selection in (BORROWED_MODE, PL_MODE):
-            search[BORROWED_FEATURE] = selection == PL_MODE or label == 'candidate'
+        if selection in (BORROWED_MODE, PL_MODE, R1_MATRIX_MODE):
+            search[BORROWED_FEATURE] = selection in (PL_MODE, R1_MATRIX_MODE) or label == 'candidate'
         if selection == PL_MODE:
             search[PL_FEATURE] = label == 'candidate'
-        if selection == MATRIX_MODE:
+        if selection in (MATRIX_MODE, R1_MATRIX_MODE):
             search[MATRIX_FEATURE] = label == 'candidate'
         return ({'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json'),
                  'lab-search': ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')},
@@ -855,6 +871,8 @@ def build(workspace):
         plan['matrix_pass_through_validation'] = 'fresh common5 dense/compact bit-exact matrix, allocator and public search activation proof'
     if selection == PL_MODE:
         plan['prepared_leaf_validation'] = 'fresh R1 dense/compact exact prepared-leaf semantics, P13 preservation and actual sharing activation'
+    if selection == R1_MATRIX_MODE:
+        plan['r1_matrix_validation'] = 'fresh R1/P14 exact matrix, allocator, borrowed-key preservation and public activation'
     (result/'test-plan.json').write_text(json.dumps(plan, indent=2)+'\n', encoding='utf-8')
     provenance = json.loads((result/'provenance.json').read_text(encoding='utf-8'))
     provenance['build_plan'] = plan
@@ -951,6 +969,11 @@ def build(workspace):
     if selection == PL_MODE:
         import prepared_leaf
         provenance['prepared_leaf_validation'] = prepared_leaf.validate(workspace)
+        (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
+
+    if selection == R1_MATRIX_MODE:
+        import r1_matrix_pass_through
+        provenance['r1_matrix_validation'] = r1_matrix_pass_through.validate(workspace)
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
 
 def main():

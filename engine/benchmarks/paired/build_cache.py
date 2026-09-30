@@ -234,6 +234,8 @@ def make_recipe(workspace, label):
         controller_files += ('matrix_pass_through.py', 'matrix_pass_through_probe.rs')
     if request['candidate_feature'] == ci.PL_MODE:
         controller_files += ('prepared_leaf.py', 'prepared_leaf_probe.rs')
+    if request['candidate_feature'] == ci.R1_MATRIX_MODE:
+        controller_files += ('r1_matrix_pass_through.py', 'r1_matrix_pass_through_probe.rs', 'matrix_pass_through.py', 'borrowed_child_keys.py')
     driver = {name: digest(controller/name) for name in controller_files}
     workflow = controller.parents[2]/'.github/workflows/engine-benchmark.yml'
     driver['.github/workflows/engine-benchmark.yml'] = digest(workflow)
@@ -274,6 +276,14 @@ def make_recipe(workspace, label):
                 or digest(probe) != driver['prepared_leaf_probe.rs']):
             raise ValueError('Injected P15 observer probe differs from controller source')
         probe_identity['prepared_leaf_probe_sha256'] = digest(probe)
+    if request['candidate_feature'] == ci.R1_MATRIX_MODE:
+        from r1_matrix_pass_through import PROBE_PATH
+        probe = root/PROBE_PATH
+        if (probe.is_symlink() or not probe.is_file()
+                or not probe.resolve().is_relative_to(root.resolve())
+                or digest(probe) != driver['r1_matrix_pass_through_probe.rs']):
+            raise ValueError('Injected R1/P14 observer probe differs from controller source')
+        probe_identity['r1_matrix_probe_sha256'] = digest(probe)
     packages, expected, hurt_active = ci.fingerprint_expectations(
         request['candidate_feature'], label)
     return {'schema_version': SCHEMA_VERSION, 'label': label, 'suite': request['suite'],

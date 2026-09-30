@@ -30,6 +30,7 @@ import p8def_combined_contract as p8def_combined
 import p13_contract as p13
 import p14_contract as p14
 import p15_contract as p15
+import r1_p14_contract as r1_p14
 
 HERE = Path(__file__).resolve().parent
 
@@ -133,6 +134,8 @@ def is_p8def_combined(document):
 
 
 def experiment_contract(document):
+    if any(v.get("id") == r1_p14.CANDIDATE for v in document["variants"]):
+        return r1_p14
     if any(v.get("id") == p15.CANDIDATE for v in document["variants"]):
         return p15
     if any(v.get("id") == p14.CANDIDATE for v in document["variants"]):
@@ -143,6 +146,8 @@ def experiment_contract(document):
 
 
 def comparison_equal(v, kind, candidate, original):
+    if v.get("id") == r1_p14.CANDIDATE:
+        return r1_p14.comparison_equal(v, kind, candidate, original)
     if v.get("id") == p15.CANDIDATE:
         return p15.comparison_equal(v, kind, candidate, original)
     if v.get("id") == p14.CANDIDATE:
