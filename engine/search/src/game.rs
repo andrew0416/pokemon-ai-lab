@@ -36,8 +36,8 @@ pub enum Pruning {
     /// Every legal choice.
     All,
     /// Legal choices minus damaging moves aimed at an ally (Pollen Puff and moves that can
-    /// only target an ally excepted). Status moves keep their ally targets (Heal Pulse,
-    /// Coaching, Skill Swap, ...).
+    /// only target an ally excepted). Forced actions keep their locked targets. Status moves
+    /// keep their ally targets (Heal Pulse, Coaching, Skill Swap, ...).
     #[default]
     Sensible,
 }
@@ -294,7 +294,8 @@ fn assignments<const N: usize>(
 }
 
 /// [`Pruning::Sensible`]: no damaging move at an ally unless the move heals it (Pollen Puff)
-/// or can target nothing else.
+/// or can target nothing else. A forced action is already fixed by the turn engine and
+/// must survive pruning, independently for each slot.
 fn sensible<const N: usize>(state: &State<N>, side: SideId, action: &[SlotAction; N]) -> bool {
     action.iter().enumerate().all(|(i, slot_action)| {
         let SlotAction::Move { index, target, .. } = *slot_action else {
@@ -303,10 +304,17 @@ fn sensible<const N: usize>(state: &State<N>, side: SideId, action: &[SlotAction
         if target >= 0 {
             return true;
         }
-        let Some(mon) = state.active(SlotRef {
+        let slot = SlotRef {
             side,
             slot: i as u8,
-        }) else {
+        };
+        // legal_joint_actions offers one normalized action for a locked slot. Removing
+        // its target would remove every joint choice, not a selectable ally attack.
+        // Check before the move index: a called locked move may use index 0 as a placeholder.
+        if locked_move(state, slot).is_some() {
+            return true;
+        }
+        let Some(mon) = state.active(slot) else {
             return true;
         };
         let Some(id) = mon.moves.get(index as usize).map(|m| m.id) else {
