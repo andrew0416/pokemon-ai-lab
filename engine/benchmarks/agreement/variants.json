@@ -1,13 +1,70 @@
 {
   "schema": 1,
   "variants": [
-    {"id":"baseline","sha":"693cd58eba1803827d18bb9d5276c5a05396fe43","features":[],"compare_to":null},
-    {"id":"p8g","sha":"693cd58eba1803827d18bb9d5276c5a05396fe43","features":["lab-engine/experiment-hurt-readers"],"compare_to":"baseline"},
-    {"id":"p9-off","sha":"1edbf061c38b2c07326679ad3139491c3c15d83c","features":["lab-engine/experiment-hurt-readers"],"compare_to":"p8g"},
-    {"id":"p9-on","sha":"1edbf061c38b2c07326679ad3139491c3c15d83c","features":["lab-engine/experiment-hurt-readers","lab-search/experiment-leaf-ending-observer"],"compare_to":"p8g"},
-    {"id":"p8c-off","sha":"209bf767050fbc236de85a6e8435a6535dbf6041","features":["lab-engine/experiment-hurt-readers"],"compare_to":"p8g"},
-    {"id":"p8c-on","sha":"209bf767050fbc236de85a6e8435a6535dbf6041","features":["lab-engine/experiment-hurt-readers","lab-search/experiment-prepared-turn-observe"],"compare_to":"p8g"},
-    {"id":"p10-off","sha":"6ce1463e1e4e543555efd3f90ad18001d2b13507","features":["lab-engine/experiment-hurt-readers"],"compare_to":"p8g"},
-    {"id":"p10-on","sha":"6ce1463e1e4e543555efd3f90ad18001d2b13507","features":["lab-engine/experiment-hurt-readers","lab-engine/experiment-compact-volatiles"],"compare_to":"p8g"}
+    {
+      "id": "baseline",
+      "sha": "173addebc4442cfc5e49d614fce4a81ede44b74d",
+      "features": [],
+      "compare_to": null
+    },
+    {
+      "id": "p8g",
+      "sha": "173addebc4442cfc5e49d614fce4a81ede44b74d",
+      "features": [
+        "lab-engine/experiment-hurt-readers"
+      ],
+      "compare_to": "baseline"
+    },
+    {
+      "id": "p9-off",
+      "sha": "0ed26ec533d9f6314abc464cecdb8994da5ce607",
+      "features": [
+        "lab-engine/experiment-hurt-readers"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p9-on",
+      "sha": "0ed26ec533d9f6314abc464cecdb8994da5ce607",
+      "features": [
+        "lab-engine/experiment-hurt-readers",
+        "lab-search/experiment-leaf-ending-observer"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p8c-off",
+      "sha": "9569c78b0d61279e41b3c9b54ac81c68b8e69519",
+      "features": [
+        "lab-engine/experiment-hurt-readers"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p8c-on",
+      "sha": "9569c78b0d61279e41b3c9b54ac81c68b8e69519",
+      "features": [
+        "lab-engine/experiment-hurt-readers",
+        "lab-search/experiment-prepared-turn-observe"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p10-off",
+      "sha": "89bfe487c2dd41b2de93ae1ed759e3524ca98c50",
+      "features": [
+        "lab-engine/experiment-hurt-readers"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p10-on",
+      "sha": "89bfe487c2dd41b2de93ae1ed759e3524ca98c50",
+      "features": [
+        "lab-engine/experiment-hurt-readers",
+        "lab-engine/experiment-compact-volatiles"
+      ],
+      "compare_to": "p8g"
+    }
   ]
 }

@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "purpose": "fresh correctness reevaluation after shared fixes",
+  "previous_run": 36633204923,
+  "controller_base": "45db088eb73799b073f1a47e0344cb1c7de3e4aa",
+  "fix_commits": [
+    "a76d699bf8b29417f443035807b3e4a31ceedc50",
+    "b4812e0e2bbba8f9d0c844cd66f237b1808fd3ba",
+    "f92e38df1c2746f6c81b445ac2b6148ab378fc1d"
+  ],
+  "patch_sha256": "7ef3d0df6506b2e6e19547d0b8ad913b766334c9598146ebba96f37ad85517c6",
+  "patch_id": "d7b0fc9ab9954ffed0b2a18382177a998d7803b8",
+  "changed_paths": [
+    "engine/core/src/turn/abilities.rs",
+    "engine/core/src/turn/battle.rs",
+    "engine/core/src/turn/lock.rs",
+    "engine/core/src/turn/moves.rs",
+    "engine/core/src/turn/moves/ability_hooks.rs",
+    "engine/core/src/turn/moves/absent_user_tests.rs",
+    "engine/scenario/src/parity.rs",
+    "engine/scenario/tests/r5d_future_absent_overlay.rs",
+    "engine/scenario/tests/refusals_rr.rs",
+    "engine/search/src/game.rs",
+    "engine/search/tests/fixtures/forced_ally_charge/.gitattributes",
+    "engine/search/tests/fixtures/forced_ally_charge/electro-shot.before.json",
+    "engine/search/tests/fixtures/forced_ally_charge/electro-shot.scenario.json",
+    "engine/search/tests/fixtures/forced_ally_charge/provenance.json",
+    "engine/search/tests/fixtures/forced_ally_charge/solar-beam.before.json",
+    "engine/search/tests/fixtures/forced_ally_charge/solar-beam.scenario.json",
+    "engine/search/tests/forced_ally_charge.rs"
+  ],
+  "original_variants": [
+    {
+      "id": "baseline",
+      "sha": "693cd58eba1803827d18bb9d5276c5a05396fe43",
+      "features": [],
+      "compare_to": null
+    },
+    {
+      "id": "p8g",
+      "sha": "693cd58eba1803827d18bb9d5276c5a05396fe43",
+      "features": [
+        "lab-engine/experiment-hurt-readers"
+      ],
+      "compare_to": "baseline"
+    },
+    {
+      "id": "p9-off",
+      "sha": "1edbf061c38b2c07326679ad3139491c3c15d83c",
+      "features": [
+        "lab-engine/experiment-hurt-readers"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p9-on",
+      "sha": "1edbf061c38b2c07326679ad3139491c3c15d83c",
+      "features": [
+        "lab-engine/experiment-hurt-readers",
+        "lab-search/experiment-leaf-ending-observer"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p8c-off",
+      "sha": "209bf767050fbc236de85a6e8435a6535dbf6041",
+      "features": [
+        "lab-engine/experiment-hurt-readers"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p8c-on",
+      "sha": "209bf767050fbc236de85a6e8435a6535dbf6041",
+      "features": [
+        "lab-engine/experiment-hurt-readers",
+        "lab-search/experiment-prepared-turn-observe"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p10-off",
+      "sha": "6ce1463e1e4e543555efd3f90ad18001d2b13507",
+      "features": [
+        "lab-engine/experiment-hurt-readers"
+      ],
+      "compare_to": "p8g"
+    },
+    {
+      "id": "p10-on",
+      "sha": "6ce1463e1e4e543555efd3f90ad18001d2b13507",
+      "features": [
+        "lab-engine/experiment-hurt-readers",
+        "lab-engine/experiment-compact-volatiles"
+      ],
+      "compare_to": "p8g"
+    }
+  ],
+  "derived_sources": [
+    {
+      "variants": [
+        "baseline",
+        "p8g"
+      ],
+      "old_sha": "693cd58eba1803827d18bb9d5276c5a05396fe43",
+      "new_sha": "173addebc4442cfc5e49d614fce4a81ede44b74d",
+      "ref": "refs/heads/codex/agreement-fixed-baseline-p8g-20260930",
+      "tree": "80d1235d2fa95e75566dd0c6dd45960526ae5a58",
+      "patch_id": "d7b0fc9ab9954ffed0b2a18382177a998d7803b8",
+      "exact_reverse_restores_original_tree": true
+    },
+    {
+      "variants": [
+        "p9-off",
+        "p9-on"
+      ],
+      "old_sha": "1edbf061c38b2c07326679ad3139491c3c15d83c",
+      "new_sha": "0ed26ec533d9f6314abc464cecdb8994da5ce607",
+      "ref": "refs/heads/codex/agreement-fixed-p9-20260930",
+      "tree": "79c9d1c100ae811f866d6499166da17cf1acec2c",
+      "patch_id": "d7b0fc9ab9954ffed0b2a18382177a998d7803b8",
+      "exact_reverse_restores_original_tree": true
+    },
+    {
+      "variants": [
+        "p8c-off",
+        "p8c-on"
+      ],
+      "old_sha": "209bf767050fbc236de85a6e8435a6535dbf6041",
+      "new_sha": "9569c78b0d61279e41b3c9b54ac81c68b8e69519",
+      "ref": "refs/heads/codex/agreement-fixed-p8c-20260930",
+      "tree": "2f5d218d744401afe6dafbaf2e577621af2486a1",
+      "patch_id": "d7b0fc9ab9954ffed0b2a18382177a998d7803b8",
+      "exact_reverse_restores_original_tree": true
+    },
+    {
+      "variants": [
+        "p10-off",
+        "p10-on"
+      ],
+      "old_sha": "6ce1463e1e4e543555efd3f90ad18001d2b13507",
+      "new_sha": "89bfe487c2dd41b2de93ae1ed759e3524ca98c50",
+      "ref": "refs/heads/codex/agreement-fixed-p10-20260930",
+      "tree": "287b8bd0ad95f5958d74ae424850ceb9da005c80",
+      "patch_id": "d7b0fc9ab9954ffed0b2a18382177a998d7803b8",
+      "exact_reverse_restores_original_tree": true
+    }
+  ],
+  "all_original_refs_preserved": true,
+  "performance_measured": false
+}
