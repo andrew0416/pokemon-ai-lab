@@ -35,3 +35,7 @@ experiment-stats-off-cost = []
 experiment-stats-off-cost-observer = ["experiment-stats-off-cost"]
 # P13: borrowed position lookup only; no state identity or storage changes.
 experiment-borrowed-child-keys = []
+# P15 shares P8c's private validation cache with P9's completed flat leaves.
+experiment-prepared-leaf = ["experiment-prepared-turn", "experiment-leaf-ending-states"]
+# Independent observation enables the existing validator/P9 counters, not P15 runtime.
+experiment-prepared-leaf-observer = ["experiment-prepared-turn-observe", "experiment-leaf-ending-observer"]

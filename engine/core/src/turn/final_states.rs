@@ -44,11 +44,21 @@ pub fn try_enumerate_turn_final_states<const N: usize>(
         return Ok(None);
     }
     let choices = check_turn(state, ruleset, &choices)?;
-    let start = Pending::new(initial_queue(state, &choices));
+    enumerate_final_states_checked(state, &choices, options).map(Some)
+}
+
+// Both callers are inside turn: the public P9 entry point checked this state above,
+// and PreparedTurn checked its own unreplaceable snapshot. No transferable token/API.
+pub(super) fn enumerate_final_states_checked<const N: usize>(
+    state: &mut State<N>,
+    choices: &[JointAction<N>; 2],
+    options: EnumerateOptions,
+) -> Result<FinalStates<N>, TurnError> {
+    let start = Pending::new(initial_queue(state, choices));
     let endings = enumerate_stages(state, start, options, run_stage)?;
     #[cfg(feature = "experiment-leaf-ending-observer")]
     observer::batch();
-    Ok(Some(FinalStates { endings }))
+    Ok(FinalStates { endings })
 }
 
 /// Optional work counters for logic checks, never a timing or allocation benchmark.

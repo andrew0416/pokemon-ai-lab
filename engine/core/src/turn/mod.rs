@@ -38,6 +38,9 @@ mod moves;
 mod order;
 #[cfg(feature = "experiment-prepared-turn")]
 mod prepared;
+#[cfg(feature = "experiment-prepared-leaf-observer")]
+#[doc(hidden)]
+pub use prepared::leaf_observer as prepared_leaf_observer;
 #[cfg(feature = "experiment-prepared-turn")]
 #[doc(hidden)]
 pub use prepared::PreparedTurn;

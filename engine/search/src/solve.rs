@@ -36,6 +36,8 @@ use crate::tt::{self, DeepTable, TranspositionTable};
 
 #[cfg(feature = "experiment-leaf-ending-states")]
 mod leaf_endings;
+#[cfg(all(test, feature = "experiment-prepared-leaf"))]
+mod prepared_leaf_tests;
 
 #[cfg(any(
     feature = "experiment-borrowed-child-keys",
@@ -703,7 +705,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         next: Next<'_, N>,
         alpha: f32,
         beta: f32,
-        prepared: Option<(&mut PreparedMatrix<N>, usize, usize)>,
+        #[allow(unused_mut)] mut prepared: Option<(&mut PreparedMatrix<N>, usize, usize)>,
     ) -> Result<f32, SearchError> {
         if let Some(max) = self.config.max_turns {
             if self.turns >= max {
@@ -713,9 +715,19 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         self.turns += 1;
         let started = Instant::now();
         #[cfg(feature = "experiment-leaf-ending-states")]
-        if let Some(value) =
-            self.try_leaf_endings(state, decision, pair, next, alpha, beta, started)
-        {
+        if let Some(value) = self.try_leaf_endings(
+            state,
+            decision,
+            pair,
+            next,
+            alpha,
+            beta,
+            started,
+            #[cfg(feature = "experiment-prepared-leaf")]
+            prepared
+                .as_mut()
+                .map(|(batch, row, col)| (&mut **batch, *row, *col)),
+        ) {
             return value;
         }
         let transitions = match prepared {

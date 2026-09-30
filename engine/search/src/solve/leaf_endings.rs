@@ -14,6 +14,11 @@ impl<const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'_, N, E> {
         alpha: f32,
         beta: f32,
         started: Instant,
+        #[cfg(feature = "experiment-prepared-leaf")] prepared: Option<(
+            &mut PreparedMatrix<N>,
+            usize,
+            usize,
+        )>,
     ) -> Option<Result<f32, SearchError>> {
         #[cfg(test)]
         if !tests::enabled() {
@@ -25,6 +30,26 @@ impl<const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'_, N, E> {
         let [Choice::Turn(a), Choice::Turn(b)] = pair else {
             return None;
         };
+        #[cfg(feature = "experiment-prepared-leaf")]
+        let prepared_endings = match prepared {
+            Some((batch, row, col)) => {
+                match batch.try_final_states(row, col, self.config.enumerate_options()) {
+                    Ok(None) => None,
+                    result => Some(result),
+                }
+            }
+            None => None,
+        };
+        #[cfg(feature = "experiment-prepared-leaf")]
+        let endings = prepared_endings.unwrap_or_else(|| {
+            try_enumerate_turn_final_states(
+                state,
+                self.config.ruleset,
+                [a, b],
+                self.config.enumerate_options(),
+            )
+        });
+        #[cfg(not(feature = "experiment-prepared-leaf"))]
         let endings = try_enumerate_turn_final_states(
             state,
             self.config.ruleset,

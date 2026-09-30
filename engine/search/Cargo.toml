@@ -27,6 +27,9 @@ experiment-leaf-ending-observer = ["experiment-leaf-ending-states", "lab-engine/
 # P13 runtime and observer are independently opt-in so OFF/ON captures can be audited.
 experiment-borrowed-child-keys = ["lab-engine/experiment-borrowed-child-keys"]
 experiment-borrowed-child-keys-observer = []
+# P15 requires both bridges; neither runtime nor observer is a default feature.
+experiment-prepared-leaf = ["experiment-prepared-turn", "experiment-leaf-ending-states", "lab-engine/experiment-prepared-leaf"]
+experiment-prepared-leaf-observer = ["experiment-prepared-turn-observe", "experiment-leaf-ending-observer", "lab-engine/experiment-prepared-leaf-observer"]
 
 [dependencies]
 lab-engine = { path = "../core" }
@@ -76,3 +79,7 @@ path = "tests/prepared_turn.rs"
 [[test]]
 name = "borrowed_child_keys"
 path = "tests/borrowed_child_keys.rs"
+
+[[test]]
+name = "prepared_leaf"
+path = "tests/prepared_leaf.rs"

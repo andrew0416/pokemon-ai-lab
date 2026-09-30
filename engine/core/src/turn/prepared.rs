@@ -61,6 +61,50 @@ impl<const N: usize> PreparedTurn<N> {
         if !Self::eligible(options) {
             return enumerate_turn_with(&mut self.state, self.ruleset, actions, options);
         }
+        let normalized = self.checked_choices(indices, actions)?;
+        enumerate_checked(&mut self.state, &normalized, options)
+    }
+
+    /// The same private parent and lazy validation, returning completed P9 endings.
+    /// None declines Full/factored requests; the caller keeps its original P9 fallback.
+    /// No State, ruleset, normalized action or validation token is accepted from outside.
+    #[cfg(feature = "experiment-prepared-leaf")]
+    pub fn try_enumerate_final_states(
+        &mut self,
+        indices: [usize; 2],
+        options: EnumerateOptions,
+    ) -> Result<Option<FinalStates<N>>, TurnError> {
+        // Match the existing indexed bridge's programmer-error boundary.
+        let actions = [self.choices[0][indices[0]], self.choices[1][indices[1]]];
+        #[cfg(feature = "experiment-prepared-leaf-observer")]
+        leaf_observer::update(|c| c.requests += 1);
+        if !Self::eligible(options) {
+            #[cfg(feature = "experiment-prepared-leaf-observer")]
+            leaf_observer::update(|c| c.declined += 1);
+            return Ok(None);
+        }
+        let result = self
+            .checked_choices(indices, actions)
+            .and_then(|normalized| {
+                final_states::enumerate_final_states_checked(&mut self.state, &normalized, options)
+            });
+        #[cfg(feature = "experiment-prepared-leaf-observer")]
+        leaf_observer::update(|c| {
+            if result.is_ok() {
+                c.batches += 1;
+            } else {
+                c.errors += 1;
+            }
+        });
+        result.map(Some)
+    }
+
+    // Keep one validation body for both bridges, including lazy cached error order.
+    fn checked_choices(
+        &mut self,
+        indices: [usize; 2],
+        actions: [JointAction<N>; 2],
+    ) -> Result<[JointAction<N>; 2], TurnError> {
         self.parent
             .get_or_insert_with(|| check_turn_parent(&self.state))
             .clone()?;
@@ -80,7 +124,35 @@ impl<const N: usize> PreparedTurn<N> {
         self.support
             .get_or_insert_with(|| check_turn_support(&self.state))
             .clone()?;
-        enumerate_checked(&mut self.state, &normalized, options)
+        Ok(normalized)
+    }
+}
+
+/// P15 work evidence only; absent from uninstrumented builds.
+#[cfg(feature = "experiment-prepared-leaf-observer")]
+pub mod leaf_observer {
+    use std::cell::Cell;
+    #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+    pub struct Counts {
+        pub requests: u64,
+        pub declined: u64,
+        pub batches: u64,
+        pub errors: u64,
+    }
+    thread_local! { static COUNTS: Cell<Counts> = const { Cell::new(Counts {
+        requests: 0, declined: 0, batches: 0, errors: 0,
+    }) }; }
+    pub fn reset() {
+        COUNTS.set(Counts::default());
+    }
+    pub fn counts() -> Counts {
+        COUNTS.get()
+    }
+    #[cfg(feature = "experiment-prepared-leaf")]
+    pub(super) fn update(f: impl FnOnce(&mut Counts)) {
+        let mut c = counts();
+        f(&mut c);
+        COUNTS.set(c);
     }
 }
 

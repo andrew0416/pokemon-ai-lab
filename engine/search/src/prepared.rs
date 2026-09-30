@@ -82,4 +82,19 @@ impl<const N: usize> PreparedMatrix<N> {
         #[cfg(not(feature = "experiment-prepared-turn"))]
         unreachable!("PreparedMatrix::new returns None without the experiment feature")
     }
+
+    #[cfg(feature = "experiment-prepared-leaf")]
+    pub(crate) fn try_final_states(
+        &mut self,
+        row: usize,
+        col: usize,
+        options: EnumerateOptions,
+    ) -> Result<Option<lab_engine::turn::FinalStates<N>>, TurnError> {
+        let indices = if self.reversed {
+            [col, row]
+        } else {
+            [row, col]
+        };
+        self.turn.try_enumerate_final_states(indices, options)
+    }
 }

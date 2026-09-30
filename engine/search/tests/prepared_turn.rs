@@ -507,7 +507,9 @@ fn one_thread_exact_deep_and_deep_nash_reuse_validation() {
         let (a, ordinary, ordinary_leaf) = run(false);
         let (b, prepared, prepared_leaf) = run(true);
         assert_eq!(a, b, "{mode}");
-        if cfg!(feature = "experiment-leaf-ending-states") {
+        if cfg!(feature = "experiment-leaf-ending-states")
+            && !cfg!(feature = "experiment-prepared-leaf")
+        {
             // The shallow turn edges use P9. Deep/deep-nash enumerate their beam's
             // non-leaf pairs through nash_cells, which has no PreparedMatrix, and
             // their child turn edges use P9 again. This toy has no replacement or
@@ -515,7 +517,8 @@ fn one_thread_exact_deep_and_deep_nash_reuse_validation() {
             assert_eq!(prepared, ordinary, "P9 bypasses P8c in {mode}");
             assert!(ordinary.into_iter().all(|count| count > 0));
         } else {
-            // Without P9, each mode's shallow matrix consumes P8c's batch.
+            // Without P9, or with P15 sharing the P9 shallow leaf validation,
+            // each mode's shallow matrix consumes P8c's batch.
             assert!(
                 prepared[0] < ordinary[0] && prepared[1] < ordinary[1] && prepared[2] < ordinary[2],
                 "{mode}: ordinary={ordinary:?}, prepared={prepared:?}"
