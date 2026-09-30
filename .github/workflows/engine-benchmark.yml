@@ -1,5 +1,5 @@
 name: engine speed matrix
-run-name: "engine speed · P8g P9 P8c P10 · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
+run-name: "engine speed · P9 corrected test · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
 
 on:
   workflow_dispatch:
@@ -58,18 +58,9 @@ jobs:
       max-parallel: 4
       matrix:
         include:
-          - id: p8g
-            feature: hurt-readers
-            source_sha: e0b4b4fc5a2973b59e0f1e4acea360ce875d381e
           - id: p9
             feature: leaf-ending-states
-            source_sha: 90ed6185dc8eeb6cae139fc9ecdec7fd2dec95eb
-          - id: p8c
-            feature: prepared-turn
-            source_sha: 5c3d6f11da15e85ab3dd49b97e7e40b85b67bac0
-          - id: p10
-            feature: compact-volatiles
-            source_sha: 829bbeace408766ed2e44ca47c08d863c0f3bb57
+            source_sha: c269035215c5a40f4950e203bb891e192ca7c8ef
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
