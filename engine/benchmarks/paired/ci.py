@@ -703,7 +703,9 @@ def validate_new_observer(workspace, selection):
         _, expected, _ = fingerprint_expectations(selection, 'candidate')
         core = expected['lab-engine']
         core[NEW_OBSERVERS[selection]] = True
-        packages = {'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json')}
+        # cargo test --lib builds the test library, without a separate normal rlib.
+        # Require the fingerprint of the executable that actually ran.
+        packages = {'lab-engine': ('test-lib-lab_engine.json',)}
         expectations = {'lab-engine': core}
         if target_spec['package'] == 'lab-scenario':
             packages = {'lab-engine': ('lib-lab_engine.json',),

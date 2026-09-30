@@ -169,7 +169,7 @@ class CacheAndObserverTests(unittest.TestCase):
 
     def test_fresh_named_observer_cannot_pass_with_zero_tests_or_wrong_features(self):
         mode = 'stats-off-cost'
-        for fault in (None, 'zero', 'missing-observer'):
+        for fault in (None, 'zero', 'missing-observer', 'missing-test-fingerprint', 'unrequested-feature'):
             with self.subTest(fault=fault), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
                 request(root, mode)
@@ -183,8 +183,10 @@ class CacheAndObserverTests(unittest.TestCase):
                         _, expected, _ = ci.fingerprint_expectations(mode, 'candidate')
                         core = expected['lab-engine']
                         core[ci.NEW_OBSERVERS[mode]] = fault != 'missing-observer'
-                        fingerprints(root, label, {'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json')},
-                                     {'lab-engine': core})
+                        if fault == 'unrequested-feature':
+                            core[ci.NEW_FEATURES['slot-diff']] = True
+                        kinds = ('lib-lab_engine.json',) if fault == 'missing-test-fingerprint' else ('test-lib-lab_engine.json',)
+                        fingerprints(root, label, {'lab-engine': kinds}, {'lab-engine': core})
                         count = 0 if fault == 'zero' else 1
                         if count:
                             stdout.write(f'test {ci.NEW_OBSERVER_TESTS[mode][0]} ... ok\n')
