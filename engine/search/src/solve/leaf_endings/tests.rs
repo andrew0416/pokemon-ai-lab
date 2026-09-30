@@ -139,6 +139,7 @@ fn p9_full_states_probabilities_suspensions_and_order() {
         ("r-spread-eject-buttons-tie", RollMode::Median),
         ("dd-emergency-exit-recoil-eject-button", RollMode::Median),
         ("ab-turn-limit-tie", RollMode::Median),
+        ("ab-future-sight-absent-user-two-occupants", RollMode::Median),
     ] {
         let (original, pair) = fixture(name);
         let [Choice::Turn(a), Choice::Turn(b)] = pair else {
@@ -174,14 +175,19 @@ fn p9_full_states_probabilities_suspensions_and_order() {
         assert_eq!(i, outcomes.len());
         compared += i;
     }
-    println!("P9 exact State/probability bits/Suspension/order checked: {compared} endings across 15 cases");
+    println!("P9 exact State/probability bits/Suspension/order checked: {compared} endings across 16 cases");
 }
 
 #[test]
 fn p9_chance_bits_counters_star1_nan_and_injected_evaluator() {
     let _flat = FactoredScope::new(false);
     let mut cases = 0;
-    for name in ["single-hit", "eject-button-uturn", "ab-turn-limit-tie"] {
+    for name in [
+        "single-hit",
+        "eject-button-uturn",
+        "ab-turn-limit-tie",
+        "ab-future-sight-absent-user-two-occupants",
+    ] {
         let (state, pair) = fixture(name);
         for rolls in [RollMode::Median, RollMode::Full] {
             for chance in [Chance::Expect, Chance::Worst] {
@@ -315,7 +321,12 @@ fn p9_errors_budgets_and_all_or_nothing() {
     pending.sides[0].slots[0].switch_flag = SwitchFlag::Move;
     let mut replacement = original.clone();
     replacement.sides[0].slots[0].party_index = None;
-    let (unsupported, unsupported_pair) = fixture("ab-future-sight-absent-user-two-occupants");
+    let (mut unsupported, unsupported_pair) =
+        fixture("rr-rivalry-switch-in-undecided-gender");
+    // Loading resolves genders. Restore one explicitly undecided gender so the
+    // benched Rivalry holder refuses during its switch-in, after turn execution
+    // starts. This intentionally tests a hand-made state, not a loader output.
+    unsupported.sides[1].party[0].gender = lab_engine::dex::Gender::Random;
     for (state, pair) in [
         (&original, invalid),
         (&over, invalid),
@@ -360,6 +371,10 @@ fn p9_errors_budgets_and_all_or_nothing() {
     );
     assert!(f32::from_bits(result.result.unwrap()).is_nan());
     assert!(!result.unsupported.is_empty());
+    assert_eq!(
+        result.unsupported,
+        vec!["Luxray: Rivalry next to a Pokémon of undecided gender".to_owned()]
+    );
     assert!(result.states.is_empty());
 }
 
