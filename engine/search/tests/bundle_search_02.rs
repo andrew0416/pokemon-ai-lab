@@ -18,3 +18,6 @@ mod parallel;
 
 #[path = "transposition.rs"]
 mod transposition;
+
+#[path = "forced_ally_charge.rs"]
+mod forced_ally_charge;

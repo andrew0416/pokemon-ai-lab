@@ -87,3 +87,6 @@ mod vd_fixture_gaps;
 
 #[path = "y_self_switch.rs"]
 mod y_self_switch;
+
+#[path = "r5d_future_absent_overlay.rs"]
+mod r5d_future_absent_overlay;
