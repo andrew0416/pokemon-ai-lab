@@ -33,6 +33,10 @@ use super::{EnumerateOptions, StageEnd, Suspension, TurnError};
 /// Relative tolerance under which compaction takes two probabilities for equal.
 const CLOSE: f64 = 1e-12;
 
+#[cfg(feature = "experiment-frontier-observer")]
+#[path = "frontier_observer.rs"]
+pub(crate) mod observer;
+
 /// The HP a key state holds for a living party member (its real HP is in the component).
 const MASK: i16 = i16::MAX;
 
@@ -91,9 +95,17 @@ impl Dist {
     /// The distribution of `(value, weight)` pairs (any order, repeats add up), as the smallest
     /// value and the normalized distribution above it; `None` for no weight.
     fn from_weights(mut weights: Vec<(i16, f64)>) -> (i16, Dist) {
-        weights.sort_by_key(|&(v, _)| v);
+        #[cfg(feature = "experiment-frontier-observer")]
+        let _timer = observer::Timer::new(observer::Phase::Distribution, false);
+        weights.sort_by_key(|&(v, _)| {
+            #[cfg(feature = "experiment-frontier-observer")]
+            observer::tick();
+            v
+        });
         let mut points: Vec<(i16, f64)> = Vec::with_capacity(weights.len());
         for (v, w) in weights {
+            #[cfg(feature = "experiment-frontier-observer")]
+            observer::tick();
             match points.last_mut() {
                 Some(last) if last.0 == v => last.1 += w,
                 _ => points.push((v, w)),
@@ -257,11 +269,17 @@ impl<const N: usize, Q: Hash + Eq + Clone> Positions<N, Q> {
 
     /// The entry of `key` (a state with the HP of its living members masked) and `rest`.
     fn entry(&mut self, key: &State<N>, rest: &Q, units: &[u8]) -> u32 {
+        #[cfg(feature = "experiment-frontier-observer")]
+        let _timer = observer::Timer::new(observer::Phase::PositionKey, false);
+        #[cfg(feature = "experiment-frontier-observer")]
+        observer::position();
         let mut hasher = KeyHasher::default();
         key.hash(&mut hasher);
         rest.hash(&mut hasher);
         let ids = self.index.entry(hasher.finish()).or_default();
         for &id in ids.iter() {
+            #[cfg(feature = "experiment-frontier-observer")]
+            observer::tick();
             let entry = &self.entries[id as usize];
             if entry.key == *key && entry.rest == *rest {
                 return id;
@@ -294,6 +312,10 @@ impl<const N: usize, Q: Hash + Eq + Clone> Positions<N, Q> {
 /// Merges components that differ in one unit only (that unit's distribution becomes their
 /// weighted mixture), for every unit, until nothing merges.
 fn compact(mut components: Vec<Component>) -> Vec<Component> {
+    #[cfg(feature = "experiment-frontier-observer")]
+    let _timer = observer::Timer::new(observer::Phase::Compact, false);
+    #[cfg(feature = "experiment-frontier-observer")]
+    observer::compact(components.len());
     let units = components.first().map_or(0, |c| c.hps.len());
     loop {
         let before = components.len();
@@ -310,10 +332,14 @@ fn compact(mut components: Vec<Component>) -> Vec<Component> {
 }
 
 fn merge_along(components: Vec<Component>, unit: usize) -> Vec<Component> {
+    #[cfg(feature = "experiment-frontier-observer")]
+    observer::merge(components.len());
     // Clusters of components whose other units agree, in first-reached order.
     let mut clusters: Vec<Vec<usize>> = Vec::new();
     let mut index: HashMap<u64, Vec<usize>> = HashMap::new();
     for (i, c) in components.iter().enumerate() {
+        #[cfg(feature = "experiment-frontier-observer")]
+        observer::tick();
         let mut h = KeyHasher::default();
         for (u, hp) in c.hps.iter().enumerate() {
             if u != unit {
@@ -322,6 +348,8 @@ fn merge_along(components: Vec<Component>, unit: usize) -> Vec<Component> {
         }
         let candidates = index.entry(h.finish()).or_default();
         let found = candidates.iter().copied().find(|&k| {
+            #[cfg(feature = "experiment-frontier-observer")]
+            observer::tick();
             let head = &components[clusters[k][0]];
             head.hps
                 .iter()
@@ -350,6 +378,8 @@ fn merge_along(components: Vec<Component>, unit: usize) -> Vec<Component> {
         let mut weight = 0.0;
         let mut weights = Vec::new();
         for &i in &cluster {
+            #[cfg(feature = "experiment-frontier-observer")]
+            observer::tick();
             let c = &components[i];
             weight += c.weight;
             let hp = &c.hps[unit];
@@ -497,6 +527,8 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
     options: FactoredOptions,
     mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
 ) -> Result<(Vec<FactoredEnding<N, P>>, f64), TurnError> {
+    #[cfg(feature = "experiment-frontier-observer")]
+    let mut observer_session = observer::Session::begin();
     let mut approx = Approx {
         max_support: options.max_support,
         tv_bound: 0.0,
@@ -514,6 +546,10 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
     let mut finished: Positions<N, Option<P>> = Positions::new();
     let mut buffers = RunBuffers::default();
     while !frontier.is_empty() {
+        #[cfg(feature = "experiment-frontier-observer")]
+        observer::stage_begin(frontier.len());
+        #[cfg(feature = "experiment-frontier-observer")]
+        let runs_timer = observer::Timer::new(observer::Phase::FrontierRuns, true);
         let started = std::time::Instant::now();
         let mut stats = Stats::default();
         let mut next: Positions<N, P> = Positions::new();
@@ -531,8 +567,16 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
             )?;
             stack.extend(parts.into_iter().rev());
         }
+        #[cfg(feature = "experiment-frontier-observer")]
+        drop(runs_timer);
         let reached = next.components();
+        #[cfg(feature = "experiment-frontier-observer")]
+        let compact_timer = observer::Timer::new(observer::Phase::StageCompact, true);
         frontier = groups(next, &mut approx);
+        #[cfg(feature = "experiment-frontier-observer")]
+        drop(compact_timer);
+        #[cfg(feature = "experiment-frontier-observer")]
+        observer::stage_end(reached, frontier.len(), finished.components());
         if stats_on {
             eprintln!(
                 "lab-engine: factored stage {} groups ({} splits, {} expansions), {} runs -> {} \
@@ -548,9 +592,13 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
             );
         }
     }
+    #[cfg(feature = "experiment-frontier-observer")]
+    let final_timer = observer::Timer::new(observer::Phase::FinalCompact, true);
     let mut out = Vec::new();
     for entry in finished.entries {
         for mut component in compact(entry.components) {
+            #[cfg(feature = "experiment-frontier-observer")]
+            observer::tick();
             approx.cap(&mut component);
             let mut end = entry.key.clone();
             let mut hp = Vec::new();
@@ -577,6 +625,11 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
             });
         }
     }
+    #[cfg(feature = "experiment-frontier-observer")]
+    {
+        drop(final_timer);
+        observer_session.complete();
+    }
     Ok((out, approx.tv_bound))
 }
 
@@ -588,6 +641,8 @@ fn groups<const N: usize, P: Clone>(
     let mut out = Vec::new();
     for entry in positions.entries {
         for mut component in compact(entry.components) {
+            #[cfg(feature = "experiment-frontier-observer")]
+            observer::tick();
             approx.cap(&mut component);
             let mut state = entry.key.clone();
             let mut lazy = Vec::new();
@@ -621,6 +676,10 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
     buffers: &mut RunBuffers,
     stats: &mut Stats,
 ) -> Result<Vec<Group<N, P>>, TurnError> {
+    #[cfg(feature = "experiment-frontier-observer")]
+    let _group_timer = observer::Timer::new(observer::Phase::Group, false);
+    #[cfg(feature = "experiment-frontier-observer")]
+    observer::group_begin();
     let Group {
         state: mut work,
         pending,
@@ -645,9 +704,13 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
     let mut units: Vec<u8> = Vec::new();
     loop {
         stats.runs += 1;
+        #[cfg(feature = "experiment-frontier-observer")]
+        observer::replay();
         chooser.begin_run();
         after.clone_from(&pending);
         let result = {
+            #[cfg(feature = "experiment-frontier-observer")]
+            let _replay_timer = observer::Timer::new(observer::Phase::Replay, false);
             let mut owned = std::mem::take(buffers);
             let mut b = match &start {
                 Some(start) => Battle::replay(&mut work, &mut chooser, start, owned),
@@ -665,12 +728,18 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
         };
         let end = result?;
         if let Some((unit, request)) = lazy::take_request() {
+            #[cfg(feature = "experiment-frontier-observer")]
+            let rollback_timer = observer::Timer::new(observer::Phase::Rollback, false);
             work.reverse(&buffers.log);
+            #[cfg(feature = "experiment-frontier-observer")]
+            drop(rollback_timer);
             clear_tags(&mut work, &lazy);
             match request {
                 Request::Split { .. } => stats.splits += 1,
                 Request::Expand => stats.expansions += 1,
             }
+            #[cfg(feature = "experiment-frontier-observer")]
+            observer::discard(reached.len());
             return Ok(split(work, pending, weight, lazy, unit as u8, request));
         }
         let p = weight * chooser.probability();
@@ -691,6 +760,8 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
                 (true, finished.entry(&work, &kept, &units))
             }
         };
+        #[cfg(feature = "experiment-frontier-observer")]
+        let component_timer = observer::Timer::new(observer::Phase::Component, false);
         let mut hps = Vec::with_capacity(masked.len());
         for &(pokemon, hp, tag) in &masked {
             work.pokemon_mut(pokemon).hp = hp;
@@ -706,17 +777,35 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
             hps.push(UnitHp { base: hp, dist });
         }
         reached.push((done, id, Component { weight: p, hps }));
+        #[cfg(feature = "experiment-frontier-observer")]
+        {
+            observer::component();
+            drop(component_timer);
+        }
+        #[cfg(feature = "experiment-frontier-observer")]
+        let rollback_timer = observer::Timer::new(observer::Phase::Rollback, false);
         work.reverse(&buffers.log);
+        #[cfg(feature = "experiment-frontier-observer")]
+        drop(rollback_timer);
         if !chooser.advance() {
             break;
         }
     }
+    #[cfg(feature = "experiment-frontier-observer")]
+    let commit_timer = observer::Timer::new(observer::Phase::Commit, false);
     for (done, id, component) in reached {
+        #[cfg(feature = "experiment-frontier-observer")]
+        observer::commit();
         if done {
             finished.entries[id as usize].components.push(component);
         } else {
             next.entries[id as usize].components.push(component);
         }
+    }
+    #[cfg(feature = "experiment-frontier-observer")]
+    {
+        drop(commit_timer);
+        observer::group_end();
     }
     Ok(Vec::new())
 }
@@ -881,15 +970,29 @@ pub(crate) fn factored_outcomes<const N: usize, P>(
     endings: Vec<FactoredEnding<N, P>>,
     suspend: impl Fn(P) -> Suspension,
 ) -> Vec<FactoredOutcome> {
-    endings
+    #[cfg(feature = "experiment-frontier-observer")]
+    let mut observer_session = observer::Session::output();
+    #[cfg(feature = "experiment-frontier-observer")]
+    let output_timer = observer::Timer::new(observer::Phase::OutcomeDiff, true);
+    let outcomes = endings
         .into_iter()
-        .map(|ending| FactoredOutcome {
-            probability: ending.probability,
-            instructions: super::diff::instructions(start, &ending.state),
-            hp: ending.hp,
-            suspension: ending.pending.map(&suspend),
+        .map(|ending| {
+            #[cfg(feature = "experiment-frontier-observer")]
+            observer::tick();
+            FactoredOutcome {
+                probability: ending.probability,
+                instructions: super::diff::instructions(start, &ending.state),
+                hp: ending.hp,
+                suspension: ending.pending.map(&suspend),
+            }
         })
-        .collect()
+        .collect();
+    #[cfg(feature = "experiment-frontier-observer")]
+    {
+        drop(output_timer);
+        observer_session.complete();
+    }
+    outcomes
 }
 
 #[cfg(test)]

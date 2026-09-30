@@ -35,3 +35,6 @@ experiment-stats-off-cost = []
 experiment-stats-off-cost-observer = ["experiment-stats-off-cost"]
 # P13: borrowed position lookup only; no state identity or storage changes.
 experiment-borrowed-child-keys = []
+
+# P17: independent diagnostics; no runtime optimization or default activation.
+experiment-frontier-observer = []

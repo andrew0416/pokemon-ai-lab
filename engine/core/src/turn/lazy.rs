@@ -80,8 +80,16 @@ pub(crate) fn tag(unit: usize) -> LazyTag {
     LazyTag(u8::try_from(unit + 1).expect("few units"))
 }
 
-fn with_span(tag: LazyTag, f: impl FnOnce(i32) -> Option<Request>) {
+#[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
+fn with_span(
+    tag: LazyTag,
+    f: impl FnOnce(i32) -> Option<Request>,
+    #[cfg(feature = "experiment-frontier-observer")]
+    reason: super::frontier::observer::RequestReason,
+) {
     let unit = usize::from(tag.0 - 1);
+    #[cfg(feature = "experiment-frontier-observer")]
+    let mut observed_span = None;
     RUN.with(|r| {
         let mut r = r.borrow_mut();
         if !r.active {
@@ -93,29 +101,49 @@ fn with_span(tag: LazyTag, f: impl FnOnce(i32) -> Option<Request>) {
         }
         if let Some(request) = f(span) {
             r.request = Some((unit, request));
+            #[cfg(feature = "experiment-frontier-observer")]
+            {
+                observed_span = Some(span);
+            }
         }
     });
+    #[cfg(feature = "experiment-frontier-observer")]
+    if let Some(span) = observed_span {
+        super::frontier::observer::request(reason, unit, span, std::panic::Location::caller());
+    }
 }
 
 /// `hp <= t` for a value `hp` of the unit tagged `tag` (the smallest; the others are up to the
 /// unit's span above it).
 #[inline]
+#[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
 fn le(hp: i16, tag: LazyTag, t: i32) -> bool {
     let hp = i32::from(hp);
     if tag.0 != 0 {
-        with_span(tag, |span| {
-            (hp <= t && t < hp + span).then(|| Request::Split {
-                at: i16::try_from(t - hp).expect("offset within the span"),
-            })
-        });
+        with_span(
+            tag,
+            |span| {
+                (hp <= t && t < hp + span).then(|| Request::Split {
+                    at: i16::try_from(t - hp).expect("offset within the span"),
+                })
+            },
+            #[cfg(feature = "experiment-frontier-observer")]
+            super::frontier::observer::RequestReason::Threshold,
+        );
     }
     hp <= t
 }
 
 #[inline]
+#[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
 fn value(hp: i16, tag: LazyTag) -> i16 {
     if tag.0 != 0 {
-        with_span(tag, |_| Some(Request::Expand));
+        with_span(
+            tag,
+            |_| Some(Request::Expand),
+            #[cfg(feature = "experiment-frontier-observer")]
+            super::frontier::observer::RequestReason::Value,
+        );
     }
     hp
 }
@@ -123,14 +151,18 @@ fn value(hp: i16, tag: LazyTag) -> i16 {
 /// For [`super::battle::Battle::apply`]: an HP change of `delta` to `mon` (before it is applied)
 /// must keep every value of a lazy unit in `1..=max_hp`, or the unit is expanded.
 #[inline]
+#[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
 pub(crate) fn check_shift(mon: &Pokemon, delta: i32) {
     if mon.lazy.0 == 0 {
         return;
     }
     let (hp, max) = (i32::from(mon.hp) + delta, i32::from(mon.max_hp));
-    with_span(mon.lazy, |span| {
-        (hp < 1 || hp + span > max).then_some(Request::Expand)
-    });
+    with_span(
+        mon.lazy,
+        |span| (hp < 1 || hp + span > max).then_some(Request::Expand),
+        #[cfg(feature = "experiment-frontier-observer")]
+        super::frontier::observer::RequestReason::Shift,
+    );
 }
 
 /// Lazy-aware HP reads (see the module documentation). Outside a factored enumeration these are
@@ -138,30 +170,35 @@ pub(crate) fn check_shift(mon: &Pokemon, delta: i32) {
 impl Pokemon {
     /// The HP as a number, for arithmetic (damage from HP, HP-scaled power, Pain Split, ...).
     #[inline]
+    #[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
     pub fn hp_value(&self) -> i16 {
         value(self.hp, self.lazy)
     }
 
     /// `hp <= t`.
     #[inline]
+    #[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
     pub fn hp_le(&self, t: i32) -> bool {
         le(self.hp, self.lazy, t)
     }
 
     /// `k * hp <= bound` for `k > 0` (Showdown's `hp <= maxhp / 2` is `hp_scaled_le(2, maxhp)`).
     #[inline]
+    #[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
     pub fn hp_scaled_le(&self, k: i32, bound: i32) -> bool {
         self.hp_le(bound.div_euclid(k))
     }
 
     /// `hp >= max_hp`.
     #[inline]
+    #[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
     pub fn hp_full(&self) -> bool {
         !self.hp_le(i32::from(self.max_hp) - 1)
     }
 
     /// The HP now, to compare with a later HP (Emergency Exit's `pokemonOriginalHP`).
     #[inline]
+    #[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
     pub(crate) fn hp_mark(&self) -> HpMark {
         HpMark {
             hp: self.hp,
@@ -181,11 +218,13 @@ pub(crate) struct HpMark {
 
 impl HpMark {
     /// `hp <= t`.
+    #[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
     pub fn hp_le(self, t: i32) -> bool {
         le(self.hp, self.lazy, t)
     }
 
     /// `k * hp <= bound` for `k > 0`.
+    #[cfg_attr(feature = "experiment-frontier-observer", track_caller)]
     pub fn hp_scaled_le(self, k: i32, bound: i32) -> bool {
         self.hp_le(bound.div_euclid(k))
     }
@@ -194,6 +233,33 @@ impl HpMark {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(feature = "experiment-frontier-observer")]
+    #[test]
+    fn frontier_observer_counts_first_request_only_after_lazy_borrow_ends() {
+        let mut session = super::super::frontier::observer::quiet_session();
+        let mon = Pokemon {
+            hp: 50,
+            max_hp: 100,
+            lazy: tag(3),
+            ..Pokemon::default()
+        };
+        begin(&[(3, 10)]);
+        assert_eq!(mon.hp_value(), 50);
+        mon.hp_value();
+        mon.hp_le(55);
+        assert_eq!(super::super::frontier::observer::requests(), (1, 0, 0));
+        assert_eq!(take_request(), Some((3, Request::Expand)));
+        assert!(mon.hp_le(55));
+        assert_eq!(take_request(), Some((3, Request::Split { at: 5 })));
+        check_shift(&mon, -50);
+        assert_eq!(take_request(), Some((3, Request::Expand)));
+        assert_eq!(super::super::frontier::observer::requests(), (1, 1, 1));
+        end();
+        mon.hp_value();
+        assert_eq!(super::super::frontier::observer::requests(), (1, 1, 1));
+        session.complete();
+    }
 
     #[test]
     fn threshold_reads_split_only_across_the_span() {
