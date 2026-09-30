@@ -168,7 +168,7 @@ jobs:
         include:
           - id: all-optimizations
             feature: all-optimizations
-            source_sha: 276d4d80f54675bc7ef9e5f360fe3048d1c25b57
+            source_sha: b22edb9dc425504da16a55594ef04178ab24e191
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:

@@ -1,14 +1,19 @@
 {
-  "combined_source_sha": "276d4d80f54675bc7ef9e5f360fe3048d1c25b57",
+  "combined_source_sha": "b22edb9dc425504da16a55594ef04178ab24e191",
   "parents": {
     "p8g": "e0b4b4fc5a2973b59e0f1e4acea360ce875d381e",
     "p8c": "5c3d6f11da15e85ab3dd49b97e7e40b85b67bac0",
     "p9": "c269035215c5a40f4950e203bb891e192ca7c8ef",
     "p10": "829bbeace408766ed2e44ca47c08d863c0f3bb57"
   },
-  "source_patch_sha256": "3bf2fff6afbb7a1dafba38ce971b61615bd380e9d455b5889edc7f5b13b4b6a9",
+  "source_patch_sha256": "129accc794b573e730bd61614d15ef0ff1c9e17080d60748309ad43615dbaa4c",
   "baseline": "all four experimental features off",
   "candidate": "P8g + P8c + P9 + P10 on; observation excluded from timing",
   "prerequisite_run_id": 36660421636,
-  "same_source_comparison": true
+  "same_source_comparison": true,
+  "parent_source_patch_sha256": "3bf2fff6afbb7a1dafba38ce971b61615bd380e9d455b5889edc7f5b13b4b6a9",
+  "runtime_source_sha": "276d4d80f54675bc7ef9e5f360fe3048d1c25b57",
+  "activation_test_repair_parent": "276d4d80f54675bc7ef9e5f360fe3048d1c25b57",
+  "failed_run": 36662928811,
+  "runtime_changed": false
 }

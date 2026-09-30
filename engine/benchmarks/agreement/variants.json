@@ -3,13 +3,13 @@
   "variants": [
     {
       "id": "combined-off",
-      "sha": "276d4d80f54675bc7ef9e5f360fe3048d1c25b57",
+      "sha": "b22edb9dc425504da16a55594ef04178ab24e191",
       "features": [],
       "compare_to": null
     },
     {
       "id": "combined-on",
-      "sha": "276d4d80f54675bc7ef9e5f360fe3048d1c25b57",
+      "sha": "b22edb9dc425504da16a55594ef04178ab24e191",
       "features": [
         "lab-engine/experiment-hurt-readers",
         "lab-engine/experiment-compact-volatiles",

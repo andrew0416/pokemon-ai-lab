@@ -17,6 +17,14 @@ FEATURES = {
 }
 COUNTS = {'oracle': 3056, 'turn': 2808, 'search': 320}
 TOTAL = sum(COUNTS.values())
+ACTIVATION_SUITE = 'prepared-leaf-nonleaf-v1'
+ACTIVATION_IDS = [f'{mode}-side{side}-{chance}' for mode in ('exact', 'mixed')
+                  for side in (1, 2) for chance in ('expect', 'worst')]
+ACTIVATION_CONFIG = {'depth': 2, 'threads': 1, 'rolls': 'Median', 'factored': False,
+                     'fixture': 'harden-protect-toy-v1'}
+ACTIVATION_FEATURES = {'prepared_compiled', 'prepared_observer_compiled',
+                       'leaf_compiled', 'leaf_observer_compiled'}
+LEAF_COUNTERS = {'batches', 'visits', 'materialized_outcomes', 'emitted_instructions'}
 ARCHIVE_SHA256 = '27aefcba3fce289c7712905b85b14d4ab4a108a74cd7846bc9aaa1f115c23727'
 ORACLES = {
     'oracle/fixture/rr-attract-undecided-gender.turn.json': 'gender-mixture-v1',
@@ -36,6 +44,94 @@ SCOPED = {
 def require(condition, message):
     if not condition:
         raise ValueError(message)
+
+
+def validate_activation_probe(document):
+    """Recompute every fixed control's verdict; claimed passed/equal bits alone never suffice."""
+    require(isinstance(document, dict), 'Missing activation probe object')
+    require(type(document.get('schema')) is int and document['schema'] == 1
+            and document.get('suite') == ACTIVATION_SUITE, 'Wrong activation probe identity')
+    require(document.get('config') == ACTIVATION_CONFIG
+            and type(document['config'].get('depth')) is int
+            and type(document['config'].get('threads')) is int
+            and document['config'].get('factored') is False, 'Wrong activation workload')
+    features = document.get('features', {})
+    require(isinstance(features, dict) and set(features) == ACTIVATION_FEATURES
+            and all(value is True for value in features.values()), 'Missing compiled activation feature')
+    controls = document.get('controls')
+    require(isinstance(controls, list) and len(controls) == len(ACTIVATION_IDS)
+            and all(isinstance(row, dict) for row in controls)
+            and [row.get('id') for row in controls] == ACTIVATION_IDS,
+            'Missing, duplicate, reordered or unexpected activation control')
+    for row in controls:
+        sides = []
+        for name, requested in [('on', True), ('off', False)]:
+            side = row.get(name)
+            require(isinstance(side, dict) and side.get('prepared_requested') is requested
+                    and side.get('restored') is True and side.get('successful') is True,
+                    'Activation toggle/success/restoration missing')
+            signature = side.get('signature')
+            require(isinstance(signature, str) and bool(signature.strip()), 'Missing result/work signature')
+            counts = side.get('validation_counts')
+            require(isinstance(counts, list) and len(counts) == 3
+                    and all(type(value) is int and value > 0 for value in counts),
+                    'Invalid three-validator evidence')
+            leaf = side.get('leaf')
+            require(isinstance(leaf, dict) and set(leaf) == LEAF_COUNTERS
+                    and all(type(value) is int and value >= 0 for value in leaf.values())
+                    and all(leaf[key] > 0 for key in ('batches', 'visits', 'materialized_outcomes')),
+                    'Both leaf and nonleaf work must execute in each control')
+            sides.append(side)
+        on, off = sides
+        require(on['signature'] == off['signature'] and on['leaf'] == off['leaf']
+                and row.get('equal') is True, 'Activation output/work differs')
+        require(all(a < b for a, b in zip(on['validation_counts'], off['validation_counts']))
+                and row.get('passed') is True, 'Every validator must execute strictly fewer times')
+    require(document.get('passed') is True, 'Activation probe declared failure')
+
+
+def validate_precedence(prepared):
+    """The frozen deep controls prove P9 precedence, not P8c activation."""
+    require(isinstance(prepared, dict) and prepared.get('passed') is True
+            and prepared.get('control_selection') == 'frozen-plan-first-eight-deep-single-thread'
+            and prepared.get('purpose') == 'leaf-precedence', 'Missing frozen precedence controls')
+    ids, controls = prepared.get('expected_control_ids'), prepared.get('controls')
+    require(isinstance(ids, list) and len(ids) == 8 and all(isinstance(key, str) for key in ids)
+            and len(set(ids)) == 8
+            and isinstance(controls, list) and len(controls) == 8
+            and all(isinstance(row, dict) for row in controls)
+            and [row.get('id') for row in controls] == ids, 'Frozen precedence controls changed')
+    for row in controls:
+        require(row.get('equal') is True and row.get('toggle_confirmed') is True
+                and row.get('leaf_active_both') is True, 'Precedence output/toggle/P9 evidence missing')
+        on, off = row.get('on_parent_checks'), row.get('off_parent_checks')
+        require(type(on) is int and type(off) is int and on > 0 and on == off,
+                'Deep controls must retain positive equal validation counts')
+        for name, requested, count in [('on', True, on), ('off', False, off)]:
+            meta = row.get(name + '_metadata', {})
+            require(isinstance(meta, dict) and meta.get('prepared_requested') is requested
+                    and meta.get('requested_threads') == 1
+                    and type(meta.get('requested_threads')) is int
+                    and meta.get('factored') is False
+                    and all(meta.get(flag) is True for flag in
+                            ('prepared_compiled', 'prepared_observer_compiled', 'leaf_observer_compiled'))
+                    and meta.get('prepared', {}).get('parent_checks') == count,
+                    'Precedence feature/toggle evidence disagrees with verdict')
+            leaf = meta.get('leaf', {})
+            require(isinstance(leaf, dict) and all(type(leaf.get(key)) is int and leaf[key] > 0
+                    for key in ('batches', 'visits')), 'P9 must execute in both precedence controls')
+
+
+def validate_nonleaf_receipt(receipt):
+    require(isinstance(receipt, dict) and receipt.get('passed') is True
+            and receipt.get('returncode') == 0 and type(receipt.get('returncode')) is int
+            and receipt.get('timeout') is False, 'Separate activation process did not complete')
+    require(isinstance(receipt.get('binary_sha256'), str)
+            and re.fullmatch('[0-9a-f]{64}', receipt['binary_sha256']) is not None
+            and isinstance(receipt.get('stdout_sha256'), str)
+            and re.fullmatch('[0-9a-f]{64}', receipt['stdout_sha256']) is not None,
+            'Missing activation binary/output identity')
+    validate_activation_probe(receipt.get('probe'))
 
 
 def validate_variants(document):
@@ -107,6 +203,8 @@ def validate_summary(summary):
             and activation.get('leaf', {}).get('passed') is True
             and activation.get('prepared', {}).get('passed') is True,
             'Combined observer activations did not both pass')
+    validate_precedence(activation.get('prepared'))
+    validate_nonleaf_receipt(activation.get('prepared_nonleaf'))
 
 
 def main():

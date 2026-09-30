@@ -24,6 +24,8 @@ import sys
 import tarfile
 import time
 
+from combined_contract import validate_activation_probe, validate_precedence
+
 HERE = Path(__file__).resolve().parent
 
 # These are comparison contracts chosen from fixture provenance, not exceptions
@@ -494,9 +496,10 @@ def activation_checks(v, records, jobs, binaries, result_dir):
     if prepared_required:
         by_id = {j["id"]: j for j in jobs}
         checks = []
-        # With leaf direct evaluation enabled, depth-one searches intentionally
-        # bypass prepared validation. Select eight depth-two controls from the
-        # frozen plan BEFORE looking at success or counters; missing cases fail.
+        # Preserve the original predetermined eight deep controls. P9 owns their
+        # turn leaves; nash_cells uses ordinary transitions for nonleaf work.
+        # These controls demonstrate precedence, not prepared-path activation.
+        # A separate fixed exact-depth-two probe below proves actual coexistence.
         if leaf_required:
             control_ids = [j["id"] for j in jobs if j["kind"] == "search"
                            and j["args"][1] == "deep" and j["args"][5] == "1"][:8]
@@ -511,9 +514,15 @@ def activation_checks(v, records, jobs, binaries, result_dir):
             job["id"] = "prepared-off-control/" + job["id"]
             job["args"] = [*job["args"], "--prepared", "off"]
             off = run_case(job, binaries, result_dir)
-            off_metadata = [json.loads(line) for line in off["stderr"].splitlines() if line.startswith('{')]
-            off_metadata = [m for m in off_metadata if m.get("phase") == "search-complete"]
-            off_meta = off_metadata[-1] if off_metadata else {}
+            off_metadata = []
+            for line in off["stderr"].splitlines():
+                try:
+                    meta = json.loads(line)
+                    if isinstance(meta, dict) and meta.get("phase") == "search-complete":
+                        off_metadata.append(meta)
+                except ValueError:
+                    pass
+            off_meta = off_metadata[0] if len(off_metadata) == 1 else {}
             on_count = metadata.get("prepared", {}).get("parent_checks")
             off_count = off_meta.get("prepared", {}).get("parent_checks")
             checks.append({"id": record["id"], "equal": off["complete"] and off.get("successful", False)
@@ -525,6 +534,13 @@ def activation_checks(v, records, jobs, binaries, result_dir):
                            and off_meta.get("prepared_compiled") is True
                            and metadata.get("prepared_observer_compiled") is True
                            and off_meta.get("prepared_observer_compiled") is True})
+            if leaf_required:
+                checks[-1].update(on_metadata=metadata, off_metadata=off_meta)
+                checks[-1]["leaf_active_both"] = all(
+                    meta.get("leaf_observer_compiled") is True
+                    and all(type(meta.get("leaf", {}).get(key)) is int
+                            and meta["leaf"][key] > 0 for key in ("batches", "visits"))
+                    for meta in (metadata, off_meta))
         prepared = {"control_selection": "frozen-plan-first-eight-deep-single-thread" if leaf_required
                     else "first-eight-successful-single-thread",
                     "expected_control_ids": control_ids, "controls": checks,
@@ -532,9 +548,58 @@ def activation_checks(v, records, jobs, binaries, result_dir):
                     and all(c["equal"] and c["toggle_confirmed"] for c in checks) and any(
                     type(c["on_parent_checks"]) is int and type(c["off_parent_checks"]) is int
                     and 0 < c["on_parent_checks"] < c["off_parent_checks"] for c in checks)}
+        if leaf_required:
+            prepared["purpose"] = "leaf-precedence"
+            prepared["passed"] = True  # Validator recomputes the complete contract below.
+            try:
+                if len(observed) != len({record["id"] for record, _ in observed}):
+                    raise ValueError("Duplicate search-complete observer records")
+                validate_precedence(prepared)
+            except (ValueError, TypeError):
+                prepared["passed"] = False
+            activation["prepared_nonleaf"] = run_nonleaf_activation(binaries, result_dir)
+            activation["passed"] &= activation["prepared_nonleaf"]["passed"]
         activation["prepared"] = prepared
         activation["passed"] &= prepared["passed"]
     return activation
+
+
+def run_nonleaf_activation(binaries, result_dir):
+    """Independent eight-control gate, deliberately excluded from the frozen 6,184 cases."""
+    stdout = result_dir / "prepared-nonleaf-activation.stdout"
+    stderr = result_dir / "prepared-nonleaf-activation.stderr"
+    receipt = {"passed": False, "timeout": False, "returncode": None,
+               "output_file": stdout.name, "stderr_file": stderr.name}
+    try:
+        binary = binaries["activation"]
+        receipt["binary_sha256"] = sha(binary)
+        code, timeout = bounded([str(binary)], stdout, stderr, 120,
+                                env=dict(os.environ, LAB_ENGINE_FACTORED="0"))
+        receipt.update(returncode=code, timeout=timeout, stdout_sha256=sha(stdout))
+        if stdout.stat().st_size > 8 * 1024 * 1024:
+            raise ValueError("Activation output exceeds fixed envelope limit")
+        def unique_object(pairs):
+            value = {}
+            for key, item in pairs:
+                if key in value:
+                    raise ValueError("Duplicate activation JSON key: " + key)
+                value[key] = item
+            return value
+        probe = json.loads(stdout.read_text(encoding="utf-8"), object_pairs_hook=unique_object)
+        receipt["probe"] = probe
+        validate_activation_probe(probe)
+        if code != 0 or timeout:
+            raise ValueError("Activation process failed or timed out")
+        receipt["passed"] = True
+    except (ValueError, OSError, KeyError, TypeError) as error:
+        receipt["error"] = f"{type(error).__name__}: {error}"
+    write(result_dir / "prepared-nonleaf-activation.json", receipt)
+    return receipt
+
+
+def uses_combined_activation(v):
+    core, _ = expected_features(v)
+    return {"experiment-prepared-turn-observe", "experiment-leaf-ending-observer"} <= core
 
 
 def prepare(args):
@@ -544,7 +609,10 @@ def prepare(args):
     assert not git(root, "status", "--porcelain"), "Source checkout must be clean"
     out.mkdir(parents=True, exist_ok=False)
     injected = {}
-    for name, package in (("turn", "scenario"), ("search", "search"), ("oracle", "scenario")):
+    probes = [("turn", "scenario"), ("search", "search"), ("oracle", "scenario")]
+    if uses_combined_activation(v):
+        probes.append(("activation", "search"))
+    for name, package in probes:
         relative = f"engine/{package}/examples/ci_agreement_{name}.rs"
         target = root / relative
         assert not target.exists()
@@ -565,6 +633,8 @@ def prepare(args):
                "--bin", "lab-check", "--example", "ci_agreement_turn",
                "--example", "ci_agreement_oracle", "-p", "lab-search",
                "--example", "ci_agreement_search"]
+    if uses_combined_activation(v):
+        command += ["--example", "ci_agreement_activation"]
     if v["features"]:
         command += ["--features", ",".join(v["features"])]
     code, timeout = bounded(command, out / "build.log", out / "build.err", 1200, cwd=root / "engine")
@@ -580,11 +650,13 @@ def prepare(args):
     assert set(actual["lab-engine"]) == expected_core, actual
     assert set(actual["lab-search"]) == expected_search, actual
     receipt = read(out / "provenance.json")
+    binary_paths = {"oracle": "lab-check", "turn": "examples/ci_agreement_turn",
+                    "oracle-contract": "examples/ci_agreement_oracle",
+                    "search": "examples/ci_agreement_search"}
+    if uses_combined_activation(v):
+        binary_paths["activation"] = "examples/ci_agreement_activation"
     receipt.update(actual_features=actual, binaries={
-        name: sha(target / path) for name, path in {
-            "oracle": "lab-check", "turn": "examples/ci_agreement_turn",
-            "oracle-contract": "examples/ci_agreement_oracle",
-            "search": "examples/ci_agreement_search"}.items()})
+        name: sha(target / path) for name, path in binary_paths.items()})
     write(out / "provenance.json", receipt)
 
 
@@ -647,6 +719,8 @@ def evaluate(args):
                 "oracle-contract": root / "engine/target/release/examples/ci_agreement_oracle",
                 "turn": root / "engine/target/release/examples/ci_agreement_turn",
                 "search": root / "engine/target/release/examples/ci_agreement_search"}
+    if uses_combined_activation(variant(args.variant)):
+        binaries["activation"] = root / "engine/target/release/examples/ci_agreement_activation"
     receipt = read(out / "provenance.json")
     assert receipt["variant"] == variant(args.variant)
     assert all(sha(path) == receipt["binaries"][k] for k, path in binaries.items())
