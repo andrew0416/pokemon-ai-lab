@@ -533,6 +533,23 @@ impl<const N: usize> State<N> {
     /// Applies `instruction` and returns the change of [`State::position_hash`] it made.
     #[inline]
     pub fn apply_hashed(&mut self, instruction: &Instruction) -> u64 {
+        #[cfg(feature = "experiment-volatile-hash-update")]
+        if let Instruction::SetVolatile {
+            target,
+            volatile,
+            old: _,
+            new,
+        } = instruction
+        {
+            // Read the complete actual previous value during the write. Instruction.old
+            // belongs to reverse_one; apply_hashed has never required it to match State.
+            let actual_old = self.slot_mut(*target).volatiles.replace(*volatile, *new);
+            return volatile_cell(*target, *volatile as usize, new).wrapping_sub(volatile_cell(
+                *target,
+                *volatile as usize,
+                &actual_old,
+            ));
+        }
         let before = self.instruction_hash(instruction);
         self.apply_one(instruction);
         self.instruction_hash(instruction).wrapping_sub(before)

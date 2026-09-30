@@ -33,3 +33,11 @@ experiment-slot-diff = []
 experiment-slot-diff-observer = ["experiment-slot-diff"]
 experiment-stats-off-cost = []
 experiment-stats-off-cost-observer = ["experiment-stats-off-cost"]
+
+# P12 changes only SetVolatile's apply_hashed lookup; each feature is opt-in.
+experiment-volatile-hash-update = []
+experiment-volatile-hash-update-observer = ["experiment-volatile-hash-update"]
+
+[[test]]
+name = "volatile_hash_update"
+path = "tests/volatile_hash_update.rs"

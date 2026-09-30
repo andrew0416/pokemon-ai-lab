@@ -1186,6 +1186,13 @@ mod compact;
 #[cfg(feature = "experiment-compact-volatiles")]
 pub use compact::Volatiles;
 
+#[cfg(feature = "experiment-volatile-hash-update-observer")]
+#[doc(hidden)]
+pub mod hash_update_observer;
+
+#[cfg(all(test, feature = "experiment-volatile-hash-update"))]
+mod hash_update_tests;
+
 const _: () = assert!(VOLATILE_COUNT < u8::MAX as usize, "indices hash as u8");
 
 /// Hashes the entries that differ from [`VolatileState::NONE`], each with its index, then a
@@ -1218,11 +1225,23 @@ impl Default for Volatiles {
 #[cfg(not(feature = "experiment-compact-volatiles"))]
 impl Volatiles {
     pub fn get(&self, volatile: Volatile) -> VolatileState {
+        #[cfg(feature = "experiment-volatile-hash-update-observer")]
+        hash_update_observer::location();
         self.0[volatile as usize]
     }
 
     pub fn set(&mut self, volatile: Volatile, state: VolatileState) {
+        #[cfg(feature = "experiment-volatile-hash-update-observer")]
+        hash_update_observer::location();
         self.0[volatile as usize] = state;
+    }
+
+    /// Replace one complete cell and return its actual previous value.
+    #[cfg(feature = "experiment-volatile-hash-update")]
+    pub(crate) fn replace(&mut self, volatile: Volatile, state: VolatileState) -> VolatileState {
+        #[cfg(feature = "experiment-volatile-hash-update-observer")]
+        hash_update_observer::location();
+        std::mem::replace(&mut self.0[volatile as usize], state)
     }
 
     pub fn has(&self, volatile: Volatile) -> bool {

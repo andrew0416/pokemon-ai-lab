@@ -36,6 +36,8 @@ impl Volatiles {
 
     /// Number of registered entries preceding this bit.
     fn rank(&self, word: usize, bit: u64) -> usize {
+        #[cfg(feature = "experiment-volatile-hash-update-observer")]
+        super::hash_update_observer::rank();
         self.present[..word]
             .iter()
             .map(|bits| bits.count_ones() as usize)
@@ -44,6 +46,8 @@ impl Volatiles {
     }
 
     pub fn get(&self, volatile: Volatile) -> VolatileState {
+        #[cfg(feature = "experiment-volatile-hash-update-observer")]
+        super::hash_update_observer::location();
         let (word, bit) = Self::location(volatile);
         if self.present[word] & bit == 0 {
             VolatileState::NONE
@@ -53,6 +57,8 @@ impl Volatiles {
     }
 
     pub fn set(&mut self, volatile: Volatile, state: VolatileState) {
+        #[cfg(feature = "experiment-volatile-hash-update-observer")]
+        super::hash_update_observer::location();
         let (word, bit) = Self::location(volatile);
         let registered = self.present[word] & bit != 0;
         if !registered && state == VolatileState::NONE {
@@ -72,6 +78,35 @@ impl Volatiles {
 
     pub fn has(&self, volatile: Volatile) -> bool {
         self.get(volatile).active
+    }
+
+    /// Preserve the same registry updates as set, but find the position only once and
+    /// return the whole previous payload, including inactive non-NONE values.
+    #[cfg(feature = "experiment-volatile-hash-update")]
+    pub(crate) fn replace(&mut self, volatile: Volatile, state: VolatileState) -> VolatileState {
+        #[cfg(feature = "experiment-volatile-hash-update-observer")]
+        super::hash_update_observer::location();
+        let (word, bit) = Self::location(volatile);
+        let registered = self.present[word] & bit != 0;
+        if !registered && state == VolatileState::NONE {
+            return VolatileState::NONE;
+        }
+        let rank = self.rank(word, bit);
+        let old = if registered {
+            self.states[rank]
+        } else {
+            VolatileState::NONE
+        };
+        if state == VolatileState::NONE {
+            self.states.remove(rank);
+            self.present[word] &= !bit;
+        } else if registered {
+            self.states[rank] = state;
+        } else {
+            self.states.insert(rank, state);
+            self.present[word] |= bit;
+        }
+        old
     }
 
     pub fn is_empty(&self) -> bool {
@@ -140,6 +175,29 @@ impl fmt::Debug for Volatiles {
 mod tests {
     use super::*;
     use crate::dex::moves;
+
+    #[cfg(feature = "experiment-volatile-hash-update")]
+    #[test]
+    fn replace_keeps_set_registry_capacity_and_spill_representation() {
+        let mut candidate = Volatiles::default();
+        let mut baseline = Volatiles::default();
+        for count in [0, 1, 4, 5, 12, VOLATILE_COUNT, 4, 0] {
+            for index in (0..VOLATILE_COUNT).rev() {
+                let next = if index < count {
+                    payload(index + count, index % 3 == 0)
+                } else {
+                    VolatileState::NONE
+                };
+                let expected_old = baseline.get(Volatile::ALL[index]);
+                assert_eq!(candidate.replace(Volatile::ALL[index], next), expected_old);
+                baseline.set(Volatile::ALL[index], next);
+                assert_eq!(candidate.present, baseline.present);
+                assert_eq!(candidate.states, baseline.states);
+                assert_eq!(candidate.states.capacity(), baseline.states.capacity());
+                assert_eq!(candidate.states.spilled(), baseline.states.spilled());
+            }
+        }
+    }
 
     // The old storage and hash contract, independent of the compact bookkeeping.
     #[derive(Clone, Copy, PartialEq, Eq)]
