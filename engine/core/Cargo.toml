@@ -33,3 +33,12 @@ experiment-slot-diff = []
 experiment-slot-diff-observer = ["experiment-slot-diff"]
 experiment-stats-off-cost = []
 experiment-stats-off-cost-observer = ["experiment-stats-off-cost"]
+
+# P11: only the immutable RunStart speed snapshot changes storage. Default OFF.
+experiment-inline-runstart = []
+experiment-inline-runstart-observer = ["experiment-inline-runstart"]
+
+[[test]]
+name = "inline_runstart_allocations"
+path = "tests/inline_runstart_allocations.rs"
+required-features = ["experiment-inline-runstart-observer"]

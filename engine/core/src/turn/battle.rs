@@ -260,8 +260,22 @@ pub(crate) struct Battle<'a, const N: usize> {
 pub(crate) struct RunStart {
     history_readers: HistoryReaders,
     suppression: bool,
+    // This immutable owned copy is captured once per stage input. Keep only this copy
+    // inline: Battle/RunBuffers/MoveProgress snapshots remain growable Vecs for newcomers.
+    // More than four entries spill normally; neither const N nor future mechanics are capped.
+    #[cfg(feature = "experiment-inline-runstart")]
+    speed_snapshot: super::Small<(PokemonRef, i32), 4>,
+    #[cfg(not(feature = "experiment-inline-runstart"))]
     speed_snapshot: Vec<(PokemonRef, i32)>,
 }
+
+#[cfg(feature = "experiment-inline-runstart-observer")]
+#[path = "battle/inline_runstart_observer.rs"]
+pub mod inline_runstart_observer;
+
+#[cfg(test)]
+#[path = "battle/inline_runstart_tests.rs"]
+mod inline_runstart_tests;
 
 /// Buffers a finished run hands to the next ([`Battle::into_buffers`], [`Battle::replay`]).
 #[derive(Debug, Default)]
@@ -634,6 +648,14 @@ impl<'a, const N: usize> Battle<'a, N> {
         RunStart {
             history_readers: self.history_readers,
             suppression: self.suppression,
+            #[cfg(all(
+                feature = "experiment-inline-runstart",
+                not(feature = "experiment-inline-runstart-observer")
+            ))]
+            speed_snapshot: super::Small::from_slice(&self.speed_snapshot),
+            #[cfg(feature = "experiment-inline-runstart-observer")]
+            speed_snapshot: inline_runstart_observer::capture(&self.speed_snapshot),
+            #[cfg(not(feature = "experiment-inline-runstart"))]
             speed_snapshot: self.speed_snapshot.clone(),
         }
     }

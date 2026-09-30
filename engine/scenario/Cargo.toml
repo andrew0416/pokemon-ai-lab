@@ -67,6 +67,7 @@ path = "tests/yy_position_hash.rs"
 [features]
 experiment-replay-action-keys-observer = ["lab-engine/experiment-replay-action-keys-observer"]
 experiment-slot-diff-observer = ["lab-engine/experiment-slot-diff-observer"]
+experiment-inline-runstart-observer = ["lab-engine/experiment-inline-runstart-observer"]
 
 [[test]]
 name = "replay_action_keys"
@@ -77,3 +78,7 @@ required-features = ["experiment-replay-action-keys-observer"]
 name = "p8e_slot_diff"
 path = "tests/p8e_slot_diff.rs"
 required-features = ["experiment-slot-diff-observer"]
+
+[[test]]
+name = "inline_runstart"
+path = "tests/inline_runstart.rs"

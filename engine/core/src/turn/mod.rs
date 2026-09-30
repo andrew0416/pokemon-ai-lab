@@ -72,6 +72,9 @@ use crate::rules::{ActionError, Ruleset};
 use crate::state::{PokemonRef, SideId, SlotRef, State};
 use crate::volatile::Volatile;
 
+#[cfg(feature = "experiment-inline-runstart-observer")]
+#[doc(hidden)]
+pub use battle::inline_runstart_observer;
 use battle::{Battle, RunBuffers, RunStart};
 use branch::Chooser;
 use lazy::HpMark;
