@@ -2,21 +2,54 @@
   "schema": 1,
   "variants": [
     {
-      "id": "combined-off",
-      "sha": "b22edb9dc425504da16a55594ef04178ab24e191",
-      "features": [],
-      "compare_to": null
-    },
-    {
-      "id": "combined-on",
-      "sha": "b22edb9dc425504da16a55594ef04178ab24e191",
+      "id": "base",
+      "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
       "features": [
-        "lab-engine/experiment-hurt-readers",
         "lab-engine/experiment-compact-volatiles",
+        "lab-engine/experiment-hurt-readers",
         "lab-search/experiment-leaf-ending-observer",
         "lab-search/experiment-prepared-turn-observe"
       ],
-      "compare_to": "combined-off"
+      "compare_to": null
+    },
+    {
+      "id": "p8d",
+      "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+      "features": [
+        "lab-engine/experiment-compact-volatiles",
+        "lab-engine/experiment-hurt-readers",
+        "lab-search/experiment-leaf-ending-observer",
+        "lab-search/experiment-prepared-turn-observe",
+        "lab-engine/experiment-replay-action-keys"
+      ],
+      "compare_to": "base",
+      "comparison_contract": "exact-v1"
+    },
+    {
+      "id": "p8e",
+      "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+      "features": [
+        "lab-engine/experiment-compact-volatiles",
+        "lab-engine/experiment-hurt-readers",
+        "lab-search/experiment-leaf-ending-observer",
+        "lab-search/experiment-prepared-turn-observe",
+        "lab-engine/experiment-slot-diff"
+      ],
+      "compare_to": "base",
+      "comparison_contract": "state-equivalent-slot-diff-v1"
+    },
+    {
+      "id": "p8f",
+      "sha": "048e4748e8854dac5eb511a358cc2f8c38c9dc29",
+      "features": [
+        "lab-engine/experiment-compact-volatiles",
+        "lab-engine/experiment-hurt-readers",
+        "lab-search/experiment-leaf-ending-observer",
+        "lab-search/experiment-prepared-turn-observe",
+        "lab-engine/experiment-stats-off-cost"
+      ],
+      "compare_to": "base",
+      "comparison_contract": "exact-v1"
     }
   ]
 }

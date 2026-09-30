@@ -211,7 +211,7 @@ def make_recipe(workspace, label):
         raise ValueError('Tracked source changed since preparation')
     untracked = subprocess.check_output(
         ['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=root, timeout=30)
-    compact = request['candidate_feature'] in ('compact-volatiles', 'all-optimizations')
+    compact = request['candidate_feature'] in ('compact-volatiles', 'all-optimizations', *ci.NEW_MODES)
     allowed_untracked = {'engine/search/examples/ci_bench.rs'}
     if compact:
         allowed_untracked.add(COMPACT_PROBE_PATH)
@@ -420,6 +420,8 @@ def _fingerprint_mapping(evidence, recipe):
         for feature, active in spec['expected'][package].items():
             if (feature in features) != active:
                 raise ValueError('Actual compiled feature activation differs from recipe')
+        import ci
+        ci.validate_strict_feature_closure(package, features, spec['expected'][package])
         mapping[artifact] = {'kind': 'fingerprint', 'target_path': target.as_posix()}
         seen[package].add(kind)
     if any(seen[p] != set(spec['packages'][p]) for p in seen):
@@ -517,6 +519,12 @@ def restore(workspace, label):
         _diagnostic(workspace, label, status='disabled', reused=False, sealed=False)
         return False
     try:
+        import ci
+        request_path = workspace/'ci-results/request.json'
+        if request_path.is_file() and json.loads(request_path.read_text(encoding='utf-8')).get('candidate_feature') in ci.NEW_MODES:
+            _diagnostic(workspace, label, status='fresh-regressions-required', reused=False, sealed=False,
+                        reason='Independent candidates rerun both complete regression arms in this run')
+            return False
         entry = _current_plan(workspace, label)
         prefix = label.upper()
         if (os.environ.get(prefix + '_CACHE_HIT') != 'true'

@@ -1,12 +1,12 @@
-"""Require the exact authorized P9 speed run to finish successfully before testing."""
+"""Require the exact authorized combined speed run to finish successfully before testing."""
 import json
 import os
 from pathlib import Path
 import urllib.request
 
 REPOSITORY = 'andrew0416/pokemon-ai-lab'
-RUN_ID = 36660421636
-HEAD_SHA = '62ac54c2c9681fa3d598128b0ed72c6f4a2b3db9'
+RUN_ID = 36665429800
+HEAD_SHA = '25ee2e42d7b17efc0d0519e0bb936fcbb38d776c'
 
 
 def validate(run):
@@ -14,7 +14,7 @@ def validate(run):
             or run.get('repository', {}).get('full_name') != REPOSITORY
             or run.get('event') != 'workflow_dispatch'
             or run.get('status') != 'completed' or run.get('conclusion') != 'success'):
-        raise ValueError('The exact prerequisite P9 run has not completed successfully')
+        raise ValueError('The exact prerequisite combined run has not completed successfully')
     return {key: run[key] for key in ('id', 'head_sha', 'status', 'conclusion', 'html_url')}
 
 
@@ -28,7 +28,7 @@ def main():
                  'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'combined-engine-prerequisite'})
     with urllib.request.urlopen(request, timeout=45) as response:
         receipt = validate(json.load(response))
-    path = Path(os.environ.get('GITHUB_WORKSPACE', '.')) / 'p9-prerequisite.json'
+    path = Path(os.environ.get('GITHUB_WORKSPACE', '.')) / 'combined-prerequisite.json'
     with path.open('x', encoding='utf-8') as stream:
         json.dump(receipt, stream, indent=2)
         stream.write('\n')

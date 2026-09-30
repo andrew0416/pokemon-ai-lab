@@ -25,6 +25,7 @@ import tarfile
 import time
 
 from combined_contract import validate_activation_probe, validate_precedence
+from p8def_contract import comparison_equal, turn_state_digest
 
 HERE = Path(__file__).resolve().parent
 
@@ -456,6 +457,8 @@ def expected_features(v):
             {"experiment-prepared-turn", "experiment-prepared-turn-observe"},
             {"experiment-prepared-turn", "experiment-prepared-turn-observe"}),
     }
+    for name in ("replay-action-keys", "slot-diff", "stats-off-cost"):
+        closures["lab-engine/experiment-" + name] = ({"experiment-" + name}, set())
     for feature in requested:
         if feature not in closures:
             raise ValueError("Unrecognized agreement feature: " + feature)
@@ -684,6 +687,9 @@ def run_case(job, binaries, result_dir):
             with stdout.open(encoding="utf-8") as f:
                 record.update(validate_probe(job["kind"], (json.loads(line) for line in f)))
             record["complete"] &= not timeout and code == 0
+            if job["kind"] == "turn" and record["complete"]:
+                with stdout.open(encoding="utf-8") as f:
+                    record["turn_state_sha256"] = turn_state_digest(json.loads(line) for line in f)
             if code:
                 record["status"] = "process-failed"
     except (ValueError, OSError, KeyError, AssertionError) as e:
@@ -816,7 +822,7 @@ def compare(args):
         if not v["compare_to"]:
             continue
         counts = {"equal_success": 0, "equal_error": 0, "different": 0, "uncompared": 0}
-        details, per_kind = [], {}
+        details, per_kind, representation_differences = [], {}, []
         base = by_variant[v["compare_to"]]
         for key in sorted(expected_ids):
             candidate, original = by_variant[v["id"]].get(key), base.get(key)
@@ -827,8 +833,10 @@ def compare(args):
                 same = semantic_oracle(candidate["verdict"]) == semantic_oracle(original["verdict"])
                 status = "equal_success" if same and candidate.get("successful") and original.get("successful") else ("equal_error" if same else "different")
             else:
-                same = candidate["sha256"] == original["sha256"]
+                same = comparison_equal(v, kind, candidate, original)
                 status = "equal_success" if same and candidate.get("successful") and original.get("successful") else ("equal_error" if same else "different")
+            if kind == "turn" and candidate and original and candidate.get("sha256") != original.get("sha256"):
+                representation_differences.append(key)
             counts[status] += 1
             pc = per_kind.setdefault(kind, {"equal_success": 0, "equal_error": 0, "different": 0, "uncompared": 0})
             pc[status] += 1
@@ -836,7 +844,9 @@ def compare(args):
                 details.append({"id": key, "status": status, "baseline_status": original["status"] if original else "missing",
                                 "candidate_status": candidate["status"] if candidate else "missing"})
         summary["comparisons"][v["id"]] = {"baseline": v["compare_to"], **counts,
-                                               "by_kind": per_kind, "details": details}
+                                               "by_kind": per_kind, "details": details,
+                                               "comparison_contract": v.get("comparison_contract", "exact-v1"),
+                                               "raw_turn_different_ids": representation_differences}
         summary["differential_complete"] &= counts["different"] == 0 and counts["uncompared"] == 0
     summary["oracle_all_match"] = bool(expected_ids) and all(
         set(counts) == {"match"} and counts["match"] == sum(k == "oracle" for k in expected_kinds.values())

@@ -20,9 +20,42 @@ PREPARED_OBSERVER_FEATURE = 'experiment-prepared-turn-observe'
 COMPACT_FEATURE = 'experiment-compact-volatiles'
 COMPACT_PROBE_PATH = 'engine/scenario/examples/ci_compact_probe.rs'
 FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles',
-                   'all-optimizations')
+                   'all-optimizations', 'replay-action-keys', 'slot-diff', 'stats-off-cost')
 EXPERIMENT_FEATURES = (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE,
                        PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE, COMPACT_FEATURE)
+NEW_MODES = ('replay-action-keys', 'slot-diff', 'stats-off-cost')
+NEW_FEATURES = {mode: 'experiment-' + mode for mode in NEW_MODES}
+NEW_OBSERVERS = {mode: feature + '-observer' for mode, feature in NEW_FEATURES.items()}
+ALL_EXPERIMENT_FEATURES = (*EXPERIMENT_FEATURES, *NEW_FEATURES.values(), *NEW_OBSERVERS.values())
+PACKAGE_BASE_FEATURES = {'lab-engine': set(), 'lab-scenario': set(),
+                         'lab-search': {'cli', 'default', 'lab-scenario', 'scenario', 'serde_json'}}
+# Filled from the implemented engine's exact Rust test registration before dispatch.
+# Empty contracts fail closed; they can never count as a passed activation gate.
+NEW_OBSERVER_TESTS = {mode: () for mode in NEW_MODES}
+NEW_OBSERVER_TESTS['replay-action-keys'] = (
+    'ordinary_keys_activate_without_changing_stage_work_or_exact_results',
+    'resumed_hits_and_midturn_switches_keep_the_uncached_path',
+    'bounded_full_and_factored_paths_preserve_bits_and_activation_scope',
+    'in_stage_errors_and_successes_preserve_original_inputs',
+    'sampling_remains_seed_identical_and_never_reuses',
+)
+NEW_OBSERVER_TESTS['slot-diff'] = (
+    'scalar_diffs_preserve_full_states_and_incremental_hash_in_singles_and_doubles',
+    'shortcut_avoids_real_switch_and_compact_clone_allocations',
+    'every_other_slot_field_retains_the_exact_baseline_fallback',
+    'empty_slots_unchanged_slots_and_inactive_payload_keep_existing_boundary',
+    'dynamax_keeps_the_existing_unsupported_reconstruction_boundary',
+    'real_turns_match_baseline_full_state_order_probability_and_suspension',
+)
+NEW_OBSERVER_TESTS['stats-off-cost'] = (
+    'turn::stats_off_cost::tests::env_presence_snapshot_and_diagnostics_are_process_isolated',
+)
+NEW_OBSERVER_TARGETS = {
+    'replay-action-keys': {'package': 'lab-scenario', 'kind': 'test', 'target': 'replay_action_keys'},
+    'slot-diff': {'package': 'lab-scenario', 'kind': 'test', 'target': 'p8e_slot_diff',
+                  'additional_package': 'lab-engine', 'test_counts': (5, 1)},
+    'stats-off-cost': {'package': 'lab-engine', 'kind': 'lib'},
+}
 COMMAND_TIMEOUT_SECONDS = 2700
 PREPARED_TESTS = (
     'matrix_reuses_real_validators_and_preserves_all_outcome_bits',
@@ -40,6 +73,11 @@ PREPARED_TESTS = (
 def feature_args(selection, label):
     if selection not in FEATURE_CHOICES or label not in ('baseline', 'candidate'):
         raise ValueError('Invalid candidate feature or build label')
+    if selection in NEW_MODES:
+        features = feature_args('all-optimizations', 'candidate')[1]
+        if label == 'candidate':
+            features += ',lab-engine/' + NEW_FEATURES[selection]
+        return ['--features', features]
     if selection == 'all-optimizations':
         if label == 'baseline':
             return []
@@ -79,7 +117,7 @@ def reject_default_experiments(manifest, features):
     visited = set()
     while pending:
         feature = pending.pop()
-        if feature.rsplit('/', 1)[-1] in EXPERIMENT_FEATURES:
+        if feature.rsplit('/', 1)[-1] in ALL_EXPERIMENT_FEATURES:
             raise ValueError(f'{manifest}: experiment feature must not be enabled by default')
         if feature not in visited:
             visited.add(feature)
@@ -89,7 +127,7 @@ def reject_default_experiments(manifest, features):
 def verify_feature_declaration(manifest, selection):
     features = read_features(manifest)
     declared = EXPERIMENT_FEATURE in features
-    if selection in ('hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles', 'all-optimizations') and not declared:
+    if selection in FEATURE_CHOICES[1:] and not declared:
         raise ValueError(f'{manifest}: missing empty {EXPERIMENT_FEATURE} feature declaration')
     if declared and features[EXPERIMENT_FEATURE] != []:
         raise ValueError(f'{manifest}: {EXPERIMENT_FEATURE} must be an empty feature')
@@ -123,12 +161,48 @@ def verify_compact_declarations(root):
             'default_activation': False}
 
 
+def verify_new_declarations(root, selection):
+    if selection not in NEW_MODES:
+        raise ValueError('Invalid independent candidate mode')
+    core_path, search_path = root/'engine/core/Cargo.toml', root/'engine/search/Cargo.toml'
+    core, search = read_features(core_path), read_features(search_path)
+    runtime, observer = NEW_FEATURES[selection], NEW_OBSERVERS[selection]
+    if core.get(runtime) != [] or core.get(observer) != [runtime]:
+        raise ValueError(f'{core_path}: missing or invalid {runtime}/{observer} declarations')
+    for mode in NEW_MODES:
+        flag, diagnostic = NEW_FEATURES[mode], NEW_OBSERVERS[mode]
+        if flag in core or diagnostic in core:
+            if core.get(flag) != [] or core.get(diagnostic) != [flag]:
+                raise ValueError(f'{core_path}: unexpected independent feature declaration')
+    forbidden = set(NEW_FEATURES.values()) | set(NEW_OBSERVERS.values())
+    if forbidden.intersection(search) or any(
+            value.rsplit('/', 1)[-1] in forbidden for values in search.values() for value in values):
+        raise ValueError(f'{search_path}: independent candidates must remain core-only')
+    for manifest, features in ((core_path, core), (search_path, search)):
+        reject_default_experiments(manifest, features)
+    target = NEW_OBSERVER_TARGETS[selection]
+    if target['package'] == 'lab-scenario':
+        scenario_path = root/'engine/scenario/Cargo.toml'
+        scenario = read_features(scenario_path)
+        if scenario.get(observer) != ['lab-engine/' + observer]:
+            raise ValueError(f'{scenario_path}: observer must forward exactly the core observer')
+        reject_default_experiments(scenario_path, scenario)
+        with scenario_path.open('rb') as stream:
+            manifest_data = tomllib.load(stream)
+        targets = [row for row in manifest_data.get('test', []) if row.get('name') == target['target']]
+        if (len(targets) != 1 or targets[0].get('path') != 'tests/' + target['target'] + '.rs'
+                or targets[0].get('required-features') != [observer]):
+            raise ValueError(f'{scenario_path}: exact observer integration target is not registered')
+    return {'core': {runtime: [], observer: [runtime]}, 'search_forwarding': False,
+            'default_activation': False}
+
+
 def injected_sources(selection):
     """The only controller files allowed to be added to each prepared checkout."""
     if selection not in FEATURE_CHOICES:
         raise ValueError('Invalid candidate feature')
     files = {'engine/search/examples/ci_bench.rs': Path(__file__).with_name('harness.rs')}
-    if selection in ('compact-volatiles', 'all-optimizations'):
+    if selection in ('compact-volatiles', 'all-optimizations', *NEW_MODES):
         files[COMPACT_PROBE_PATH] = Path(__file__).with_name('compact_probe.rs')
     return files
 
@@ -172,10 +246,10 @@ def refs(workspace):
     pairs = int(os.environ['PAIRS'])
     if suite not in ('smoke', 'narrow') or threads not in (1, 2, 4):
         raise ValueError('Invalid suite or thread count')
-    if candidate_feature in ('compact-volatiles', 'all-optimizations') and suite != 'narrow':
+    if candidate_feature in ('compact-volatiles', 'all-optimizations', *NEW_MODES) and suite != 'narrow':
         raise ValueError(f'{candidate_feature} requires the full narrow regression suite')
-    if candidate_feature == 'all-optimizations' and baseline.lower() != candidate.lower():
-        raise ValueError('all-optimizations requires the same source SHA with features off/on')
+    if candidate_feature in ('all-optimizations', *NEW_MODES) and baseline.lower() != candidate.lower():
+        raise ValueError(f'{candidate_feature} requires the same source SHA with features off/on')
     if pairs < 2 or pairs > 20 or pairs % 2:
         raise ValueError('pairs must be even, from 2 through 20')
     cpus = len(os.sched_getaffinity(0)) if hasattr(os, 'sched_getaffinity') else os.cpu_count()
@@ -198,8 +272,8 @@ def prepare(workspace):
     result = workspace/'ci-results'
     metadata = json.loads((result/'request.json').read_text(encoding='utf-8'))
     selection = metadata['candidate_feature']
-    if selection == 'all-optimizations' and metadata['baseline_sha'] != metadata['candidate_sha']:
-        raise ValueError('all-optimizations requires the same source SHA with features off/on')
+    if selection in ('all-optimizations', *NEW_MODES) and metadata['baseline_sha'] != metadata['candidate_sha']:
+        raise ValueError(f'{selection} requires the same source SHA with features off/on')
     if metadata['feature_args'] != {label: feature_args(selection, label)
                                    for label in ('baseline', 'candidate')}:
         raise ValueError('Requested feature arguments do not match the explicit selection')
@@ -235,12 +309,14 @@ def prepare(workspace):
                 '.cargo/config', '.cargo/config.toml', 'rust-toolchain', 'rust-toolchain.toml',
                 'engine/.cargo/config', 'engine/.cargo/config.toml',
                 'engine/rust-toolchain', 'engine/rust-toolchain.toml') if (root/name).is_file()}}
-        if selection in ('leaf-ending-states', 'all-optimizations'):
+        if selection in ('leaf-ending-states', 'all-optimizations', *NEW_MODES):
             metadata['sources'][label]['leaf_declarations'] = verify_leaf_declarations(root)
-        if selection in ('prepared-turn', 'all-optimizations'):
+        if selection in ('prepared-turn', 'all-optimizations', *NEW_MODES):
             metadata['sources'][label]['prepared_declarations'] = verify_prepared_declarations(root)
-        if selection in ('compact-volatiles', 'all-optimizations'):
+        if selection in ('compact-volatiles', 'all-optimizations', *NEW_MODES):
             metadata['sources'][label]['compact_declarations'] = verify_compact_declarations(root)
+        if selection in NEW_MODES:
+            metadata['sources'][label]['independent_candidate_declarations'] = verify_new_declarations(root, selection)
     # A dependency/profile change needs a separately designed experiment.
     for key in ('lock_sha256', 'workspace_manifest_sha256', 'search_manifest_sha256',
                 'package_manifests', 'cargo_configuration'):
@@ -257,7 +333,7 @@ def prepare(workspace):
 def build_commands(suite, selection, label):
     if suite not in ('smoke', 'narrow'):
         raise ValueError('Invalid benchmark suite')
-    if selection in ('compact-volatiles', 'all-optimizations') and suite != 'narrow':
+    if selection in ('compact-volatiles', 'all-optimizations', *NEW_MODES) and suite != 'narrow':
         raise ValueError(f'{selection} requires the full narrow regression suite')
     tests = [['cargo', 'test', '--locked', '--release', '-p', 'lab-engine', '-p', 'lab-scenario', '-p', 'lab-search']]
     if suite == 'smoke':
@@ -271,7 +347,7 @@ def build_commands(suite, selection, label):
         ['cargo', 'build', '--locked', '--release', '-p', 'lab-search', '--example', 'ci_bench'],
     ]
     return [argv + ['--timings'] + feature_args(selection, label) +
-            (['--', '--test-threads=1'] if selection in ('compact-volatiles', 'all-optimizations') and argv[1] == 'test' else [])
+            (['--', '--test-threads=1'] if selection in ('compact-volatiles', 'all-optimizations', *NEW_MODES) and argv[1] == 'test' else [])
             for argv in commands]
 
 
@@ -286,10 +362,16 @@ def verify_prepared(workspace):
     receipt = {'schema_version': 1, 'status': 'running', 'sources': {}}
     receipt_path = result/'prepared-source-verification.json'
     try:
+        if selection in NEW_MODES or provenance.get('candidate_feature') in NEW_MODES:
+            declared = {label: feature_args(selection, label) for label in ('baseline', 'candidate')}
+            if (request.get('candidate_feature') != provenance.get('candidate_feature')
+                    or request.get('feature_args') != declared or provenance.get('feature_args') != declared
+                    or request['baseline_sha'] != request['candidate_sha']):
+                raise ValueError('Independent candidate request changed after preparation')
         if harness_hash != provenance['harness_sha256']:
             raise ValueError('Controller harness changed after prepare')
         injection_hashes = {name: sha(source) for name, source in injections.items()}
-        if (selection in ('compact-volatiles', 'all-optimizations') or 'injected_source_sha256' in provenance) and (
+        if (selection in ('compact-volatiles', 'all-optimizations', *NEW_MODES) or 'injected_source_sha256' in provenance) and (
                 injection_hashes != provenance.get('injected_source_sha256')):
             raise ValueError('Controller injected source changed after prepare')
         for label in ('baseline', 'candidate'):
@@ -358,6 +440,16 @@ def preserve_build_timings(workspace, label, before):
 
 def fingerprint_expectations(selection, label):
     feature_args(selection, label)
+    if selection in NEW_MODES:
+        core = {name: False for name in ALL_EXPERIMENT_FEATURES}
+        core.update({EXPERIMENT_FEATURE: True, PREPARED_FEATURE: True,
+                     LEAF_FEATURE: True, COMPACT_FEATURE: True})
+        core[NEW_FEATURES[selection]] = label == 'candidate'
+        search = {name: False for name in ALL_EXPERIMENT_FEATURES}
+        search.update({PREPARED_FEATURE: True, LEAF_FEATURE: True})
+        return ({'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json'),
+                 'lab-search': ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')},
+                {'lab-engine': core, 'lab-search': search}, True)
     if selection == 'all-optimizations':
         active = label == 'candidate'
         core = {name: False for name in EXPERIMENT_FEATURES}
@@ -388,6 +480,17 @@ def fingerprint_expectations(selection, label):
 def preserve_fingerprints(workspace, label, selection):
     packages, expected, hurt_active = fingerprint_expectations(selection, label)
     return preserve_expected_fingerprints(workspace, label, packages, expected, hurt_active)
+
+
+def validate_strict_feature_closure(package, features, expected):
+    """New mode/observer maps declare every known switch and exact package closure."""
+    if not set(ALL_EXPERIMENT_FEATURES) <= set(expected):
+        return
+    if any(name.startswith('experiment-') and name not in expected for name in features):
+        raise ValueError('actual compiled feature activation includes an unknown experiment feature')
+    required = {name for name, active in expected.items() if active} | PACKAGE_BASE_FEATURES[package]
+    if len(features) != len(set(features)) or set(features) != required:
+        raise ValueError('actual compiled feature activation differs from exact package closure')
 
 
 def preserve_expected_fingerprints(workspace, label, packages, expected, hurt_active):
@@ -423,15 +526,18 @@ def preserve_expected_fingerprints(workspace, label, packages, expected, hurt_ac
         if kinds != set(names):
             raise ValueError(f'{label}: missing compiled {package} fingerprints: {set(names) - kinds}')
     for item in evidence['fingerprints']:
+        validate_strict_feature_closure(item['package'], item['features'], expected[item['package']])
         for feature, active in expected[item['package']].items():
             if (feature in item['features']) != active:
                 raise ValueError(f'{label}: actual compiled feature activation differs from request: '
                                  f'{item["target_path"]}: {item["features"]}')
+        if (set(item['features']) & set(ALL_EXPERIMENT_FEATURES)) - set(expected[item['package']]):
+            raise ValueError(f'{label}: actual compiled feature activation includes an undeclared experiment')
     return evidence
 
 
 def prepared_validation_command(selection='prepared-turn'):
-    if selection == 'all-optimizations':
+    if selection in ('all-optimizations', *NEW_MODES):
         features = (feature_args(selection, 'candidate')[1] + ',lab-search/' + PREPARED_OBSERVER_FEATURE
                     + ',lab-search/' + OBSERVER_FEATURE)
         return ['cargo', 'test', '--locked', '--release', '-p', 'lab-search',
@@ -446,7 +552,7 @@ def prepared_validation_command(selection='prepared-turn'):
 def validate_prepared_turn(workspace, selection='prepared-turn'):
     """Run observer-dependent differential tests outside both timing targets."""
     result = workspace/'ci-results'
-    label = 'prepared-combined-validation' if selection == 'all-optimizations' else 'prepared-validation'
+    label = 'prepared-combined-validation' if selection in ('all-optimizations', *NEW_MODES) else 'prepared-validation'
     target = workspace/('target-' + label)
     if target.exists():
         raise ValueError('Prepared validation target directory must be new')
@@ -494,17 +600,123 @@ def validate_prepared_turn(workspace, selection='prepared-turn'):
         bridge = {LEAF_FEATURE: False, OBSERVER_FEATURE: False,
                   PREPARED_FEATURE: True, PREPARED_OBSERVER_FEATURE: True}
         expected = {'lab-engine': {EXPERIMENT_FEATURE: True, **bridge}, 'lab-search': dict(bridge)}
-        if selection == 'all-optimizations':
+        if selection in ('all-optimizations', *NEW_MODES):
             _, expected, _ = fingerprint_expectations(selection, 'candidate')
             for package in expected:
                 expected[package][PREPARED_OBSERVER_FEATURE] = True
                 expected[package][OBSERVER_FEATURE] = True
+        elif (result/'request.json').is_file() and json.loads((result/'request.json').read_text(encoding='utf-8')).get('candidate_feature') in NEW_MODES:
+            for package in expected:
+                expected[package] = {**{name: False for name in ALL_EXPERIMENT_FEATURES}, **expected[package]}
         receipt['selection'] = selection
         receipt['compiler_feature_evidence'] = preserve_expected_fingerprints(
             workspace, label,
             {'lab-engine': ('lib-lab_engine.json',),
              'lab-search': ('lib-lab_search.json', 'test-integration-test-prepared_turn.json')},
             expected, True)
+        receipt['status'] = 'ok'
+        save()
+        return receipt
+    except Exception as error:
+        receipt.update(status='failed', error=f'{type(error).__name__}: {error}')
+        save()
+        raise
+
+
+def new_observer_validation_commands(selection):
+    if selection not in NEW_MODES:
+        raise ValueError('Invalid independent observer mode')
+    tests = NEW_OBSERVER_TESTS[selection]
+    if (not tests or len(set(tests)) != len(tests)
+            or any(not re.fullmatch(r'[A-Za-z0-9_:]+', name) for name in tests)):
+        raise ValueError(f'{selection}: exact observer test registration must be resolved before launch')
+    # This observer gate targets core unit tests. Request the same core feature
+    # closure directly, without building a search timing binary with observers.
+    features = ','.join('lab-engine/' + name for name in (
+        EXPERIMENT_FEATURE, PREPARED_FEATURE, LEAF_FEATURE, COMPACT_FEATURE,
+        NEW_FEATURES[selection]))
+    target = NEW_OBSERVER_TARGETS[selection]
+    features += ',' + target['package'] + '/' + NEW_OBSERVERS[selection]
+    if target['kind'] == 'test':
+        packages = ['-p', target['package']]
+        if target.get('additional_package'):
+            packages += ['-p', target['additional_package']]
+        return [['cargo', 'test', '--locked', '--release', *packages,
+                 '--test', target['target'], '--features', features, '--', '--test-threads=1']]
+    return [['cargo', 'test', '--locked', '--release', '-p', target['package'], '--lib',
+             '--features', features, name, '--', '--exact', '--test-threads=1'] for name in tests]
+
+
+def validate_new_observer(workspace, selection):
+    commands = new_observer_validation_commands(selection)
+    result = workspace/'ci-results'
+    label = selection + '-observer-validation'
+    target = workspace/('target-' + label)
+    if os.path.lexists(target):
+        raise ValueError('Independent observer target directory must be new')
+    receipt_path = result/(label + '.json')
+    log_path = result/(label + '.log')
+    receipt = {'status': 'running', 'selection': selection, 'source': 'candidate',
+               'commands': commands, 'expected_tests': list(NEW_OBSERVER_TESTS[selection]),
+               'target_directory': str(target), 'log': log_path.name,
+               'per_command_timeout_seconds': COMMAND_TIMEOUT_SECONDS,
+               'cached_results_reused': False, 'performance_measurement': False}
+
+    def save():
+        receipt_path.write_text(json.dumps(receipt, indent=2)+'\n', encoding='utf-8')
+
+    save()
+    try:
+        env = os.environ.copy()
+        env['CARGO_TARGET_DIR'] = str(target)
+        with log_path.open('w', encoding='utf-8') as log:
+            for command in commands:
+                log.write('COMMAND '+json.dumps(command)+'\n')
+                log.flush()
+                proc = subprocess.Popen(command, cwd=workspace/'candidate/engine', env=env,
+                                        stdout=log, stderr=subprocess.STDOUT,
+                                        start_new_session=(os.name == 'posix'))
+                try:
+                    proc.wait(timeout=COMMAND_TIMEOUT_SECONDS)
+                except subprocess.TimeoutExpired:
+                    if os.name == 'posix':
+                        os.killpg(proc.pid, signal.SIGKILL)
+                    else:
+                        proc.kill()
+                    proc.wait()
+                    raise RuntimeError('Independent observer validation timed out; process group terminated')
+                receipt.setdefault('returncodes', []).append(proc.returncode)
+                if proc.returncode:
+                    raise RuntimeError(f'Independent observer validation failed ({proc.returncode}); see log')
+        text = log_path.read_text(encoding='utf-8')
+        passed = re.findall(r'^test (\S+) \.\.\. ok$', text, re.MULTILINE)
+        summaries = re.findall(r'^test result: ok\. (\d+) passed; (\d+) failed; (\d+) ignored; '
+                               r'(\d+) measured; (\d+) filtered out;', text, re.MULTILINE)
+        receipt['passed_tests'] = passed
+        target_spec = NEW_OBSERVER_TARGETS[selection]
+        counts = target_spec.get('test_counts', (len(NEW_OBSERVER_TESTS[selection]),)) if target_spec['kind'] == 'test' else (1,) * len(commands)
+        if (sorted(passed) != sorted(NEW_OBSERVER_TESTS[selection]) or len(summaries) != len(counts)
+                or sorted(int(row[0]) for row in summaries) != sorted(counts)
+                or any(tuple(map(int, row[1:4])) != (0, 0, 0) for row in summaries)
+                or target_spec['kind'] == 'test' and any(int(row[4]) != 0 for row in summaries)):
+            raise ValueError('Every exact independent observer test must execute once and pass unskipped')
+        _, expected, _ = fingerprint_expectations(selection, 'candidate')
+        core = expected['lab-engine']
+        core[NEW_OBSERVERS[selection]] = True
+        packages = {'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json')}
+        expectations = {'lab-engine': core}
+        if target_spec['package'] == 'lab-scenario':
+            packages = {'lab-engine': ('lib-lab_engine.json',),
+                        'lab-scenario': ('lib-lab_scenario.json',
+                                         'test-integration-test-' + target_spec['target'] + '.json')}
+            scenario = {name: False for name in ALL_EXPERIMENT_FEATURES}
+            scenario[NEW_OBSERVERS[selection]] = True
+            expectations['lab-scenario'] = scenario
+            if target_spec.get('additional_package') == 'lab-engine':
+                packages['lab-engine'] = ('lib-lab_engine.json',
+                                          'test-integration-test-' + target_spec['target'] + '.json')
+        receipt['compiler_feature_evidence'] = preserve_expected_fingerprints(
+            workspace, label, packages, expectations, True)
         receipt['status'] = 'ok'
         save()
         return receipt
@@ -522,6 +734,8 @@ def build(workspace):
     result = workspace/'ci-results'
     request = json.loads((result/'request.json').read_text(encoding='utf-8'))
     selection = request['candidate_feature']
+    if selection in NEW_MODES and request['baseline_sha'] != request['candidate_sha']:
+        raise ValueError(f'{selection} requires the same source SHA with features off/on')
     commands_by_version = {label: build_commands(request['suite'], selection, label)
                            for label in ('baseline', 'candidate')}
     expected_args = {label: feature_args(selection, label) for label in commands_by_version}
@@ -530,10 +744,12 @@ def build(workspace):
     plan = {'suite': request['suite'], 'candidate_feature': selection,
             'feature_args': expected_args, 'commands_by_version': commands_by_version,
             'per_command_timeout_seconds': COMMAND_TIMEOUT_SECONDS}
-    if selection in ('prepared-turn', 'all-optimizations'):
+    if selection in ('prepared-turn', 'all-optimizations', *NEW_MODES):
         plan['prepared_validation_command'] = prepared_validation_command()
-    if selection == 'all-optimizations':
+    if selection in ('all-optimizations', *NEW_MODES):
         plan['combined_prepared_validation_command'] = prepared_validation_command(selection)
+    if selection in NEW_MODES:
+        plan['independent_observer_validation_commands'] = new_observer_validation_commands(selection)
     (result/'test-plan.json').write_text(json.dumps(plan, indent=2)+'\n', encoding='utf-8')
     provenance = json.loads((result/'provenance.json').read_text(encoding='utf-8'))
     provenance['build_plan'] = plan
@@ -601,11 +817,14 @@ def build(workspace):
         provenance.setdefault('build_cache', {})[label] = json.loads(
             (result/('cache-' + label + '.json')).read_text(encoding='utf-8'))
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
-    if selection in ('prepared-turn', 'all-optimizations'):
+    if selection in ('prepared-turn', 'all-optimizations', *NEW_MODES):
         provenance['prepared_validation'] = validate_prepared_turn(workspace)
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
-    if selection == 'all-optimizations':
+    if selection in ('all-optimizations', *NEW_MODES):
         provenance['combined_prepared_validation'] = validate_prepared_turn(workspace, selection)
+        (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
+    if selection in NEW_MODES:
+        provenance['independent_observer_validation'] = validate_new_observer(workspace, selection)
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
 
 

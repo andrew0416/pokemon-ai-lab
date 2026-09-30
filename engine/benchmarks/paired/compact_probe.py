@@ -176,7 +176,9 @@ def _run(argv, cwd, env, stem, timeout, commands, save):
 
 
 def _fingerprints(workspace, label, compact, off_guard):
-    expected = {feature: False for feature in ci.EXPERIMENT_FEATURES}
+    request = json.loads((workspace/'ci-results/request.json').read_text(encoding='utf-8'))
+    known = ci.ALL_EXPERIMENT_FEATURES if request.get('candidate_feature') in ci.NEW_MODES else ci.EXPERIMENT_FEATURES
+    expected = {feature: False for feature in known}
     expected.update({HURT: True, COMPACT: compact})
     kinds = ['lib-lab_engine.json']
     if off_guard:
@@ -185,6 +187,99 @@ def _fingerprints(workspace, label, compact, off_guard):
                 'lab-scenario': ('lib-lab_scenario.json', 'example-' + PROBE_EXAMPLE + '.json')}
     return ci.preserve_expected_fingerprints(workspace, label, packages,
         {'lab-engine': expected, 'lab-scenario': {key: False for key in expected}}, True)
+
+
+def slot_diff_semantic_output(path, selection):
+    """Only P8e may change emitted outcome instruction representation.
+
+    Keep explicit state-instructions cases, every complete before/after state,
+    probabilities, hidden diagnostics, suspension, record/ending order and all
+    other fields. The Rust probe itself still applies/reverses every instruction
+    and asserts complete state restoration and incremental-hash consistency.
+    """
+    if selection != 'slot-diff':
+        raise ValueError('Instruction representation exemption is only valid for slot-diff')
+    validate_output(path)
+    rows = [_json(line) for line in path.read_text(encoding='utf-8').splitlines()]
+    removed = 0
+    for row in rows:
+        if row['kind'] != 'fixture':
+            continue
+        if not isinstance(row['records'], list):
+            raise ValueError('Fixture records must remain an ordered list')
+        for record in row['records']:
+            if not isinstance(record, dict) or not isinstance(record.get('endings'), list):
+                raise ValueError('Every fixture record must retain ordered endings')
+            for ending in record['endings']:
+                if not isinstance(ending, dict) or not isinstance(ending.get('instructions'), str):
+                    raise ValueError('Missing explicit outcome instruction representation')
+                del ending['instructions']
+                removed += 1
+    if not removed:
+        raise ValueError('No complete outcome instruction representations were inspected')
+    canonical = json.dumps(rows, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode('utf-8')
+    return {'semantic_sha256': hashlib.sha256(canonical).hexdigest(),
+            'removed_outcome_instruction_fields': removed,
+            'excluded_path': 'fixture.records[].endings[].instructions'}
+
+
+def validate_independent_candidate(workspace, out_dir, selection, receipt, save):
+    if selection not in ci.NEW_MODES:
+        raise ValueError('Invalid independent candidate representation comparison')
+    comparison = {'selection': selection, 'variants': {}, 'performance_measurement': False,
+                  'scope': 'all four validated core runtime flags common; exactly one new candidate flag',
+                  'raw_outputs_retained': True}
+    receipt['independent_candidate_comparison'] = comparison
+    for tree in ('baseline', 'candidate'):
+        if os.path.lexists(workspace/('target-' + selection + '-probe-' + tree)):
+            raise ValueError('Independent representation targets must be fresh')
+    for tree in ('baseline', 'candidate'):
+        label = selection + '-probe-' + tree
+        target = workspace/('target-' + label)
+        env = environment(target)
+        cwd = workspace/tree/'engine'
+        _, expected, _ = ci.fingerprint_expectations(selection, tree)
+        core_expected = expected['lab-engine']
+        feature = ','.join('lab-engine/' + name for name, active in core_expected.items() if active)
+        item = {'tree': tree, 'target': str(target), 'features': feature,
+                'configuration': _configuration(env)}
+        comparison['variants'][tree] = item
+        folder = out_dir/'independent-candidate'/tree
+        _run(['cargo', 'build', '--locked', '--release', '-p', 'lab-scenario', '--example',
+              PROBE_EXAMPLE, '--features', feature], cwd, env, folder/'build', 1800, receipt['commands'], save)
+        item['compiler_feature_evidence'] = ci.preserve_expected_fingerprints(
+            workspace, label,
+            {'lab-engine': ('lib-lab_engine.json',),
+             'lab-scenario': ('lib-lab_scenario.json', 'example-' + PROBE_EXAMPLE + '.json')},
+            {'lab-engine': core_expected,
+             'lab-scenario': {name: False for name in ci.ALL_EXPERIMENT_FEATURES}}, True)
+        binary = target/'release/examples'/PROBE_EXAMPLE
+        if binary.is_symlink() or not binary.is_file() or not os.access(binary, os.X_OK):
+            raise ValueError('Independent representation probe must be a regular executable')
+        item['binary_sha256'] = sha(binary)
+        _run([str(binary), str(workspace/'baseline/engine')], cwd, env, folder/'probe',
+             600, receipt['commands'], save)
+        item['output'] = validate_output(folder/'probe.stdout')
+        if selection == 'slot-diff':
+            item['semantic_output'] = slot_diff_semantic_output(folder/'probe.stdout', selection)
+        _run([str(binary), '--layout'], cwd, env, folder/'layout', 60, receipt['commands'], save)
+        item['layout'] = validate_layout(folder/'layout.stdout')
+        save()
+    before = (out_dir/'independent-candidate/baseline/probe.stdout').read_bytes()
+    after = (out_dir/'independent-candidate/candidate/probe.stdout').read_bytes()
+    comparison['complete_jsonl_byte_equal'] = before == after
+    if selection == 'slot-diff':
+        outputs = [comparison['variants'][tree]['semantic_output'] for tree in ('baseline', 'candidate')]
+        if outputs[0] != outputs[1]:
+            raise ValueError('Slot-diff complete semantic probe outputs differ beyond instruction representation')
+        comparison.update(semantic_equal=True,
+                          excluded_path='fixture.records[].endings[].instructions')
+    elif before != after:
+        raise ValueError('Independent candidate complete 56-record outputs must be byte-identical')
+    else:
+        comparison['semantic_equal'] = True
+    comparison['status'] = 'success'
+    save()
 
 
 def validate_compact(workspace, out_dir):
@@ -202,7 +297,7 @@ def validate_compact(workspace, out_dir):
     save()
     try:
         request = json.loads((workspace/'ci-results/request.json').read_text(encoding='utf-8'))
-        if request['candidate_feature'] not in ('compact-volatiles', 'all-optimizations'):
+        if request['candidate_feature'] not in ('compact-volatiles', 'all-optimizations', *ci.NEW_MODES):
             raise ValueError('Compact gate requires compact-volatiles or all-optimizations mode')
         receipt['selection'] = request['candidate_feature']
         receipt['isolated_feature_scope'] = 'hurt-readers common; compact on/off; leaf/prepared/observers off'
@@ -229,6 +324,10 @@ def validate_compact(workspace, out_dir):
             if os.path.lexists(target):
                 raise ValueError(f'Compact target must be fresh: {target}')
             environment(target)
+        if request['candidate_feature'] in ci.NEW_MODES:
+            for tree in ('baseline', 'candidate'):
+                if os.path.lexists(workspace/('target-' + request['candidate_feature'] + '-probe-' + tree)):
+                    raise ValueError('Independent representation targets must be fresh')
         for variant, tree, label, compact in VARIANTS:
             target = workspace/('target-' + label)
             env = environment(target)
@@ -266,6 +365,8 @@ def validate_compact(workspace, out_dir):
             raise ValueError('Default-off layout differs from baseline')
         if variants['baseline']['layout'] == variants['candidate-on']['layout']:
             raise ValueError('Compact-on layout did not differ despite requested activation')
+        if request['candidate_feature'] in ci.NEW_MODES:
+            validate_independent_candidate(workspace, out_dir, request['candidate_feature'], receipt, save)
         if sources != {tree: _source_hashes(workspace/tree) for tree in sources}:
             raise ValueError('Sources or fixture inputs changed during compact validation')
         receipt.update(status='success', complete_jsonl_byte_equal=True, source_inputs_unchanged=True,
