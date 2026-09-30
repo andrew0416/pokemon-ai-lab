@@ -29,6 +29,7 @@ from p8def_contract import comparison_equal as independent_comparison_equal, tur
 import p8def_combined_contract as p8def_combined
 import p13_contract as p13
 import p14_contract as p14
+import p15_contract as p15
 
 HERE = Path(__file__).resolve().parent
 
@@ -132,6 +133,8 @@ def is_p8def_combined(document):
 
 
 def experiment_contract(document):
+    if any(v.get("id") == p15.CANDIDATE for v in document["variants"]):
+        return p15
     if any(v.get("id") == p14.CANDIDATE for v in document["variants"]):
         return p14
     if any(v.get("id") == p13.CANDIDATE for v in document["variants"]):
@@ -140,6 +143,8 @@ def experiment_contract(document):
 
 
 def comparison_equal(v, kind, candidate, original):
+    if v.get("id") == p15.CANDIDATE:
+        return p15.comparison_equal(v, kind, candidate, original)
     if v.get("id") == p14.CANDIDATE:
         return p14.comparison_equal(v, kind, candidate, original)
     if v.get("id") == p13.CANDIDATE:
@@ -490,6 +495,7 @@ def expected_features(v):
         closures["lab-engine/experiment-" + name] = ({"experiment-" + name}, set())
     closures["lab-search/experiment-borrowed-child-keys"] = ({"experiment-borrowed-child-keys"}, {"experiment-borrowed-child-keys"})
     closures["lab-search/experiment-matrix-pass-through"] = (set(), {"experiment-matrix-pass-through"})
+    closures["lab-search/experiment-prepared-leaf"] = ({"experiment-prepared-leaf"}, {"experiment-prepared-leaf"})
     for feature in requested:
         if feature not in closures:
             raise ValueError("Unrecognized agreement feature: " + feature)
@@ -570,6 +576,11 @@ def activation_checks(v, records, jobs, binaries, result_dir):
                            and off_meta.get("prepared_observer_compiled") is True})
             if leaf_required:
                 checks[-1].update(on_metadata=metadata, off_metadata=off_meta)
+                if v.get("id") == p15.CANDIDATE:
+                    checks[-1].update(on_stdout_sha256=record.get("sha256"),
+                                      off_stdout_sha256=off.get("sha256"),
+                                      on_stdout_bytes=record.get("stdout_bytes"),
+                                      off_stdout_bytes=off.get("stdout_bytes"))
                 checks[-1]["leaf_active_both"] = all(
                     meta.get("leaf_observer_compiled") is True
                     and all(type(meta.get("leaf", {}).get(key)) is int
@@ -588,7 +599,12 @@ def activation_checks(v, records, jobs, binaries, result_dir):
             try:
                 if len(observed) != len({record["id"] for record, _ in observed}):
                     raise ValueError("Duplicate search-complete observer records")
-                validate_precedence(prepared)
+                if v.get("id") == p15.CANDIDATE:
+                    prepared["purpose"] = "prepared-leaf-sharing"
+                    prepared["contract"] = p15.PRECEDENCE_CONTRACT
+                    p15.validate_prepared_leaf_precedence(prepared)
+                else:
+                    validate_precedence(prepared)
             except (ValueError, TypeError):
                 prepared["passed"] = False
             activation["prepared_nonleaf"] = run_nonleaf_activation(binaries, result_dir)

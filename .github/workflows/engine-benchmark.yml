@@ -1,5 +1,5 @@
-name: engine P14 matrix pass-through
-run-name: "engine speed · old4+D vs old4+D+P14 · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
+name: engine P15 prepared leaf validation sharing
+run-name: "engine speed · R1 vs R1+P15 · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
 
 on:
   workflow_dispatch:
@@ -29,11 +29,11 @@ permissions:
   actions: read
 
 concurrency:
-  group: engine-benchmark-p14
+  group: engine-benchmark-p15
   cancel-in-progress: false
 
 env:
-  AGREEMENT_VARIANTS_FILE: p14-variants.json
+  AGREEMENT_VARIANTS_FILE: p15-variants.json
   CARGO_TERM_COLOR: never
   CARGO_INCREMENTAL: "0"
   CARGO_BUILD_JOBS: "2"
@@ -67,15 +67,15 @@ jobs:
           python-version: "3.12"
       - name: Test evaluation controller
         run: AGREEMENT_VARIANTS_FILE=variants.json python -m unittest discover -s engine/benchmarks/agreement -p 'test_*.py' -v
-      - name: Verify P14 feature and source contract
-        run: python engine/benchmarks/agreement/p14_contract.py --variants engine/benchmarks/agreement/p14-variants.json
-      - name: Immutable P14 source matrix
+      - name: Verify P15 feature and source contract
+        run: python engine/benchmarks/agreement/p15_contract.py --variants engine/benchmarks/agreement/p15-variants.json
+      - name: Immutable P15 source matrix
         id: matrix
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
-          variants = json.loads(Path('engine/benchmarks/agreement/p14-variants.json').read_text())['variants']
+          variants = json.loads(Path('engine/benchmarks/agreement/p15-variants.json').read_text())['variants']
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write('value=' + json.dumps({'include': variants}, separators=(',', ':')) + '\n')
           PY
@@ -109,7 +109,7 @@ jobs:
       - name: Verify corpus and make identical case plan
         run: |
           python controller/engine/benchmarks/agreement/run.py plan --out case-plan.json
-          python controller/engine/benchmarks/agreement/p14_contract.py --plan case-plan.json
+          python controller/engine/benchmarks/agreement/p15_contract.py --plan case-plan.json
       - name: Build and verify all actual features
         run: python controller/engine/benchmarks/agreement/run.py prepare --source source --out results/${{ matrix.id }} --variant ${{ matrix.id }}
       - name: Fresh oracle and differential outputs
@@ -143,7 +143,7 @@ jobs:
       - name: Compare every declared case with strict oracle and legality contracts
         run: |
           python engine/benchmarks/agreement/run.py compare --results downloaded --out agreement-summary.json
-          python engine/benchmarks/agreement/p14_contract.py --summary agreement-summary.json
+          python engine/benchmarks/agreement/p15_contract.py --summary agreement-summary.json
       - name: Preserve complete comparison
         if: always()
         uses: actions/upload-artifact@v4
@@ -161,9 +161,9 @@ jobs:
       max-parallel: 1
       matrix:
         include:
-          - id: matrix-pass-through
-            feature: matrix-pass-through
-            source_sha: bc4fb5ef7d1aaa2400edd34931071ec6f0b64781
+          - id: prepared-leaf
+            feature: prepared-leaf
+            source_sha: 71d5a84a97f6a3ce05430e1108538aed43fdc7f1
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -273,7 +273,7 @@ jobs:
           CANDIDATE_DEPENDENCY_CACHE_HIT: ${{ steps.deps-candidate.outputs.cache-hit }}
         run: python controller/engine/benchmarks/paired/ci.py build --workspace "$GITHUB_WORKSPACE"
       - name: Validate compact Volatiles baseline, enabled and disabled contracts
-        if: success() && (matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","matrix-pass-through"]'), matrix.feature))
+        if: success() && (matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","prepared-leaf"]'), matrix.feature))
         run: >-
           python controller/engine/benchmarks/paired/compact_probe.py
           --workspace "$GITHUB_WORKSPACE"
@@ -326,7 +326,7 @@ jobs:
             echo 'Benchmark did not complete. Inspect the job logs and engine-benchmark artifact.' >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Measure peak RSS separately
-        if: success() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","matrix-pass-through"]'), matrix.feature))
+        if: success() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","prepared-leaf"]'), matrix.feature))
         env:
           SUITE: ${{ inputs.suite }}
           THREADS: ${{ inputs.threads }}
@@ -338,7 +338,7 @@ jobs:
           --benchmark-dir "$GITHUB_WORKSPACE/ci-results/benchmark"
           --out-dir "$GITHUB_WORKSPACE/ci-results/memory"
       - name: Publish peak RSS summary
-        if: always() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","matrix-pass-through"]'), matrix.feature))
+        if: always() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || contains(fromJSON('["all-optimizations","replay-action-keys","slot-diff","stats-off-cost","p8def-combined","prepared-leaf"]'), matrix.feature))
         run: |
           if [ -f ci-results/memory/summary.md ]; then
             cat ci-results/memory/summary.md >> "$GITHUB_STEP_SUMMARY"

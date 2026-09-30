@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "variants": [
+    {
+      "id": "base",
+      "sha": "71d5a84a97f6a3ce05430e1108538aed43fdc7f1",
+      "features": [
+        "lab-engine/experiment-compact-volatiles",
+        "lab-engine/experiment-hurt-readers",
+        "lab-search/experiment-leaf-ending-observer",
+        "lab-search/experiment-prepared-turn-observe",
+        "lab-engine/experiment-replay-action-keys",
+        "lab-search/experiment-borrowed-child-keys"
+      ],
+      "compare_to": null
+    },
+    {
+      "id": "p15",
+      "sha": "71d5a84a97f6a3ce05430e1108538aed43fdc7f1",
+      "features": [
+        "lab-engine/experiment-compact-volatiles",
+        "lab-engine/experiment-hurt-readers",
+        "lab-search/experiment-leaf-ending-observer",
+        "lab-search/experiment-prepared-turn-observe",
+        "lab-engine/experiment-replay-action-keys",
+        "lab-search/experiment-prepared-leaf",
+        "lab-search/experiment-borrowed-child-keys"
+      ],
+      "compare_to": "base",
+      "comparison_contract": "exact-v1"
+    }
+  ]
+}
