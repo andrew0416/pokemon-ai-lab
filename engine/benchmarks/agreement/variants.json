@@ -2,69 +2,21 @@
   "schema": 1,
   "variants": [
     {
-      "id": "baseline",
-      "sha": "173addebc4442cfc5e49d614fce4a81ede44b74d",
+      "id": "combined-off",
+      "sha": "276d4d80f54675bc7ef9e5f360fe3048d1c25b57",
       "features": [],
       "compare_to": null
     },
     {
-      "id": "p8g",
-      "sha": "173addebc4442cfc5e49d614fce4a81ede44b74d",
-      "features": [
-        "lab-engine/experiment-hurt-readers"
-      ],
-      "compare_to": "baseline"
-    },
-    {
-      "id": "p9-off",
-      "sha": "0ed26ec533d9f6314abc464cecdb8994da5ce607",
-      "features": [
-        "lab-engine/experiment-hurt-readers"
-      ],
-      "compare_to": "p8g"
-    },
-    {
-      "id": "p9-on",
-      "sha": "0ed26ec533d9f6314abc464cecdb8994da5ce607",
+      "id": "combined-on",
+      "sha": "276d4d80f54675bc7ef9e5f360fe3048d1c25b57",
       "features": [
         "lab-engine/experiment-hurt-readers",
-        "lab-search/experiment-leaf-ending-observer"
-      ],
-      "compare_to": "p8g"
-    },
-    {
-      "id": "p8c-off",
-      "sha": "9569c78b0d61279e41b3c9b54ac81c68b8e69519",
-      "features": [
-        "lab-engine/experiment-hurt-readers"
-      ],
-      "compare_to": "p8g"
-    },
-    {
-      "id": "p8c-on",
-      "sha": "9569c78b0d61279e41b3c9b54ac81c68b8e69519",
-      "features": [
-        "lab-engine/experiment-hurt-readers",
+        "lab-engine/experiment-compact-volatiles",
+        "lab-search/experiment-leaf-ending-observer",
         "lab-search/experiment-prepared-turn-observe"
       ],
-      "compare_to": "p8g"
-    },
-    {
-      "id": "p10-off",
-      "sha": "89bfe487c2dd41b2de93ae1ed759e3524ca98c50",
-      "features": [
-        "lab-engine/experiment-hurt-readers"
-      ],
-      "compare_to": "p8g"
-    },
-    {
-      "id": "p10-on",
-      "sha": "89bfe487c2dd41b2de93ae1ed759e3524ca98c50",
-      "features": [
-        "lab-engine/experiment-hurt-readers",
-        "lab-engine/experiment-compact-volatiles"
-      ],
-      "compare_to": "p8g"
+      "compare_to": "combined-off"
     }
   ]
 }

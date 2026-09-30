@@ -437,6 +437,106 @@ def plan(args):
           for k in ("oracle", "turn", "search")}, "excluded_fixture_reports": len(skipped)}))
 
 
+def expected_features(v):
+    # Explicit allow-list; observer dependencies are part of the fingerprint.
+    requested = v["features"]
+    if len(requested) != len(set(requested)):
+        raise ValueError("Duplicate requested agreement features")
+    core = set()
+    search = {"cli", "default", "lab-scenario", "scenario", "serde_json"}
+    closures = {
+        "lab-engine/experiment-hurt-readers": ({"experiment-hurt-readers"}, set()),
+        "lab-engine/experiment-compact-volatiles": ({"experiment-compact-volatiles"}, set()),
+        "lab-search/experiment-leaf-ending-observer": (
+            {"experiment-leaf-ending-states", "experiment-leaf-ending-observer"},
+            {"experiment-leaf-ending-states", "experiment-leaf-ending-observer"}),
+        "lab-search/experiment-prepared-turn-observe": (
+            {"experiment-prepared-turn", "experiment-prepared-turn-observe"},
+            {"experiment-prepared-turn", "experiment-prepared-turn-observe"}),
+    }
+    for feature in requested:
+        if feature not in closures:
+            raise ValueError("Unrecognized agreement feature: " + feature)
+        expected_core, expected_search = closures[feature]
+        core |= expected_core
+        search |= expected_search
+    return core, search
+
+
+def activation_checks(v, records, jobs, binaries, result_dir):
+    core, _ = expected_features(v)
+    leaf_required = "experiment-leaf-ending-observer" in core
+    prepared_required = "experiment-prepared-turn-observe" in core
+    activation = {"required": leaf_required or prepared_required, "passed": True,
+                  "leaf_required": leaf_required, "prepared_required": prepared_required}
+    observed = []
+    for record in records:
+        if record["kind"] != "search" or not record.get("successful"):
+            continue
+        for line in record["stderr"].splitlines():
+            try:
+                value = json.loads(line)
+                if value.get("phase") == "search-complete" and value.get("requested_threads") == 1:
+                    observed.append((record, value))
+            except ValueError:
+                continue
+    if leaf_required:
+        leaf = {
+            "visited_cases": sum(meta.get("leaf", {}).get("visits", 0) > 0 for _, meta in observed),
+            "batches": sum(meta.get("leaf", {}).get("batches", 0) for _, meta in observed),
+            "visits": sum(meta.get("leaf", {}).get("visits", 0) for _, meta in observed),
+            "observer_compiled": bool(observed) and all(
+                meta.get("leaf_observer_compiled") is True for _, meta in observed),
+        }
+        leaf["passed"] = leaf["observer_compiled"] and leaf["batches"] > 0 and leaf["visits"] > 0
+        activation["leaf"] = leaf
+        activation["passed"] &= leaf["passed"]
+    if prepared_required:
+        by_id = {j["id"]: j for j in jobs}
+        checks = []
+        # With leaf direct evaluation enabled, depth-one searches intentionally
+        # bypass prepared validation. Select eight depth-two controls from the
+        # frozen plan BEFORE looking at success or counters; missing cases fail.
+        if leaf_required:
+            control_ids = [j["id"] for j in jobs if j["kind"] == "search"
+                           and j["args"][1] == "deep" and j["args"][5] == "1"][:8]
+            observed_by_id = {r["id"]: (r, m) for r, m in observed}
+            controls = [observed_by_id[key] for key in control_ids if key in observed_by_id]
+        else:
+            control_ids = [r["id"] for r, _ in observed[:8]]
+            controls = observed[:8]
+        # The leaf path stays enabled in BOTH controls. Only prepared is toggled.
+        for record, metadata in controls:
+            job = dict(by_id[record["id"]])
+            job["id"] = "prepared-off-control/" + job["id"]
+            job["args"] = [*job["args"], "--prepared", "off"]
+            off = run_case(job, binaries, result_dir)
+            off_metadata = [json.loads(line) for line in off["stderr"].splitlines() if line.startswith('{')]
+            off_metadata = [m for m in off_metadata if m.get("phase") == "search-complete"]
+            off_meta = off_metadata[-1] if off_metadata else {}
+            on_count = metadata.get("prepared", {}).get("parent_checks")
+            off_count = off_meta.get("prepared", {}).get("parent_checks")
+            checks.append({"id": record["id"], "equal": off["complete"] and off.get("successful", False)
+                           and off["sha256"] == record["sha256"], "on_parent_checks": on_count,
+                           "off_parent_checks": off_count,
+                           "toggle_confirmed": metadata.get("prepared_requested") is True
+                           and off_meta.get("prepared_requested") is False
+                           and metadata.get("prepared_compiled") is True
+                           and off_meta.get("prepared_compiled") is True
+                           and metadata.get("prepared_observer_compiled") is True
+                           and off_meta.get("prepared_observer_compiled") is True})
+        prepared = {"control_selection": "frozen-plan-first-eight-deep-single-thread" if leaf_required
+                    else "first-eight-successful-single-thread",
+                    "expected_control_ids": control_ids, "controls": checks,
+                    "passed": len(control_ids) == 8 and len(checks) == 8
+                    and all(c["equal"] and c["toggle_confirmed"] for c in checks) and any(
+                    type(c["on_parent_checks"]) is int and type(c["off_parent_checks"]) is int
+                    and 0 < c["on_parent_checks"] < c["off_parent_checks"] for c in checks)}
+        activation["prepared"] = prepared
+        activation["passed"] &= prepared["passed"]
+    return activation
+
+
 def prepare(args):
     v = variant(args.variant)
     root, out = args.source.resolve(), args.out.resolve()
@@ -476,16 +576,7 @@ def prepare(args):
         assert len(matches) == 1, (package, matches)
         fingerprint = read(matches[0])
         actual[package] = json.loads(fingerprint["features"])
-    expected_core = {"experiment-hurt-readers"} if v["id"] != "baseline" else set()
-    expected_search = {"cli", "default", "lab-scenario", "scenario", "serde_json"}
-    if v["id"] == "p9-on":
-        expected_core |= {"experiment-leaf-ending-states", "experiment-leaf-ending-observer"}
-        expected_search |= {"experiment-leaf-ending-states", "experiment-leaf-ending-observer"}
-    if v["id"] == "p8c-on":
-        expected_core |= {"experiment-prepared-turn", "experiment-prepared-turn-observe"}
-        expected_search |= {"experiment-prepared-turn", "experiment-prepared-turn-observe"}
-    if v["id"] == "p10-on":
-        expected_core |= {"experiment-compact-volatiles"}
+    expected_core, expected_search = expected_features(v)
     assert set(actual["lab-engine"]) == expected_core, actual
     assert set(actual["lab-search"]) == expected_search, actual
     receipt = read(out / "provenance.json")
@@ -576,43 +667,7 @@ def evaluate(args):
             if index % 100 == 0:
                 print(f"{args.variant}: completed {index}/{len(jobs)} cases", flush=True)
     assert {r["id"] for r in records} == set(ids)
-    activation = {"required": args.variant in ("p9-on", "p8c-on"), "passed": True}
-    observed = []
-    for record in records:
-        if record["kind"] != "search" or not record.get("successful"):
-            continue
-        for line in record["stderr"].splitlines():
-            try:
-                value = json.loads(line)
-                if value.get("phase") == "search-complete" and value.get("requested_threads") == 1:
-                    observed.append((record, value))
-            except ValueError:
-                continue
-    if args.variant == "p9-on":
-        activation["visited_cases"] = sum(meta.get("leaf", {}).get("visits", 0) > 0 for _, meta in observed)
-        activation["batches"] = sum(meta.get("leaf", {}).get("batches", 0) for _, meta in observed)
-        activation["visits"] = sum(meta.get("leaf", {}).get("visits", 0) for _, meta in observed)
-        activation["passed"] = activation["batches"] > 0 and activation["visits"] > 0
-    elif args.variant == "p8c-on":
-        by_id = {j["id"]: j for j in jobs}
-        checks = []
-        # Additional same-binary on/off controls, separate from the shared case denominator.
-        for record, metadata in observed[:8]:
-            job = dict(by_id[record["id"]])
-            job["id"] = "prepared-off-control/" + job["id"]
-            job["args"] = [*job["args"], "--prepared", "off"]
-            off = run_case(job, binaries, result_dir)
-            off_metadata = [json.loads(line) for line in off["stderr"].splitlines() if line.startswith('{')]
-            off_metadata = [m for m in off_metadata if m.get("phase") == "search-complete"]
-            on_count = metadata.get("prepared", {}).get("parent_checks")
-            off_count = off_metadata[-1].get("prepared", {}).get("parent_checks") if off_metadata else None
-            checks.append({"id": record["id"], "equal": off["complete"] and off.get("successful", False)
-                           and off["sha256"] == record["sha256"], "on_parent_checks": on_count,
-                           "off_parent_checks": off_count})
-        activation["controls"] = checks
-        activation["passed"] = bool(checks) and all(c["equal"] for c in checks) and any(
-            isinstance(c["on_parent_checks"], int) and isinstance(c["off_parent_checks"], int)
-            and 0 < c["on_parent_checks"] < c["off_parent_checks"] for c in checks)
+    activation = activation_checks(variant(args.variant), records, jobs, binaries, result_dir)
     summary = {"schema": 1, "variant": args.variant, "plan_sha256": sha(args.plan),
                "expected": len(jobs), "observed": len(records), "activation": activation, "cases": records}
     write(out / "results.json", summary)

@@ -1,5 +1,5 @@
-name: engine speed matrix
-run-name: "engine speed · P9 corrected test · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
+name: engine combined optimization evaluation
+run-name: "engine speed · P8g+P8c+P9+P10 combined · ${{ inputs.threads }}t · ${{ inputs.pairs }} pairs"
 
 on:
   workflow_dispatch:
@@ -12,12 +12,12 @@ on:
       threads:
         description: "각 A/B 쌍의 동일 스레드 수"
         type: choice
-        options: ["1", "2", "4"]
+        options: ["1"]
         default: "1"
       pairs:
         description: "국면별 warmup 제외 AB/BA 쌍 수"
         type: choice
-        options: ["6", "10", "20"]
+        options: ["10"]
         default: "10"
       build_cache:
         description: "검증된 빌드·의존성 캐시 복원; 시간 측정은 항상 새 실행"
@@ -26,6 +26,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: engine-benchmark
@@ -51,16 +52,123 @@ env:
   BUILD_CACHE_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
 
 jobs:
+  agreement_plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Require successful P9 predecessor
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python engine/benchmarks/combined/prerequisite.py
+      - name: Test predecessor gate
+        run: python -m unittest discover -s engine/benchmarks/combined -p 'test_*.py' -v
+      - name: Test evaluation controller
+        run: python -m unittest discover -s engine/benchmarks/agreement -p 'test_*.py' -v
+      - name: Verify combined feature and source contract
+        run: python engine/benchmarks/agreement/combined_contract.py --variants engine/benchmarks/agreement/variants.json
+      - name: Immutable combined source matrix
+        id: matrix
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          variants = json.loads(Path('engine/benchmarks/agreement/variants.json').read_text())['variants']
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('value=' + json.dumps({'include': variants}, separators=(',', ':')) + '\n')
+          PY
+  agreement_evaluate:
+    needs: agreement_plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      RAYON_NUM_THREADS: "2"
+      RUST_MIN_STACK: "16777216"
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.agreement_plan.outputs.matrix) }}
+    steps:
+      - name: Shared controller and frozen corpus
+        uses: actions/checkout@v4
+        with:
+          path: controller
+          persist-credentials: false
+      - name: Immutable engine source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@1.98.1
+      - name: Verify corpus and make identical case plan
+        run: |
+          python controller/engine/benchmarks/agreement/run.py plan --out case-plan.json
+          python controller/engine/benchmarks/agreement/combined_contract.py --plan case-plan.json
+      - name: Build and verify all actual features
+        run: python controller/engine/benchmarks/agreement/run.py prepare --source source --out results/${{ matrix.id }} --variant ${{ matrix.id }}
+      - name: Fresh oracle and differential outputs
+        run: python controller/engine/benchmarks/agreement/run.py evaluate --source source --out results/${{ matrix.id }} --variant ${{ matrix.id }} --plan case-plan.json
+      - name: Preserve complete and partial correctness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agreement-${{ matrix.id }}
+          path: |
+            results/${{ matrix.id }}/
+            case-plan.json
+          if-no-files-found: error
+          retention-days: 30
+  agreement_compare:
+    needs: agreement_evaluate
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: agreement-combined-*
+          path: downloaded
+      - name: Compare every declared case with strict oracle and legality contracts
+        run: |
+          python engine/benchmarks/agreement/run.py compare --results downloaded --out agreement-summary.json
+          python engine/benchmarks/agreement/combined_contract.py --summary agreement-summary.json
+      - name: Preserve complete comparison
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agreement-summary
+          path: agreement-summary.json
+          if-no-files-found: warn
+          retention-days: 30
+
   paired:
+    needs: agreement_compare
     name: speed ${{ matrix.id }}
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 1
       matrix:
         include:
-          - id: p9
-            feature: leaf-ending-states
-            source_sha: c269035215c5a40f4950e203bb891e192ca7c8ef
+          - id: all-optimizations
+            feature: all-optimizations
+            source_sha: 276d4d80f54675bc7ef9e5f360fe3048d1c25b57
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -169,7 +277,7 @@ jobs:
           CANDIDATE_DEPENDENCY_CACHE_HIT: ${{ steps.deps-candidate.outputs.cache-hit }}
         run: python controller/engine/benchmarks/paired/ci.py build --workspace "$GITHUB_WORKSPACE"
       - name: Validate compact Volatiles baseline, enabled and disabled contracts
-        if: success() && matrix.feature == 'compact-volatiles'
+        if: success() && (matrix.feature == 'compact-volatiles' || matrix.feature == 'all-optimizations')
         run: >-
           python controller/engine/benchmarks/paired/compact_probe.py
           --workspace "$GITHUB_WORKSPACE"
@@ -222,7 +330,7 @@ jobs:
             echo 'Benchmark did not complete. Inspect the job logs and engine-benchmark artifact.' >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Measure peak RSS separately
-        if: success() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles')
+        if: success() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || matrix.feature == 'all-optimizations')
         env:
           SUITE: ${{ inputs.suite }}
           THREADS: ${{ inputs.threads }}
@@ -234,7 +342,7 @@ jobs:
           --benchmark-dir "$GITHUB_WORKSPACE/ci-results/benchmark"
           --out-dir "$GITHUB_WORKSPACE/ci-results/memory"
       - name: Publish peak RSS summary
-        if: always() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles')
+        if: always() && (matrix.feature == 'prepared-turn' || matrix.feature == 'compact-volatiles' || matrix.feature == 'all-optimizations')
         run: |
           if [ -f ci-results/memory/summary.md ]; then
             cat ci-results/memory/summary.md >> "$GITHUB_STEP_SUMMARY"

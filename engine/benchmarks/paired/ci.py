@@ -19,7 +19,8 @@ PREPARED_FEATURE = 'experiment-prepared-turn'
 PREPARED_OBSERVER_FEATURE = 'experiment-prepared-turn-observe'
 COMPACT_FEATURE = 'experiment-compact-volatiles'
 COMPACT_PROBE_PATH = 'engine/scenario/examples/ci_compact_probe.rs'
-FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles')
+FEATURE_CHOICES = ('none', 'hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles',
+                   'all-optimizations')
 EXPERIMENT_FEATURES = (EXPERIMENT_FEATURE, LEAF_FEATURE, OBSERVER_FEATURE,
                        PREPARED_FEATURE, PREPARED_OBSERVER_FEATURE, COMPACT_FEATURE)
 COMMAND_TIMEOUT_SECONDS = 2700
@@ -39,6 +40,13 @@ PREPARED_TESTS = (
 def feature_args(selection, label):
     if selection not in FEATURE_CHOICES or label not in ('baseline', 'candidate'):
         raise ValueError('Invalid candidate feature or build label')
+    if selection == 'all-optimizations':
+        if label == 'baseline':
+            return []
+        return ['--features', ','.join(('lab-engine/' + EXPERIMENT_FEATURE,
+                                       'lab-search/' + PREPARED_FEATURE,
+                                       'lab-search/' + LEAF_FEATURE,
+                                       'lab-engine/' + COMPACT_FEATURE))]
     if label == 'candidate' and selection == 'hurt-readers':
         return ['--features', 'lab-engine/' + EXPERIMENT_FEATURE]
     if selection == 'compact-volatiles':
@@ -81,7 +89,7 @@ def reject_default_experiments(manifest, features):
 def verify_feature_declaration(manifest, selection):
     features = read_features(manifest)
     declared = EXPERIMENT_FEATURE in features
-    if selection in ('hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles') and not declared:
+    if selection in ('hurt-readers', 'leaf-ending-states', 'prepared-turn', 'compact-volatiles', 'all-optimizations') and not declared:
         raise ValueError(f'{manifest}: missing empty {EXPERIMENT_FEATURE} feature declaration')
     if declared and features[EXPERIMENT_FEATURE] != []:
         raise ValueError(f'{manifest}: {EXPERIMENT_FEATURE} must be an empty feature')
@@ -120,7 +128,7 @@ def injected_sources(selection):
     if selection not in FEATURE_CHOICES:
         raise ValueError('Invalid candidate feature')
     files = {'engine/search/examples/ci_bench.rs': Path(__file__).with_name('harness.rs')}
-    if selection == 'compact-volatiles':
+    if selection in ('compact-volatiles', 'all-optimizations'):
         files[COMPACT_PROBE_PATH] = Path(__file__).with_name('compact_probe.rs')
     return files
 
@@ -164,8 +172,10 @@ def refs(workspace):
     pairs = int(os.environ['PAIRS'])
     if suite not in ('smoke', 'narrow') or threads not in (1, 2, 4):
         raise ValueError('Invalid suite or thread count')
-    if candidate_feature == 'compact-volatiles' and suite != 'narrow':
-        raise ValueError('compact-volatiles requires the full narrow regression suite')
+    if candidate_feature in ('compact-volatiles', 'all-optimizations') and suite != 'narrow':
+        raise ValueError(f'{candidate_feature} requires the full narrow regression suite')
+    if candidate_feature == 'all-optimizations' and baseline.lower() != candidate.lower():
+        raise ValueError('all-optimizations requires the same source SHA with features off/on')
     if pairs < 2 or pairs > 20 or pairs % 2:
         raise ValueError('pairs must be even, from 2 through 20')
     cpus = len(os.sched_getaffinity(0)) if hasattr(os, 'sched_getaffinity') else os.cpu_count()
@@ -188,6 +198,8 @@ def prepare(workspace):
     result = workspace/'ci-results'
     metadata = json.loads((result/'request.json').read_text(encoding='utf-8'))
     selection = metadata['candidate_feature']
+    if selection == 'all-optimizations' and metadata['baseline_sha'] != metadata['candidate_sha']:
+        raise ValueError('all-optimizations requires the same source SHA with features off/on')
     if metadata['feature_args'] != {label: feature_args(selection, label)
                                    for label in ('baseline', 'candidate')}:
         raise ValueError('Requested feature arguments do not match the explicit selection')
@@ -223,11 +235,11 @@ def prepare(workspace):
                 '.cargo/config', '.cargo/config.toml', 'rust-toolchain', 'rust-toolchain.toml',
                 'engine/.cargo/config', 'engine/.cargo/config.toml',
                 'engine/rust-toolchain', 'engine/rust-toolchain.toml') if (root/name).is_file()}}
-        if selection == 'leaf-ending-states':
+        if selection in ('leaf-ending-states', 'all-optimizations'):
             metadata['sources'][label]['leaf_declarations'] = verify_leaf_declarations(root)
-        elif selection == 'prepared-turn':
+        if selection in ('prepared-turn', 'all-optimizations'):
             metadata['sources'][label]['prepared_declarations'] = verify_prepared_declarations(root)
-        elif selection == 'compact-volatiles':
+        if selection in ('compact-volatiles', 'all-optimizations'):
             metadata['sources'][label]['compact_declarations'] = verify_compact_declarations(root)
     # A dependency/profile change needs a separately designed experiment.
     for key in ('lock_sha256', 'workspace_manifest_sha256', 'search_manifest_sha256',
@@ -245,8 +257,8 @@ def prepare(workspace):
 def build_commands(suite, selection, label):
     if suite not in ('smoke', 'narrow'):
         raise ValueError('Invalid benchmark suite')
-    if selection == 'compact-volatiles' and suite != 'narrow':
-        raise ValueError('compact-volatiles requires the full narrow regression suite')
+    if selection in ('compact-volatiles', 'all-optimizations') and suite != 'narrow':
+        raise ValueError(f'{selection} requires the full narrow regression suite')
     tests = [['cargo', 'test', '--locked', '--release', '-p', 'lab-engine', '-p', 'lab-scenario', '-p', 'lab-search']]
     if suite == 'smoke':
         # Infrastructure checks need the harness and its fixture, not every oracle binary.
@@ -259,7 +271,7 @@ def build_commands(suite, selection, label):
         ['cargo', 'build', '--locked', '--release', '-p', 'lab-search', '--example', 'ci_bench'],
     ]
     return [argv + ['--timings'] + feature_args(selection, label) +
-            (['--', '--test-threads=1'] if selection == 'compact-volatiles' and argv[1] == 'test' else [])
+            (['--', '--test-threads=1'] if selection in ('compact-volatiles', 'all-optimizations') and argv[1] == 'test' else [])
             for argv in commands]
 
 
@@ -277,7 +289,7 @@ def verify_prepared(workspace):
         if harness_hash != provenance['harness_sha256']:
             raise ValueError('Controller harness changed after prepare')
         injection_hashes = {name: sha(source) for name, source in injections.items()}
-        if (selection == 'compact-volatiles' or 'injected_source_sha256' in provenance) and (
+        if (selection in ('compact-volatiles', 'all-optimizations') or 'injected_source_sha256' in provenance) and (
                 injection_hashes != provenance.get('injected_source_sha256')):
             raise ValueError('Controller injected source changed after prepare')
         for label in ('baseline', 'candidate'):
@@ -346,6 +358,16 @@ def preserve_build_timings(workspace, label, before):
 
 def fingerprint_expectations(selection, label):
     feature_args(selection, label)
+    if selection == 'all-optimizations':
+        active = label == 'candidate'
+        core = {name: False for name in EXPERIMENT_FEATURES}
+        core.update({EXPERIMENT_FEATURE: active, PREPARED_FEATURE: active,
+                     LEAF_FEATURE: active, COMPACT_FEATURE: active})
+        search = {name: False for name in EXPERIMENT_FEATURES}
+        search.update({PREPARED_FEATURE: active, LEAF_FEATURE: active})
+        return ({'lab-engine': ('lib-lab_engine.json', 'test-lib-lab_engine.json'),
+                 'lab-search': ('lib-lab_search.json', 'test-lib-lab_search.json', 'example-ci_bench.json')},
+                {'lab-engine': core, 'lab-search': search}, active)
     hurt_active = selection in ('leaf-ending-states', 'prepared-turn', 'compact-volatiles') or (
         label == 'candidate' and selection == 'hurt-readers')
     leaf_active = selection == 'leaf-ending-states' and label == 'candidate'
@@ -408,20 +430,27 @@ def preserve_expected_fingerprints(workspace, label, packages, expected, hurt_ac
     return evidence
 
 
-def prepared_validation_command():
+def prepared_validation_command(selection='prepared-turn'):
+    if selection == 'all-optimizations':
+        features = (feature_args(selection, 'candidate')[1] + ',lab-search/' + PREPARED_OBSERVER_FEATURE
+                    + ',lab-search/' + OBSERVER_FEATURE)
+        return ['cargo', 'test', '--locked', '--release', '-p', 'lab-search',
+                '--test', 'prepared_turn', '--features', features]
+    if selection != 'prepared-turn':
+        raise ValueError('Invalid prepared validation selection')
     return ['cargo', 'test', '--locked', '--release', '-p', 'lab-search',
             '--test', 'prepared_turn', '--features',
             'lab-engine/' + EXPERIMENT_FEATURE + ',lab-search/' + PREPARED_OBSERVER_FEATURE]
 
 
-def validate_prepared_turn(workspace):
+def validate_prepared_turn(workspace, selection='prepared-turn'):
     """Run observer-dependent differential tests outside both timing targets."""
     result = workspace/'ci-results'
-    label = 'prepared-validation'
+    label = 'prepared-combined-validation' if selection == 'all-optimizations' else 'prepared-validation'
     target = workspace/('target-' + label)
     if target.exists():
         raise ValueError('Prepared validation target directory must be new')
-    command = prepared_validation_command()
+    command = prepared_validation_command(selection)
     log_path = result/(label + '.log')
     receipt_path = result/(label + '.json')
     receipt = {'status': 'running', 'command': command, 'source': 'candidate',
@@ -464,11 +493,18 @@ def validate_prepared_turn(workspace):
             raise ValueError('Prepared validation must execute all nine named tests, with none skipped')
         bridge = {LEAF_FEATURE: False, OBSERVER_FEATURE: False,
                   PREPARED_FEATURE: True, PREPARED_OBSERVER_FEATURE: True}
+        expected = {'lab-engine': {EXPERIMENT_FEATURE: True, **bridge}, 'lab-search': dict(bridge)}
+        if selection == 'all-optimizations':
+            _, expected, _ = fingerprint_expectations(selection, 'candidate')
+            for package in expected:
+                expected[package][PREPARED_OBSERVER_FEATURE] = True
+                expected[package][OBSERVER_FEATURE] = True
+        receipt['selection'] = selection
         receipt['compiler_feature_evidence'] = preserve_expected_fingerprints(
             workspace, label,
             {'lab-engine': ('lib-lab_engine.json',),
              'lab-search': ('lib-lab_search.json', 'test-integration-test-prepared_turn.json')},
-            {'lab-engine': {EXPERIMENT_FEATURE: True, **bridge}, 'lab-search': dict(bridge)}, True)
+            expected, True)
         receipt['status'] = 'ok'
         save()
         return receipt
@@ -494,8 +530,10 @@ def build(workspace):
     plan = {'suite': request['suite'], 'candidate_feature': selection,
             'feature_args': expected_args, 'commands_by_version': commands_by_version,
             'per_command_timeout_seconds': COMMAND_TIMEOUT_SECONDS}
-    if selection == 'prepared-turn':
+    if selection in ('prepared-turn', 'all-optimizations'):
         plan['prepared_validation_command'] = prepared_validation_command()
+    if selection == 'all-optimizations':
+        plan['combined_prepared_validation_command'] = prepared_validation_command(selection)
     (result/'test-plan.json').write_text(json.dumps(plan, indent=2)+'\n', encoding='utf-8')
     provenance = json.loads((result/'provenance.json').read_text(encoding='utf-8'))
     provenance['build_plan'] = plan
@@ -563,8 +601,11 @@ def build(workspace):
         provenance.setdefault('build_cache', {})[label] = json.loads(
             (result/('cache-' + label + '.json')).read_text(encoding='utf-8'))
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
-    if selection == 'prepared-turn':
+    if selection in ('prepared-turn', 'all-optimizations'):
         provenance['prepared_validation'] = validate_prepared_turn(workspace)
+        (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
+    if selection == 'all-optimizations':
+        provenance['combined_prepared_validation'] = validate_prepared_turn(workspace, selection)
         (result/'provenance.json').write_text(json.dumps(provenance, indent=2)+'\n', encoding='utf-8')
 
 

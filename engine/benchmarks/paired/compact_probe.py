@@ -202,8 +202,10 @@ def validate_compact(workspace, out_dir):
     save()
     try:
         request = json.loads((workspace/'ci-results/request.json').read_text(encoding='utf-8'))
-        if request['candidate_feature'] != 'compact-volatiles':
-            raise ValueError('Compact gate requires compact-volatiles mode')
+        if request['candidate_feature'] not in ('compact-volatiles', 'all-optimizations'):
+            raise ValueError('Compact gate requires compact-volatiles or all-optimizations mode')
+        receipt['selection'] = request['candidate_feature']
+        receipt['isolated_feature_scope'] = 'hurt-readers common; compact on/off; leaf/prepared/observers off'
         ci.verify_prepared(workspace)
         receipt['prepared_source_verification_sha256'] = sha(workspace/'ci-results/prepared-source-verification.json')
         provenance_path = workspace/'ci-results/provenance.json'

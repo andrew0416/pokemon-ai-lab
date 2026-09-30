@@ -211,7 +211,7 @@ def make_recipe(workspace, label):
         raise ValueError('Tracked source changed since preparation')
     untracked = subprocess.check_output(
         ['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=root, timeout=30)
-    compact = request['candidate_feature'] == 'compact-volatiles'
+    compact = request['candidate_feature'] in ('compact-volatiles', 'all-optimizations')
     allowed_untracked = {'engine/search/examples/ci_bench.rs'}
     if compact:
         allowed_untracked.add(COMPACT_PROBE_PATH)
