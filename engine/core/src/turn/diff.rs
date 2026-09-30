@@ -240,6 +240,12 @@ pub(crate) fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: 
     if a == b {
         return;
     }
+    #[cfg(feature = "experiment-slot-diff")]
+    if scalar_slot_changes(out, r, a, b) {
+        return;
+    }
+    #[cfg(feature = "experiment-slot-diff-observer")]
+    observer::record(|counts| counts.rebuilt_slots += 1);
     out.push(Instruction::Switch {
         slot: r,
         previous: Box::new(a.clone()),
@@ -319,6 +325,156 @@ pub(crate) fn slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: 
         });
     }
     debug_assert!(!b.dynamax.is_active(), "no instruction sets it yet");
+}
+
+/// The exhaustive pattern deliberately has no `..`: adding a Slot field requires reviewing
+/// its equality guard here. Borrowing avoids a Slot clone and compact overflow allocations.
+#[cfg(feature = "experiment-slot-diff")]
+fn scalar_slot_eligible(a: &Slot, b: &Slot) -> bool {
+    let Slot {
+        party_index,
+        fainted_occupant,
+        boosts,
+        volatiles,
+        last_move: _,
+        last_move_target_loc: _,
+        move_actions: _,
+        history,
+        switch_flag,
+        substitute_hp,
+        dynamax,
+        ability_order,
+    } = a;
+    if party_index.is_none()
+        || *party_index != b.party_index
+        || *fainted_occupant != b.fainted_occupant
+        || *boosts != b.boosts
+        || *volatiles != b.volatiles
+        || *history != b.history
+        || *switch_flag != b.switch_flag
+        || *substitute_hp != b.substitute_hp
+        || *dynamax != b.dynamax
+        || *ability_order != b.ability_order
+        || dynamax.is_active()
+    {
+        return false;
+    }
+    // Baseline reconstruction copies active volatiles only. An inactive non-NONE payload
+    // cannot use the shortcut, even when unchanged, or P8e would change that boundary.
+    #[cfg(not(feature = "experiment-compact-volatiles"))]
+    let eligible = volatiles
+        .0
+        .iter()
+        .all(|value| value.active || *value == VolatileState::NONE);
+    #[cfg(feature = "experiment-compact-volatiles")]
+    let eligible = volatiles.non_none().all(|(_, value)| value.active);
+    eligible
+}
+
+#[cfg(feature = "experiment-slot-diff")]
+fn scalar_slot_changes(out: &mut Vec<Instruction>, r: SlotRef, a: &Slot, b: &Slot) -> bool {
+    #[cfg(feature = "experiment-slot-diff-observer")]
+    if observer::baseline_forced() {
+        return false;
+    }
+    if !scalar_slot_eligible(a, b) {
+        return false;
+    }
+    #[cfg(feature = "experiment-slot-diff-observer")]
+    let before = out.len();
+    if a.last_move != b.last_move {
+        out.push(Instruction::SetLastMove {
+            target: r,
+            old: a.last_move,
+            new: b.last_move,
+        });
+    }
+    if a.last_move_target_loc != b.last_move_target_loc {
+        out.push(Instruction::SetLastMoveTargetLoc {
+            target: r,
+            old: a.last_move_target_loc,
+            new: b.last_move_target_loc,
+        });
+    }
+    if a.move_actions != b.move_actions {
+        out.push(Instruction::SetMoveActions {
+            target: r,
+            old: a.move_actions,
+            new: b.move_actions,
+        });
+    }
+    #[cfg(feature = "experiment-slot-diff-observer")]
+    observer::record(|counts| {
+        counts.shortcut_slots += 1;
+        counts.scalar_instructions += out.len() - before;
+    });
+    true
+}
+
+/// Isolated diagnostics and reference control, compiled out of timing builds.
+#[cfg(feature = "experiment-slot-diff-observer")]
+pub mod observer {
+    use crate::instruction::Instruction;
+    use crate::state::State;
+    use std::cell::Cell;
+
+    #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+    pub struct Counts {
+        pub shortcut_slots: usize,
+        pub rebuilt_slots: usize,
+        pub scalar_instructions: usize,
+    }
+
+    thread_local! {
+        static COUNTS: Cell<Counts> = Cell::new(Counts::default());
+        static BASELINE: Cell<bool> = const { Cell::new(false) };
+    }
+
+    pub fn reset() {
+        COUNTS.with(|cell| cell.set(Counts::default()));
+    }
+    pub fn counts() -> Counts {
+        COUNTS.with(Cell::get)
+    }
+    pub(super) fn record(update: impl FnOnce(&mut Counts)) {
+        COUNTS.with(|cell| {
+            let mut counts = cell.get();
+            update(&mut counts);
+            cell.set(counts);
+        });
+    }
+    pub(super) fn baseline_forced() -> bool {
+        BASELINE.with(Cell::get)
+    }
+
+    /// Thread-local and nestable; Drop restores the previous mode even during unwinding.
+    pub struct BaselineScope {
+        previous: bool,
+        _not_send: std::marker::PhantomData<std::rc::Rc<()>>,
+    }
+    impl BaselineScope {
+        pub fn new() -> Self {
+            Self {
+                previous: BASELINE.with(|cell| cell.replace(true)),
+                _not_send: std::marker::PhantomData,
+            }
+        }
+    }
+    impl Default for BaselineScope {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+    impl Drop for BaselineScope {
+        fn drop(&mut self) {
+            BASELINE.with(|cell| cell.set(self.previous));
+        }
+    }
+
+    /// Full-state diff entry point for the isolated correctness/allocation executable.
+    pub fn instructions<const N: usize>(from: &State<N>, to: &State<N>) -> Vec<Instruction> {
+        super::instructions(from, to)
+    }
 }
 
 fn field_effect(i: usize) -> crate::field::FieldEffect {

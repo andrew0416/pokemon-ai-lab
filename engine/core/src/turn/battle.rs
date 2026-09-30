@@ -162,6 +162,10 @@ pub(crate) struct Battle<'a, const N: usize> {
     pub active_move: Option<ActiveMoveRef>,
     /// The actions of the turn not yet run (Showdown `queue.list`), see `queue.rs`.
     pub queue: Vec<super::queue::Action>,
+    /// P8d scratch borrowed only from one ordinary enumeration input's replay loop.
+    /// Constructors leave it absent, so sampling and factored/lazy execution cannot reuse.
+    #[cfg(feature = "experiment-replay-action-keys")]
+    pub(super) replay_action_keys: Option<&'a mut super::replay_action_keys::ReplayActionKeys>,
     /// The battle start's switch-ins are running (`enumerate_start`): no Pokémon has been on
     /// the field before, so the once-per-battle flags Showdown keeps on each Pokémon
     /// (`swordBoost`, `shieldBoost`, `syrupTriggered`), which the state does not record, are all
@@ -659,6 +663,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             faint_queue: Vec::new(),
             active_move: None,
             queue: Vec::new(),
+            #[cfg(feature = "experiment-replay-action-keys")]
+            replay_action_keys: None,
             battle_start: false,
             hit_type_mod: [[None; N]; 2],
             hit_crit: [[false; N]; 2],

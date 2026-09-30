@@ -20,6 +20,8 @@ mod branch;
 mod conditions;
 pub mod coverage;
 mod diff;
+#[cfg(feature = "experiment-slot-diff-observer")]
+pub use diff::observer as slot_diff_observer;
 mod field_events;
 #[cfg(feature = "experiment-leaf-ending-states")]
 mod final_states;
@@ -43,9 +45,18 @@ pub use prepared::PreparedTurn;
 #[doc(hidden)]
 pub use prepared::{reset_validation_counts, validation_counts};
 mod queue;
+#[cfg(feature = "experiment-replay-action-keys")]
+mod replay_action_keys;
+#[cfg(feature = "experiment-replay-action-keys-observer")]
+#[doc(hidden)]
+pub use replay_action_keys::observer as replay_action_keys_observer;
 mod residual;
+#[cfg(feature = "experiment-stats-off-cost")]
+mod stats_off_cost;
 mod support;
 mod switching;
+#[cfg(feature = "experiment-stats-off-cost-observer")]
+pub use stats_off_cost::observer as stats_cost_observer;
 mod transform;
 mod update;
 
@@ -908,6 +919,8 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     if frontier::factored_active() {
         return frontier::enumerate_expanded(state, start, options, stage);
     }
+    #[cfg(feature = "experiment-stats-off-cost")]
+    let stage_stats = stats_off_cost::StageStats::snapshot();
     // The turn runs in stages (one action, or the end of turn). After every stage identical
     // (state, remaining turn) pairs merge, so the work grows with the number of distinct
     // intermediate positions, not with the number of random paths. Within a stage every
@@ -924,7 +937,10 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
     let mut buffers = RunBuffers::default();
     while !frontier.is_empty() {
         let mut next: Merger<N, P> = Merger::new();
+        #[cfg(not(feature = "experiment-stats-off-cost"))]
         let stage_started = std::time::Instant::now();
+        #[cfg(feature = "experiment-stats-off-cost")]
+        let stage_started = stage_stats.start();
         let mut runs = 0usize;
         for (work, pending, probability, work_hash) in frontier.iter_mut().flatten() {
             let (probability, work_hash) = (*probability, *work_hash);
@@ -934,6 +950,10 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
             // it and the others replay it, reusing the previous run's pending buffers too.
             let mut start: Option<RunStart> = None;
             let mut after = pending.clone();
+            // P8d: this cache belongs to exactly this restored input and RunStart, never to
+            // the next frontier entry/stage. Factored enumeration returned above.
+            #[cfg(feature = "experiment-replay-action-keys")]
+            let mut action_keys = replay_action_keys::ReplayActionKeys::default();
             loop {
                 runs += 1;
                 chooser.begin_run();
@@ -948,6 +968,10 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                     };
                     if start.is_none() {
                         start = Some(b.run_start());
+                    }
+                    #[cfg(feature = "experiment-replay-action-keys")]
+                    {
+                        b.replay_action_keys = Some(&mut action_keys);
                     }
                     let result = stage(&mut b, &mut after);
                     buffers = b.into_buffers();
@@ -969,6 +993,7 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                 }
             }
         }
+        #[cfg(not(feature = "experiment-stats-off-cost"))]
         if std::env::var_os("LAB_ENGINE_STATS").is_some() {
             eprintln!(
                 "lab-engine: stage frontier {} states, {} finished; {} replays in {:.1} ms",
@@ -976,6 +1001,16 @@ fn enumerate_stages<const N: usize, P: Clone + Eq + Hash>(
                 finished.len(),
                 runs,
                 stage_started.elapsed().as_secs_f64() * 1000.0
+            );
+        }
+        #[cfg(feature = "experiment-stats-off-cost")]
+        if let Some(elapsed) = stage_stats.finish(stage_started) {
+            eprintln!(
+                "lab-engine: stage frontier {} states, {} finished; {} replays in {:.1} ms",
+                next.len(),
+                finished.len(),
+                runs,
+                elapsed.as_secs_f64() * 1000.0
             );
         }
         frontier = next.into_chunks();
@@ -1400,6 +1435,8 @@ impl<const N: usize> Battle<'_, N> {
     /// Showdown's sort key of a queued action: (order, priority in tenths including the
     /// fractional priority, speed).
     pub(crate) fn action_key(&self, action: &Action) -> (u32, i32, i32) {
+        #[cfg(feature = "experiment-replay-action-keys-observer")]
+        replay_action_keys::observer::update(|c| c.action_key_calls += 1);
         let in_slot = self.alive(action.slot) == Some(action.pokemon);
         let (order, priority) = match action.kind {
             ActionKind::Switch { .. } => (ORDER_SWITCH, 0),
@@ -1528,6 +1565,8 @@ fn run_stage<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
 ) -> Result<StageEnd, TurnError> {
+    #[cfg(feature = "experiment-replay-action-keys")]
+    replay_action_keys::guard(b, pending);
     // A resumed turn: the decided mid-turn switches first.
     if !pending.switches.is_empty() {
         let switches = std::mem::take(&mut pending.switches);
@@ -1617,17 +1656,22 @@ fn run_stage_inner<const N: usize>(
     if !b.queue.is_empty() {
         // Best action by (order asc, priority desc, speed desc), ties uniformly at random. The
         // keys stay on the stack for a queue of usual length (this runs for every action).
-        const INLINE: usize = 24;
-        let n = b.queue.len();
-        let pick = if n <= INLINE {
-            let mut keys = [(0u32, 0i32, 0i32); INLINE];
-            for (key, action) in keys.iter_mut().zip(&b.queue) {
-                *key = b.action_key(action);
+        #[cfg(feature = "experiment-replay-action-keys")]
+        let pick = replay_action_keys::pick(b);
+        #[cfg(not(feature = "experiment-replay-action-keys"))]
+        let pick = {
+            const INLINE: usize = 24;
+            let n = b.queue.len();
+            if n <= INLINE {
+                let mut keys = [(0u32, 0i32, 0i32); INLINE];
+                for (key, action) in keys.iter_mut().zip(&b.queue) {
+                    *key = b.action_key(action);
+                }
+                pick_action(b, &keys[..n])
+            } else {
+                let keys: Vec<(u32, i32, i32)> = b.queue.iter().map(|a| b.action_key(a)).collect();
+                pick_action(b, &keys)
             }
-            pick_action(b, &keys[..n])
-        } else {
-            let keys: Vec<(u32, i32, i32)> = b.queue.iter().map(|a| b.action_key(a)).collect();
-            pick_action(b, &keys)
         };
         let action = b.queue.remove(pick);
 

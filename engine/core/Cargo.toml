@@ -25,3 +25,11 @@ experiment-leaf-ending-states = []
 experiment-leaf-ending-observer = ["experiment-leaf-ending-states"]
 # P10: opt-in sparse storage; dense Volatiles remains the default representation.
 experiment-compact-volatiles = []
+
+# Independent P8d/e/f experiments; every runtime and observer feature is opt-in.
+experiment-replay-action-keys = []
+experiment-replay-action-keys-observer = ["experiment-replay-action-keys"]
+experiment-slot-diff = []
+experiment-slot-diff-observer = ["experiment-slot-diff"]
+experiment-stats-off-cost = []
+experiment-stats-off-cost-observer = ["experiment-stats-off-cost"]
