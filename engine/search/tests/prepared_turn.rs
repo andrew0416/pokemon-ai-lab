@@ -507,14 +507,15 @@ fn one_thread_exact_deep_and_deep_nash_reuse_validation() {
         let (a, ordinary, ordinary_leaf) = run(false);
         let (b, prepared, prepared_leaf) = run(true);
         assert_eq!(a, b, "{mode}");
-        if cfg!(feature = "experiment-leaf-ending-states") && mode == "exact" {
-            // All depth-one edges use P9 before the PreparedTurn fallback. These are
-            // shared check_turn counters: P9 still validates each pair, so they are
-            // positive and equal, not zero. The snapshot must not change the result.
-            assert_eq!(prepared, ordinary, "P9 owns every exact depth-one leaf");
+        if cfg!(feature = "experiment-leaf-ending-states") {
+            // The shallow turn edges use P9. Deep/deep-nash enumerate their beam's
+            // non-leaf pairs through nash_cells, which has no PreparedMatrix, and
+            // their child turn edges use P9 again. This toy has no replacement or
+            // mid-turn decision, so none of these three modes consumes P8c's batch.
+            assert_eq!(prepared, ordinary, "P9 bypasses P8c in {mode}");
             assert!(ordinary.into_iter().all(|count| count > 0));
         } else {
-            // P8c alone, or the non-leaf edges of the combined depth-two search.
+            // Without P9, each mode's shallow matrix consumes P8c's batch.
             assert!(
                 prepared[0] < ordinary[0] && prepared[1] < ordinary[1] && prepared[2] < ordinary[2],
                 "{mode}: ordinary={ordinary:?}, prepared={prepared:?}"
@@ -531,6 +532,75 @@ fn one_thread_exact_deep_and_deep_nash_reuse_validation() {
             }
         }
         println!("P8C_SEARCH_VALIDATIONS {mode} ordinary={ordinary:?} prepared={prepared:?} ordinary_leaf={ordinary_leaf:?} prepared_leaf={prepared_leaf:?}");
+    }
+
+    // Predetermined non-leaf coverage, independent of the corpus and its results.
+    // Unlike deep/deep-nash's beam enumeration, pure depth-two matrix searches
+    // consume PreparedMatrix at depth one and P9 at the depth-zero leaves.
+    for mode in ["exact", "mixed"] {
+        for side in [SideId::One, SideId::Two] {
+            for chance in [Chance::Expect, Chance::Worst] {
+                let run = |enabled| {
+                    let mut config = Config::new(RULES, side);
+                    config.threads = 1;
+                    config.rolls = RollMode::Median;
+                    config.depth = 2;
+                    config.exact_lines = true;
+                    config.chance = chance;
+                    config.prepared_turn = enabled;
+                    let mut work = state.clone();
+                    let original_debug = format!("{state:?}");
+                    let mut solver = Solver::new(config, &Heuristic);
+                    turn::reset_validation_counts();
+                    #[cfg(feature = "experiment-leaf-ending-observer")]
+                    turn::final_state_observer::reset();
+                    let result = if mode == "exact" {
+                        let mut value = solver.analyse(&mut work, None).unwrap();
+                        value.elapsed = std::time::Duration::ZERO;
+                        format!("{value:?}")
+                    } else {
+                        let mut value = solver.analyse_mixed(&mut work, None).unwrap();
+                        value.elapsed = std::time::Duration::ZERO;
+                        format!("{value:?}")
+                    };
+                    let counts = turn::validation_counts();
+                    assert_eq!(work, state);
+                    assert_eq!(format!("{work:?}"), original_debug);
+                    let mut stats = solver.stats();
+                    stats.enumerate_seconds = 0.0;
+                    stats.nash_seconds = 0.0;
+                    #[cfg(feature = "experiment-leaf-ending-observer")]
+                    let leaf = {
+                        let value = turn::final_state_observer::counts();
+                        [
+                            value.batches,
+                            value.visits,
+                            value.materialized_outcomes,
+                            value.emitted_instructions,
+                        ]
+                    };
+                    #[cfg(not(feature = "experiment-leaf-ending-observer"))]
+                    let leaf = [0usize; 4];
+                    (format!("{result}|{stats:?}"), counts, leaf)
+                };
+                let (a, ordinary, ordinary_leaf) = run(false);
+                let (b, prepared, prepared_leaf) = run(true);
+                assert_eq!(a, b, "{mode} {side:?} {chance:?} depth two");
+                assert!(
+                    (0..3).all(|i| 0 < prepared[i] && prepared[i] < ordinary[i]),
+                    "{mode} {side:?} {chance:?}: ordinary={ordinary:?}, prepared={prepared:?}"
+                );
+                #[cfg(feature = "experiment-leaf-ending-observer")]
+                {
+                    assert_eq!(ordinary_leaf, prepared_leaf);
+                    assert!(
+                        ordinary_leaf[..3].iter().all(|count| *count > 0),
+                        "P9 leaves and materialized non-leaf outcomes must both execute"
+                    );
+                }
+                println!("P8C_NONLEAF_VALIDATIONS {mode} {side:?} {chance:?} ordinary={ordinary:?} prepared={prepared:?} ordinary_leaf={ordinary_leaf:?} prepared_leaf={prepared_leaf:?}");
+            }
+        }
     }
 }
 
