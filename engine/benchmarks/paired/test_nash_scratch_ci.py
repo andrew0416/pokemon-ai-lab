@@ -91,7 +91,30 @@ class RoutingTests(unittest.TestCase):
         raw=(here/'harness.rs').read_text();probe=(here/'nash_scratch_probe.rs').read_text()
         self.assertEqual(raw[raw.index('fn bit('):raw.index('fn main()')],probe[probe.index('fn bit('):probe.index('fn main()')])
         self.assertEqual(raw[raw.index('    let loaded ='):raw.index('    let analysis =')],
-                         probe[probe.index('    let loaded ='):probe.index('    lab_search::nash::scratch_observer::reset();')])
+                         probe[probe.index('    let loaded ='):probe.index('    #[cfg(feature = "experiment-nash-scratch-observer")]')])
+
+    def test_probe_observer_symbols_remain_feature_gated_when_full_tests_compile_examples(self):
+        probe=Path(gate.__file__).with_name('nash_scratch_probe.rs').read_text()
+        for feature,path in ((ci.NASH_OBSERVER,'lab_search::nash::scratch_observer'),
+                             (ci.BORROWED_OBSERVER,'lab_search::solve::child_keys_observer')):
+            self.assertIn(f'#[cfg(feature = "{feature}")]\n    {path}::reset();',probe)
+        block='''#[cfg(all(
+        feature = "experiment-nash-scratch-observer",
+        feature = "experiment-borrowed-child-keys-observer"
+    ))]
+    {'''
+        self.assertEqual(probe.count(block),1)
+        start=probe.index(block);end=probe.index('    assert_eq!(state, original',start)
+        for path in ('lab_search::nash::scratch_observer::counts()',
+                     'lab_search::solve::child_keys_observer::counts()'):
+            self.assertEqual(probe.count(path),1)
+            self.assertIn(path,probe[start:end])
+        # Runtime gate remains strict: suppressing activation cannot make an
+        # observer-free or half-observer measurement count as successful.
+        with self.assertRaises(ValueError):gate.validate_counts('',True)
+        _,expected=gate.actual_features('candidate')
+        self.assertTrue(expected['lab-search'][ci.NASH_OBSERVER])
+        self.assertTrue(expected['lab-search'][ci.BORROWED_OBSERVER])
 
     def test_refs_bind_source_one_thread_ten_pairs(self):
         with patch.object(gate,'SOURCE_SHA','d'*40):

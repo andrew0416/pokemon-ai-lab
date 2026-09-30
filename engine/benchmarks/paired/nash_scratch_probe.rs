@@ -140,9 +140,16 @@ fn main() {
         double_oracle: true,
         split_heavy_cells: false,
     };
+    #[cfg(feature = "experiment-nash-scratch-observer")]
     lab_search::nash::scratch_observer::reset();
+    #[cfg(feature = "experiment-borrowed-child-keys-observer")]
     lab_search::solve::child_keys_observer::reset();
     let analysis = analyse(&mut state, config, &Heuristic);
+    #[cfg(all(
+        feature = "experiment-nash-scratch-observer",
+        feature = "experiment-borrowed-child-keys-observer"
+    ))]
+    {
     let c = lab_search::nash::scratch_observer::counts();
     let b = lab_search::solve::child_keys_observer::counts();
     eprintln!("P16 activation: {}", json!({
@@ -154,6 +161,7 @@ fn main() {
             "borrowed_queries":b.borrowed_queries,"seen_hits":b.seen_hits,
             "seen_collisions":b.seen_collisions,"seen_links":b.seen_links}
     }));
+    }
 
     assert_eq!(state, original, "search must restore State");
     let output = json!({"schema": 1, "state_restored": true, "analysis": analysis});
