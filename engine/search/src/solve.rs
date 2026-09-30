@@ -31,7 +31,11 @@ use lab_engine::turn::{EnumerateOptions, RollMode, Suspension, TurnError};
 use crate::choice::Choice;
 use crate::game::{self, Decision, Pruning};
 use crate::nash::{self, Equilibrium, Matrix};
+use crate::prepared::PreparedMatrix;
 use crate::tt::{self, DeepTable, TranspositionTable};
+
+#[cfg(feature = "experiment-leaf-ending-states")]
+mod leaf_endings;
 
 /// What a chance node continues into: the maximin tree with `depth` turns left, or a fixed
 /// plan (`Solver::evaluate_plan`) at its next entry. (Children worth their own equilibrium,
@@ -62,6 +66,9 @@ pub enum Chance {
 
 #[derive(Clone, Copy, Debug)]
 pub struct Config {
+    /// Opt-in experiment; the Cargo feature itself is off by default.
+    #[cfg(feature = "experiment-prepared-turn")]
+    pub prepared_turn: bool,
     pub ruleset: Ruleset,
     /// The side the plan is for.
     pub us: SideId,
@@ -119,6 +126,8 @@ impl Config {
 
     pub fn new(ruleset: Ruleset, us: SideId) -> Config {
         Config {
+            #[cfg(feature = "experiment-prepared-turn")]
+            prepared_turn: true,
             ruleset,
             us,
             depth: 1,
@@ -440,14 +449,22 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                 lines = new_lines;
                 continue;
             }
-            for &a in &ours {
+            let mut prepared = PreparedMatrix::new(
+                state,
+                self.config,
+                decision,
+                &ours,
+                &theirs,
+                &mut self.stats,
+            );
+            for (row, &a) in ours.iter().enumerate() {
                 let alpha = best;
                 let mut worst = f32::INFINITY;
                 let mut reply = None;
                 let mut cut = false;
-                for &b in &theirs {
+                for (col, &b) in theirs.iter().enumerate() {
                     let pair = self.pair(a, b);
-                    let v = self.chance(
+                    let v = self.chance_prepared(
                         state,
                         decision,
                         suspension,
@@ -455,6 +472,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                         Next::Depth(next_depth),
                         alpha,
                         worst,
+                        prepared.as_mut().map(|batch| (batch, row, col)),
                     )?;
                     if v.is_nan() {
                         continue;
@@ -566,13 +584,13 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         alpha: f32,
         beta: f32,
     ) -> Result<f32, SearchError> {
+        if depth == 0 {
+            return self.depth_zero_value(state, suspension);
+        }
         self.nodes += 1;
         let decision = game::decision(state, suspension)?;
         if let Decision::Over(result) = decision {
             return Ok(self.terminal(result, depth));
-        }
-        if depth == 0 {
-            return Ok(self.leaf(state));
         }
         let them = self.config.us.other();
         let ours = self.choices(state, decision, self.config.us)?;
@@ -583,13 +601,21 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             depth
         };
         let mut best = f32::NEG_INFINITY;
-        for &a in &ours {
+        let mut prepared = PreparedMatrix::new(
+            state,
+            self.config,
+            decision,
+            &ours,
+            &theirs,
+            &mut self.stats,
+        );
+        for (row, &a) in ours.iter().enumerate() {
             let mut worst = f32::INFINITY;
-            for &b in &theirs {
+            for (col, &b) in theirs.iter().enumerate() {
                 let lo = alpha.max(best);
                 let hi = beta.min(worst);
                 let pair = self.pair(a, b);
-                let v = self.chance(
+                let v = self.chance_prepared(
                     state,
                     decision,
                     suspension,
@@ -597,6 +623,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                     Next::Depth(next_depth),
                     lo,
                     hi,
+                    prepared.as_mut().map(|batch| (batch, row, col)),
                 )?;
                 if v.is_nan() {
                     continue;
@@ -621,6 +648,21 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         Ok(best)
     }
 
+    /// Shared horizon semantics for the reversible and borrowed-state paths. Do not resume
+    /// or replace here: depth zero still validates the decision, then prefers terminal values.
+    fn depth_zero_value(
+        &mut self,
+        state: &State<N>,
+        suspension: Option<&Suspension>,
+    ) -> Result<f32, SearchError> {
+        self.nodes += 1;
+        let decision = game::decision(state, suspension)?;
+        if let Decision::Over(result) = decision {
+            return Ok(self.terminal(result, 0));
+        }
+        Ok(self.leaf(state))
+    }
+
     /// The value of the chance node after both sides chose `pair`.
     #[allow(clippy::too_many_arguments)]
     fn chance(
@@ -633,6 +675,21 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         alpha: f32,
         beta: f32,
     ) -> Result<f32, SearchError> {
+        self.chance_prepared(state, decision, suspension, pair, next, alpha, beta, None)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn chance_prepared(
+        &mut self,
+        state: &mut State<N>,
+        decision: Decision,
+        suspension: Option<&Suspension>,
+        pair: [Choice<N>; 2],
+        next: Next<'_, N>,
+        alpha: f32,
+        beta: f32,
+        prepared: Option<(&mut PreparedMatrix<N>, usize, usize)>,
+    ) -> Result<f32, SearchError> {
         if let Some(max) = self.config.max_turns {
             if self.turns >= max {
                 return Err(SearchError::Budget);
@@ -640,14 +697,23 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         }
         self.turns += 1;
         let started = Instant::now();
-        let transitions = game::transitions(
-            state,
-            self.config.ruleset,
-            self.config.enumerate_options(),
-            decision,
-            suspension,
-            pair,
-        );
+        #[cfg(feature = "experiment-leaf-ending-states")]
+        if let Some(value) =
+            self.try_leaf_endings(state, decision, pair, next, alpha, beta, started)
+        {
+            return value;
+        }
+        let transitions = match prepared {
+            Some((batch, row, col)) => batch.enumerate(row, col, self.config.enumerate_options()),
+            None => game::transitions(
+                state,
+                self.config.ruleset,
+                self.config.enumerate_options(),
+                decision,
+                suspension,
+                pair,
+            ),
+        };
         self.stats.enumerate_seconds += started.elapsed().as_secs_f64();
         let outcomes = match transitions {
             Ok(outcomes) => outcomes,
@@ -662,6 +728,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             Chance::Worst => {
                 let mut worst = f32::INFINITY;
                 for outcome in &outcomes {
+                    #[cfg(all(test, feature = "experiment-leaf-ending-states"))]
+                    leaf_endings::tests::record_apply();
                     state.apply(&outcome.instructions);
                     let v = self.continue_at(
                         state,
@@ -671,6 +739,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                         beta.min(worst),
                     );
                     state.reverse(&outcome.instructions);
+                    #[cfg(all(test, feature = "experiment-leaf-ending-states"))]
+                    leaf_endings::tests::record_reverse();
                     let v = v?;
                     if v.is_nan() {
                         return Ok(f32::NAN);
@@ -691,6 +761,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                     let rest = (remaining - p).max(0.0);
                     let lo = ((alpha as f64 - (sum + rest * BOUND as f64)) / p).max(-BOUND as f64);
                     let hi = ((beta as f64 - (sum - rest * BOUND as f64)) / p).min(BOUND as f64);
+                    #[cfg(all(test, feature = "experiment-leaf-ending-states"))]
+                    leaf_endings::tests::record_apply();
                     state.apply(&outcome.instructions);
                     let v = self.continue_at(
                         state,
@@ -700,6 +772,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                         hi as f32,
                     );
                     state.reverse(&outcome.instructions);
+                    #[cfg(all(test, feature = "experiment-leaf-ending-states"))]
+                    leaf_endings::tests::record_reverse();
                     let v = v?;
                     if v.is_nan() {
                         return Ok(f32::NAN);
@@ -1381,10 +1455,18 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
             )?
         } else {
             let mut values = Vec::with_capacity(ours.len() * theirs.len());
-            for &a in &ours {
-                for &b in &theirs {
+            let mut prepared = PreparedMatrix::new(
+                state,
+                self.config,
+                decision,
+                &ours,
+                &theirs,
+                &mut self.stats,
+            );
+            for (row, &a) in ours.iter().enumerate() {
+                for (col, &b) in theirs.iter().enumerate() {
                     let pair = self.pair(a, b);
-                    let v = self.chance(
+                    let v = self.chance_prepared(
                         state,
                         decision,
                         suspension,
@@ -1392,6 +1474,7 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
                         Next::Depth(next_depth),
                         f32::NEG_INFINITY,
                         f32::INFINITY,
+                        prepared.as_mut().map(|batch| (batch, row, col)),
                     )?;
                     values.push(v);
                 }
@@ -1497,25 +1580,52 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
         let config = self.config;
         let evaluator = self.evaluator;
         let cells: Vec<usize> = (0..ours.len() * theirs.len()).collect();
-        let outs = self.par_map(
-            &cells,
-            || state.clone(),
-            |local_state, &i| {
-                let mut local = Solver::new(config, evaluator);
-                let (a, b) = (ours[i / theirs.len()], theirs[i % theirs.len()]);
-                let pair = local.pair(a, b);
-                let value = local.chance(
-                    local_state,
-                    decision,
-                    suspension,
-                    pair,
-                    next,
-                    f32::NEG_INFINITY,
-                    f32::INFINITY,
-                );
-                CellOut::from_solver(value, local)
-            },
-        );
+        // Even a one-thread exact/deep caller uses this entry point. Preserve its fresh
+        // solver per cell and delayed row-major absorption while sharing one parent batch.
+        let outs = if self.config.worker_threads(usize::MAX) <= 1 {
+            let mut local_state = state.clone();
+            let mut prepared =
+                PreparedMatrix::new(state, config, decision, ours, theirs, &mut self.stats);
+            cells
+                .iter()
+                .map(|&i| {
+                    let mut local = Solver::new(config, evaluator);
+                    let (row, col) = (i / theirs.len(), i % theirs.len());
+                    let pair = local.pair(ours[row], theirs[col]);
+                    let value = local.chance_prepared(
+                        &mut local_state,
+                        decision,
+                        suspension,
+                        pair,
+                        next,
+                        f32::NEG_INFINITY,
+                        f32::INFINITY,
+                        prepared.as_mut().map(|batch| (batch, row, col)),
+                    );
+                    CellOut::from_solver(value, local)
+                })
+                .collect()
+        } else {
+            self.par_map(
+                &cells,
+                || state.clone(),
+                |local_state, &i| {
+                    let mut local = Solver::new(config, evaluator);
+                    let (a, b) = (ours[i / theirs.len()], theirs[i % theirs.len()]);
+                    let pair = local.pair(a, b);
+                    let value = local.chance(
+                        local_state,
+                        decision,
+                        suspension,
+                        pair,
+                        next,
+                        f32::NEG_INFINITY,
+                        f32::INFINITY,
+                    );
+                    CellOut::from_solver(value, local)
+                },
+            )
+        };
         let mut values = Vec::with_capacity(outs.len());
         for out in outs {
             self.absorb(&out);

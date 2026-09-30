@@ -18,3 +18,10 @@ harness = false
 
 [features]
 experiment-hurt-readers = []
+experiment-prepared-turn = []
+experiment-prepared-turn-observe = ["experiment-prepared-turn"]
+# P9 isolated experiment. Neither feature is enabled by default.
+experiment-leaf-ending-states = []
+experiment-leaf-ending-observer = ["experiment-leaf-ending-states"]
+# P10: opt-in sparse storage; dense Volatiles remains the default representation.
+experiment-compact-volatiles = []

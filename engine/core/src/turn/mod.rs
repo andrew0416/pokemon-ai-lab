@@ -21,6 +21,8 @@ mod conditions;
 pub mod coverage;
 mod diff;
 mod field_events;
+#[cfg(feature = "experiment-leaf-ending-states")]
+mod final_states;
 mod forme;
 mod frontier;
 mod history;
@@ -32,6 +34,14 @@ mod mega;
 mod merge;
 mod moves;
 mod order;
+#[cfg(feature = "experiment-prepared-turn")]
+mod prepared;
+#[cfg(feature = "experiment-prepared-turn")]
+#[doc(hidden)]
+pub use prepared::PreparedTurn;
+#[cfg(feature = "experiment-prepared-turn-observe")]
+#[doc(hidden)]
+pub use prepared::{reset_validation_counts, validation_counts};
 mod queue;
 mod residual;
 mod support;
@@ -64,6 +74,10 @@ pub(crate) type Small<T, const K: usize> = smallvec::SmallVec<[T; K]>;
 pub(crate) type Slots = Small<SlotRef, 6>;
 
 pub use branch::RollMode;
+#[cfg(feature = "experiment-leaf-ending-observer")]
+pub use final_states::observer as final_state_observer;
+#[cfg(feature = "experiment-leaf-ending-states")]
+pub use final_states::{try_enumerate_turn_final_states, FinalStates};
 pub use frontier::{Factored, FactoredOptions, FactoredOutcome, FactoredScope};
 use order::{
     ORDER_BEFORE_TURN, ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_PRIORITY_CHARGE,
@@ -148,7 +162,15 @@ pub fn enumerate_turn_with<const N: usize>(
     options: EnumerateOptions,
 ) -> Result<Vec<Outcome>, TurnError> {
     let choices = check_turn(state, ruleset, &choices)?;
-    let start = Pending::new(initial_queue(state, &choices));
+    enumerate_checked(state, &choices, options)
+}
+
+fn enumerate_checked<const N: usize>(
+    state: &mut State<N>,
+    choices: &[JointAction<N>; 2],
+    options: EnumerateOptions,
+) -> Result<Vec<Outcome>, TurnError> {
+    let start = Pending::new(initial_queue(state, choices));
     let endings = enumerate_stages(state, start, options, run_stage)?;
     Ok(outcomes(state, endings, Suspension))
 }
@@ -864,10 +886,15 @@ fn outcomes<const N: usize, P>(
     endings
         .iter_mut()
         .flatten()
-        .map(|(end, pending, probability, _)| Outcome {
-            probability: *probability,
-            instructions: diff::instructions(start, end),
-            suspension: pending.take().map(&suspend),
+        .map(|(end, pending, probability, _)| {
+            let instructions = diff::instructions(start, end);
+            #[cfg(feature = "experiment-leaf-ending-observer")]
+            final_states::observer::materialized(instructions.len());
+            Outcome {
+                probability: *probability,
+                instructions,
+                suspension: pending.take().map(&suspend),
+            }
         })
         .collect()
 }
@@ -1025,6 +1052,18 @@ fn check_turn<const N: usize>(
     ruleset: Ruleset,
     choices: &[JointAction<N>; 2],
 ) -> Result<[JointAction<N>; 2], TurnError> {
+    check_turn_parent(state)?;
+    let normalized = [
+        check_side(state, ruleset, SideId::One, &choices[0])?,
+        check_side(state, ruleset, SideId::Two, &choices[1])?,
+    ];
+    check_turn_support(state)?;
+    Ok(normalized)
+}
+
+fn check_turn_parent<const N: usize>(state: &State<N>) -> Result<(), TurnError> {
+    #[cfg(feature = "experiment-prepared-turn-observe")]
+    prepared::count(0);
     if state.result.is_over() {
         return Err(TurnError::BattleOver);
     }
@@ -1040,12 +1079,13 @@ fn check_turn<const N: usize>(
             return Err(TurnError::ReplacementPending(side));
         }
     }
-    let normalized = [
-        check_side(state, ruleset, SideId::One, &choices[0])?,
-        check_side(state, ruleset, SideId::Two, &choices[1])?,
-    ];
-    support::check_state(state).map_err(TurnError::Unsupported)?;
-    Ok(normalized)
+    Ok(())
+}
+
+fn check_turn_support<const N: usize>(state: &State<N>) -> Result<(), TurnError> {
+    #[cfg(feature = "experiment-prepared-turn-observe")]
+    prepared::count(2);
+    support::check_state(state).map_err(TurnError::Unsupported)
 }
 
 /// One side's part of [`check_turn`]: the ruleset's validation, then each slot's choice
@@ -1057,6 +1097,8 @@ pub(crate) fn check_side<const N: usize>(
     side: SideId,
     action: &JointAction<N>,
 ) -> Result<JointAction<N>, TurnError> {
+    #[cfg(feature = "experiment-prepared-turn-observe")]
+    prepared::count(1);
     let mut normalized = *action;
     ruleset
         .validate_joint_action(state, side, action)
