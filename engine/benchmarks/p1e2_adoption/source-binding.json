@@ -1,0 +1,1826 @@
+{
+  "source_sha": "56376838ffea91169321895f8e81abec2137dd46",
+  "source_parent": "a10adfd9aeaebe9624bd8e4bd804789ddecf6167",
+  "source_ref": "refs/heads/codex/p1e2-validation-source-20261001",
+  "test_only_file_sha256": {
+    "engine/scenario/Cargo.toml": "2e7ed8be8a6fd322dbd9ef4db250004bfb488d176fa9ee18b80989835c98893c",
+    "engine/scenario/src/bin/lab-joint-export.rs": "07ba3fdc3e09b90ea8e9dc90cc4bdc8edd96e96eeafea0ebc80fcaa843d11a43",
+    "engine/scenario/tests/lazy_ko_damage_expanded.rs": "5666eea4adeb2dfc6936ceba339c8911c234ef60bbbe628a8ad26cbd650bd8ac",
+    "engine/scenario/tests/p1e2_cases.rs": "b60f7b1f8cea6c8512a31ff438e47351449bcbef43bae3bc1d71d7a5ea453a78"
+  },
+  "inherited_p1e_file_sha256": {
+    "engine/core/Cargo.toml": "e63df141c145599ef5ee618c32c6137bbdde73329e8774b4b2f23a0f9a202d1e",
+    "engine/core/src/turn/abilities.rs": "81374869c0087aeff77b91afd586b0c0efbcadd98d4e0c0a106d32c8e3fafd30",
+    "engine/core/src/turn/battle.rs": "df4d595db1cabc859518245bf0245921ffa086e614eb74253f74d82d39c86c71",
+    "engine/core/src/turn/frontier.rs": "b773197aeebd3f24ea2614f8dfe7e94e69597ce02f8c703425ba9a42905c0bce",
+    "engine/core/src/turn/history.rs": "ab1cb2b94ec35df6ff54d99642e6bb8d65f898b20240cef621468e439298aa74",
+    "engine/core/src/turn/items.rs": "9d1009df681b791e5bf960044f20ace70caafa4fa8ba6de5faf725390b806824",
+    "engine/core/src/turn/lazy.rs": "0cd5573b38735d9d2e394653a54045e3fc0f73a38949f1fc5c6c355d3b304a63",
+    "engine/core/src/turn/mod.rs": "f235f37ae4838bfd9f6f63abd9b5a884ad1241a18196001683f585c1eb7b729e",
+    "engine/core/src/turn/moves.rs": "eda075bafa852e250f90f6b852eaee2b91b0a4ae1f26590386d226cc3a6ee287",
+    "engine/core/src/turn/frontier/lazy_ko_tests.rs": "545133b21ebfb2db73d9f818158f64faa829571f67f2473ea3fecb9977f571f6",
+    "engine/core/src/turn/moves/ability_hooks.rs": "5f84682e07c7f589a89aaa2430df688f6e745a4c4de4cd15f204cf4d87b3c9e1",
+    "engine/core/src/turn/moves/handlers.rs": "1567fd14099e57beac53834e6afe422431b7f92f3865f8ac63a29605b4cd0f8c",
+    "engine/core/src/turn/moves/p1e_damage_tests.rs": "91cd3e107c153ee95406c71787ad0bfdbb58c491b543889142932460b62f72f3",
+    "engine/scenario/Cargo.toml": "e61642e051071b4674b033db91e8efab60ccabb607b830bcae68a687df26fc5b",
+    "engine/scenario/tests/lazy_ko_damage.rs": "0c5671bd243dc4a092e12176c2db231a213230f9699502804071cd50740af67e"
+  },
+  "source_receipt_sha256": "b1d856f1ccd0fe5756ce89bdb3cc60df984749663ad89b368d2d1f8b9b7693b1",
+  "root_source_review_sha256": "584d8b64f908b74ffd6dbea239eefa322584cf2a2b9b2a54c6e657510e140bd4",
+  "logic_receipt_sha256": "fed460842ac104b75553b1b06984bfd83ba418a42bacfb4af5c633e89ee16c01",
+  "broad_target": "lazy_ko_damage_expanded",
+  "broad_tests": [
+    "p1e2_corpus_contract",
+    "p1e2_full_state_corpus"
+  ],
+  "broad_record_environment": "LAB_P1E2_PUBLIC_RECORDS",
+  "broad_scope_environment": {
+    "LAB_P1E2_SCOPE": "expanded"
+  },
+  "broad_record_contract": {
+    "case_count": 104,
+    "cases": [
+      {
+        "case": "derived-plain-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 1107511706947701098,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-plain-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 2823060458334228331,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": true
+      },
+      {
+        "case": "derived-plain-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 2544951269816757675,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-plain-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 6178615513753320698,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-drain-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 8363615706670191335,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "drain-healed-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-drain-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 1234485300786399134,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "drain-healed-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": true
+      },
+      {
+        "case": "derived-drain-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 5490862434709472507,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "drain-healed-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-drain-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 11156793653079202893,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "drain-healed-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-recoil-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 493055064580393260,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "recoil-damaged-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-recoil-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 16185728288834013295,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "recoil-damaged-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-recoil-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 12105559229712484931,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "recoil-damaged-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-recoil-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 15874454205799723800,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "recoil-damaged-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-shell-bell-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 16917422267653859663,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "shell-bell-healed-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-shell-bell-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 17625165104896824890,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "shell-bell-healed-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-shell-bell-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 3095581900601505266,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "shell-bell-healed-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-shell-bell-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 17648119525274315904,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "shell-bell-healed-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-innards-out-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 14777457429379946040,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "innards-out-damaged-attacker",
+          "holder-fainted"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-innards-out-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 8608996078203615416,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "innards-out-damaged-attacker",
+          "holder-fainted"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-innards-out-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 4894777930895452234,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "innards-out-damaged-attacker",
+          "holder-fainted"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-innards-out-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 6666872386980625688,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "innards-out-damaged-attacker",
+          "holder-fainted"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-liquid-ooze-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 13646347101429557505,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "ooze-damaged-drainer"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-liquid-ooze-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 3377914393870264147,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "ooze-damaged-drainer"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-liquid-ooze-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 2123229780289421375,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "ooze-damaged-drainer"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-liquid-ooze-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 1096172584719041456,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "ooze-damaged-drainer"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-life-orb-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 18208948044256013326,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "orb-damaged-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-life-orb-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 7904019209656694542,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "orb-damaged-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-life-orb-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 8741933865261147925,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "orb-damaged-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-life-orb-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 3130968960312055038,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "orb-damaged-user"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-counter-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 10133143004922434970,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-counter-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 17588470362223487852,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": true
+      },
+      {
+        "case": "derived-counter-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 17998629291995138290,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-counter-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 16805140964231772386,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "returned-damage"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-mirror-coat-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 13767102026684440516,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-mirror-coat-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 7604598915243790921,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-mirror-coat-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 15730539257682005687,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-mirror-coat-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 17801140943506510115,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "returned-damage"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-metal-burst-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 13130944869067097236,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-metal-burst-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 12158586103641073918,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-metal-burst-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 10365605846273569374,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-metal-burst-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 8426514052267508864,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "returned-damage"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-comeuppance-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 18428234929429011838,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-comeuppance-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 2602289880526893847,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-comeuppance-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 11434527818233287756,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-comeuppance-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 7309246881595230808,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "returned-damage"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-u-turn-hp45",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 3932878512886340999,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "real-midturn-pause"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-u-turn-hp60",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 2940762689287465328,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "real-midturn-pause"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-u-turn-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 5843309089105424717,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "real-midturn-pause"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-u-turn-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 2762875941689707947,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "real-midturn-pause"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-counter-paused-history",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 961437177725684961,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "real-pause-before-reflection",
+          "paused-counter-numeric-record"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": true
+      },
+      {
+        "case": "derived-mirror-coat-paused-history",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 5118520898126685705,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "real-pause-before-reflection",
+          "paused-mirror-numeric-record"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-metal-burst-paused-history",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 6271131594369180172,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "real-pause-before-reflection",
+          "paused-last-damage-record"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-comeuppance-paused-history",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 8842362132378290630,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "real-pause-before-reflection",
+          "paused-last-damage-record"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-berserk-hp99",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 5019822859073696146,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-berserk-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 11875609992438076532,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-berserk-hp101",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 9987437187088368918,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "crossing-raised-spa"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-berserk-hp120",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 11708418705316101608,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "crossing-raised-spa"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": true
+      },
+      {
+        "case": "derived-berserk-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 5817498859932322634,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-anger-shell-hp99",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 10294552198944553379,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-anger-shell-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 16568343457470129219,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-anger-shell-hp101",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 4197232418346113391,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "crossing-raised-speed"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-anger-shell-hp120",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 9302608644278062960,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "crossing-raised-speed"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-anger-shell-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 6375094886392287142,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-emergency-exit-hp99",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 1022679191038684363,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-emergency-exit-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 11486136469542453916,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-emergency-exit-hp101",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 11597307461770288275,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "crossing-requested-switch"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-emergency-exit-hp120",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 4893894686328767638,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "crossing-requested-switch"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-emergency-exit-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 8477602789412141586,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-endure-hp1",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 859523918061771063,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-endure-hp2",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 1068251636752068885,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-endure-hp40",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 12882344974621695305,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": true
+      },
+      {
+        "case": "derived-endure-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 12928010140351189066,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-false-swipe-hp1",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 13128898985272692902,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-false-swipe-hp2",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 16892969494789864403,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-false-swipe-hp40",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 17078620023154870640,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-false-swipe-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 18347916835543209251,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-hold-back-hp1",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 14400193124950487537,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-hold-back-hp2",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 8382232272905674881,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-hold-back-hp40",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 11378214331485167506,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-hold-back-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 8859474259056377857,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "protected-at-one-hp",
+          "protecting-move-used"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-sturdy-hp1",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 9916875542449945305,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "partial-hp-not-protected"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-sturdy-hp199",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 3086433931490728661,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "partial-hp-not-protected"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-sturdy-hp200",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 10203625764731344377,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "survival-at-one-hp"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-focus-sash-hp1",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 14689202543334079273,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "partial-hp-not-protected"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-focus-sash-hp199",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 18399133364377514455,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "partial-hp-not-protected"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-focus-sash-hp200",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 8539246857896895843,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "survival-at-one-hp",
+          "sash-consumed"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": true
+      },
+      {
+        "case": "derived-focus-band-hp1",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 16011293573981872462,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "survival-at-one-hp",
+          "band-can-fail"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-focus-band-hp199",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 12533847308528717810,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "survival-at-one-hp",
+          "band-can-fail"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-focus-band-hp200",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 772362184891428960,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "survival-at-one-hp",
+          "band-can-fail"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-double-hit-hp100",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 12030555074161387001,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "multiple-damage-applications"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-double-hit-hp150",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 15335725993391630901,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "multiple-damage-applications"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-double-hit-hp180",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 15038309520917228103,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged",
+          "multiple-damage-applications"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "derived-plain-hp60-full",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 2823060458334228331,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "derived:single-hit",
+        "required_activation": [
+          "target-damaged"
+        ],
+        "resume_policy": "stop-at-first-pause",
+        "rolls": "Full",
+        "smoke": true
+      },
+      {
+        "case": "oracle-counter-mirror-coat-position0",
+        "decision": "Turn([[Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 2, gimmick: None }, Move { index: 0, target: 2, gimmick: None }]])",
+        "input_hash": 4499617277844424315,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "oracle/scenarios/counter-mirror-coat.json",
+        "required_activation": [
+          "mirror-returned-exact100"
+        ],
+        "resume_policy": "scenario-recorded-switches",
+        "rolls": "Extremes",
+        "smoke": true
+      },
+      {
+        "case": "oracle-counter-follow-me-position0",
+        "decision": "Turn([[Move { index: 0, target: 0, gimmick: None }, Move { index: 1, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 1, gimmick: None }]])",
+        "input_hash": 1614369977751483072,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "oracle/scenarios/counter-follow-me.json",
+        "required_activation": [
+          "counter-redirected-exact100"
+        ],
+        "resume_policy": "scenario-recorded-switches",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-history-ragefist-metalburst-position0",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 2, gimmick: None }]])",
+        "input_hash": 13994715776156249554,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "oracle/scenarios/history-ragefist-metalburst.json",
+        "required_activation": [
+          "metal-burst-exact75"
+        ],
+        "resume_policy": "scenario-recorded-switches",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-ll-staged-comeuppance-position0",
+        "decision": "Turn([[Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 1, gimmick: None }]])",
+        "input_hash": 10124675648017848505,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "oracle/scenarios/ll-staged-comeuppance.json",
+        "required_activation": [
+          "comeuppance-returned-damage"
+        ],
+        "resume_policy": "scenario-recorded-switches",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-o55-anger-shell-berserk-position0",
+        "decision": "Turn([[Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 2, gimmick: None }]])",
+        "input_hash": 8048397415860723304,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "oracle/scenarios/o55-anger-shell-berserk.json",
+        "required_activation": [
+          "anger-shell-speed"
+        ],
+        "resume_policy": "scenario-recorded-switches",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-nn-sleep-talk-double-hit-life-orb-position0",
+        "decision": "Turn([[Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 1020887806341223361,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "oracle/scenarios/nn-sleep-talk-double-hit-life-orb.json",
+        "required_activation": [
+          "sleep-talk-used",
+          "orb-recoil-on-caller"
+        ],
+        "resume_policy": "scenario-recorded-switches",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-nn-copycat-bullet-seed-position0",
+        "decision": "Turn([[Move { index: 0, target: 0, gimmick: None }, Move { index: 1, target: 0, gimmick: None }], [Move { index: 0, target: 2, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 17036678819339176661,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "oracle/scenarios/nn-copycat-bullet-seed.json",
+        "required_activation": [
+          "copycat-used",
+          "called-seed-damaged-foe"
+        ],
+        "resume_policy": "scenario-recorded-switches",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-emergency-exit-position0",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 1875796625451903822,
+        "mid_turn": [
+          [],
+          [
+            "switch 3"
+          ]
+        ],
+        "origin": "oracle/scenarios/emergency-exit.json",
+        "required_activation": [
+          "resumed-switch",
+          "resumed-to-end"
+        ],
+        "resume_policy": "scenario-recorded-switches",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-dd-emergency-exit-recoil-paused-position0",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 0, target: 0, gimmick: None }, Move { index: 0, target: 0, gimmick: None }]])",
+        "input_hash": 11211121278725348103,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "oracle/scenarios/dd-emergency-exit-recoil-paused.json",
+        "required_activation": [
+          "real-pause"
+        ],
+        "resume_policy": "scenario-recorded-switches",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-uu-copycat-uturn-hits-initial-pause",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 1, target: 0, gimmick: None }, Move { index: 1, target: 0, gimmick: None }]])",
+        "input_hash": 1252137207008277491,
+        "mid_turn": [
+          [],
+          []
+        ],
+        "origin": "oracle/scenarios/uu-copycat-uturn-hits.json",
+        "required_activation": [
+          "initial-uturn-paused"
+        ],
+        "resume_policy": "initial-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-uu-copycat-uturn-hits-called-pause",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 1, target: 0, gimmick: None }, Move { index: 1, target: 0, gimmick: None }]])",
+        "input_hash": 1252137207008277491,
+        "mid_turn": [
+          [
+            "switch 3"
+          ],
+          []
+        ],
+        "origin": "oracle/scenarios/uu-copycat-uturn-hits.json",
+        "required_activation": [
+          "copycat-used",
+          "called-uturn-paused"
+        ],
+        "resume_policy": "called-pause",
+        "rolls": "Extremes",
+        "smoke": false
+      },
+      {
+        "case": "oracle-uu-copycat-uturn-hits-completed",
+        "decision": "Turn([[Move { index: 0, target: 1, gimmick: None }, Move { index: 0, target: 0, gimmick: None }], [Move { index: 1, target: 0, gimmick: None }, Move { index: 1, target: 0, gimmick: None }]])",
+        "input_hash": 1252137207008277491,
+        "mid_turn": [
+          [
+            "switch 3",
+            "switch 3"
+          ],
+          []
+        ],
+        "origin": "oracle/scenarios/uu-copycat-uturn-hits.json",
+        "required_activation": [
+          "copycat-used",
+          "switched",
+          "completed"
+        ],
+        "resume_policy": "completed",
+        "rolls": "Extremes",
+        "smoke": false
+      }
+    ],
+    "distinct_input_count": 101,
+    "schema": 2,
+    "scope": "derived mechanic/HP inputs plus oracle-based real calling and suspension cases",
+    "smoke_count": 9
+  },
+  "broad_comparator_sha256": "6bce47c82b74530ccc49a1e2ed19bec35efe2344036ccd34ddc5a08b6daa1201",
+  "tail_contract": {
+    "enabled": true,
+    "case_id": "opening-0429",
+    "arms": [
+      "original",
+      "on"
+    ],
+    "target": "lab-joint-export",
+    "source_path": "engine/scenario/src/bin/lab-joint-export.rs",
+    "tests": [
+      "tests::joint_export_overlap_matches_independent_flat_expansion",
+      "tests::joint_export_preserves_hp_correlation_and_last_reserve",
+      "tests::joint_export_retains_hidden_non_hp_fields_and_dictionary_order",
+      "tests::joint_export_rejects_bad_factors_and_mass",
+      "tests::joint_export_row_encoding_and_limits_are_explicit",
+      "tests::joint_export_plan_comparison_requires_exact_bytes"
+    ],
+    "timeout_seconds": {
+      "original": 1200,
+      "on": 300
+    },
+    "rss_limit_bytes": 6442450944,
+    "max_rows": 10000000,
+    "max_bytes_including_manifest": 536870912,
+    "job_timeout_minutes": 35,
+    "run_candidate_after_original_incomplete": true,
+    "incomplete_reference_verdict": "inconclusive",
+    "adoption_if_incomplete": false,
+    "accuracy_only": true
+  },
+  "parent_p1e_binding_sha256": "cbc0f47acb3261ae018eca2b4022bf83dc322314458b9f4d00209abe94cdf3e4",
+  "broad_manifest_environment": "LAB_P1E2_CORPUS_MANIFEST",
+  "joint_comparator_sha256": "3261682b7446935cbd70971bd5156f61ad7f84ff27919d821a3ccc8662b803ee",
+  "corpus_manifest_sha256": "258dac3175a48976010f80c0963cc4096a9b7051ef2341ea8269ddc008342f86"
+}
