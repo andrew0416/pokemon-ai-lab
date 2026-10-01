@@ -17,6 +17,8 @@ name = "damage"
 harness = false
 
 [features]
+# P1e4 validation-only external-memory concrete oracle; default OFF.
+experiment-exact-stream-oracle = []
 experiment-hurt-readers = []
 experiment-prepared-turn = []
 experiment-prepared-turn-observe = ["experiment-prepared-turn"]

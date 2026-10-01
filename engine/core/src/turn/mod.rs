@@ -59,6 +59,9 @@ mod switching;
 pub use stats_off_cost::observer as stats_cost_observer;
 mod transform;
 mod update;
+#[cfg(feature = "experiment-exact-stream-oracle")]
+#[doc(hidden)]
+pub mod exact_stream_oracle;
 
 use std::fmt;
 use std::hash::Hash;
