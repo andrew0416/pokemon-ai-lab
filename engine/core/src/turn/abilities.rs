@@ -1912,8 +1912,8 @@ pub(crate) fn after_move_secondary<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     target: SlotRef,
-    damage: i32,
-    total_damage: i32,
+    damage: super::lazy::DealtDamage,
+    total_damage: super::lazy::DealtDamage,
 ) {
     let ability = b.ability(target);
     if !has_berserk_check(ability) || b.occupant(target).is_none() {
@@ -1923,12 +1923,17 @@ pub(crate) fn after_move_secondary<const N: usize>(
     let Some(mon) = b.alive(target).map(|p| b.mon(p)) else {
         return;
     };
-    if target == user || total_damage == 0 {
+    if target == user || total_damage.is_zero() {
         return;
     }
     let max_hp = i32::from(mon.max_hp);
     // `target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2`.
-    if mon.hp_scaled_le(2, max_hp) && !mon.hp_scaled_le(2, max_hp - 2 * damage) {
+    if mon.hp_scaled_le(2, max_hp)
+        && !mon.hp_scaled_le(
+            2,
+            max_hp - 2 * damage.exact(super::lazy::ExactDamageConsumer::Berserk),
+        )
+    {
         let mut boosts = NO_BOOSTS;
         if ability == abilities::ANGER_SHELL {
             boosts = [1, -1, 1, -1, 1, 0, 0];

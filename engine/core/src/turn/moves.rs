@@ -8,6 +8,9 @@ mod handlers;
 #[cfg(test)]
 mod absent_user_tests;
 
+#[cfg(all(test, feature = "experiment-lazy-ko-damage"))]
+mod p1e_damage_tests;
+
 use handlers::HitResult;
 pub(crate) use handlers::{
     called_after_move_checked, set_types, sleep_talk_calls, trick_item_start, trick_moves_item,
@@ -32,7 +35,7 @@ use super::abilities::{Handler, SUB_FIELD_CONDITION, SUB_ITEM, SUB_MOVE, SUB_SID
 use super::battle::{ActiveMoveRef, Battle, BoostEffect, DamageSource};
 use super::conditions;
 use super::items as item_events;
-use super::lazy::HpMark;
+use super::lazy::{DealtDamage, ExactDamageConsumer, HpMark};
 use super::order::{boosted_stat, modify};
 use super::support::{side_effect_of, type_boost_item};
 use super::TurnError;
@@ -70,7 +73,7 @@ pub(crate) struct ActiveMove {
     /// `move.multihitType = 'parentalbond'`): the second hit's damage is quartered.
     parental_bond: bool,
     /// HP taken by the move's hits (Showdown `move.totalDamage`), set once the hits are done.
-    total_damage: i32,
+    total_damage: DealtDamage,
     /// Target type after ModifyMove (Showdown `move.target`; Expanding Force widens it).
     target: MoveTarget,
     /// Type after ModifyType (Showdown `move.type`; Weather Ball, Terrain Pulse). Every rule
@@ -234,7 +237,7 @@ pub(crate) struct MoveProgress {
     hits: u8,
     hit: u8,
     /// `move.totalDamage`.
-    total_damage: i32,
+    total_damage: DealtDamage,
     /// Whether any hit so far did something (the move's success).
     any_ok: bool,
     /// The last hit's targets it did not fail on (Showdown's `targetsCopy` after
@@ -274,6 +277,29 @@ pub(crate) struct CallerFrame {
     main_target: SlotRef,
 }
 
+impl MoveProgress {
+    /// Pending move progress is a state-key field, so it must retain exact numeric damage.
+    /// Called-move frames can nest and contain both totals and per-target hit results. This is
+    /// invoked at every `run_stage` return, after the complete caller chain has been assembled.
+    pub(super) fn materialize_damage(&mut self) {
+        self.mv.total_damage.materialize();
+        self.total_damage.materialize();
+        for (_, last) in &mut self.last_hit {
+            if let LastHit::Damage(damage) = last {
+                damage.materialize();
+            }
+        }
+        if let Some(caller) = &mut self.caller {
+            caller.progress.materialize_damage();
+            for hit in &mut caller.results {
+                if let Hit::Damage(damage) = hit {
+                    damage.materialize();
+                }
+            }
+        }
+    }
+}
+
 /// How far a move got: finished, or suspended before its next hit. The suspension is kept inline
 /// (its target lists are, board P4a): a move returns it once, a box would allocate per hit.
 #[allow(clippy::large_enum_variant)]
@@ -286,7 +312,7 @@ pub(crate) enum MoveStep {
 /// hits took), or suspended before its next hit (inline, as [`MoveStep`]).
 #[allow(clippy::large_enum_variant)]
 enum HitOutcome {
-    Finished { ok: bool, total_damage: i32 },
+    Finished { ok: bool, total_damage: DealtDamage },
     Suspended(MoveProgress),
 }
 
@@ -296,7 +322,7 @@ enum Hit {
     Failed,
     /// Hit without damage (status moves).
     Done,
-    Damage(i32),
+    Damage(DealtDamage),
     /// The target's substitute took the hit (`TryPrimaryHit` returned `HIT_SUBSTITUTE`): the
     /// target is `null` for the rest of `spreadMoveHit` (only the user's own effects, `self`
     /// drops and the secondaries' `self` parts act) and its damage is 0.
@@ -329,8 +355,8 @@ impl Hit {
 /// (`gotAttacked`, Emergency Exit).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 enum LastHit {
-    /// Numeric damage.
-    Damage(i32),
+    /// Numeric damage, retaining lazy provenance until observed.
+    Damage(DealtDamage),
     /// A status effect (`true`).
     Done,
     /// The target's substitute took it (`targetsCopy[i]` is `null`, its damage 0).
@@ -376,7 +402,7 @@ pub(crate) fn run_move<const N: usize>(
             secondary_chance_factor: 1,
             added_secondary: None,
             parental_bond: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
             target: MoveId::NONE.data().target,
             move_type: MoveId::NONE.data().move_type,
             base_power: 0,
@@ -508,7 +534,7 @@ pub(crate) fn future_move_hit<const N: usize>(
         secondary_chance_factor: 1,
         added_secondary: None,
         parental_bond: false,
-        total_damage: 0,
+        total_damage: DealtDamage::ZERO,
         target: data.target,
         move_type,
         base_power: i32::from(data.base_power),
@@ -1069,7 +1095,7 @@ fn run_external_move<const N: usize>(
         secondary_chance_factor: 1,
         added_secondary: None,
         parental_bond: false,
-        total_damage: 0,
+        total_damage: DealtDamage::ZERO,
         target: data.target,
         move_type: data.move_type,
         base_power: i32::from(data.base_power),
@@ -1162,7 +1188,7 @@ fn run_move_inner<const N: usize>(
         secondary_chance_factor: 1,
         added_secondary: None,
         parental_bond: false,
-        total_damage: 0,
+        total_damage: DealtDamage::ZERO,
         target: id.data().target,
         move_type: id.data().move_type,
         base_power: i32::from(id.data().base_power),
@@ -1954,7 +1980,7 @@ fn call_move<const N: usize>(
         secondary_chance_factor: 1,
         added_secondary: None,
         parental_bond: false,
-        total_damage: 0,
+        total_damage: DealtDamage::ZERO,
         target: data.target,
         move_type: data.move_type,
         base_power: i32::from(data.base_power),
@@ -2047,7 +2073,7 @@ fn bounce_move<const N: usize>(
         secondary_chance_factor: 1,
         added_secondary: None,
         parental_bond: false,
-        total_damage: 0,
+        total_damage: DealtDamage::ZERO,
         target: data.target,
         move_type: data.move_type,
         base_power: i32::from(data.base_power),
@@ -2326,7 +2352,7 @@ fn try_spread_move_hit<const N: usize>(
         let ok = conditions::start_future_move(b, user, targets[0], mv.id);
         return Ok(HitOutcome::Finished {
             ok,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
 
@@ -2343,7 +2369,7 @@ fn try_spread_move_hit<const N: usize>(
         if !ok {
             return Ok(HitOutcome::Finished {
                 ok: false,
-                total_damage: 0,
+                total_damage: DealtDamage::ZERO,
             });
         }
     }
@@ -2355,7 +2381,7 @@ fn try_spread_move_hit<const N: usize>(
     if !handlers::on_try(b, user, mv, targets[0]) {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // Follow Me / Rage Powder `onTry` and Spotlight `onTryHit`: doubles only.
@@ -2366,7 +2392,7 @@ fn try_spread_move_hit<const N: usize>(
     {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // PrepareHit: Protect and Detect need a later action and pass the stall check; then the
@@ -2374,7 +2400,7 @@ fn try_spread_move_hit<const N: usize>(
     if mv.data.stalling_move && !(will_act && stall_move(b, user)) {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // Destiny Bond's `onPrepareHit`: `return !pokemon.removeVolatile('destinybond');` (it
@@ -2382,14 +2408,14 @@ fn try_spread_move_hit<const N: usize>(
     if mv.id == moves::DESTINY_BOND && b.remove_volatile(user, Volatile::DestinyBond) {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // The move's other `onPrepareHit` handlers (Ally Switch, Fling).
     if !handlers::on_prepare_hit(b, user, mv) {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     prepare_hit_ability(b, user, mv);
@@ -2409,7 +2435,7 @@ fn try_spread_move_hit<const N: usize>(
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // 1. TryHit: Psychic Terrain (priority 4), Protect (3), the target's ability (0). Each
@@ -2437,7 +2463,7 @@ fn try_spread_move_hit<const N: usize>(
         }
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // 2. Type immunity.
@@ -2447,7 +2473,7 @@ fn try_spread_move_hit<const N: usize>(
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // 3. Move-specific immunities: powder, the move's `onTryImmunity`, Prankster vs Dark.
@@ -2466,7 +2492,7 @@ fn try_spread_move_hit<const N: usize>(
     if targets.is_empty() {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // 4. Accuracy.
@@ -2482,7 +2508,7 @@ fn try_spread_move_hit<const N: usize>(
     if hit.is_empty() {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // 5. `hitStepBreakProtect` (Feint, Hyperspace Hole): every target left loses its protection.
@@ -2496,7 +2522,7 @@ fn try_spread_move_hit<const N: usize>(
     if !handlers::on_try_hit(b, user, hit[0], mv)? {
         return Ok(HitOutcome::Finished {
             ok: false,
-            total_damage: 0,
+            total_damage: DealtDamage::ZERO,
         });
     }
     // 7. The hit loop, on the targets left (`move.hitTargets` unless every hit fails). With
@@ -2515,7 +2541,7 @@ fn try_spread_move_hit<const N: usize>(
         main_target: user,
         hits: decide_hits(b, user, mv),
         hit: 0,
-        total_damage: 0,
+        total_damage: DealtDamage::ZERO,
         any_ok: false,
         last_hit: Small::new(),
         ignore_ability: b.active_move.is_some_and(|a| a.ignore_ability),
@@ -3050,13 +3076,23 @@ fn hit_loop<const N: usize>(
     if !ended_by_miss {
         // `move.totalDamage` so far only reaches the hit's handlers through Innards Out, which
         // adds it only without `smartTarget`.
-        let total_before = if smart { 0 } else { progress.total_damage };
+        let total_before = if smart {
+            DealtDamage::ZERO
+        } else {
+            progress.total_damage
+        };
         results = spread_move_hit(b, user, mv, &hit_targets, total_before, hit)?;
         progress.hit = hit;
         progress.total_damage += results
             .iter()
-            .map(|r| if let Hit::Damage(d) = r { *d } else { 0 })
-            .sum::<i32>();
+            .map(|r| {
+                if let Hit::Damage(d) = r {
+                    *d
+                } else {
+                    DealtDamage::ZERO
+                }
+            })
+            .sum::<DealtDamage>();
         let this_hit: Small<(SlotRef, LastHit), 6> = hit_targets
             .iter()
             .zip(&results)
@@ -3143,7 +3179,7 @@ fn hit_loop_rest<const N: usize>(
     // `if (move.totalDamage) this.applyRecoilDamage(move.totalDamage, move, pokemon)`: Struggle's
     // `directDamage` (which no Damage handler sees: Rock Head, Magic Guard, Endure, Sturdy) or
     // a `recoil` move's, then Emergency Exit on the user.
-    if total > 0 {
+    if total.is_positive() {
         apply_recoil_damage(b, user, mv, total);
     }
     // `gotAttacked` and `timesAttacked` (`hit - 1` = the hits made) for the last hit's
@@ -3168,7 +3204,7 @@ fn hit_loop_rest<const N: usize>(
         let damage = match (last, ended_by_miss) {
             (LastHit::Damage(d), _) => Some(d),
             (LastHit::Done, _) | (LastHit::Blocked, true) => None,
-            (LastHit::Substitute, true) => Some(0),
+            (LastHit::Substitute, true) => Some(DealtDamage::ZERO),
             (LastHit::Substitute | LastHit::Blocked, false) => continue,
         };
         b.record_attack(t, user, damage, progress.hit);
@@ -3194,19 +3230,32 @@ fn hit_loop_rest<const N: usize>(
         // dart's damage.
         let dart = |t: SlotRef| match progress.last_hit.iter().find(|&&(s, _)| s == t) {
             Some(&(_, LastHit::Damage(d))) => d,
-            _ => 0,
+            _ => DealtDamage::ZERO,
         };
-        let last_hit: Small<(SlotRef, i32), 6> = if smart {
+        let last_hit: Small<(SlotRef, DealtDamage), 6> = if smart {
             progress.targets.iter().map(|&t| (t, dart(t))).collect()
         } else if ended_by_miss {
-            progress.targets.iter().map(|&t| (t, 0)).collect()
+            progress
+                .targets
+                .iter()
+                .map(|&t| (t, DealtDamage::ZERO))
+                .collect()
         } else {
             progress
                 .targets
                 .iter()
                 .zip(&results)
                 .filter(|(_, r)| r.reached())
-                .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
+                .map(|(&t, r)| {
+                    (
+                        t,
+                        if let Hit::Damage(d) = r {
+                            *d
+                        } else {
+                            DealtDamage::ZERO
+                        },
+                    )
+                })
                 .collect()
         };
         let slots: Slots = last_hit.iter().map(|&(t, _)| t).collect();
@@ -3255,7 +3304,7 @@ fn hit_loop_rest<const N: usize>(
         // With `smartTarget` the loop's `damage` array has lost the first target's entry
         // (`damage = [damage[hit - 1]]` each hit): only the second target is checked, with its own
         // dart's damage (`targets.length` is 2, so not the total).
-        let damages: Small<(SlotRef, i32), 6> = if smart {
+        let damages: Small<(SlotRef, DealtDamage), 6> = if smart {
             smallvec::smallvec![(progress.targets[1], dart(progress.targets[1]))]
         } else if ended_by_miss {
             progress
@@ -3265,7 +3314,7 @@ fn hit_loop_rest<const N: usize>(
                     let last = progress.last_hit.iter().find(|&&(s, _)| s == t);
                     let damage = match last {
                         Some(&(_, LastHit::Damage(d))) => d,
-                        _ => 0,
+                        _ => DealtDamage::ZERO,
                     };
                     (t, damage)
                 })
@@ -3275,7 +3324,16 @@ fn hit_loop_rest<const N: usize>(
                 .targets
                 .iter()
                 .zip(&results)
-                .map(|(&t, r)| (t, if let Hit::Damage(d) = r { *d } else { 0 }))
+                .map(|(&t, r)| {
+                    (
+                        t,
+                        if let Hit::Damage(d) = r {
+                            *d
+                        } else {
+                            DealtDamage::ZERO
+                        },
+                    )
+                })
                 .collect()
         };
         for (t, damage) in damages {
@@ -3291,7 +3349,9 @@ fn hit_loop_rest<const N: usize>(
             let mon = b.mon(pokemon);
             let max_hp = i32::from(mon.max_hp);
             let hurt = b.slot_history(t).hurt_this_turn.map_or(0, i32::from);
-            if mon.hp_scaled_le(2, max_hp) && 2 * (hurt + current) > max_hp {
+            if mon.hp_scaled_le(2, max_hp)
+                && 2 * (hurt + current.exact(ExactDamageConsumer::EmergencyExit)) > max_hp
+            {
                 super::switching::emergency_exit(b, t);
             }
         }
@@ -3309,7 +3369,7 @@ fn spread_move_hit<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     targets: &[SlotRef],
-    total_before: i32,
+    total_before: DealtDamage,
     hit: u8,
 ) -> Result<Small<Hit, 6>, TurnError> {
     let data = mv.data;
@@ -3353,11 +3413,13 @@ fn spread_move_hit<const N: usize>(
             Planned::Fail => Hit::Failed,
             Planned::NoDamage => Hit::Done,
             Planned::Damage(d) => {
-                let dealt = b.damage(t, f64::from(d), DamageSource::Move);
-                if dealt > 0 {
+                let dealt = b.move_damage(t, f64::from(d));
+                if dealt.is_positive() {
                     if let Some(drain) = data.drain {
-                        let amount =
-                            (f64::from(dealt) * f64::from(drain.0) / f64::from(drain.1)).round();
+                        let amount = (f64::from(dealt.exact(ExactDamageConsumer::Drain))
+                            * f64::from(drain.0)
+                            / f64::from(drain.1))
+                        .round();
                         // `this.battle.heal(..., pokemon, target, 'drain')`: Big Root, the
                         // target's Liquid Ooze.
                         b.heal_rooted_from(user, amount, Some(t));
@@ -3642,7 +3704,7 @@ fn spread_move_hit<const N: usize>(
         }
     }
     // DamagingHit for every damaged target, then AfterHit (only while the user stands).
-    let damaged: Small<(SlotRef, i32), 6> = targets
+    let damaged: Small<(SlotRef, DealtDamage), 6> = targets
         .iter()
         .zip(&results)
         .filter_map(|(&t, r)| match r {
@@ -3742,7 +3804,7 @@ fn hit_substitute<const N: usize>(
         b.set_substitute_hp(target, (sub_hp - damage) as i16);
     }
     if damage != 0 {
-        apply_recoil_damage(b, user, mv, damage);
+        apply_recoil_damage(b, user, mv, DealtDamage::constant(damage));
     }
     if let Some(drain) = mv.data.drain {
         let amount = (f64::from(damage) * f64::from(drain.0) / f64::from(drain.1)).ceil();
@@ -3762,7 +3824,7 @@ fn apply_recoil_damage<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
-    damage: i32,
+    damage: DealtDamage,
 ) {
     let Some(pokemon) = b.alive(user) else {
         return;
@@ -3777,9 +3839,10 @@ fn apply_recoil_damage<const N: usize>(
         let amount = (f64::from(max_hp) / 2.0).round();
         b.damage(user, amount, DamageSource::Indirect);
     } else if let Some(recoil) = mv.data.recoil {
-        let amount = (f64::from(damage) * f64::from(recoil.0) / f64::from(recoil.1))
-            .round()
-            .max(1.0);
+        let amount = (f64::from(damage.exact(ExactDamageConsumer::Recoil)) * f64::from(recoil.0)
+            / f64::from(recoil.1))
+        .round()
+        .max(1.0);
         b.damage(user, amount, DamageSource::Recoil);
     } else {
         return;
@@ -3858,8 +3921,8 @@ fn damaging_hit<const N: usize>(
     b: &mut Battle<'_, N>,
     user: SlotRef,
     mv: &ActiveMove,
-    damaged: &[(SlotRef, i32)],
-    total_before: i32,
+    damaged: &[(SlotRef, DealtDamage)],
+    total_before: DealtDamage,
 ) -> Result<(), TurnError> {
     #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
     enum Kind {

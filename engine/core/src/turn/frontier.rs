@@ -707,6 +707,12 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
         }
         reached.push((done, id, Component { weight: p, hps }));
         work.reverse(&buffers.log);
+        #[cfg(feature = "experiment-lazy-ko-damage")]
+        for &(unit, _) in &lazy {
+            // A universally fainted unit shed its live tag. Instructions restore its HP;
+            // the group restores its original tag before the next chooser replay.
+            work.pokemon_mut(unit_ref(unit)).lazy = lazy::tag(usize::from(unit));
+        }
         if !chooser.advance() {
             break;
         }
@@ -891,6 +897,10 @@ pub(crate) fn factored_outcomes<const N: usize, P>(
         })
         .collect()
 }
+
+#[cfg(test)]
+#[path = "frontier/lazy_ko_tests.rs"]
+mod p1e_lazy_ko_tests;
 
 #[cfg(test)]
 mod tests {

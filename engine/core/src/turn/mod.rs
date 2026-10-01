@@ -1575,6 +1575,9 @@ fn run_stage<const N: usize>(
         pending.queue = std::mem::take(&mut b.queue);
         let end = result?;
         items::stage_end_check(b)?;
+        if let Some(progress) = &mut pending.in_progress {
+            progress.materialize_damage();
+        }
         return Ok(end);
     }
     // Quick Draw's 3/10 and Quick Claw's 1/5 are drawn, and Custap Berry eaten, when the
@@ -1615,6 +1618,9 @@ fn run_stage<const N: usize>(
         "a called move's suspension was not taken by its caller"
     );
     items::stage_end_check(b)?;
+    if let Some(progress) = &mut pending.in_progress {
+        progress.materialize_damage();
+    }
     Ok(end)
 }
 

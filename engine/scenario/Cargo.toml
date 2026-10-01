@@ -57,6 +57,10 @@ name = "factored"
 path = "tests/factored.rs"
 
 [[test]]
+name = "lazy_ko_damage"
+path = "tests/lazy_ko_damage.rs"
+
+[[test]]
 name = "lab_check_batch"
 path = "tests/lab_check_batch.rs"
 

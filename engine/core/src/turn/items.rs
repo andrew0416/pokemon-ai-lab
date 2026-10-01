@@ -1296,7 +1296,7 @@ pub(crate) fn after_move_secondary_self<const N: usize>(
     user: SlotRef,
     target: SlotRef,
     data: &MoveData,
-    total_damage: i32,
+    total_damage: super::lazy::DealtDamage,
 ) {
     let Some(mon) = b.alive(user).map(|p| b.mon(p)) else {
         return;
@@ -1312,8 +1312,11 @@ pub(crate) fn after_move_secondary_self<const N: usize>(
         {
             b.damage(user, max_hp / 10.0, DamageSource::Indirect);
         }
-        i if i == items::SHELL_BELL && total_damage > 0 => {
-            b.heal(user, f64::from(total_damage) / 8.0);
+        i if i == items::SHELL_BELL && total_damage.is_positive() => {
+            b.heal(
+                user,
+                f64::from(total_damage.exact(super::lazy::ExactDamageConsumer::ShellBell)) / 8.0,
+            );
         }
         i if i == items::THROAT_SPRAY && data.flags.contains(MoveFlags::SOUND) => {
             b.boost_by(user, &i.data().boosts, Some(user), BoostEffect::Item(i));

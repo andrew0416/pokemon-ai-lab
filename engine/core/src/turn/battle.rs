@@ -990,13 +990,30 @@ impl<'a, const N: usize> Battle<'a, N> {
     /// damage (Sturdy and the Sash only from full HP; Sturdy acts first, so the Sash then
     /// stays). Sturdy is breakable (ignored by Sunsteel Strike and the like).
     pub fn damage(&mut self, target: SlotRef, amount: f64, source: DamageSource) -> i32 {
+        self.damage_amount(target, amount, source, false)
+            .exact(super::lazy::ExactDamageConsumer::LegacyDamageReturn)
+    }
+
+    /// Move-hit internals retain the provenance of dealt damage until a real numeric reader.
+    pub(crate) fn move_damage(&mut self, target: SlotRef, amount: f64) -> super::lazy::DealtDamage {
+        self.damage_amount(target, amount, DamageSource::Move, true)
+    }
+
+    fn damage_amount(
+        &mut self,
+        target: SlotRef,
+        amount: f64,
+        source: DamageSource,
+        allow_symbolic: bool,
+    ) -> super::lazy::DealtDamage {
+        use super::lazy::DealtDamage;
         let Some(pokemon) = self.alive(target) else {
-            return 0;
+            return DealtDamage::ZERO;
         };
         // Disguise / Ice Face `onDamage` (priority 1, the first handler): a move's damage becomes
         // 0, which ends the event.
         if source == DamageSource::Move && super::forme::absorbs_damage(self, target, pokemon) {
-            return 0;
+            return DealtDamage::ZERO;
         }
         // Anger Shell / Berserk `onDamage` (priority 0, before every handler below that could
         // change the damage; it changes nothing itself).
@@ -1012,7 +1029,7 @@ impl<'a, const N: usize> Battle<'a, N> {
             _ => false,
         };
         if cancelled {
-            return 0;
+            return DealtDamage::ZERO;
         }
         // Endure (`onDamagePriority: -10`): a move's damage leaves at least 1 HP; Sturdy and
         // Focus Sash then see damage below the HP and keep quiet.
@@ -1045,9 +1062,9 @@ impl<'a, const N: usize> Battle<'a, N> {
             .active_move
             .filter(|_| source == DamageSource::Move)
             .map(|m| m.pokemon);
-        let dealt = self.lose_hp(target, pokemon, amount, attacker);
+        let dealt = self.lose_hp_amount(target, pokemon, amount, attacker, allow_symbolic);
         // `if (targetDamage !== 0) target.hurtThisTurn = target.hp`.
-        if dealt != 0 {
+        if dealt.is_positive() {
             self.record_hurt(target);
         }
         dealt
@@ -1072,13 +1089,44 @@ impl<'a, const N: usize> Battle<'a, N> {
         amount: i32,
         attacker: Option<PokemonRef>,
     ) -> i32 {
+        self.lose_hp_amount(slot, pokemon, amount, attacker, false)
+            .exact(super::lazy::ExactDamageConsumer::LegacyDamageReturn)
+    }
+
+    fn lose_hp_amount(
+        &mut self,
+        slot: SlotRef,
+        pokemon: PokemonRef,
+        amount: i32,
+        attacker: Option<PokemonRef>,
+        allow_symbolic: bool,
+    ) -> super::lazy::DealtDamage {
+        use super::lazy::DealtDamage;
         let mon = self.mon(pokemon);
         if amount <= 0 || !mon.is_alive() {
-            return 0;
+            return DealtDamage::ZERO;
         }
         // `amount.min(hp)`: the Pokémon faints when the damage reaches its HP (a lazy HP splits
         // there, and the fainting values are expanded: their damage is their HP).
         let faints = mon.hp_le(amount);
+        #[cfg(feature = "experiment-lazy-ko-damage")]
+        if allow_symbolic && faints {
+            if let Some((dealt, amount)) = super::lazy::capture_ko(mon, amount) {
+                // Every represented value becomes zero. Only the live object's tag is cleared:
+                // old Pokemon copies, HP marks, and dealt-damage provenance keep the original
+                // unit/span and can still request a split/expansion. Frontier restores the live
+                // tag after rolling the instruction back before its next replay.
+                self.state.pokemon_mut(pokemon).lazy = crate::state::LazyTag::default();
+                self.apply(Instruction::Damage {
+                    target: pokemon,
+                    amount,
+                });
+                self.queue_faint(pokemon, slot, attacker);
+                return dealt;
+            }
+        }
+        #[cfg(not(feature = "experiment-lazy-ko-damage"))]
+        let _ = allow_symbolic;
         let dealt = if faints {
             i32::from(mon.hp_value())
         } else {
@@ -1091,7 +1139,7 @@ impl<'a, const N: usize> Battle<'a, N> {
         if faints {
             self.queue_faint(pokemon, slot, attacker);
         }
-        dealt
+        DealtDamage::constant(dealt)
     }
 
     /// Showdown `battle.heal`: fractions below 1 become 1, then truncate; nothing on a fainted

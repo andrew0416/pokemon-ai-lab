@@ -732,7 +732,7 @@ pub(super) fn counter_damaging_hit<const N: usize>(
     user: SlotRef,
     mv: &ActiveMove,
     target: SlotRef,
-    damage: i32,
+    damage: super::DealtDamage,
 ) {
     if user.side == target.side {
         return;
@@ -750,7 +750,8 @@ pub(super) fn counter_damaging_hit<const N: usize>(
         target,
         volatile,
         VolatileState {
-            counter: (2 * damage).clamp(0, i32::from(u16::MAX)) as u16,
+            counter: (2 * damage.exact(super::ExactDamageConsumer::Counter))
+                .clamp(0, i32::from(u16::MAX)) as u16,
             hidden: user.slot + 1,
             ..state
         },

@@ -7,6 +7,7 @@
 //! Flare, Rage Fist, Last Respects, Metal Burst, Comeuppance).
 
 use super::battle::Battle;
+use super::lazy::{DealtDamage, ExactDamageConsumer};
 use crate::instruction::Instruction;
 use crate::state::{
     DamagedBy, MoveResult, PokemonRef, SideHistory, SideId, SlotHistory, SlotRef, State,
@@ -64,7 +65,7 @@ impl<const N: usize> Battle<'_, N> {
         &mut self,
         target: SlotRef,
         source: SlotRef,
-        damage: Option<i32>,
+        damage: Option<DealtDamage>,
         hits: u8,
     ) {
         let (Some(attacker), Some(_)) = (self.occupant(source), self.occupant(target)) else {
@@ -81,10 +82,12 @@ impl<const N: usize> Battle<'_, N> {
             history.last_damaged_by = Some(DamagedBy {
                 source: attacker,
                 slot: source,
-                damage: damage.clamp(0, i32::from(i16::MAX)) as i16,
+                damage: damage
+                    .exact(ExactDamageConsumer::LastDamagedBy)
+                    .clamp(0, i32::from(i16::MAX)) as i16,
             });
         }
-        if damage > 0 {
+        if damage.is_positive() {
             history.damaged_by_this_turn |= SlotHistory::attacker_bit(attacker);
         }
         if readers.times_attacked {

@@ -495,9 +495,9 @@ pub(super) fn on_damaging_hit<const N: usize>(
     holder: SlotRef,
     attacker: SlotRef,
     mv: &ActiveMove,
-    damage: i32,
+    damage: super::DealtDamage,
     contact: bool,
-    total_before: i32,
+    total_before: super::DealtDamage,
 ) -> Result<(), TurnError> {
     let boost_holder = |b: &mut Battle<'_, N>, stat: usize, amount: i8| {
         let mut boosts = NO_BOOSTS;
@@ -690,7 +690,7 @@ pub(super) fn on_damaging_hit<const N: usize>(
         a if a == abilities::INNARDS_OUT && holder_fainted && b.absent_user != Some(attacker) => {
             b.damage(
                 attacker,
-                f64::from(damage + total_before),
+                f64::from((damage + total_before).exact(super::ExactDamageConsumer::InnardsOut)),
                 DamageSource::Indirect,
             );
         }

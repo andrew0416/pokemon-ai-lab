@@ -35,3 +35,5 @@ experiment-stats-off-cost = []
 experiment-stats-off-cost-observer = ["experiment-stats-off-cost"]
 # P13: borrowed position lookup only; no state identity or storage changes.
 experiment-borrowed-child-keys = []
+# P1e: collapse universally fainted HP only while dealt damage remains unobserved.
+experiment-lazy-ko-damage = []
