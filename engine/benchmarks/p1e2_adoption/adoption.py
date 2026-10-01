@@ -43,6 +43,10 @@ def compiled_executable(log,target):
     c.require(len(selected)==1,'Missing/duplicate broad executable')
     return selected[0]
 
+def command_log_name(arm,label):
+    # Keep producer and receipt verifier on the same frozen filename contract.
+    return arm+'-'+('broad-build' if label=='broad_build' else label)+'.log'
+
 def broad_command(arm):
     return ['cargo','test','--locked','--release','-p','lab-scenario','--test',s.BROAD_TARGET,
             *s.p1.feature_args(arm=='on'),'--no-run','--message-format=json']
@@ -84,7 +88,7 @@ def build(workspace):
             public=folder/(arm+'-public-records.jsonl')
             c.require(not public.exists(),'Cached public records forbidden')
             for label,argv,tests,filtered in s.old_ci.command_plan(arm,prior):
-                log=folder/(arm+'-'+label+'.log');child=dict(env)
+                log=folder/command_log_name(arm,label);child=dict(env)
                 if label=='public_tests':child['LAB_P1E_PUBLIC_RECORDS']=str(public)
                 row={'arm':arm,'label':label,'argv':argv,'log':log.name,'lab_environment':{k:v for k,v in child.items() if k.startswith('LAB_')}}
                 value['commands'].append(row);base_ci.write(path,value)
@@ -97,7 +101,7 @@ def build(workspace):
             # Compile, but do not run the broad suite under Cargo. Direct execution below gets
             # a strict wall/RSS/one-CPU bound and retains a fresh named-test receipt.
             argv=broad_command(arm)
-            log=folder/(arm+'-broad-build.log')
+            log=folder/command_log_name(arm,'broad_build')
             row={'arm':arm,'label':'broad_build','argv':argv,'log':log.name,'lab_environment':{}}
             value['commands'].append(row);base_ci.write(path,value)
             with log.open('xb') as stream:
@@ -141,7 +145,7 @@ def verify_build(workspace,bound):
     total=0
     for row,(arm,label,argv,tests,filtered) in zip(value['commands'],expected):
         c.require((row['arm'],row['label'],row['argv'],row['returncode'])==(arm,label,argv,0),'Fresh command identity changed')
-        log=folder/(arm+'-'+label+'.log')
+        log=folder/command_log_name(arm,label)
         c.require(row['log']==log.name and c.sha(log)==row['log_sha256'],'Fresh command/log changed')
         expected_env={'LAB_P1E_PUBLIC_RECORDS':str(folder/(arm+'-public-records.jsonl'))} if label=='public_tests' else {}
         c.require(row['lab_environment']==expected_env,'Fresh test environment changed')
