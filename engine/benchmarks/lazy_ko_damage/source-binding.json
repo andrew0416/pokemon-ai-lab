@@ -1,0 +1,109 @@
+{
+  "source_sha": "a10adfd9aeaebe9624bd8e4bd804789ddecf6167",
+  "source_parent": "a4a881420ca35335c6e0ac4c73fd9e686dd617c0",
+  "source_ref": "refs/heads/codex/p1e-lazy-ko-damage-source-20261001",
+  "changed_file_sha256": {
+    "engine/core/Cargo.toml": "e63df141c145599ef5ee618c32c6137bbdde73329e8774b4b2f23a0f9a202d1e",
+    "engine/core/src/turn/abilities.rs": "81374869c0087aeff77b91afd586b0c0efbcadd98d4e0c0a106d32c8e3fafd30",
+    "engine/core/src/turn/battle.rs": "df4d595db1cabc859518245bf0245921ffa086e614eb74253f74d82d39c86c71",
+    "engine/core/src/turn/frontier.rs": "b773197aeebd3f24ea2614f8dfe7e94e69597ce02f8c703425ba9a42905c0bce",
+    "engine/core/src/turn/history.rs": "ab1cb2b94ec35df6ff54d99642e6bb8d65f898b20240cef621468e439298aa74",
+    "engine/core/src/turn/items.rs": "9d1009df681b791e5bf960044f20ace70caafa4fa8ba6de5faf725390b806824",
+    "engine/core/src/turn/lazy.rs": "0cd5573b38735d9d2e394653a54045e3fc0f73a38949f1fc5c6c355d3b304a63",
+    "engine/core/src/turn/mod.rs": "f235f37ae4838bfd9f6f63abd9b5a884ad1241a18196001683f585c1eb7b729e",
+    "engine/core/src/turn/moves.rs": "eda075bafa852e250f90f6b852eaee2b91b0a4ae1f26590386d226cc3a6ee287",
+    "engine/core/src/turn/frontier/lazy_ko_tests.rs": "545133b21ebfb2db73d9f818158f64faa829571f67f2473ea3fecb9977f571f6",
+    "engine/core/src/turn/moves/ability_hooks.rs": "5f84682e07c7f589a89aaa2430df688f6e745a4c4de4cd15f204cf4d87b3c9e1",
+    "engine/core/src/turn/moves/handlers.rs": "1567fd14099e57beac53834e6afe422431b7f92f3865f8ac63a29605b4cd0f8c",
+    "engine/core/src/turn/moves/p1e_damage_tests.rs": "91cd3e107c153ee95406c71787ad0bfdbb58c491b543889142932460b62f72f3",
+    "engine/scenario/Cargo.toml": "e61642e051071b4674b033db91e8efab60ccabb607b830bcae68a687df26fc5b",
+    "engine/scenario/tests/lazy_ko_damage.rs": "0c5671bd243dc4a092e12176c2db231a213230f9699502804071cd50740af67e"
+  },
+  "benchmark_sha256": "8b04912f6494a3617d8956299ae6cfb9191221d46027e6d2c46df72c9d588e1a",
+  "feature": "experiment-lazy-ko-damage",
+  "core_suites": [
+    {
+      "label": "core_frontier",
+      "filter": "turn::frontier::p1e_lazy_ko_tests",
+      "arms": [
+        "off",
+        "on"
+      ],
+      "tests": [
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_collapse_reduces_replays_and_restores_live_tags",
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_error_discards_private_state_and_closes_tls",
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_exact_sink_and_public_damage_keep_legacy_expansion",
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_mixed_threshold_preserves_ko_and_survivor_mass",
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_old_copy_numeric_read_still_forces_expansion"
+      ]
+    },
+    {
+      "label": "core_lazy",
+      "filter": "turn::lazy::p1e_dealt_damage_tests",
+      "arms": [
+        "on"
+      ],
+      "tests": [
+        "turn::lazy::p1e_dealt_damage_tests::collapse_never_captures_a_threshold_crossing_group",
+        "turn::lazy::p1e_dealt_damage_tests::dependent_damage_cannot_be_read_after_its_lazy_run_ended",
+        "turn::lazy::p1e_dealt_damage_tests::every_registered_numeric_consumer_requests_original_hp",
+        "turn::lazy::p1e_dealt_damage_tests::materialization_requests_expansion_before_removing_key_dependencies",
+        "turn::lazy::p1e_dealt_damage_tests::old_hp_copies_keep_the_original_span_after_the_live_tag_clears",
+        "turn::lazy::p1e_dealt_damage_tests::positive_sums_retain_each_dependency_until_exactly_observed",
+        "turn::lazy::p1e_dealt_damage_tests::unresolved_damage_cannot_silently_enter_a_hashed_key"
+      ]
+    },
+    {
+      "label": "core_moves",
+      "filter": "turn::moves::p1e_damage_tests",
+      "arms": [
+        "on"
+      ],
+      "tests": [
+        "turn::moves::p1e_damage_tests::nested_caller_materialization_observes_every_damage_carrier_before_keying"
+      ]
+    },
+    {
+      "label": "core_lazy_accessors",
+      "filter": "turn::lazy::tests",
+      "arms": [
+        "off",
+        "on"
+      ],
+      "tests": [
+        "turn::lazy::tests::threshold_reads_split_only_across_the_span",
+        "turn::lazy::tests::turn_code_reads_hp_through_the_accessors"
+      ]
+    }
+  ],
+  "public_target": "lazy_ko_damage",
+  "public_tests": [
+    "p1e_full_state_distributions_match_flat_and_rollback"
+  ],
+  "public_comparator_sha256": "3f1790f9dbef985e8c7ef2b769c863670e6deab76bac27c7f9b6c52339fd87bf",
+  "public_record_contract": {
+    "schema": 1,
+    "cases": [
+      "all-ko",
+      "ko-threshold",
+      "drain",
+      "recoil",
+      "shell-bell",
+      "innards-out",
+      "liquid-ooze",
+      "life-orb",
+      "uturn-suspension",
+      "multihit-survive"
+    ],
+    "probability_abs_tolerance": 1e-12,
+    "full_state_suspension_support_exact": true,
+    "input_and_sample_distributions_exact": true,
+    "component_counts_may_differ": true,
+    "test_only_environment": "LAB_P1E_PUBLIC_RECORDS"
+  },
+  "root_source_review_sha256": "38d6c3a1f877491a17d2603a10f9ce2465fae53d949cbad438d3f7774fab7528",
+  "logic_receipt_sha256": "35009a587bfe85180c3035daa9c1654c56f500d67fbf0701eea79e0f0875cd51",
+  "source_receipt_sha256": "7c28cd45596d9d458aa2bcd2ec34de1e520629992aeecd3e330ffe2877e998c9",
+  "three_arm_agreement_sha256": "be43e6cd0b3c4018b84a9bc20897f9e674416176296715668d5439a21ce4ef69",
+  "original_reference_receipt_sha256": "c7eeee162b43c7122a1508453e6f45f719ffd6e1b6cd37114715367257a08594"
+}
