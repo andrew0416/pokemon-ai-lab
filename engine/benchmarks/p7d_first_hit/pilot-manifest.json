@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "reference_sha": "56376838ffea91169321895f8e81abec2137dd46",
+  "corpus_sha256": "16410bfd800213a7af9f9fd896d5a8e4fb7da39b0a0912192263c1a7625272ec",
+  "selection_run": 36780443039,
+  "pre_candidate_cost_run": 36870979964,
+  "case_ids": [
+    "opening-0000",
+    "opening-0001",
+    "opening-0099",
+    "opening-0110",
+    "opening-0129",
+    "opening-0133",
+    "opening-0279",
+    "opening-0429"
+  ],
+  "timing_case_ids": [
+    "opening-0099",
+    "opening-0110",
+    "opening-0129",
+    "opening-0279",
+    "opening-0429"
+  ],
+  "timing_blocks": 3,
+  "order": [
+    "off",
+    "on",
+    "on",
+    "off"
+  ],
+  "warmup": [
+    "off",
+    "on"
+  ],
+  "sampler_metric_role": "ancillary",
+  "cases": [
+    {
+      "id": "opening-0000",
+      "plan_sha256": "bbd7c02f87855ab7d0790cd4146c1eeee8885ae00ca5da5ef26a9cf14559ea0f",
+      "plan_bytes": 57135,
+      "selection_reason": "low-cost all-fallback control",
+      "prior_reference_kernel_ns": 122639,
+      "prior_flat_count_upper_bound": 1.0,
+      "prior_suspended_components": 0
+    },
+    {
+      "id": "opening-0001",
+      "plan_sha256": "e000643e06333b644be1a6f5056f8f7435c9bd5d925bf6ffd30f7011f08eda9d",
+      "plan_bytes": 57144,
+      "selection_reason": "low-cost speed-tie/all-fallback control",
+      "prior_reference_kernel_ns": 939264,
+      "prior_flat_count_upper_bound": 590.0,
+      "prior_suspended_components": 0
+    },
+    {
+      "id": "opening-0099",
+      "plan_sha256": "4488ad700b710cbecdb3ec20e308f97a3515165c0f2b14cdfea076e7c0d40a4f",
+      "plan_bytes": 57141,
+      "selection_reason": "Hyper Voice with same raw Speed stats",
+      "prior_reference_kernel_ns": 34780494,
+      "prior_flat_count_upper_bound": 1964.0,
+      "prior_suspended_components": 0
+    },
+    {
+      "id": "opening-0110",
+      "plan_sha256": "a650f784cdc3846ca63539992256ef891ed64ce33c12c0f045969e6ebca5b56a",
+      "plan_bytes": 57147,
+      "selection_reason": "Heat Wave with same raw Speed stats",
+      "prior_reference_kernel_ns": 35665055,
+      "prior_flat_count_upper_bound": 3672.0,
+      "prior_suspended_components": 0
+    },
+    {
+      "id": "opening-0129",
+      "plan_sha256": "873a2ac4acdf8d353f9e3c831126e183e4ce815e243586d69e03ede170330a61",
+      "plan_bytes": 57129,
+      "selection_reason": "Hyper Voice plus real suspended output in prior frozen candidate run",
+      "prior_reference_kernel_ns": 673189458,
+      "prior_flat_count_upper_bound": 16003.0,
+      "prior_suspended_components": 287
+    },
+    {
+      "id": "opening-0133",
+      "plan_sha256": "a639140b503a089c2113cc1485b070e4e70b1fed8315ca3ad5e2d48ccd38cdc6",
+      "plan_bytes": 57128,
+      "selection_reason": "Earthquake with same raw Speed stats",
+      "prior_reference_kernel_ns": 2576280,
+      "prior_flat_count_upper_bound": 198.0,
+      "prior_suspended_components": 0
+    },
+    {
+      "id": "opening-0279",
+      "plan_sha256": "0468afd56c1ca46d91eb86513567e96ac987c8f3f4f3e890210930a531ed8e10",
+      "plan_bytes": 57151,
+      "selection_reason": "Rock Slide with same raw Speed stats",
+      "prior_reference_kernel_ns": 129433625,
+      "prior_flat_count_upper_bound": 40392.0,
+      "prior_suspended_components": 0
+    },
+    {
+      "id": "opening-0429",
+      "plan_sha256": "2a6ec43ac6e821e1d710a94542f80f6ab04f37416406fb6a932b40f3d6de89ec",
+      "plan_bytes": 57133,
+      "selection_reason": "known expensive Earthquake/Rock Slide plus Expanding Force fallback",
+      "prior_reference_kernel_ns": 11169366614,
+      "prior_flat_count_upper_bound": 1712062.0,
+      "prior_suspended_components": 0
+    }
+  ],
+  "selection_limits": "Raw Speed equality is fixture metadata, not proof of a live tie. Actual cut/KO/fallback execution witnesses are scoped named core tests, not inferred from listed moves."
+}

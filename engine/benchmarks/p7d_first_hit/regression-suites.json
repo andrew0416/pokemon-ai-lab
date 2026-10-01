@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "suites": [
+    {
+      "label": "regress_absent",
+      "package": "lab-engine",
+      "target": "lib",
+      "filter": "turn::moves::absent_user_tests::",
+      "tests": [
+        "turn::moves::absent_user_tests::displaced_unnerve_reads_current_suppression_and_shield",
+        "turn::moves::absent_user_tests::displaced_unnerve_tracks_started_alive_and_other_holders",
+        "turn::moves::absent_user_tests::cotton_down_updates_real_occupants_and_keeps_the_benched_source",
+        "turn::moves::absent_user_tests::real_field_update_eats_a_displaced_berry_after_the_foe_unnerve_faints",
+        "turn::moves::absent_user_tests::overlay_transports_faint_and_restores_context_on_result_error",
+        "turn::moves::absent_user_tests::unrelated_cross_pokemon_handlers_still_fail_closed_without_mutation",
+        "turn::moves::absent_user_tests::an_update_that_gains_a_cross_pokemon_handler_is_refused_and_cleans_up",
+        "turn::moves::absent_user_tests::an_empty_seat_stays_empty_after_cotton_down"
+      ],
+      "source_path": "engine/core/src/turn/moves/absent_user_tests.rs",
+      "source_sha256": "a4ff4dba10ad5c06605c903b5b5bc841c0ec64599378c111536563e97b831581",
+      "exact": false
+    },
+    {
+      "label": "regress_lazy",
+      "package": "lab-engine",
+      "target": "lib",
+      "filter": "turn::frontier::p1e_lazy_ko_tests::",
+      "tests": [
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_collapse_reduces_replays_and_restores_live_tags",
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_mixed_threshold_preserves_ko_and_survivor_mass",
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_old_copy_numeric_read_still_forces_expansion",
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_exact_sink_and_public_damage_keep_legacy_expansion",
+        "turn::frontier::p1e_lazy_ko_tests::lazy_ko_error_discards_private_state_and_closes_tls"
+      ],
+      "source_path": "engine/core/src/turn/frontier/lazy_ko_tests.rs",
+      "source_sha256": "27e0107425059bd2c39fcb6a332cce33671a49020a20c9446af08eef686bb421",
+      "exact": false
+    },
+    {
+      "label": "regress_factored_0",
+      "package": "lab-scenario",
+      "target": "factored",
+      "filter": "hp_fixtures_match_through_the_factored_path",
+      "tests": [
+        "hp_fixtures_match_through_the_factored_path"
+      ],
+      "source_path": "engine/scenario/tests/factored.rs",
+      "source_sha256": "b99155f16cb62c795b39e9dac0c34b3b9651fbf050b8c58d136540591c486436",
+      "exact": true
+    },
+    {
+      "label": "regress_factored_1",
+      "package": "lab-scenario",
+      "target": "factored",
+      "filter": "heavy_turns_match_through_the_factored_path",
+      "tests": [
+        "heavy_turns_match_through_the_factored_path"
+      ],
+      "source_path": "engine/scenario/tests/factored.rs",
+      "source_sha256": "b99155f16cb62c795b39e9dac0c34b3b9651fbf050b8c58d136540591c486436",
+      "exact": true
+    },
+    {
+      "label": "regress_factored_2",
+      "package": "lab-scenario",
+      "target": "factored",
+      "filter": "spread_damage_reduced_rolls_match_the_flat_enumeration",
+      "tests": [
+        "spread_damage_reduced_rolls_match_the_flat_enumeration"
+      ],
+      "source_path": "engine/scenario/tests/factored.rs",
+      "source_sha256": "b99155f16cb62c795b39e9dac0c34b3b9651fbf050b8c58d136540591c486436",
+      "exact": true
+    },
+    {
+      "label": "regress_multihit",
+      "package": "lab-scenario",
+      "target": "bundle_scenario_04",
+      "filter": "multihit::",
+      "tests": [
+        "multihit::fixed_two_hit_move_matches_showdown_exactly",
+        "multihit::two_to_five_hits_match_showdown_sampling",
+        "multihit::loaded_dice_matches_showdown_sampling",
+        "multihit::population_bomb_matches_showdown_sampling"
+      ],
+      "source_path": "engine/scenario/tests/multihit.rs",
+      "source_sha256": "95ee42171bc5f8400e5c6eb07b9a32337c75eab5047c8eba6d5d645876da6b6e",
+      "exact": false
+    },
+    {
+      "label": "regress_emergency_exit",
+      "package": "lab-scenario",
+      "target": "bundle_scenario_04",
+      "filter": "emergency_exit::",
+      "tests": [
+        "emergency_exit::life_orb_emergency_exit_matches_showdown_exactly",
+        "emergency_exit::rocky_helmet_emergency_exit_matches_showdown_exactly",
+        "emergency_exit::recoil_emergency_exit_matches_showdown_exactly",
+        "emergency_exit::crash_emergency_exit_matches_showdown_exactly",
+        "emergency_exit::spread_status_emergency_exit_matches_showdown_exactly",
+        "emergency_exit::spread_failure_emergency_exit_matches_showdown_exactly"
+      ],
+      "source_path": "engine/scenario/tests/emergency_exit.rs",
+      "source_sha256": "3946452c9ba5d66bc494a72906a0810fcdaa257f030018bcb5d4f3f69414f481",
+      "exact": false
+    },
+    {
+      "label": "regress_called_move_tail",
+      "package": "lab-scenario",
+      "target": "bundle_scenario_06",
+      "filter": "called_move_tail::",
+      "tests": [
+        "called_move_tail::sleep_talk_calling_an_electric_move_ends_charge_matches_showdown",
+        "called_move_tail::copycat_calling_an_electric_move_ends_charge_matches_showdown"
+      ],
+      "source_path": "engine/scenario/tests/called_move_tail.rs",
+      "source_sha256": "2a2f99d85b5eec1be55c4ffacd11fd7b4c337cc6cc10cb46b6278e99bb05a06c",
+      "exact": false
+    },
+    {
+      "label": "regress_emergency_exit_recoil_faint",
+      "package": "lab-scenario",
+      "target": "bundle_scenario_06",
+      "filter": "emergency_exit_recoil_faint::",
+      "tests": [
+        "emergency_exit_recoil_faint::emergency_exit_recoil_eject_pack_matches_showdown",
+        "emergency_exit_recoil_faint::emergency_exit_recoil_eject_button_matches_showdown",
+        "emergency_exit_recoil_faint::emergency_exit_recoil_ko_matches_showdown",
+        "emergency_exit_recoil_faint::emergency_exit_recoil_paused_matches_showdown",
+        "emergency_exit_recoil_faint::fainted_flagged_user_asks_for_a_mid_turn_switch"
+      ],
+      "source_path": "engine/scenario/tests/emergency_exit_recoil_faint.rs",
+      "source_sha256": "a462a28a178ecb367d296298eb03728aba722435914ca4caec537b171e310017",
+      "exact": false
+    },
+    {
+      "label": "regress_eject_0",
+      "package": "lab-scenario",
+      "target": "bundle_scenario_06",
+      "filter": "followups_r::spread_eject_buttons_act_in_speed_order",
+      "tests": [
+        "followups_r::spread_eject_buttons_act_in_speed_order"
+      ],
+      "source_path": "engine/scenario/tests/followups_r.rs",
+      "source_sha256": "8c3fafd68321eb1a11677a81bd03e2b7eebffa7ce15a1964cc1333ed2b1cab00",
+      "exact": true
+    },
+    {
+      "label": "regress_eject_1",
+      "package": "lab-scenario",
+      "target": "bundle_scenario_06",
+      "filter": "followups_r::tied_spread_eject_buttons_act_in_random_order",
+      "tests": [
+        "followups_r::tied_spread_eject_buttons_act_in_random_order"
+      ],
+      "source_path": "engine/scenario/tests/followups_r.rs",
+      "source_sha256": "8c3fafd68321eb1a11677a81bd03e2b7eebffa7ce15a1964cc1333ed2b1cab00",
+      "exact": true
+    }
+  ],
+  "total_tests": 35
+}

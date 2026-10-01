@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "source_sha": "8f7bdb4742cec83aac8bf8891e6c5db90142cf34",
+  "source_ref": "refs/heads/codex/p7d-first-hit-source-20261002",
+  "source_parent": "56376838ffea91169321895f8e81abec2137dd46",
+  "reference_sha": "56376838ffea91169321895f8e81abec2137dd46",
+  "controller_parent": "6508953962bc46ed7c6a7780a0e859b3444231ff",
+  "changed_file_sha256": {
+    "engine/core/Cargo.toml": "fa4767ee656d4221c9a62d4a0baf4f1debce7e3e94c0952057c84771dbc53b94",
+    "engine/core/src/turn/battle.rs": "d630dbbb94079a31c137a3874290e240cfa921f8797a24699b2a33e86ed529fb",
+    "engine/core/src/turn/first_hit.rs": "3bc6199085037b467c5e71891082811791fdbdadfabaeed4ba04afa05b3bd6ce",
+    "engine/core/src/turn/first_hit_tests.rs": "d79bce9a3476e44dc54814a510e50b1470be7bb9ee6b958990d3a1ed6fb8ff9f",
+    "engine/core/src/turn/frontier.rs": "2afe77e4a834a9f1628c12221422b8f259bfbc31e04c3dddb096c142b1153f54",
+    "engine/core/src/turn/mod.rs": "e77cf0183776f8c53a651c0fbd85ef4c2d1857f1c46413197ec4b4645305584b",
+    "engine/core/src/turn/moves.rs": "0335a3a64aeed22bccd3c4c722531195410dd88f06cfcfbcf2efa38edb556ba0",
+    "engine/core/src/turn/frontier/lazy_ko_tests.rs": "27e0107425059bd2c39fcb6a332cce33671a49020a20c9446af08eef686bb421",
+    "engine/core/src/turn/moves/p1e_damage_tests.rs": "ff24f8f31669a679ad0bbc26e7d78059ff90a255928671f0b5edc83c13315c9e"
+  },
+  "source_receipt_sha256": "49a9a69bd8849987ce41d3834c572818431d316df34188b8d3536d84638db2ec",
+  "logic_receipt_sha256": "6001d5d2ff73fd8e9fecd103e48da2af48196cda310b528fdda808d5238d2e6c",
+  "core_tests": [
+    "turn::first_hit_tests::tests::full_spread_matches_flat_and_strictly_reduces_prefix_execution",
+    "turn::first_hit_tests::tests::pressure_items_substitute_and_ko_boundaries_keep_full_state",
+    "turn::first_hit_tests::tests::previous_damage_lazy_hp_and_prefix_status_branches_match",
+    "turn::first_hit_tests::tests::real_eject_button_suspension_and_resume_preserve_pending",
+    "turn::first_hit_tests::tests::reduced_rolls_approximation_flat_and_sampling_do_not_capture",
+    "turn::first_hit_tests::tests::excluded_single_target_multihit_called_and_selfdestruct_use_fallback",
+    "turn::first_hit_tests::tests::speed_ties_and_dirty_mirror_herb_prefix_match_without_early_update",
+    "turn::first_hit_tests::tests::errors_after_real_prefix_and_resumed_work_restore_input_and_tls",
+    "turn::first_hit_tests::tests::disabled_scope_is_nested_and_does_not_leak"
+  ],
+  "core_test_filter": "turn::first_hit_tests::",
+  "feature": "experiment-factored-first-hit",
+  "feature_default_on": false,
+  "inherited_helper_sha256": {
+    "p1e2_adoption/compare_joint.py": "3261682b7446935cbd70971bd5156f61ad7f84ff27919d821a3ccc8662b803ee",
+    "p1e2_adoption/tail_process.py": "56b0fcd8b5363d007a622b86079117b788c2917bdc0f3fd28b08950e9aee3c7c",
+    "turn_distribution/contract.py": "680bdc2a53790275ee6dfa114df4c2ffa7ea0ed63a8b5ad3aeea3abdf93fc6e8",
+    "lazy_ko_damage/common.py": "1f780ea075f8da89471edb4a673442020cd88cba50470eba63fa663ecf5f0da1"
+  },
+  "pilot_manifest_sha256": "b057f15a7282e32f6b747e618a275e2ae3b15f7644d408eacf01ce78577e77b8",
+  "source_review_sha256": "3efbda9d2331d0938571c60132f84a9361067f227a84189ce9b20e01a09b13c9"
+}
