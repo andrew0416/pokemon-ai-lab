@@ -55,6 +55,8 @@ fn progress(nested_callers: usize) -> MoveProgress {
         slot: 0,
     };
     MoveProgress {
+        #[cfg(feature = "experiment-factored-first-hit")]
+        phase: MovePhase::BetweenHits,
         user,
         pokemon: PokemonRef {
             side: user.side,

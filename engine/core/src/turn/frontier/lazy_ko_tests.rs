@@ -63,6 +63,8 @@ fn run_seeded(
             &mut stage,
             &mut buffers,
             &mut stats,
+            #[cfg(feature = "experiment-factored-first-hit")]
+            crate::turn::first_hit::Policy::Disabled,
         )
         .unwrap();
         stack.extend(parts.into_iter().rev());
@@ -210,6 +212,8 @@ fn lazy_ko_error_discards_private_state_and_closes_tls() {
         },
         &mut buffers,
         &mut stats,
+        #[cfg(feature = "experiment-factored-first-hit")]
+        crate::turn::first_hit::Policy::Disabled,
     );
     assert!(matches!(error, Err(TurnError::Unsupported(ref s)) if s == "synthetic post-KO error"));
     assert_eq!(stats.runs, 1);

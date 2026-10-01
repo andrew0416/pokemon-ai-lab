@@ -225,8 +225,11 @@ impl std::hash::Hash for ActiveMove {
 /// as its own stage so identical positions merge between hits instead of multiplying every
 /// hit's damage rolls into one enumeration. Everything `hitStepMoveHitLoop` keeps across hits
 /// plus what the move's tail (`useMoveInner`, `runMove`) needs.
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash)]
+#[cfg_attr(not(feature = "experiment-factored-first-hit"), derive(Debug))]
 pub(crate) struct MoveProgress {
+    #[cfg(feature = "experiment-factored-first-hit")]
+    phase: MovePhase,
     user: SlotRef,
     pokemon: PokemonRef,
     mv: ActiveMove,
@@ -277,7 +280,53 @@ pub(crate) struct CallerFrame {
     main_target: SlotRef,
 }
 
+#[cfg(feature = "experiment-factored-first-hit")]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+enum MovePhase {
+    BetweenHits,
+    FirstHit(super::first_hit::Context),
+}
+
+#[cfg(feature = "experiment-factored-first-hit")]
+impl std::fmt::Debug for MoveProgress {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut d = f.debug_struct("MoveProgress");
+        // Preserve the old public Suspension Debug representation. FirstHit is internal
+        // only and remains visible when debugging internal keys; Eq/Hash always include it.
+        if let MovePhase::FirstHit(_) = self.phase {
+            d.field("phase", &self.phase);
+        }
+        d.field("user", &self.user)
+            .field("pokemon", &self.pokemon)
+            .field("mv", &self.mv)
+            .field("targets", &self.targets)
+            .field("main_target", &self.main_target)
+            .field("hits", &self.hits)
+            .field("hit", &self.hit)
+            .field("total_damage", &self.total_damage)
+            .field("any_ok", &self.any_ok)
+            .field("last_hit", &self.last_hit)
+            .field("ignore_ability", &self.ignore_ability)
+            .field("infiltrates", &self.infiltrates)
+            .field("raw_speed", &self.raw_speed)
+            .field("speed_snapshot", &self.speed_snapshot)
+            .field("smart", &self.smart)
+            .field("caller", &self.caller)
+            .finish()
+    }
+}
+
 impl MoveProgress {
+    #[cfg(feature = "experiment-factored-first-hit")]
+    pub(super) fn assert_public_phase(&self) {
+        assert!(
+            matches!(self.phase, MovePhase::BetweenHits),
+            "an internal first-hit frame escaped into public Suspension"
+        );
+        if let Some(caller) = &self.caller {
+            caller.progress.assert_public_phase();
+        }
+    }
     /// Pending move progress is a state-key field, so it must retain exact numeric damage.
     /// Called-move frames can nest and contain both totals and per-target hit results. This is
     /// invoked at every `run_stage` return, after the complete caller chain has been assembled.
@@ -562,7 +611,15 @@ pub(crate) fn future_move_hit<const N: usize>(
         parental_bond: false,
     });
     b.move_self_switch = false;
-    let result = try_spread_move_hit(b, user, &mut mv, smallvec::smallvec![slot], false);
+    let result = try_spread_move_hit(
+        b,
+        user,
+        &mut mv,
+        smallvec::smallvec![slot],
+        false,
+        #[cfg(feature = "experiment-factored-first-hit")]
+        super::first_hit::Origin::Nested,
+    );
     if let Some(absent) = absent {
         absent.remove(b);
     }
@@ -879,6 +936,14 @@ pub(crate) fn resume_move<const N: usize>(
     b: &mut Battle<'_, N>,
     progress: MoveProgress,
 ) -> Result<MoveStep, TurnError> {
+    #[cfg(feature = "experiment-factored-first-hit")]
+    if matches!(progress.phase, MovePhase::FirstHit(_)) {
+        let result = resume_first_hit(b, progress);
+        if result.is_err() {
+            b.active_move = None;
+        }
+        return result;
+    }
     let (user, pokemon, main_target) = (progress.user, progress.pokemon, progress.main_target);
     b.active_move = Some(ActiveMoveRef {
         user,
@@ -1138,7 +1203,17 @@ fn run_external_move<const N: usize>(
     let outer = b.external_move;
     b.external_move = true;
     let will_act = b.will_act();
-    if use_move(b, user, &mut mv, target, will_act)?.is_some() {
+    if use_move(
+        b,
+        user,
+        &mut mv,
+        target,
+        will_act,
+        #[cfg(feature = "experiment-factored-first-hit")]
+        super::first_hit::Origin::Nested,
+    )?
+    .is_some()
+    {
         return Err(b.unsupported(format!("Dancer copying {}: a multi-hit move", data.name)));
     }
     let user = handlers::current_slot(b, user, pokemon);
@@ -1277,23 +1352,36 @@ fn run_move_inner<const N: usize>(
     b.set_last_move(user, id);
     b.set_last_move_target_loc(user, aim.loc);
 
-    if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
+    if let Some(progress) = use_move(
+        b,
+        user,
+        &mut mv,
+        target,
+        will_act,
+        #[cfg(feature = "experiment-factored-first-hit")]
+        super::first_hit::Origin::Direct,
+    )? {
         return Ok(MoveStep::Suspended(progress));
     }
-    let user = handlers::current_slot(b, user, pokemon);
-    // (Fling's user knocked out before its item was thrown gets the item's Update at 0 HP inside
-    // the hit loop, `update::update_event`; the faint then clears the volatile.)
-    // `if (this.battle.activeMove) move = this.battle.activeMove;`: the AfterMove events see the
-    // move a calling move (Sleep Talk, Copycat) used, not the caller.
-    let called = b.called_move.take();
-    let tail = called.as_ref().unwrap_or(&mv);
-    // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
-    handlers::on_after_move(b, user, pokemon, tail);
-    run_move_tail(b, user, tail)?;
-    // The action's `clearActiveMove()`: `battle.lastMove` is the active move, a called move
-    // (Sleep Talk's, Copycat's) rather than its caller.
-    if let Some(active) = b.active_move {
-        b.record_battle_last_move(active.id);
+    #[cfg(feature = "experiment-factored-first-hit")]
+    complete_run_move(b, user, pokemon, &mv)?;
+    #[cfg(not(feature = "experiment-factored-first-hit"))]
+    {
+        let user = handlers::current_slot(b, user, pokemon);
+        // (Fling's user knocked out before its item was thrown gets the item's Update at 0 HP inside
+        // the hit loop, `update::update_event`; the faint then clears the volatile.)
+        // `if (this.battle.activeMove) move = this.battle.activeMove;`: the AfterMove events see the
+        // move a calling move (Sleep Talk, Copycat) used, not the caller.
+        let called = b.called_move.take();
+        let tail = called.as_ref().unwrap_or(&mv);
+        // `singleEvent('AfterMove', move)` (Sparkling Aria), then the rest of `runMove`.
+        handlers::on_after_move(b, user, pokemon, tail);
+        run_move_tail(b, user, tail)?;
+        // The action's `clearActiveMove()`: `battle.lastMove` is the active move, a called move
+        // (Sleep Talk's, Copycat's) rather than its caller.
+        if let Some(active) = b.active_move {
+            b.record_battle_last_move(active.id);
+        }
     }
     Ok(MoveStep::Done)
 }
@@ -1779,6 +1867,7 @@ fn use_move<const N: usize>(
     mv: &mut ActiveMove,
     target: Option<SlotRef>,
     will_act: bool,
+    #[cfg(feature = "experiment-factored-first-hit")] origin: super::first_hit::Origin,
 ) -> Result<Option<MoveProgress>, TurnError> {
     let pokemon = b.occupant(user).expect("checked");
     // Dancer's `activeTarget` and `moveDidSomething`: set once the move ran.
@@ -1911,7 +2000,15 @@ fn use_move<const N: usize>(
             return Ok(None);
         };
         main_target = last;
-        match try_spread_move_hit(b, user, mv, targets, will_act)? {
+        match try_spread_move_hit(
+            b,
+            user,
+            mv,
+            targets,
+            will_act,
+            #[cfg(feature = "experiment-factored-first-hit")]
+            origin,
+        )? {
             HitOutcome::Finished { ok, total_damage } => {
                 mv.total_damage = total_damage;
                 if !ok {
@@ -1931,13 +2028,18 @@ fn use_move<const N: usize>(
         }
     };
     // Ally Switch moved the user (Showdown's steps below act on the Pokémon wherever it is).
-    let user = handlers::current_slot(b, user, pokemon);
-    // The self-switch flag was set in `spread_move_hit` (`runMoveEffects`), before the targets'
-    // Emergency Exit could clear it. The request is made, or the flag dropped for a side
-    // without a bench, after the action.
-    b.finish_move_result(user, result);
-    b.active_target = Some((main_target, result));
-    use_move_tail(b, user, mv, result, main_target)?;
+    #[cfg(feature = "experiment-factored-first-hit")]
+    complete_use_move(b, user, pokemon, mv, result, main_target)?;
+    #[cfg(not(feature = "experiment-factored-first-hit"))]
+    {
+        let user = handlers::current_slot(b, user, pokemon);
+        // The self-switch flag was set in `spread_move_hit` (`runMoveEffects`), before the targets'
+        // Emergency Exit could clear it. The request is made, or the flag dropped for a side
+        // without a bench, after the action.
+        b.finish_move_result(user, result);
+        b.active_target = Some((main_target, result));
+        use_move_tail(b, user, mv, result, main_target)?;
+    }
     Ok(None)
 }
 
@@ -2004,7 +2106,15 @@ fn call_move<const N: usize>(
     // `move.selfSwitch` belongs to each move object: the called move's (U-turn's) must not be
     // read back by the caller's own `runMoveEffects` tail (board B41, `uu-copycat-uturn-protected`).
     let caller_self_switch = b.move_self_switch;
-    if let Some(progress) = use_move(b, user, &mut mv, target, will_act)? {
+    if let Some(progress) = use_move(
+        b,
+        user,
+        &mut mv,
+        target,
+        will_act,
+        #[cfg(feature = "experiment-factored-first-hit")]
+        super::first_hit::Origin::Nested,
+    )? {
         if ![moves::COPYCAT, moves::SLEEP_TALK].contains(&caller.id) {
             return Err(b.unsupported(format!(
                 "{} called by {}: a multi-hit called move",
@@ -2092,7 +2202,17 @@ fn bounce_move<const N: usize>(
         target_loc: 0,
     };
     let will_act = b.will_act();
-    if use_move(b, holder, &mut mv, Some(source), will_act)?.is_some() {
+    if use_move(
+        b,
+        holder,
+        &mut mv,
+        Some(source),
+        will_act,
+        #[cfg(feature = "experiment-factored-first-hit")]
+        super::first_hit::Origin::Nested,
+    )?
+    .is_some()
+    {
         return Err(b.unsupported(format!("{} bounced: a multi-hit move", data.name)));
     }
     b.active_move = saved;
@@ -2337,7 +2457,10 @@ fn try_spread_move_hit<const N: usize>(
     mv: &mut ActiveMove,
     mut targets: Slots,
     will_act: bool,
+    #[cfg(feature = "experiment-factored-first-hit")] origin: super::first_hit::Origin,
 ) -> Result<HitOutcome, TurnError> {
+    #[cfg(feature = "experiment-factored-first-hit")]
+    super::first_hit::prefix_entry();
     // Dragon Darts' `move.smartTarget` (its two smart targets from `get_move_targets`): `if
     // (targets.length > 1 && !move.smartTarget) move.spreadHit = true;` — never a spread hit. Any
     // target a hit step drops turns it off (a miss, an immunity, a failure, and the protect
@@ -2534,6 +2657,8 @@ fn try_spread_move_hit<const N: usize>(
         hit.iter().fold(0, |bits, &t| bits | target_bit::<N>(t))
     };
     let progress = MoveProgress {
+        #[cfg(feature = "experiment-factored-first-hit")]
+        phase: MovePhase::BetweenHits,
         user,
         pokemon: b.occupant(user).expect("checked"),
         mv: mv.clone(),
@@ -2550,6 +2675,42 @@ fn try_spread_move_hit<const N: usize>(
         speed_snapshot: Vec::new(),
         smart,
         caller: None,
+    };
+    #[cfg(feature = "experiment-factored-first-hit")]
+    let progress = {
+        let mut progress = progress;
+        if origin == super::first_hit::Origin::Direct
+            && b.first_hit_policy == super::first_hit::Policy::ExactFull
+            && super::first_hit::data_capable(mv.data)
+            && mv.spread
+            && progress.targets.len() > 1
+            && progress.hits == 1
+            && !progress.smart
+            && !mv.parental_bond
+            && !mv.has_bounced
+            && !mv.future_hit
+            && !mv.self_switch
+            && mv.source_effect.is_none()
+            && mv.beat_up == [0; 6]
+            && b.alive(user) == Some(progress.pokemon)
+            && b.active_move
+                .is_some_and(|a| a.id == mv.id && a.user == user && a.pokemon == progress.pokemon)
+            && progress
+                .targets
+                .iter()
+                .all(|&t| !substitute_takes_hit(b, user, mv, t))
+        {
+            super::first_hit::eligible();
+            if let Some(context) = b.first_hit_context() {
+                progress.raw_speed = b.raw_speed.clone();
+                progress.speed_snapshot = b.speed_snapshot.clone();
+                progress.phase = MovePhase::FirstHit(context);
+                super::first_hit::captured();
+                return Ok(HitOutcome::Suspended(progress));
+            }
+            super::first_hit::fallback();
+        }
+        progress
     };
     hit_loop(b, user, mv, Some(progress))
 }
@@ -4678,4 +4839,80 @@ mod tests {
         assert_eq!(weight_power(999), 80);
         assert_eq!(weight_power(99), 20);
     }
+}
+
+/// The ordinary action's two completion tails, shared by its first-hit continuation.
+/// Legacy between-hit/called-move continuation keeps its existing semantics.
+#[cfg(feature = "experiment-factored-first-hit")]
+fn complete_use_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    pokemon: PokemonRef,
+    mv: &ActiveMove,
+    result: bool,
+    main_target: SlotRef,
+) -> Result<(), TurnError> {
+    let user = handlers::current_slot(b, user, pokemon);
+    b.finish_move_result(user, result);
+    b.active_target = Some((main_target, result));
+    use_move_tail(b, user, mv, result, main_target)
+}
+
+#[cfg(feature = "experiment-factored-first-hit")]
+fn complete_run_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    pokemon: PokemonRef,
+    mv: &ActiveMove,
+) -> Result<(), TurnError> {
+    let user = handlers::current_slot(b, user, pokemon);
+    let called = b.called_move.take();
+    let tail = called.as_ref().unwrap_or(mv);
+    handlers::on_after_move(b, user, pokemon, tail);
+    run_move_tail(b, user, tail)?;
+    if let Some(active) = b.active_move {
+        b.record_battle_last_move(active.id);
+    }
+    Ok(())
+}
+
+#[cfg(feature = "experiment-factored-first-hit")]
+fn resume_first_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    mut progress: MoveProgress,
+) -> Result<MoveStep, TurnError> {
+    let MovePhase::FirstHit(context) = &progress.phase else {
+        unreachable!("first-hit phase")
+    };
+    b.restore_first_hit_context(context);
+    let (user, pokemon, main_target) = (progress.user, progress.pokemon, progress.main_target);
+    b.active_move = Some(ActiveMoveRef {
+        user,
+        pokemon,
+        id: progress.mv.id,
+        ignore_ability: progress.ignore_ability,
+        category: progress.mv.category,
+        infiltrates: progress.infiltrates,
+        parental_bond: progress.mv.parental_bond,
+    });
+    b.raw_speed.clone_from(&progress.raw_speed);
+    b.speed_snapshot.clone_from(&progress.speed_snapshot);
+    progress.phase = MovePhase::BetweenHits;
+    let mut mv = progress.mv.clone();
+    super::first_hit::resumed();
+    let result = match hit_loop(b, user, &mv, Some(progress))? {
+        HitOutcome::Finished { ok, total_damage } => {
+            mv.total_damage = total_damage;
+            if !ok {
+                mv.hit_targets = 0;
+            }
+            ok
+        }
+        HitOutcome::Suspended(_) => {
+            unreachable!("first-hit capability requires a single non-calling hit")
+        }
+    };
+    complete_use_move(b, user, pokemon, &mv, result, main_target)?;
+    complete_run_move(b, user, pokemon, &mv)?;
+    Ok(MoveStep::Done)
 }

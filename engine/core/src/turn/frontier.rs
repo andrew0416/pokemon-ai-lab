@@ -497,6 +497,8 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
     options: FactoredOptions,
     mut stage: impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
 ) -> Result<(Vec<FactoredEnding<N, P>>, f64), TurnError> {
+    #[cfg(feature = "experiment-factored-first-hit")]
+    let first_hit_policy = super::first_hit::Policy::for_options(options);
     let mut approx = Approx {
         max_support: options.max_support,
         tv_bound: 0.0,
@@ -528,6 +530,8 @@ pub(crate) fn enumerate_factored<const N: usize, P: Clone + Eq + Hash>(
                 &mut stage,
                 &mut buffers,
                 &mut stats,
+                #[cfg(feature = "experiment-factored-first-hit")]
+                first_hit_policy,
             )?;
             stack.extend(parts.into_iter().rev());
         }
@@ -620,6 +624,7 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
     stage: &mut impl FnMut(&mut Battle<'_, N>, &mut P) -> Result<StageEnd, TurnError>,
     buffers: &mut RunBuffers,
     stats: &mut Stats,
+    #[cfg(feature = "experiment-factored-first-hit")] first_hit_policy: super::first_hit::Policy,
 ) -> Result<Vec<Group<N, P>>, TurnError> {
     let Group {
         state: mut work,
@@ -658,6 +663,10 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
             };
             if start.is_none() {
                 start = Some(b.run_start());
+            }
+            #[cfg(feature = "experiment-factored-first-hit")]
+            {
+                b.first_hit_policy = first_hit_policy;
             }
             let result = stage(&mut b, &mut after);
             *buffers = b.into_buffers();

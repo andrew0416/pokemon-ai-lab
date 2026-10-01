@@ -37,3 +37,6 @@ experiment-stats-off-cost-observer = ["experiment-stats-off-cost"]
 experiment-borrowed-child-keys = []
 # P1e: collapse universally fainted HP only while dealt damage remains unobserved.
 experiment-lazy-ko-damage = []
+
+# P7d: exact Full factored first-hit stage; no default, sampler, or SIMD changes.
+experiment-factored-first-hit = []

@@ -152,6 +152,9 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// log started from plus this.
     pub hash_delta: u64,
     pub rng: &'a mut Chooser,
+    /// Driver-owned capability: never inferred from an environment switch or lazy spans.
+    #[cfg(feature = "experiment-factored-first-hit")]
+    pub(super) first_hit_policy: super::first_hit::Policy,
     /// Showdown `faintQueue`: Pokémon at 0 HP not yet processed, in the order they fell, with
     /// the Pokémon whose move's damage knocked them out (`faintData.source` when
     /// `faintData.effect` is a move; `None` otherwise), which Destiny Bond reads.
@@ -283,7 +286,7 @@ impl RunBuffers {
 
 /// The readers of the hidden damage history present in a battle (any party member's moves;
 /// see `history::record_attack`).
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub struct HistoryReaders {
     /// Metal Burst, Comeuppance (`lastDamagedBy`).
     pub last_damaged_by: bool,
@@ -660,6 +663,8 @@ impl<'a, const N: usize> Battle<'a, N> {
             log: buffers.log,
             hash_delta: buffers.hash_delta,
             rng,
+            #[cfg(feature = "experiment-factored-first-hit")]
+            first_hit_policy: super::first_hit::Policy::Disabled,
             faint_queue: Vec::new(),
             active_move: None,
             queue: Vec::new(),
@@ -2900,5 +2905,80 @@ mod hurt_readers_experiment_tests {
                 "case {case}"
             );
         }
+    }
+}
+
+#[cfg(feature = "experiment-factored-first-hit")]
+impl<const N: usize> Battle<'_, N> {
+    pub(super) fn first_hit_context(&self) -> Option<super::first_hit::Context> {
+        let Self {
+            state: _,
+            log: _,
+            hash_delta: _,
+            rng: _,
+            first_hit_policy,
+            faint_queue,
+            active_move,
+            queue: _,
+            #[cfg(feature = "experiment-replay-action-keys")]
+                replay_action_keys: _,
+            battle_start,
+            hit_type_mod,
+            hit_crit,
+            mirror_herb,
+            umbrella_inactive,
+            move_self_switch,
+            force_switch,
+            busted,
+            history_readers,
+            raw_speed: _,
+            speed_snapshot: _,
+            awaiting_run_switch,
+            unstarted,
+            queue_done,
+            absent_user,
+            absent_occupant,
+            external_move,
+            called_move,
+            called_suspension,
+            active_target,
+            suppression,
+        } = self;
+        if *first_hit_policy != super::first_hit::Policy::ExactFull
+            || !super::first_hit::enabled()
+            || !faint_queue.is_empty()
+            || active_move.is_none()
+            || *battle_start
+            || hit_type_mod.iter().flatten().any(Option::is_some)
+            || hit_crit.iter().flatten().any(|v| *v)
+            || !mirror_herb.is_empty()
+            || !umbrella_inactive.is_empty()
+            || !force_switch.is_empty()
+            || !busted.is_empty()
+            || *awaiting_run_switch
+            || !unstarted.is_empty()
+            || *queue_done
+            || absent_user.is_some()
+            || absent_occupant.is_some()
+            || *external_move
+            || called_move.is_some()
+            || called_suspension.is_some()
+            || active_target.is_some()
+        {
+            return None;
+        }
+        Some(super::first_hit::Context {
+            history_readers: *history_readers,
+            suppression: *suppression,
+            move_self_switch: *move_self_switch,
+        })
+    }
+
+    pub(super) fn restore_first_hit_context(&mut self, context: &super::first_hit::Context) {
+        // Preserve action-start reader/suppression semantics, rather than recomputing them
+        // from the new frontier position. All other discarded scratch was checked empty.
+        self.history_readers = context.history_readers;
+        self.suppression = context.suppression;
+        self.move_self_switch = context.move_self_switch;
     }
 }

@@ -25,6 +25,10 @@ pub use diff::observer as slot_diff_observer;
 mod field_events;
 #[cfg(feature = "experiment-leaf-ending-states")]
 mod final_states;
+#[cfg(feature = "experiment-factored-first-hit")]
+mod first_hit;
+#[cfg(all(test, feature = "experiment-factored-first-hit"))]
+mod first_hit_tests;
 mod forme;
 mod frontier;
 mod history;
@@ -1577,6 +1581,10 @@ fn run_stage<const N: usize>(
         items::stage_end_check(b)?;
         if let Some(progress) = &mut pending.in_progress {
             progress.materialize_damage();
+            #[cfg(feature = "experiment-factored-first-hit")]
+            if end == StageEnd::Suspended {
+                progress.assert_public_phase();
+            }
         }
         return Ok(end);
     }
@@ -1620,6 +1628,10 @@ fn run_stage<const N: usize>(
     items::stage_end_check(b)?;
     if let Some(progress) = &mut pending.in_progress {
         progress.materialize_damage();
+        #[cfg(feature = "experiment-factored-first-hit")]
+        if end == StageEnd::Suspended {
+            progress.assert_public_phase();
+        }
     }
     Ok(end)
 }
