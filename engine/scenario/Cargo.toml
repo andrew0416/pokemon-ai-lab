@@ -65,6 +65,7 @@ name = "yy_position_hash"
 path = "tests/yy_position_hash.rs"
 
 [features]
+experiment-exact-stream-oracle = ["lab-engine/experiment-exact-stream-oracle"]
 experiment-replay-action-keys-observer = ["lab-engine/experiment-replay-action-keys-observer"]
 experiment-slot-diff-observer = ["lab-engine/experiment-slot-diff-observer"]
 
@@ -77,3 +78,8 @@ required-features = ["experiment-replay-action-keys-observer"]
 name = "p8e_slot_diff"
 path = "tests/p8e_slot_diff.rs"
 required-features = ["experiment-slot-diff-observer"]
+
+[[bin]]
+name = "lab-exact-stream-oracle"
+path = "src/bin/lab-exact-stream-oracle.rs"
+required-features = ["experiment-exact-stream-oracle"]
