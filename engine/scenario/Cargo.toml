@@ -81,3 +81,7 @@ required-features = ["experiment-replay-action-keys-observer"]
 name = "p8e_slot_diff"
 path = "tests/p8e_slot_diff.rs"
 required-features = ["experiment-slot-diff-observer"]
+
+[[test]]
+name = "lazy_ko_damage_expanded"
+path = "tests/lazy_ko_damage_expanded.rs"
