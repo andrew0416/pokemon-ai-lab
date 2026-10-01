@@ -1,0 +1,148 @@
+{
+  "passed": true,
+  "run": 36835592119,
+  "job": 110282119993,
+  "controller_sha": "20d361afaa6767656ed6a5444c23f22dabba8d50",
+  "source_sha": "56376838ffea91169321895f8e81abec2137dd46",
+  "artifact_id": 11149281704,
+  "artifact_sha256": "13d01b0018cade731c0ea0d6c24cef230130e5498696b92bd83b7d24b7d416b0",
+  "saved_run_sha256": "d29923066cb2122de602c3e1b27c0e8f2c378d142e05673f6ee9384fda9ce491",
+  "saved_jobs_sha256": "19cec27cd241693c37156cf3c0b9de0a72609d0e86746bf02fbcf11f9c95b02f",
+  "saved_artifact_listing_sha256": "7f534605811c55eb0eb1d643fffcc33cb4b262422ad378c0ef803a31ab783c2d",
+  "source_controller_and_binding_pins_verified": true,
+  "fresh_named_test_executions": 61,
+  "arms": {
+    "original": {
+      "actual_compiler_features": [
+        "experiment-hurt-readers",
+        "experiment-prepared-turn",
+        "experiment-leaf-ending-states",
+        "experiment-compact-volatiles",
+        "experiment-replay-action-keys",
+        "experiment-borrowed-child-keys"
+      ],
+      "generic_x86_64_fingerprints": 7,
+      "fresh_expanded_tests": 2,
+      "records_sha256": "0bb1c4d7b271c7b4289e6ac7ad91507f7c2648aa0ce88f466f7e53dc3b9f718b",
+      "records_bytes": 76684843,
+      "manifest_sha256": "258dac3175a48976010f80c0963cc4096a9b7051ef2341ea8269ddc008342f86",
+      "process_bound_satisfied": true
+    },
+    "off": {
+      "actual_compiler_features": [
+        "experiment-hurt-readers",
+        "experiment-prepared-turn",
+        "experiment-leaf-ending-states",
+        "experiment-compact-volatiles",
+        "experiment-replay-action-keys",
+        "experiment-borrowed-child-keys"
+      ],
+      "generic_x86_64_fingerprints": 8,
+      "fresh_expanded_tests": 2,
+      "records_sha256": "0bb1c4d7b271c7b4289e6ac7ad91507f7c2648aa0ce88f466f7e53dc3b9f718b",
+      "records_bytes": 76684843,
+      "manifest_sha256": "258dac3175a48976010f80c0963cc4096a9b7051ef2341ea8269ddc008342f86",
+      "process_bound_satisfied": true
+    },
+    "on": {
+      "actual_compiler_features": [
+        "experiment-hurt-readers",
+        "experiment-prepared-turn",
+        "experiment-leaf-ending-states",
+        "experiment-compact-volatiles",
+        "experiment-replay-action-keys",
+        "experiment-borrowed-child-keys",
+        "experiment-lazy-ko-damage"
+      ],
+      "generic_x86_64_fingerprints": 8,
+      "fresh_expanded_tests": 2,
+      "records_sha256": "b718adb2faaa514836a9ee23085f13a3ad8c06be7dbadafe3b1098eb2fc1761e",
+      "records_bytes": 76684843,
+      "manifest_sha256": "258dac3175a48976010f80c0963cc4096a9b7051ef2341ea8269ddc008342f86",
+      "process_bound_satisfied": true
+    }
+  },
+  "recomputed_comparisons": {
+    "original_vs_on": {
+      "passed": true,
+      "cases": 104,
+      "distinct_input_count": 101,
+      "full_state_suspension_keys": 918,
+      "max_abs_probability_error": 1.1102230246251565e-16,
+      "sum_case_abs_probability_error": 1.1102230246251565e-16,
+      "support_exact": true,
+      "input_decision_resume_metadata_exact": true,
+      "sample_distributions_exact": true,
+      "activation_proofs_exact": true,
+      "max_case_total_variation": 5.551115123125783e-17
+    },
+    "off_vs_on": {
+      "passed": true,
+      "cases": 104,
+      "distinct_input_count": 101,
+      "full_state_suspension_keys": 918,
+      "max_abs_probability_error": 1.1102230246251565e-16,
+      "sum_case_abs_probability_error": 1.1102230246251565e-16,
+      "support_exact": true,
+      "input_decision_resume_metadata_exact": true,
+      "sample_distributions_exact": true,
+      "activation_proofs_exact": true,
+      "max_case_total_variation": 5.551115123125783e-17
+    }
+  },
+  "probability_bit_comparisons": {
+    "original_vs_on": {
+      "bit_exact": false,
+      "different_probability_keys": 1,
+      "differences": [
+        {
+          "case": "derived-life-orb-hp100",
+          "full_state_suspension_key_sha256": "adb45c53112cf3ac625981060a673711d322eff68fd387bf42f72de6183fe95f",
+          "key_utf8_bytes": 55937,
+          "baseline_probability": 0.5208333333333335,
+          "candidate_probability": 0.5208333333333334,
+          "baseline_f64_hex": "3fe0aaaaaaaaaaac",
+          "candidate_f64_hex": "3fe0aaaaaaaaaaab",
+          "abs_error": 1.1102230246251565e-16
+        }
+      ]
+    },
+    "off_vs_on": {
+      "bit_exact": false,
+      "different_probability_keys": 1,
+      "differences": [
+        {
+          "case": "derived-life-orb-hp100",
+          "full_state_suspension_key_sha256": "adb45c53112cf3ac625981060a673711d322eff68fd387bf42f72de6183fe95f",
+          "key_utf8_bytes": 55937,
+          "baseline_probability": 0.5208333333333335,
+          "candidate_probability": 0.5208333333333334,
+          "baseline_f64_hex": "3fe0aaaaaaaaaaac",
+          "candidate_f64_hex": "3fe0aaaaaaaaaaab",
+          "abs_error": 1.1102230246251565e-16
+        }
+      ]
+    }
+  },
+  "support_count_definition": "918 is the sum of distinct full-State/Suspension keys within each of the 104 cases, for each arm; it is not a deduplicated global state count or 918 independent inputs.",
+  "full_support_exact": true,
+  "probability_comparison": "Per-key abs <= 1e-12 and each case L1/2 <= 1e-9; floating-point probabilities need not be bit-identical.",
+  "original_failed_run_preserved": {
+    "run": 36833560306,
+    "summary_sha256": "4f06a45e59161388fb968017259423a8ff4e79bc30ae22452b568779963ef9f3",
+    "error": "ValueError: Fresh command/log changed"
+  },
+  "limitations": [
+    "Bounded fixed 104-case/101-input corpus only, not universal mechanic correctness.",
+    "No original opening-0429 exact oracle was completed; prior resource-limited tail remains inconclusive.",
+    "No speed measurement, adoption approval, production change, or full500 result.",
+    "Executable binaries are not uploaded; binary hashes agree across compiler/build/run receipts, while copied actual compiler fingerprints and all test/output logs were independently verified."
+  ],
+  "adoption_approved": false,
+  "full500_complete": false,
+  "official_full500_metrics": null,
+  "speed_claim": null,
+  "network_used": false,
+  "git_mutations": false,
+  "engine_execution": false
+}
