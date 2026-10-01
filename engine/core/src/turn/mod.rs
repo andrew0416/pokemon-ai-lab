@@ -29,6 +29,8 @@ mod final_states;
 mod first_hit;
 #[cfg(all(test, feature = "experiment-factored-first-hit"))]
 mod first_hit_tests;
+#[cfg(all(test, feature = "experiment-factored-first-hit"))]
+mod first_hit_coverage_tests;
 mod forme;
 mod frontier;
 mod history;
