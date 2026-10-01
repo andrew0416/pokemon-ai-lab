@@ -1,0 +1,15 @@
+# P1e4b exact concrete oracle CI contract
+
+This isolated workflow compares original a4 with the additive default-OFF concrete-stream oracle feature against frozen candidate 56376838 with KEEP-R1 core6 and lazy KO damage enabled. Existing original function bodies are preserved byte for byte by three exact additive registrations and two new files. Both source checkouts must be clean and pinned.
+
+One Ubuntu job, 35 minutes, generic x86-64, observer OFF, one execution CPU. Fresh release tests are seven named oracle core tests, four oracle binary tests, and six candidate exporter tests. Dependency cache reuse never authorizes reuse of workspace test/build fingerprints. Actual core and scenario compiler features are recorded and rechecked before execution.
+
+Both executables must describe the same immutable opening-0429 selection bytes before the expensive attempt. The original concrete oracle is bounded to 1200 seconds and 6 GiB RSS; candidate export is independently bounded to 300 seconds and 6 GiB RSS and is attempted after an incomplete original. Original external-sort scratch is capped at 4 GiB cumulative writes and lives outside the uploaded result directory. Raw stdout, progress stderr, resource receipts, partial exports and all completed output files remain in the artifact.
+
+The original streaming manifest has a separate strict schema and declares its concrete replay/external-sort method. It is never parsed as a factored exporter. A complete comparison requires successful child exits, manifests written last, stdout/manifest agreement, exact frozen selection, exact full non-HP State plus Suspension dictionaries, and exact support across all twelve party HP coordinates. Raw per-key absolute probability tolerance is 1e-12; raw mass and normalized total variation tolerance are 1e-9. All support rows are traversed. Current engine/runtime source is never changed by the controller.
+
+Timeout, resource failure or incomplete original leaves the reference inconclusive, emits a workflow warning and visible job summary, and cannot prove agreement or authorize adoption. A successful child with malformed output or a complete distribution mismatch fails the gate. Diagnostic time includes different algorithms and external disk sorting; no speed ratio, overall adoption decision or full500 claim is produced.
+
+Synthetic Python tests exercise the actual build producer and receipt verifier with Cargo replaced by a fixture, including every command filename and actual compiler fingerprint parsing. Full driver tests replace only child execution/source preparation with fixtures to verify matching output, incomplete-original continuation, and complete mismatch verdicts. No local engine/performance run is part of this CI preparation.
+
+This retry changes only the validation-oracle default instruction-row guard from 100 million to 10 billion and replay guard from 100 million to 1 billion. The algorithm, sampling/decision bytes, candidate, 1200/300-second bounds, RSS, scratch, dictionary and export limits remain unchanged. The earlier instruction-limit failure is preserved as inconclusive evidence, not an engine mismatch.

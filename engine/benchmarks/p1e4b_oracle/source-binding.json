@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "oracle_source_sha": "ce5291b00f11e705b640fdb4a53432a7a6353de2",
+  "oracle_source_ref": "refs/heads/codex/p1e4b-oracle-source-20261001",
+  "oracle_source_parent": "a4a881420ca35335c6e0ac4c73fd9e686dd617c0",
+  "oracle_source_file_sha256": {
+    "engine/core/Cargo.toml": "00d2cae21cb118579a672499457b007bf4ba636f6c1159163d69f58ad819587f",
+    "engine/core/src/turn/exact_stream_oracle.rs": "ba4393c77fc04c2df2d0271bfc7720792c2045eda36d6d61e19df8a5efb03953",
+    "engine/core/src/turn/mod.rs": "49a4069688da0889540f1227c3a04963dd21fed18d3920c157643be448673d76",
+    "engine/scenario/Cargo.toml": "da8287cd2059b91a588ca47e7e1a4722b0d6c24da8e2f2cd784b8f10fb38f0e2",
+    "engine/scenario/src/bin/lab-exact-stream-oracle.rs": "b6e8173d35087bcf809b97dc5a3df825a1a67cebe8489ba3a74ae1d84b43bb2b"
+  },
+  "oracle_feature": "experiment-exact-stream-oracle",
+  "oracle_named_suites": {
+    "oracle_core": [
+      "turn::exact_stream_oracle::tests::chooser_dynamic_paths_keep_conditional_mass_and_roll_multiplicity",
+      "turn::exact_stream_oracle::tests::dictionary_rejects_debug_collision_and_resource_limits",
+      "turn::exact_stream_oracle::tests::dictionary_roundtrip_preserves_last_reserve_and_pending",
+      "turn::exact_stream_oracle::tests::external_merge_matches_overlap_and_nonuniform_weights",
+      "turn::exact_stream_oracle::tests::external_rows_keep_correlations_and_last_reserve",
+      "turn::exact_stream_oracle::tests::failed_emission_rolls_back_actual_battle_work_and_clears_tls",
+      "turn::exact_stream_oracle::tests::wire_rejects_truncation_invalid_mass_and_scratch_limit"
+    ],
+    "oracle_bin": [
+      "tests::concrete_stream_matches_original_flat_and_factored",
+      "tests::concrete_stream_preserves_real_full_suspension",
+      "tests::frozen_plan_requires_exact_bytes",
+      "tests::resource_failure_after_real_stage_keeps_input_and_has_no_manifest"
+    ],
+    "candidate_bin": [
+      "tests::joint_export_overlap_matches_independent_flat_expansion",
+      "tests::joint_export_preserves_hp_correlation_and_last_reserve",
+      "tests::joint_export_retains_hidden_non_hp_fields_and_dictionary_order",
+      "tests::joint_export_rejects_bad_factors_and_mass",
+      "tests::joint_export_row_encoding_and_limits_are_explicit",
+      "tests::joint_export_plan_comparison_requires_exact_bytes"
+    ]
+  },
+  "oracle_source_receipt_sha256": "92d0fd1829d66a8b47150a8d92202808c73d55eae9ec98ba61486dbaaf1c7b24",
+  "oracle_root_review_sha256": "0cbbc33c80356007f2744513431391bb95f64f160a6d1485cd4e3b92eafac041",
+  "oracle_logic_receipt_sha256": "727b7da37cfe3b880ff59f0168f291026166dc9a1a484eecbef06309e78ab24d",
+  "candidate_source_sha": "56376838ffea91169321895f8e81abec2137dd46",
+  "candidate_source_parent": "a10adfd9aeaebe9624bd8e4bd804789ddecf6167",
+  "candidate_binding_sha256": "88e8b259410decaa38f142cf791d01df47d6383d062242e96c592e6304168873",
+  "inherited_tail_process_sha256": "56b0fcd8b5363d007a622b86079117b788c2917bdc0f3fd28b08950e9aee3c7c",
+  "inherited_joint_comparator_sha256": "3261682b7446935cbd70971bd5156f61ad7f84ff27919d821a3ccc8662b803ee",
+  "case_id": "opening-0429",
+  "plan_sha256": "2a6ec43ac6e821e1d710a94542f80f6ab04f37416406fb6a932b40f3d6de89ec",
+  "timeout_seconds": {
+    "oracle": 1200,
+    "candidate": 300
+  },
+  "rss_limit_bytes": 6442450944,
+  "job_timeout_minutes": 35,
+  "adoption_approved": false,
+  "oracle_registrations": {
+    "engine/core/Cargo.toml": [
+      "[features]\n",
+      "# P1e4 validation-only external-memory concrete oracle; default OFF.\nexperiment-exact-stream-oracle = []\n",
+      ""
+    ],
+    "engine/core/src/turn/mod.rs": [
+      "mod update;\n",
+      "#[cfg(feature = \"experiment-exact-stream-oracle\")]\n#[doc(hidden)]\npub mod exact_stream_oracle;\n",
+      ""
+    ],
+    "engine/scenario/Cargo.toml": [
+      "[features]\n",
+      "experiment-exact-stream-oracle = [\"lab-engine/experiment-exact-stream-oracle\"]\n",
+      "\n[[bin]]\nname = \"lab-exact-stream-oracle\"\npath = \"src/bin/lab-exact-stream-oracle.rs\"\nrequired-features = [\"experiment-exact-stream-oracle\"]\n"
+    ]
+  },
+  "oracle_limits": {
+    "chunk_rows": 65536,
+    "merge_fan_in": 16,
+    "dictionary_entries_per_live_dictionary": 4096,
+    "dictionary_debug_bytes_per_live_dictionary": 134217728,
+    "scratch_bytes_cumulative": 4294967296,
+    "max_unique_rows": 10000000,
+    "max_replays": 1000000000,
+    "max_instruction_rows": 10000000000,
+    "max_stages": 64
+  }
+}
