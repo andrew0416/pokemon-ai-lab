@@ -1,0 +1,17 @@
+# P7f expanded correctness contract
+
+This accuracy-only controller compares reference source 56376838 with the same new source compiled P7d OFF and ON. All three retain core6 and P1e lazy damage. The candidate adds exactly two test-only files/registrations above runtime 8f7bdb4; it does not change that runtime. The feature remains default OFF.
+
+The build job runs 84 fresh named tests: 18 exporter checks, 35 existing regressions, 18 P7d checks, 10 P7f coverage checks and three broad-corpus contracts. P7d/P7f core checks run with P1e ON and OFF. Actual compiler fingerprints require generic x86-64 and the exact arm features. Dependency compilation may be cached; workspace crate compilation and named tests must be fresh.
+
+The same six executable byte sequences are transferred once with an exact inventory, manifest digest, controller/source/run/attempt identity and compiler proof. Consumers verify every member and restore executable permissions without changing bytes. Source and reference checkouts preserve embedded fixture paths.
+
+Four shards cover exactly 125 original B17 decisions each by index modulo four. Every case records all three frozen descriptions, three full exports, raw stdout/stderr and process evidence. Reference descriptions must match the original 500-plan ledger, not a plan regenerated from the candidate. Full non-HP State and Suspension dictionaries plus all 12 party HP coordinates are compared; support is exact, probability absolute error at most 1e-12, raw mass error and normalized TV at most 1e-9. Reference/OFF dictionary, joint and selection bytes must be identical. ON may change floating-point folding and component representation.
+
+The separate broad104 gate reuses the immutable full-State record harness with exact case manifest, inputs, decisions, activation witnesses and seeded samples. All 104 are fallback/mechanics regression cases; they are not P7d checkpoint activation evidence. Checkpoint activation and rollback/error behavior are proved only by the named synthetic Full core fixtures; Full500 does not claim every decision activates a cut. Dual-unsupported fixture tests preserve refusal and cleanup but do not promise identical first Unsupported message or discovery order.
+
+Children use one CPU, 300 seconds and 6 GiB RSS. Each shard has a 1500-second admission budget and starts a child only when its complete allowance remains. Every requested case has an explicit row; failures, refused inputs, missing outputs and skipped-for-budget cases remain visible and prevent completion. Export bounds are ten million joint rows and 512 MiB including manifest per arm. Build/shard/broad jobs have 35-minute limits; aggregate has 15 minutes. Artifacts preserve partial outputs too.
+
+Aggregate independently checks build provenance, exact 500 membership, source/binary/arguments/environment/resource receipts, all original plan bytes, strict exports, OFF byte identity and re-computes every reference/ON full joint comparison. It re-computes broad104 comparisons and fails unless both corpora complete. Raw inventories are retained for an offline audit.
+
+This run measures accuracy, not speed. It does not compare against original a4, repair the missing a4 opening-0429 oracle, prove all possible mechanics, or approve adoption. Existing controllers and source are unchanged. Only this exact new branch triggers the workflow; no manual dispatch or other workflow is requested.

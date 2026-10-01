@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "source_sha": "87e7fdcb47b24e407e81d9d5688714dfee6de35d",
+  "source_ref": "refs/heads/codex/p7f-coverage-source-20261002",
+  "source_parent": "8f7bdb4742cec83aac8bf8891e6c5db90142cf34",
+  "reference_sha": "56376838ffea91169321895f8e81abec2137dd46",
+  "controller_parent": "baaca4dd6f19562dc69ba2a46609a5215bdefea7",
+  "test_only_file_sha256": {
+    "engine/core/src/turn/first_hit_coverage_tests.rs": "4428a24fdb40b5e819b597bbd57db930052e439348bae138c0a5035d0b992a6a",
+    "engine/core/src/turn/mod.rs": "f205f34d7d5255b971992fba60dbdc15ac635dfcc80bd37403b1b215e67d660b"
+  },
+  "source_receipt_sha256": "8ada0e5651d93d40d60910522b08b5e7635f1a2dcadc7285c5afb138f81a1e4b",
+  "source_review_sha256": "6152c1b410874c56d4385fbe0b25d093db38b4e2cbca3abcce7e640819cb7bc1",
+  "logic_receipt_sha256": "1b3fe08d71168e5751b60b61263560ee3a14362bf1e32b33051b71bb4c733315",
+  "coverage_tests": [
+    "turn::first_hit_coverage_tests::tests::distinct_reachable_unsupported_paths_preserve_refusal_and_cleanup",
+    "turn::first_hit_coverage_tests::tests::newly_registered_callbacks_and_event_orders_fail_checkpoint_capability",
+    "turn::first_hit_coverage_tests::tests::mega_spread_then_real_pause_resume_preserves_gimmick_and_pending",
+    "turn::first_hit_coverage_tests::tests::fractional_priority_is_drawn_once_across_first_hit_and_changes_real_survival",
+    "turn::first_hit_coverage_tests::tests::called_spread_and_called_multihit_execute_but_never_capture_direct_checkpoint"
+  ],
+  "coverage_filter": "turn::first_hit_coverage_tests::",
+  "registration": "#[cfg(all(test, feature = \"experiment-factored-first-hit\"))]\nmod first_hit_coverage_tests;\n",
+  "prior_p7d_binding_sha256": "370b360931adbdcc0b279ae078bf66efb5d3e5499e6b090f101f6bb1bca29bb5",
+  "broad_binding_sha256": "88e8b259410decaa38f142cf791d01df47d6383d062242e96c592e6304168873",
+  "plan_ledger_sha256": "2ebfa8608ab59c501790484c5c040e9ac0a5217e665dc92aff9827cf28107bd4"
+}
