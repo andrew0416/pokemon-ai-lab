@@ -72,6 +72,12 @@ pub(crate) fn take_request() -> Option<(usize, Request)> {
     RUN.with(|r| r.borrow_mut().request.take())
 }
 
+/// Peek without consuming or reordering the first outstanding request.
+#[cfg(feature = "experiment-factored-hit-suffix")]
+pub(crate) fn request_pending() -> bool {
+    RUN.with(|r| r.borrow().request.is_some())
+}
+
 /// Ends a group's runs.
 pub(crate) fn end() {
     RUN.with(|r| {

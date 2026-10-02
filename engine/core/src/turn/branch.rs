@@ -27,6 +27,14 @@ pub(crate) struct Chooser {
     roll_mode: RollMode,
 }
 
+/// Prefix identity and its exact probability, retained only inside one factored group.
+#[cfg(feature = "experiment-factored-hit-suffix")]
+#[derive(Clone, Debug)]
+pub(crate) struct ChooserCheckpoint {
+    trace: Vec<(u8, u8)>,
+    probability: f64,
+}
+
 /// How [`Chooser::roll`] treats the 16 damage rolls (WORKPLAN F18). Everything else (critical
 /// hits, accuracy, secondary effects, Speed ties) stays exact in every mode. Sampling ignores
 /// the mode and draws from all 16.
@@ -165,6 +173,37 @@ impl Chooser {
     pub fn begin_run(&mut self) {
         self.trace.clear();
         self.probability = 1.0;
+    }
+
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    pub fn checkpoint(&self) -> ChooserCheckpoint {
+        assert!(self.random.is_none() && self.roll_mode == RollMode::Full);
+        ChooserCheckpoint {
+            trace: self.trace.clone(),
+            probability: self.probability,
+        }
+    }
+
+    /// Pure predicate after advance: no RNG draw, trace mutation, or request consumption.
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    pub fn matches_checkpoint(&self, saved: &ChooserCheckpoint) -> bool {
+        self.random.is_none()
+            && self.roll_mode == RollMode::Full
+            && saved
+                .trace
+                .iter()
+                .enumerate()
+                .all(|(depth, &(choice, _))| self.prefix.get(depth) == Some(&choice))
+    }
+
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    pub fn resume_checkpoint(&mut self, saved: &ChooserCheckpoint) {
+        assert!(
+            self.matches_checkpoint(saved),
+            "retained hit prefix diverged"
+        );
+        self.trace.clone_from(&saved.trace);
+        self.probability = saved.probability;
     }
 
     /// Probability of the current run's choices so far.

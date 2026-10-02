@@ -626,6 +626,19 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
     stats: &mut Stats,
     #[cfg(feature = "experiment-factored-first-hit")] first_hit_policy: super::first_hit::Policy,
 ) -> Result<Vec<Group<N, P>>, TurnError> {
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    if first_hit_policy == super::first_hit::Policy::ExactFull && super::hit_suffix::enabled() {
+        return hit_suffix_driver::run(
+            group,
+            next,
+            finished,
+            options,
+            stage,
+            buffers,
+            stats,
+            first_hit_policy,
+        );
+    }
     let Group {
         state: mut work,
         pending,
@@ -683,38 +696,18 @@ fn run_group<const N: usize, P: Clone + Eq + Hash>(
             return Ok(split(work, pending, weight, lazy, unit as u8, request));
         }
         let p = weight * chooser.probability();
-        // The key: every living member's HP masked (and remembered for the component).
-        masked.clear();
-        units.clear();
-        let alive: Vec<PokemonRef> = living(&work).collect();
-        for pokemon in alive {
-            let mon = work.pokemon_mut(pokemon);
-            masked.push((pokemon, mon.hp, mon.lazy));
-            units.push(unit_index(pokemon));
-            mon.hp = MASK;
-        }
-        let (done, id) = match end {
-            StageEnd::Continue => (false, next.entry(&work, &after, &units)),
-            StageEnd::Finished | StageEnd::Suspended => {
-                let kept = (end == StageEnd::Suspended).then(|| after.clone());
-                (true, finished.entry(&work, &kept, &units))
-            }
-        };
-        let mut hps = Vec::with_capacity(masked.len());
-        for &(pokemon, hp, tag) in &masked {
-            work.pokemon_mut(pokemon).hp = hp;
-            let dist = if tag.0 != 0 {
-                let unit = unit_index(pokemon);
-                lazy.iter()
-                    .find(|(u, _)| *u == unit)
-                    .map(|(_, d)| d.clone())
-                    .expect("a lazy unit of the group")
-            } else {
-                point()
-            };
-            hps.push(UnitHp { base: hp, dist });
-        }
-        reached.push((done, id, Component { weight: p, hps }));
+        record_run(
+            &mut work,
+            &after,
+            end,
+            p,
+            &lazy,
+            next,
+            finished,
+            &mut reached,
+            &mut masked,
+            &mut units,
+        );
         work.reverse(&buffers.log);
         #[cfg(feature = "experiment-lazy-ko-damage")]
         for &(unit, _) in &lazy {
@@ -998,4 +991,60 @@ mod tests {
         let total: f64 = flat.iter().map(|o| o.probability).sum();
         assert!((total - 0.5).abs() < 1e-15);
     }
+}
+
+#[cfg(feature = "experiment-factored-hit-suffix")]
+mod hit_suffix_driver;
+
+/// Record the same complete non-HP/Pending key and HP component for either replay driver.
+#[allow(clippy::too_many_arguments)]
+fn record_run<const N: usize, P: Clone + Eq + Hash>(
+    work: &mut State<N>,
+    after: &P,
+    end: StageEnd,
+    p: f64,
+    lazy: &[(u8, Rc<Dist>)],
+    next: &mut Positions<N, P>,
+    finished: &mut Positions<N, Option<P>>,
+    reached: &mut Vec<(bool, u32, Component)>,
+    masked: &mut Vec<(PokemonRef, i16, LazyTag)>,
+    units: &mut Vec<u8>,
+) {
+    // The key: every living member's HP masked (and remembered for the component).
+    masked.clear();
+    units.clear();
+    let alive: Vec<PokemonRef> = living(work).collect();
+    for pokemon in alive {
+        let mon = work.pokemon_mut(pokemon);
+        masked.push((pokemon, mon.hp, mon.lazy));
+        units.push(unit_index(pokemon));
+        mon.hp = MASK;
+    }
+    let (done, id) = match end {
+        StageEnd::Continue => (false, next.entry(work, after, units)),
+        StageEnd::Finished | StageEnd::Suspended => {
+            let kept = (end == StageEnd::Suspended).then(|| (*after).clone());
+            (true, finished.entry(work, &kept, units))
+        }
+    };
+    let mut hps = Vec::with_capacity(masked.len());
+    for &(pokemon, hp, tag) in masked.iter() {
+        work.pokemon_mut(pokemon).hp = hp;
+        let dist = if tag.0 != 0 {
+            let unit = unit_index(pokemon);
+            lazy.iter()
+                .find(|(u, _)| *u == unit)
+                .map(|(_, d)| d.clone())
+                .expect("a lazy unit of the group")
+        } else {
+            point()
+        };
+        hps.push(UnitHp { base: hp, dist });
+    }
+    reached.push((done, id, Component { weight: p, hps }));
+}
+
+#[cfg(all(test, feature = "experiment-factored-hit-suffix"))]
+mod p7h {
+    include!("hit_suffix_tests.rs");
 }

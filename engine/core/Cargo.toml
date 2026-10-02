@@ -40,3 +40,6 @@ experiment-lazy-ko-damage = []
 
 # P7d: exact Full factored first-hit stage; no default, sampler, or SIMD changes.
 experiment-factored-first-hit = []
+
+# P7h: intra-group suffix retention, never a new public suspension.
+experiment-factored-hit-suffix = ["experiment-factored-first-hit"]

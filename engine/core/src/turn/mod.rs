@@ -28,12 +28,14 @@ mod final_states;
 #[cfg(feature = "experiment-factored-first-hit")]
 mod first_hit;
 #[cfg(all(test, feature = "experiment-factored-first-hit"))]
-mod first_hit_tests;
-#[cfg(all(test, feature = "experiment-factored-first-hit"))]
 mod first_hit_coverage_tests;
+#[cfg(all(test, feature = "experiment-factored-first-hit"))]
+mod first_hit_tests;
 mod forme;
 mod frontier;
 mod history;
+#[cfg(feature = "experiment-factored-hit-suffix")]
+mod hit_suffix;
 mod items;
 mod lazy;
 pub mod legal;
@@ -1571,6 +1573,26 @@ fn run_stage<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
 ) -> Result<StageEnd, TurnError> {
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    if b.hit_suffix_retained {
+        // The driver is generic over P; this concrete stage alone knows its Pending.
+        // Branch before queue handoff/FirstHit setup can overwrite the restored boundary.
+        let saved = b.hit_suffix_frame.take().expect("retained hit frame");
+        assert!(!lazy::request_pending());
+        b.rng.resume_checkpoint(&saved.chooser);
+        pending.clone_from(&saved.pending);
+        b.hit_suffix_retained = false;
+        b.hit_suffix_allowed = false;
+        hit_suffix::resumed(saved.battle.log_len);
+        let step = moves::resume_damage_suffix(b, &saved.damage);
+        if step.is_err() {
+            b.active_move = None;
+        }
+        let result = step.and_then(|step| finish_resumed_move(b, pending, step));
+        b.hit_suffix_frame = Some(saved);
+        return finish_stage(b, pending, result);
+    }
+
     #[cfg(feature = "experiment-replay-action-keys")]
     replay_action_keys::guard(b, pending);
     // A resumed turn: the decided mid-turn switches first.
@@ -1621,6 +1643,19 @@ fn run_stage<const N: usize>(
     // The remaining queue is visible to handlers through the Battle while the stage runs.
     b.queue = std::mem::take(&mut pending.queue);
     let result = run_stage_inner(b, pending);
+    finish_stage(b, pending, result)
+}
+
+fn finish_stage<const N: usize>(
+    b: &mut Battle<'_, N>,
+    pending: &mut Pending,
+    result: Result<StageEnd, TurnError>,
+) -> Result<StageEnd, TurnError> {
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    {
+        b.hit_suffix_pending = None;
+        b.hit_suffix_seed = None;
+    }
     pending.queue = std::mem::take(&mut b.queue);
     let end = result?;
     debug_assert!(
@@ -1656,23 +1691,37 @@ fn pick_action<const N: usize>(b: &mut Battle<'_, N>, keys: &[(u32, i32, i32)]) 
         .expect("a tied action")
 }
 
+fn finish_resumed_move<const N: usize>(
+    b: &mut Battle<'_, N>,
+    pending: &mut Pending,
+    step: moves::MoveStep,
+) -> Result<StageEnd, TurnError> {
+    match step {
+        moves::MoveStep::Suspended(progress) => {
+            pending.in_progress = Some(progress);
+            Ok(StageEnd::Continue)
+        }
+        moves::MoveStep::Done => {
+            drag_outs(b)?;
+            after_action(b, pending, &[])
+        }
+    }
+}
+
 fn run_stage_inner<const N: usize>(
     b: &mut Battle<'_, N>,
     pending: &mut Pending,
 ) -> Result<StageEnd, TurnError> {
     // A multi-hit move continues with its next hit before anything else.
     if let Some(progress) = pending.in_progress.take() {
-        return match moves::resume_move(b, progress)? {
-            moves::MoveStep::Suspended(progress) => {
-                pending.in_progress = Some(progress);
-                Ok(StageEnd::Continue)
-            }
-            moves::MoveStep::Done => {
-                drag_outs(b)?;
-                after_action(b, pending, &[])
-            }
-        };
+        #[cfg(feature = "experiment-factored-hit-suffix")]
+        if b.hit_suffix_allowed && progress.is_first_hit() {
+            b.hit_suffix_pending = Some(pending.clone());
+        }
+        let step = moves::resume_move(b, progress)?;
+        return finish_resumed_move(b, pending, step);
     }
+
     if !b.queue.is_empty() {
         // Best action by (order asc, priority desc, speed desc), ties uniformly at random. The
         // keys stay on the stack for a queue of usual length (this runs for every action).

@@ -256,6 +256,17 @@ pub(crate) struct Battle<'a, const N: usize> {
     /// Whether an ability can be suppressed in this battle (`abilities::suppression_possible`):
     /// without it [`Battle::ability`] skips the `ignoringAbility` check.
     pub suppression: bool,
+    /// P7h bookkeeping is group-local and never part of a State/Pending key.
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    pub(super) hit_suffix_frame: Option<Box<super::hit_suffix::Frame<N>>>,
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    pub(super) hit_suffix_retained: bool,
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    pub(super) hit_suffix_allowed: bool,
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    pub(super) hit_suffix_pending: Option<super::Pending>,
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    pub(super) hit_suffix_seed: Option<super::moves::MoveProgress>,
 }
 
 /// The context [`Battle::new`] derives from the state before a run (see [`Battle::replay`]).
@@ -691,6 +702,16 @@ impl<'a, const N: usize> Battle<'a, N> {
             called_suspension: None,
             active_target: None,
             suppression,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+            hit_suffix_frame: None,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+            hit_suffix_retained: false,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+            hit_suffix_allowed: false,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+            hit_suffix_pending: None,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+            hit_suffix_seed: None,
         }
     }
 
@@ -2943,6 +2964,16 @@ impl<const N: usize> Battle<'_, N> {
             called_suspension,
             active_target,
             suppression,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+                hit_suffix_frame: _,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+                hit_suffix_retained: _,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+                hit_suffix_allowed: _,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+                hit_suffix_pending: _,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+                hit_suffix_seed: _,
         } = self;
         if *first_hit_policy != super::first_hit::Policy::ExactFull
             || !super::first_hit::enabled()
@@ -2982,3 +3013,8 @@ impl<const N: usize> Battle<'_, N> {
         self.move_self_switch = context.move_self_switch;
     }
 }
+
+#[cfg(feature = "experiment-factored-hit-suffix")]
+mod hit_suffix_checkpoint;
+#[cfg(feature = "experiment-factored-hit-suffix")]
+pub(crate) use hit_suffix_checkpoint::HitCheckpoint;

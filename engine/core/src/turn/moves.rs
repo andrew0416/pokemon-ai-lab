@@ -317,6 +317,10 @@ impl std::fmt::Debug for MoveProgress {
 }
 
 impl MoveProgress {
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    pub(super) fn is_first_hit(&self) -> bool {
+        matches!(self.phase, MovePhase::FirstHit(_))
+    }
     #[cfg(feature = "experiment-factored-first-hit")]
     pub(super) fn assert_public_phase(&self) {
         assert!(
@@ -3211,7 +3215,7 @@ fn hit_loop<const N: usize>(
     mv: &ActiveMove,
     progress: Option<MoveProgress>,
 ) -> Result<HitOutcome, TurnError> {
-    let mut progress = progress.expect("a hit loop starts with its progress");
+    let progress = progress.expect("a hit loop starts with its progress");
     let hit = progress.hit + 1;
     let targets = progress.targets.clone();
     // Champions `hitStepMoveHitLoop` with `move.smartTarget` and two targets: `targetsCopy =
@@ -3243,50 +3247,65 @@ fn hit_loop<const N: usize>(
             progress.total_damage
         };
         results = spread_move_hit(b, user, mv, &hit_targets, total_before, hit)?;
-        progress.hit = hit;
-        progress.total_damage += results
-            .iter()
-            .map(|r| {
-                if let Hit::Damage(d) = r {
-                    *d
-                } else {
-                    DealtDamage::ZERO
-                }
-            })
-            .sum::<DealtDamage>();
-        let this_hit: Small<(SlotRef, LastHit), 6> = hit_targets
-            .iter()
-            .zip(&results)
-            .filter_map(|(&t, r)| match r {
-                Hit::Damage(d) => Some((t, LastHit::Damage(*d))),
-                Hit::Done => Some((t, LastHit::Done)),
-                Hit::Substitute => Some((t, LastHit::Substitute)),
-                Hit::Blocked => Some((t, LastHit::Blocked)),
-                Hit::Failed => None,
-            })
-            .collect();
-        // With `smartTarget` each target keeps its own dart's result (`moveDamage` grows by one
-        // entry per hit).
-        if smart {
-            progress.last_hit.extend(this_hit);
-        } else {
-            progress.last_hit = this_hit;
-        }
-        let hit_ok = results.iter().any(|r| r.ok());
-        progress.any_ok |= hit_ok;
-        // This hit's `onHit` (Copycat's, Sleep Talk's) called a multi-hit move that suspended
-        // after its first hit: the calling move stops here and goes on once the called move's
-        // hits are done ([`finish_called`]).
-        if let Some(mut called) = b.called_suspension.take() {
-            called.caller = Some(Box::new(CallerFrame {
-                progress,
-                results,
-                main_target: user,
-            }));
-            return Ok(HitOutcome::Suspended(called));
-        }
+        return finish_hit_step(b, user, mv, progress, hit_targets, results, hit);
     }
     hit_loop_rest(b, user, mv, progress, results, ended_by_miss)
+}
+
+/// Account for a completed spread hit before Update/faint/recoil and move completion.
+fn finish_hit_step<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    mut progress: MoveProgress,
+    hit_targets: Slots,
+    results: Small<Hit, 6>,
+    hit: u8,
+) -> Result<HitOutcome, TurnError> {
+    let smart = progress.smart;
+    progress.hit = hit;
+    progress.total_damage += results
+        .iter()
+        .map(|r| {
+            if let Hit::Damage(d) = r {
+                *d
+            } else {
+                DealtDamage::ZERO
+            }
+        })
+        .sum::<DealtDamage>();
+    let this_hit: Small<(SlotRef, LastHit), 6> = hit_targets
+        .iter()
+        .zip(&results)
+        .filter_map(|(&t, r)| match r {
+            Hit::Damage(d) => Some((t, LastHit::Damage(*d))),
+            Hit::Done => Some((t, LastHit::Done)),
+            Hit::Substitute => Some((t, LastHit::Substitute)),
+            Hit::Blocked => Some((t, LastHit::Blocked)),
+            Hit::Failed => None,
+        })
+        .collect();
+    // With `smartTarget` each target keeps its own dart's result (`moveDamage` grows by one
+    // entry per hit).
+    if smart {
+        progress.last_hit.extend(this_hit);
+    } else {
+        progress.last_hit = this_hit;
+    }
+    let hit_ok = results.iter().any(|r| r.ok());
+    progress.any_ok |= hit_ok;
+    // This hit's `onHit` (Copycat's, Sleep Talk's) called a multi-hit move that suspended
+    // after its first hit: the calling move stops here and goes on once the called move's
+    // hits are done ([`finish_called`]).
+    if let Some(mut called) = b.called_suspension.take() {
+        called.caller = Some(Box::new(CallerFrame {
+            progress,
+            results,
+            main_target: user,
+        }));
+        return Ok(HitOutcome::Suspended(called));
+    }
+    hit_loop_rest(b, user, mv, progress, results, false)
 }
 
 /// The rest of a hit of [`hit_loop`] after its `spreadMoveHit` (or its multi-accuracy miss): the
@@ -3533,7 +3552,6 @@ fn spread_move_hit<const N: usize>(
     total_before: DealtDamage,
     hit: u8,
 ) -> Result<Small<Hit, 6>, TurnError> {
-    let data = mv.data;
     // `getMoveHitData(move).typeMod` is (re)computed by this hit's `getDamage`.
     b.hit_type_mod = [[None; N]; 2];
     b.hit_crit = [[false; N]; 2];
@@ -3555,17 +3573,74 @@ fn spread_move_hit<const N: usize>(
             None
         });
     }
-    // getSpreadDamage: every other target's damage is decided before any is dealt.
+    // getSpreadDamage: decide every target before applying any target's damage.
     let mut planned = Small::<_, 6>::with_capacity(targets.len());
-    for (&t, shield) in targets.iter().zip(&shielded) {
-        planned.push(match shield {
+    for (index, (&target, shield)) in targets.iter().zip(&shielded).enumerate() {
+        #[cfg(not(feature = "experiment-factored-hit-suffix"))]
+        let _ = index;
+        #[cfg(feature = "experiment-factored-hit-suffix")]
+        let defer_roll =
+            b.hit_suffix_allowed && b.hit_suffix_seed.is_some() && index + 1 == targets.len();
+        let plan = match shield {
             Some(_) => None,
-            None => Some(get_damage(b, user, mv, t, hit, false)?),
-        });
+            None => Some(get_damage(
+                b,
+                user,
+                mv,
+                target,
+                hit,
+                false,
+                #[cfg(feature = "experiment-factored-hit-suffix")]
+                defer_roll,
+            )?),
+        };
+        #[cfg(feature = "experiment-factored-hit-suffix")]
+        let plan = match plan {
+            Some(Planned::Rolls(rolls)) => {
+                // No request is consumed here. A prior HP-dependent read invalidates this
+                // whole lazy run, so retaining its representative prefix would be unsound.
+                if !super::lazy::request_pending()
+                    && b.hit_suffix_pending.is_some()
+                    && shielded.iter().all(Option::is_none)
+                    && rolls.iter().any(|r| *r != rolls[0])
+                {
+                    let damage = DamageSuffix {
+                        progress: b.hit_suffix_seed.as_ref().expect("FirstHit seed").clone(),
+                        mv: mv.clone(),
+                        targets: targets.iter().copied().collect(),
+                        planned: planned.clone(),
+                        shielded: shielded.clone(),
+                        rolls,
+                        total_before,
+                        hit,
+                    };
+                    super::hit_suffix::capture(b, damage);
+                }
+                Some(Planned::Damage(i32::from(b.rng.roll(&rolls, user.side))))
+            }
+            other => other,
+        };
+        planned.push(plan);
     }
+    finish_spread_move_hit(b, user, mv, targets, total_before, hit, &planned, &shielded)
+}
+
+/// Common post-plan suffix. No target's damage may be applied before all plans exist.
+#[allow(clippy::too_many_arguments)]
+fn finish_spread_move_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    mv: &ActiveMove,
+    targets: &[SlotRef],
+    total_before: DealtDamage,
+    hit: u8,
+    planned: &[Option<Planned>],
+    shielded: &[Option<Hit>],
+) -> Result<Small<Hit, 6>, TurnError> {
+    let data = mv.data;
     // spreadDamage.
     let mut results = Small::with_capacity(targets.len());
-    for ((&t, plan), shield) in targets.iter().zip(&planned).zip(&shielded) {
+    for ((&t, plan), shield) in targets.iter().zip(planned).zip(shielded) {
         let Some(plan) = plan else {
             results.push(shield.expect("a shielded target has its result"));
             continue;
@@ -3573,6 +3648,8 @@ fn spread_move_hit<const N: usize>(
         let result = match *plan {
             Planned::Fail => Hit::Failed,
             Planned::NoDamage => Hit::Done,
+            #[cfg(feature = "experiment-factored-hit-suffix")]
+            Planned::Rolls(_) => unreachable!("all rolls resolved before applying any damage"),
             Planned::Damage(d) => {
                 let dealt = b.move_damage(t, f64::from(d));
                 if dealt.is_positive() {
@@ -3953,9 +4030,20 @@ fn hit_substitute<const N: usize>(
 ) -> Result<Hit, TurnError> {
     // Disguise and Ice Face skip their shields against a hit on the substitute (`hitSub`):
     // `forme::shields_hit` inside `get_damage`.
-    let damage = match get_damage(b, user, mv, target, hit, true)? {
+    let damage = match get_damage(
+        b,
+        user,
+        mv,
+        target,
+        hit,
+        true,
+        #[cfg(feature = "experiment-factored-hit-suffix")]
+        false,
+    )? {
         Planned::Damage(d) => d,
         Planned::Fail | Planned::NoDamage => return Ok(Hit::Blocked),
+        #[cfg(feature = "experiment-factored-hit-suffix")]
+        Planned::Rolls(_) => unreachable!("substitute damage never defers its roll"),
     };
     let sub_hp = i32::from(b.state.slot(target).substitute_hp);
     let damage = damage.min(sub_hp);
@@ -4218,10 +4306,13 @@ pub(crate) fn clear_terrain<const N: usize>(b: &mut Battle<'_, N>) -> bool {
 
 // ---- damage -------------------------------------------------------------------------------------
 
+#[derive(Clone, Copy, Debug)]
 enum Planned {
     Fail,
     NoDamage,
     Damage(i32),
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    Rolls(crate::damage::DamageRolls),
 }
 
 /// Showdown `getDamage` + `modifyDamage`; the crit and the damage roll are decided here. `hit`
@@ -4234,7 +4325,10 @@ fn get_damage<const N: usize>(
     target: SlotRef,
     hit: u8,
     hit_substitute: bool,
+    #[cfg(feature = "experiment-factored-hit-suffix")] defer_roll: bool,
 ) -> Result<Planned, TurnError> {
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    super::hit_suffix::damage_entry();
     let data = mv.data;
     if type_immune(b, mv, target) {
         return Ok(Planned::Fail);
@@ -4508,6 +4602,10 @@ fn get_damage<const N: usize>(
     };
     let rolls = damage_rolls(input);
     b.hit_crit[target.side.index()][usize::from(target.slot)] = critical;
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    if defer_roll {
+        return Ok(Planned::Rolls(rolls));
+    }
     Ok(Planned::Damage(i32::from(b.rng.roll(&rolls, user.side))))
 }
 
@@ -4898,9 +4996,30 @@ fn resume_first_hit<const N: usize>(
     b.raw_speed.clone_from(&progress.raw_speed);
     b.speed_snapshot.clone_from(&progress.speed_snapshot);
     progress.phase = MovePhase::BetweenHits;
-    let mut mv = progress.mv.clone();
+    let mv = progress.mv.clone();
     super::first_hit::resumed();
-    let result = match hit_loop(b, user, &mv, Some(progress))? {
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    if b.hit_suffix_allowed && b.hit_suffix_pending.is_some() {
+        b.hit_suffix_seed = Some(progress.clone());
+    }
+    let outcome = hit_loop(b, user, &mv, Some(progress));
+    #[cfg(feature = "experiment-factored-hit-suffix")]
+    {
+        b.hit_suffix_seed = None;
+    }
+    complete_first_hit(b, user, pokemon, main_target, mv, outcome?)
+}
+
+#[cfg(feature = "experiment-factored-first-hit")]
+fn complete_first_hit<const N: usize>(
+    b: &mut Battle<'_, N>,
+    user: SlotRef,
+    pokemon: PokemonRef,
+    main_target: SlotRef,
+    mut mv: ActiveMove,
+    outcome: HitOutcome,
+) -> Result<MoveStep, TurnError> {
+    let result = match outcome {
         HitOutcome::Finished { ok, total_damage } => {
             mv.total_damage = total_damage;
             if !ok {
@@ -4915,4 +5034,59 @@ fn resume_first_hit<const N: usize>(
     complete_use_move(b, user, pokemon, &mv, result, main_target)?;
     complete_run_move(b, user, pokemon, &mv)?;
     Ok(MoveStep::Done)
+}
+
+/// The final target has computed modifiers/crit and any item effects but has not rolled.
+/// Only a P7d direct, one-hit FirstHit origin creates this frame.
+#[cfg(feature = "experiment-factored-hit-suffix")]
+#[derive(Clone, Debug)]
+pub(super) struct DamageSuffix {
+    progress: MoveProgress,
+    mv: ActiveMove,
+    targets: Slots,
+    planned: Small<Option<Planned>, 6>,
+    shielded: Small<Option<Hit>, 6>,
+    rolls: crate::damage::DamageRolls,
+    total_before: DealtDamage,
+    hit: u8,
+}
+
+#[cfg(feature = "experiment-factored-hit-suffix")]
+pub(super) fn resume_damage_suffix<const N: usize>(
+    b: &mut Battle<'_, N>,
+    saved: &DamageSuffix,
+) -> Result<MoveStep, TurnError> {
+    let user = saved.progress.user;
+    let mut planned = saved.planned.clone();
+    planned.push(Some(Planned::Damage(i32::from(
+        b.rng.roll(&saved.rolls, user.side),
+    ))));
+    assert_eq!(planned.len(), saved.targets.len());
+    let results = finish_spread_move_hit(
+        b,
+        user,
+        &saved.mv,
+        &saved.targets,
+        saved.total_before,
+        saved.hit,
+        &planned,
+        &saved.shielded,
+    )?;
+    let outcome = finish_hit_step(
+        b,
+        user,
+        &saved.mv,
+        saved.progress.clone(),
+        saved.targets.clone(),
+        results,
+        saved.hit,
+    )?;
+    complete_first_hit(
+        b,
+        user,
+        saved.progress.pokemon,
+        saved.progress.main_target,
+        saved.mv.clone(),
+        outcome,
+    )
 }
