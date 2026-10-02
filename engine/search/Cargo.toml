@@ -15,6 +15,7 @@ path = "src/lib.rs"
 # `default-features = false`.
 [features]
 default = ["cli"]
+experiment-bayesian-cfr = ["experiment-budgeted-search"]
 experiment-budgeted-search = []
 experiment-response-sweeps = ["experiment-budgeted-search"]
 experiment-search-quality = ["experiment-budgeted-search", "cli"]
@@ -66,6 +67,11 @@ required-features = ["cli"]
 name = "lab-budget"
 path = "src/bin/lab-budget.rs"
 required-features = ["cli", "experiment-budgeted-search"]
+
+[[bin]]
+name = "lab-bayes"
+path = "src/bin/lab-bayes.rs"
+required-features = ["cli", "experiment-bayesian-cfr"]
 
 [[bin]]
 name = "lab-search-quality"

@@ -38,6 +38,8 @@
 
 #[cfg(feature = "scenario")]
 pub mod api;
+#[cfg(feature = "experiment-bayesian-cfr")]
+pub mod bayesian;
 pub mod choice;
 #[cfg(feature = "experiment-budgeted-search")]
 pub mod budgeted;

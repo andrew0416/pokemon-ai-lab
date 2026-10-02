@@ -1,0 +1,9 @@
+{
+  "mode": "matrix",
+  "rows": ["attack", "protect"],
+  "solver": {"iterations": 100000, "tolerance": 0.01, "check_every": 64},
+  "worlds": [
+    {"id": "fast", "weight": 3, "columns": ["attack", "switch"], "payoffs": [3, 0, 0, 1]},
+    {"id": "slow", "weight": 1, "columns": ["attack"], "payoffs": [-1, 2]}
+  ]
+}

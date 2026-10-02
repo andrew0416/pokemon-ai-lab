@@ -1,0 +1,68 @@
+name: S26 Bayesian CFR correctness
+on:
+  push:
+    branches: [codex/s26a-bayesian-cfr-20261002]
+permissions:
+  contents: read
+concurrency:
+  group: s26a-bayesian-cfr
+  cancel-in-progress: false
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
+  RUSTFLAGS: "-C target-cpu=x86-64"
+  RUST_MIN_STACK: "16777216"
+  RUST_TEST_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  PYTHONUTF8: "1"
+jobs:
+  correctness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@1.98.1
+        with:
+          components: clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-search-quality-deps-v1
+          workspaces: engine -> ../target-s25
+          cache-workspace-crates: false
+          cache-bin: false
+      - name: Independent LP dependency
+        run: python -m pip install numpy==2.2.6 scipy==1.15.3
+      - name: Fresh logic checks and CLI executable
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s26-results
+          cd engine
+          cargo test --locked -p lab-search --lib --features experiment-bayesian-cfr,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26-results/on.log
+          cargo test --locked -p lab-search --bin lab-bayes --features experiment-bayesian-cfr 2>&1 | tee ../s26-results/cli.log
+          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26-results/off.log
+          cargo check --locked -p lab-search --lib --no-default-features --features experiment-bayesian-cfr 2>&1 | tee ../s26-results/library.log
+          cargo clippy --locked -p lab-search --lib --bin lab-bayes --features experiment-bayesian-cfr,experiment-response-sweeps,experiment-search-quality -- -D warnings 2>&1 | tee ../s26-results/clippy.log
+          cargo build --locked -p lab-search --bin lab-bayes --features experiment-bayesian-cfr 2>&1 | tee ../s26-results/build.log
+          git rev-parse HEAD > ../s26-results/source-sha.txt
+          rustc --version > ../s26-results/rustc.txt
+      - name: Seventy-two independent Bayesian LP certificates
+        run: python -B engine/benchmarks/s26_bayesian/check.py --binary target-s25/debug/lab-bayes --out s26-results/lp
+      - name: Preserve correctness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s26-correctness-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s26-results/
+          if-no-files-found: error
+          retention-days: 30
