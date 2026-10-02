@@ -16,6 +16,7 @@ path = "src/lib.rs"
 [features]
 default = ["cli"]
 experiment-bayesian-cfr = ["experiment-budgeted-search"]
+experiment-public-belief = ["experiment-bayesian-cfr"]
 experiment-budgeted-search = []
 experiment-response-sweeps = ["experiment-budgeted-search"]
 experiment-search-quality = ["experiment-budgeted-search", "cli"]
@@ -72,6 +73,11 @@ required-features = ["cli", "experiment-budgeted-search"]
 name = "lab-bayes"
 path = "src/bin/lab-bayes.rs"
 required-features = ["cli", "experiment-bayesian-cfr"]
+
+[[bin]]
+name = "lab-belief"
+path = "src/bin/lab-belief.rs"
+required-features = ["cli", "experiment-public-belief"]
 
 [[bin]]
 name = "lab-search-quality"

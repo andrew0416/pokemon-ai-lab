@@ -7,6 +7,8 @@
 //! perfect-information continuation policies must not be advertised as safe leaf values.
 
 pub mod engine;
+#[cfg(feature = "experiment-public-belief")]
+pub mod tree;
 
 use std::collections::HashSet;
 

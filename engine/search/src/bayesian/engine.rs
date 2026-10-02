@@ -37,7 +37,7 @@ pub struct BuiltGame<const N: usize> {
     pub outcomes: usize,
 }
 
-fn visible<const N: usize>(
+pub(crate) fn visible<const N: usize>(
     state: &State<N>,
     us: SideId,
     knowledge: &Knowledge,
