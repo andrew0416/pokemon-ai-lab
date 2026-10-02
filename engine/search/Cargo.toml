@@ -18,6 +18,7 @@ default = ["cli"]
 experiment-bayesian-cfr = ["experiment-budgeted-search"]
 experiment-public-belief = ["experiment-bayesian-cfr"]
 experiment-growing-belief = ["experiment-public-belief"]
+experiment-belief-workspace = ["experiment-growing-belief"]
 experiment-budgeted-search = []
 experiment-response-sweeps = ["experiment-budgeted-search"]
 experiment-search-quality = ["experiment-budgeted-search", "cli"]
@@ -107,3 +108,13 @@ path = "tests/prepared_turn.rs"
 [[test]]
 name = "borrowed_child_keys"
 path = "tests/borrowed_child_keys.rs"
+
+[[bin]]
+name = "lab-belief-workspace-speed"
+path = "src/bin/lab-belief-workspace-speed.rs"
+required-features = ["cli", "experiment-belief-workspace"]
+
+[[bin]]
+name = "lab-belief-workspace"
+path = "src/bin/lab-belief-workspace.rs"
+required-features = ["cli", "experiment-belief-workspace"]

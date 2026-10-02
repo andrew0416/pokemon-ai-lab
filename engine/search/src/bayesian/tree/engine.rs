@@ -197,6 +197,56 @@ pub fn growing<const N: usize, E: Evaluator<N> + ?Sized>(
     builder::growing::search(&domain, &seeds, limits, config, &builder::growing::Uniform)
 }
 
+/// Allocation-only candidate; same root information checks as `growing`.
+#[cfg(feature = "experiment-belief-workspace")]
+pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+    settings: builder::growing::reuse::Settings,
+) -> Result<builder::growing::ResultTree, Error> {
+    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+    let reference = visible(&first.position.state, us, knowledge)?;
+    for w in worlds {
+        if w.position.suspension.is_some() {
+            return Err(Error(
+                "root suspended state needs prior action memory".into(),
+            ));
+        }
+        if visible(&w.position.state, us, knowledge)? != reference {
+            return Err(Error("worlds disagree on declared known root state".into()));
+        }
+    }
+    let domain = SnapshotDomain {
+        inner: EngineDomain {
+            ruleset,
+            options: EnumerateOptions::default(),
+            pruning: Pruning::All,
+            us,
+            evaluator,
+        },
+    };
+    let seeds: Vec<_> = worlds
+        .iter()
+        .map(|w| Seed {
+            id: w.id.clone(),
+            weight: w.weight,
+            position: w.position.clone(),
+        })
+        .collect();
+    builder::growing::reuse::search(
+        &domain,
+        &seeds,
+        limits,
+        settings.growth,
+        &builder::growing::Uniform,
+        settings.storage,
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

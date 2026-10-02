@@ -364,3 +364,147 @@ fn invalid_solver_fails_before_engine_work() {
     assert!(search(&game, &seeds(), Limits::default(), c, &Uniform).is_err());
     assert_eq!(game.calls.get(), 0);
 }
+
+#[cfg(feature = "experiment-belief-workspace")]
+fn exact_result(r: Result<ResultTree, Error>) -> String {
+    match r {
+        Err(e) => format!("error: {e:?}"),
+        Ok(r) => format!(
+            "{:?}|{:?}|{:?}|{:?}|{:?}|{}|{}|{}",
+            r.built.tree,
+            r.built.stats,
+            r.solution,
+            r.stop,
+            r.work,
+            r.frontier_histories,
+            r.frontier_public_groups,
+            r.horizon_complete
+        ),
+    }
+}
+
+#[cfg(feature = "experiment-belief-workspace")]
+#[test]
+fn allocation_candidates_match_all_admission_failure_boundaries() {
+    let mut trials = Vec::new();
+    for cap in 0..=42 {
+        trials.push((
+            Limits {
+                max_transitions: cap,
+                ..Limits::default()
+            },
+            config(100),
+        ));
+    }
+    for cap in (0..=180).step_by(3) {
+        trials.push((
+            Limits {
+                max_nodes: cap,
+                ..Limits::default()
+            },
+            config(100),
+        ));
+    }
+    for cap in 0..=3 {
+        trials.push((
+            Limits {
+                max_decisions: cap,
+                ..Limits::default()
+            },
+            config(100),
+        ));
+    }
+    for cap in 0..=4 {
+        trials.push((Limits::default(), config(cap)));
+    }
+    for cap in 0..=4 {
+        trials.push((
+            Limits::default(),
+            Config {
+                max_walks: cap,
+                ..config(100)
+            },
+        ));
+    }
+    for switch in [false, true] {
+        for (limits, cfg) in &trials {
+            let g = Game {
+                switch,
+                ..Game::new()
+            };
+            let expected = exact_result(search(&g, &seeds(), *limits, *cfg, &Uniform));
+            let expected_calls = g.calls.get();
+            for options in [
+                reuse::Options {
+                    in_place: true,
+                    workspace: false,
+                },
+                reuse::Options {
+                    in_place: false,
+                    workspace: true,
+                },
+                reuse::Options {
+                    in_place: true,
+                    workspace: true,
+                },
+            ] {
+                let g = Game {
+                    switch,
+                    ..Game::new()
+                };
+                let actual = exact_result(reuse::search(
+                    &g,
+                    &seeds(),
+                    *limits,
+                    *cfg,
+                    &Uniform,
+                    options,
+                ));
+                assert_eq!(
+                    actual, expected,
+                    "{limits:?}, {cfg:?}, {options:?}, switch={switch}"
+                );
+                assert_eq!(g.calls.get(), expected_calls);
+            }
+        }
+    }
+}
+
+#[cfg(feature = "experiment-belief-workspace")]
+#[test]
+fn allocation_candidates_keep_zero_mass_and_malformed_domain_behavior() {
+    let mut s = seeds();
+    s[1].weight = 0.;
+    for bad_mass in [false, true] {
+        for seed in [1, 7, 31, u64::MAX] {
+            let cfg = Config {
+                seed,
+                ..config(100)
+            };
+            let a = Game {
+                bad_mass,
+                ..Game::new()
+            };
+            let b = Game {
+                bad_mass,
+                ..Game::new()
+            };
+            assert_eq!(
+                exact_result(search(&a, &s, Limits::default(), cfg, &Uniform)),
+                exact_result(reuse::search(
+                    &b,
+                    &s,
+                    Limits::default(),
+                    cfg,
+                    &Uniform,
+                    reuse::Options {
+                        in_place: true,
+                        workspace: true
+                    }
+                ))
+            );
+            assert_eq!(a.calls.get(), b.calls.get());
+        }
+    }
+    assert_eq!(s[0].position.stage, 0);
+}

@@ -10,6 +10,8 @@ use super::super::{self as tree, Compiled, Information, Policy, Solution};
 use super::*;
 use crate::bayesian::Config as CfrConfig;
 use std::collections::BTreeMap;
+#[cfg(feature = "experiment-belief-workspace")]
+pub mod reuse;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Config {

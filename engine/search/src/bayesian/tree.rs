@@ -8,6 +8,8 @@
 
 pub mod builder;
 pub mod engine;
+#[cfg(feature = "experiment-belief-workspace")]
+pub mod workspace;
 use super::{labels, probability, strategy, Config, Error};
 use std::collections::HashMap;
 

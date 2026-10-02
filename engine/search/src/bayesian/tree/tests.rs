@@ -44,6 +44,72 @@ fn simultaneous_choices_do_not_observe_each_other() {
     assert_eq!(t.information[1].nodes.len(), 2);
 }
 
+#[cfg(feature = "experiment-belief-workspace")]
+#[test]
+fn scratch_reuse_matches_reference_kuhn_at_every_check_schedule() {
+    let tree = kuhn();
+    for iterations in [1, 2, 3, 31, 32, 127, 511] {
+        for check_every in [1, 7, 32] {
+            for tolerance in [0., 0.1] {
+                let config = Config {
+                    iterations,
+                    check_every,
+                    tolerance,
+                };
+                let reference = solve(&tree, config).unwrap();
+                let candidate = workspace::solve(&tree, config).unwrap();
+                assert_eq!(format!("{reference:?}"), format!("{candidate:?}"));
+            }
+        }
+    }
+}
+
+#[cfg(feature = "experiment-belief-workspace")]
+#[test]
+fn scratch_reuse_matches_scaled_hidden_games_and_invalid_configs() {
+    for scale in [0., 1e-300, 1., 1e100] {
+        for mass in [0., 0.01, 0.5, 1.] {
+            let t = Tree::new(
+                vec![
+                    Node::Chance(vec![(mass, 1), (1. - mass, 2)]),
+                    decision(0, "same", vec![3, 4]),
+                    decision(0, "same", vec![5, 6]),
+                    Node::Terminal(scale),
+                    Node::Terminal(-scale),
+                    Node::Terminal(-scale * 0.7),
+                    Node::Terminal(scale * 0.3),
+                ],
+                0,
+            )
+            .unwrap();
+            for config in [
+                Config {
+                    iterations: 100,
+                    check_every: 7,
+                    tolerance: 0.,
+                },
+                Config {
+                    iterations: 0,
+                    ..cfg()
+                },
+                Config {
+                    check_every: 0,
+                    ..cfg()
+                },
+                Config {
+                    tolerance: f64::NAN,
+                    ..cfg()
+                },
+            ] {
+                assert_eq!(
+                    format!("{:?}", solve(&t, config)),
+                    format!("{:?}", workspace::solve(&t, config))
+                );
+            }
+        }
+    }
+}
+
 #[test]
 fn best_response_shares_actions_across_indistinguishable_histories() {
     let t = Tree::new(
