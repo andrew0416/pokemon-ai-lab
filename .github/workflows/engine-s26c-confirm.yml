@@ -1,0 +1,64 @@
+name: S26c final broader confirmation
+on:
+  push:
+    branches: [codex/s26c-confirm-20261003]
+permissions:
+  contents: read
+concurrency:
+  group: s26c-confirm
+  cancel-in-progress: false
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
+  CARGO_PROFILE_RELEASE_DEBUG: "0"
+  RUSTFLAGS: "-C target-cpu=x86-64"
+  RUST_MIN_STACK: "16777216"
+  RUST_TEST_THREADS: "1"
+  RAYON_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  PYTHONUTF8: "1"
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@1.98.1
+        with:
+          components: clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-search-quality-deps-v1
+          workspaces: engine -> ../target-s25
+          cache-workspace-crates: false
+          cache-bin: false
+      - name: Correctness and portable release binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s26c-confirm-results
+          cd engine
+          cargo clippy --locked -p lab-search --lib --bin lab-belief-workspace --bin lab-belief-workspace-speed --features experiment-belief-workspace -- -D warnings 2>&1 | tee ../s26c-confirm-results/clippy.log
+          cargo build --locked --release -p lab-search --bin lab-belief-workspace-speed --features experiment-belief-workspace 2>&1 | tee ../s26c-confirm-results/release-build.log
+          git rev-parse HEAD > ../s26c-confirm-results/source-sha.txt
+          rustc --version > ../s26c-confirm-results/rustc.txt
+      - name: Exact same-work paired comparison
+        run: python -B engine/benchmarks/s26_confirm/run.py --binary target-s25/release/lab-belief-workspace-speed --out s26c-confirm-results/paired
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s26c-confirm-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s26c-confirm-results/
+          if-no-files-found: error
+          retention-days: 30

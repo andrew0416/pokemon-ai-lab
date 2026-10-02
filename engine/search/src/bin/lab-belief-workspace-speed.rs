@@ -173,9 +173,69 @@ fn diagnostics(o: &Output) -> Value {
         "solver_converged":o.solved.converged,"horizon_complete":o.complete,"growth":growth,
         "root_policy":root_policy(o)})
 }
-fn validate(reference: &Output, o: &Output, _: &Value) -> Result<(), String> {
+// Full and growing builders assign different physical IDs. Canonical preorder removes
+// only this numbering; information keys, menus, chance probabilities and leaf values stay.
+fn canonical(t: &tree::Tree) -> String {
+    fn visit(n: usize, raw: &[tree::Node], out: &mut Vec<tree::Node>) -> usize {
+        let id = out.len();
+        out.push(tree::Node::Terminal(0.));
+        out[id] = match &raw[n] {
+            tree::Node::Terminal(v) => tree::Node::Terminal(*v),
+            tree::Node::Chance(edges) => tree::Node::Chance(
+                edges
+                    .iter()
+                    .map(|(p, c)| (*p, visit(*c, raw, out)))
+                    .collect(),
+            ),
+            tree::Node::Decision {
+                player,
+                information,
+                actions,
+                children,
+            } => tree::Node::Decision {
+                player: *player,
+                information: information.clone(),
+                actions: actions.clone(),
+                children: children.iter().map(|c| visit(*c, raw, out)).collect(),
+            },
+        };
+        id
+    }
+    let raw = t.export_nodes();
+    let mut out = Vec::new();
+    visit(t.root(), &raw, &mut out);
+    format!("{:?}|{:?}", t.worlds(), out)
+}
+fn semantic_policy(o: &Output) -> BTreeMap<String, Vec<u64>> {
+    o.built
+        .tree
+        .information()
+        .iter()
+        .enumerate()
+        .map(|(id, i)| {
+            (
+                i.key.clone(),
+                o.solved.policy[id].iter().map(|p| p.to_bits()).collect(),
+            )
+        })
+        .collect()
+}
+fn validate(reference: &Output, o: &Output, variant: &Value) -> Result<(), String> {
     if !o.solved.converged {
         return Err("requested solver tolerance was not met".into());
+    }
+    if variant["comparison"] == "same-finite-game" {
+        if !reference.complete || !o.complete {
+            return Err("incomplete requested horizon".into());
+        }
+        if canonical(&reference.built.tree) != canonical(&o.built.tree)
+            || semantic_policy(reference) != semantic_policy(o)
+            || format!("{:?}", reference.solved.assessment) != format!("{:?}", o.solved.assessment)
+            || reference.built.stats.transitions != o.built.stats.transitions
+        {
+            return Err("finite-game tree/policy/certificate parity failed".into());
+        }
+        return Ok(());
     }
     // Exact comparison of the entire policy, tree, observation metadata, best responses,
     // stopping state and charged/committed work. This also covers partial/limited trees.
