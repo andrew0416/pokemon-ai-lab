@@ -7,11 +7,23 @@ use super::*;
 pub struct Options {
     pub in_place: bool,
     pub workspace: bool,
+    pub compiler: bool,
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Settings {
     pub growth: Config,
     pub storage: Options,
+}
+fn compile<D: ObservedDomain>(g: &Growing<'_, D>, borrowed: bool) -> Result<Tree, Error> {
+    if !borrowed {
+        return g.compile();
+    }
+    let mut t = tree::compiler::compile(&g.b.nodes, g.root)?;
+    t.worlds = g.worlds.clone();
+    t.public_keys = g.b.public_keys.clone();
+    t.private_keys = g.b.private_keys.clone();
+    t.boundaries = g.b.boundaries.clone();
+    Ok(t)
 }
 fn summary<D: ObservedDomain>(g: &Growing<'_, D>) -> (Stats, usize, usize) {
     (
@@ -122,7 +134,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
         .admit(&[first.public], &mut work, cfg)
         .map_err(fatal)?;
     work.committed_expansions = work.attempted_expansions;
-    let mut t = growing.compile()?;
+    let mut t = compile(&growing, options.compiler)?;
     let mut solved = solve(&t, cfg.solver, options.workspace)?;
     work.solves += 1;
     work.cfr_iterations += solved.iterations;
@@ -166,7 +178,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
             Err(Failure::Invalid(e)) => return Err(e),
             Ok(()) => {}
         }
-        let next = candidate.compile()?;
+        let next = compile(candidate, options.compiler)?;
         let solution = solve(&next, cfg.solver, options.workspace)?;
         q = scores(&next, &solution.policy)?;
         work.committed_expansions += work.attempted_expansions - before;

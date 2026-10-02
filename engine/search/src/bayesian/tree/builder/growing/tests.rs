@@ -436,16 +436,34 @@ fn allocation_candidates_match_all_admission_failure_boundaries() {
             let expected_calls = g.calls.get();
             for options in [
                 reuse::Options {
+                    in_place: false,
+                    workspace: false,
+                    compiler: true,
+                },
+                reuse::Options {
                     in_place: true,
                     workspace: false,
+                    compiler: true,
+                },
+                reuse::Options {
+                    in_place: true,
+                    workspace: true,
+                    compiler: true,
+                },
+                reuse::Options {
+                    in_place: true,
+                    workspace: false,
+                    compiler: false,
                 },
                 reuse::Options {
                     in_place: false,
                     workspace: true,
+                    compiler: false,
                 },
                 reuse::Options {
                     in_place: true,
                     workspace: true,
+                    compiler: false,
                 },
             ] {
                 let g = Game {
@@ -499,7 +517,8 @@ fn allocation_candidates_keep_zero_mass_and_malformed_domain_behavior() {
                     &Uniform,
                     reuse::Options {
                         in_place: true,
-                        workspace: true
+                        workspace: true,
+                        compiler: true,
                     }
                 ))
             );

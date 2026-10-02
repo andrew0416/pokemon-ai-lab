@@ -188,6 +188,7 @@ pub fn request(
             growing::reuse::Options {
                 in_place: true,
                 workspace: true,
+                compiler: true,
             },
         )
         .map_err(|e| e.to_string())?;

@@ -194,13 +194,22 @@ fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
         "exhaustive" => Method::Exhaustive,
         "exhaustive-workspace" => Method::ExhaustiveWorkspace,
         "growing" => Method::Growing(config),
-        "in-place" | "workspace" | "combined" => Method::Reusing(
-            config,
-            growing::reuse::Options {
-                in_place: v["kind"] != "workspace",
-                workspace: v["kind"] != "in-place",
-            },
-        ),
+        "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all" => {
+            Method::Reusing(
+                config,
+                growing::reuse::Options {
+                    in_place: matches!(
+                        v["kind"].as_str(),
+                        Some("in-place" | "combined" | "in-place-compiler" | "all")
+                    ),
+                    workspace: matches!(v["kind"].as_str(), Some("workspace" | "combined" | "all")),
+                    compiler: matches!(
+                        v["kind"].as_str(),
+                        Some("compiler" | "in-place-compiler" | "all")
+                    ),
+                },
+            )
+        }
         _ => return Err("invalid method".into()),
     })
 }

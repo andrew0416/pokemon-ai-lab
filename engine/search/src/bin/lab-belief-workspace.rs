@@ -227,6 +227,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                             storage: tree::builder::growing::reuse::Options {
                                 in_place: true,
                                 workspace: true,
+                                compiler: true,
                             },
                         },
                     )
