@@ -9,6 +9,10 @@ use lab_search::budgeted::Position;
 use serde_json::{json, Value};
 use std::path::Path;
 
+#[cfg(feature = "experiment-growing-belief")]
+#[path = "lab-belief/observed.rs"]
+mod observed;
+
 fn string(v: &Value, k: &str) -> Result<String, String> {
     v[k].as_str()
         .map(str::to_owned)
@@ -72,7 +76,14 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
     }
     let mode = string(v, "mode")?;
     let include_keys = boolean(v, "include_keys", false)?;
+    let mut growth_solution = None;
     let (tree, metadata) = match mode.as_str() {
+        #[cfg(feature = "experiment-growing-belief")]
+        "observed" => {
+            let (built, solution, metadata) = observed::request(v, config)?;
+            growth_solution = solution;
+            (built.tree, metadata)
+        }
         "tree" => {
             keys(v, &["mode", "nodes", "root", "solver", "include_keys"])?;
             let mut nodes = Vec::new();
@@ -127,6 +138,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                     "solver",
                     "include_keys",
                     "observation_model",
+                    "growth",
                 ],
             )?;
             if string(v, "observation_model")? != "snapshot-information-v1" {
@@ -194,15 +206,59 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                 "heuristic".into()
             };
             let evaluator = lab_search::model::load_evaluator(&evaluation)?;
-            let built = tree::engine::build(
-                &worlds,
-                side,
-                Ruleset::CHAMPIONS_MC,
-                evaluator.as_ref(),
-                &knowledge,
-                limits,
-            )
-            .map_err(|e| e.to_string())?;
+            #[cfg(not(feature = "experiment-growing-belief"))]
+            if v.get("growth").is_some() {
+                return Err("growth requires experiment-growing-belief".into());
+            }
+            #[cfg(feature = "experiment-growing-belief")]
+            let growing_config = observed::growth_config(v, config)?;
+            #[cfg(feature = "experiment-growing-belief")]
+            let grown = if let Some(c) = growing_config {
+                Some(
+                    tree::engine::growing(
+                        &worlds,
+                        side,
+                        Ruleset::CHAMPIONS_MC,
+                        evaluator.as_ref(),
+                        &knowledge,
+                        limits,
+                        c,
+                    )
+                    .map_err(|e| e.to_string())?,
+                )
+            } else {
+                None
+            };
+            #[cfg(not(feature = "experiment-growing-belief"))]
+            let grown: Option<()> = None;
+            let (built, growth_metadata, solution) = match grown {
+                None => (
+                    tree::engine::build(
+                        &worlds,
+                        side,
+                        Ruleset::CHAMPIONS_MC,
+                        evaluator.as_ref(),
+                        &knowledge,
+                        limits,
+                    )
+                    .map_err(|e| e.to_string())?,
+                    Value::Null,
+                    None,
+                ),
+                Some(g) => {
+                    #[cfg(feature = "experiment-growing-belief")]
+                    {
+                        let meta = observed::metadata(&g);
+                        (g.built, meta, Some(g.solution))
+                    }
+                    #[cfg(not(feature = "experiment-growing-belief"))]
+                    {
+                        let () = g;
+                        unreachable!()
+                    }
+                }
+            };
+            growth_solution = solution;
             let stats = built.stats;
             let root_ours: Vec<_> = built
                 .tree
@@ -216,12 +272,15 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                 json!({"scope":"finite-depth-snapshot-information-game","observation_model":"snapshot-information-v1",
                 "full_battle_log_information":false,"rolls":"full","pruning":"all","evaluator":evaluation,"turns":limits.turns,
                 "root_our_information":root_ours,"transitions":stats.transitions,"chance_outcomes":stats.chance_outcomes,
-                "turn_decisions":stats.turn_decisions,"switch_decisions":stats.switch_decisions,"leaves":stats.leaves}),
+                "turn_decisions":stats.turn_decisions,"switch_decisions":stats.switch_decisions,"leaves":stats.leaves,"growth":growth_metadata}),
             )
         }
         _ => return Err("mode must be tree or engine".into()),
     };
-    let solved = tree::solve(&tree, config).map_err(|e| e.to_string())?;
+    let solved = match growth_solution {
+        Some(s) => s,
+        None => tree::solve(&tree, config).map_err(|e| e.to_string())?,
+    };
     let beliefs = tree
         .public_beliefs(&solved.policy)
         .map_err(|e| e.to_string())?;
@@ -233,12 +292,33 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
         let mut v=json!({"id":b.id,"reach":b.reach,"posterior":b.posterior,"world_conditional_values":b.world_values,"history_count":b.histories.len()});
         if include_keys{v["key"]=json!(b.key);v["history_weights"]=json!(b.histories);}v
     }).collect();
-    Ok(
-        json!({"schema":1,"mode":mode,"algorithm":"extensive-form-alternating-linear-cfr","metadata":metadata,
+    let mut result = json!({"schema":1,"mode":mode,"algorithm":"extensive-form-alternating-linear-cfr","metadata":metadata,
         "nodes":tree.node_count(),"information_sets":policies.len(),"iterations":solved.iterations,"converged":solved.converged,
         "tolerance":config.tolerance,"value":solved.assessment.value,"lower":solved.assessment.lower,"upper":solved.assessment.upper,
-        "finite_game_gap":solved.assessment.gap,"policies":policies,"worlds":tree.worlds(),"public_beliefs":beliefs}),
-    )
+        "finite_game_gap":solved.assessment.gap,"policies":policies,"worlds":tree.worlds(),"public_beliefs":beliefs});
+    if !result["metadata"]["growth"].is_null() {
+        let complete = result["metadata"]["growth"]["horizon_complete"]
+            .as_bool()
+            .unwrap();
+        result["algorithm"] = json!("public-history-closed-growing-tree-cfr");
+        result["surrogate_converged"] = json!(solved.converged);
+        result["converged"] = json!(complete && solved.converged);
+        result["full_horizon_gap"] = if complete {
+            json!(solved.assessment.gap)
+        } else {
+            Value::Null
+        };
+        result["certificate_scope"] = json!(if complete {
+            "requested-finite-horizon"
+        } else {
+            "current-fixed-leaf-surrogate-only"
+        });
+    }
+    #[cfg(feature = "experiment-growing-belief")]
+    if mode == "observed" {
+        result["oracle_tree"] = observed::export(&tree);
+    }
+    Ok(result)
 }
 
 fn main() -> std::process::ExitCode {

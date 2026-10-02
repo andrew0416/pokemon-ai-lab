@@ -6,6 +6,9 @@ use crate::bayesian::{labels, normalize, Error};
 use crate::budgeted::{Domain, Phase};
 use std::collections::HashMap;
 
+#[cfg(feature = "experiment-growing-belief")]
+pub mod growing;
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Observation {
     pub public: String,

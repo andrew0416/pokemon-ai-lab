@@ -17,6 +17,7 @@ path = "src/lib.rs"
 default = ["cli"]
 experiment-bayesian-cfr = ["experiment-budgeted-search"]
 experiment-public-belief = ["experiment-bayesian-cfr"]
+experiment-growing-belief = ["experiment-public-belief"]
 experiment-budgeted-search = []
 experiment-response-sweeps = ["experiment-budgeted-search"]
 experiment-search-quality = ["experiment-budgeted-search", "cli"]

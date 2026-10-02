@@ -186,6 +186,23 @@ impl Tree {
     pub fn node_count(&self) -> usize {
         self.nodes.len()
     }
+    /// Developer/oracle export, NOT an observation supplied to the playing agent.
+    #[cfg(feature = "experiment-growing-belief")]
+    pub fn export_nodes(&self) -> Vec<Node> {
+        self.nodes
+            .iter()
+            .map(|n| match n {
+                Compiled::Terminal(v) => Node::Terminal(*v),
+                Compiled::Chance(e) => Node::Chance(e.clone()),
+                Compiled::Decision { info, children } => Node::Decision {
+                    player: self.information[*info].player,
+                    information: self.information[*info].key.clone(),
+                    actions: self.information[*info].actions.clone(),
+                    children: children.clone(),
+                },
+            })
+            .collect()
+    }
     pub fn root(&self) -> usize {
         self.root
     }

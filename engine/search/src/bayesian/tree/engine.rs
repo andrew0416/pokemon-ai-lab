@@ -154,6 +154,49 @@ pub fn build<const N: usize, E: Evaluator<N> + ?Sized>(
     builder::build(&domain, &seeds, limits)
 }
 
+/// Selective expansion uses exactly the same root knowledge and observation contract.
+#[cfg(feature = "experiment-growing-belief")]
+pub fn growing<const N: usize, E: Evaluator<N> + ?Sized>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+    config: builder::growing::Config,
+) -> Result<builder::growing::ResultTree, Error> {
+    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+    let reference = visible(&first.position.state, us, knowledge)?;
+    for w in worlds {
+        if w.position.suspension.is_some() {
+            return Err(Error(
+                "root suspended state needs prior action memory".into(),
+            ));
+        }
+        if visible(&w.position.state, us, knowledge)? != reference {
+            return Err(Error("worlds disagree on declared known root state".into()));
+        }
+    }
+    let domain = SnapshotDomain {
+        inner: EngineDomain {
+            ruleset,
+            options: EnumerateOptions::default(),
+            pruning: Pruning::All,
+            us,
+            evaluator,
+        },
+    };
+    let seeds: Vec<_> = worlds
+        .iter()
+        .map(|w| Seed {
+            id: w.id.clone(),
+            weight: w.weight,
+            position: w.position.clone(),
+        })
+        .collect();
+    builder::growing::search(&domain, &seeds, limits, config, &builder::growing::Uniform)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
