@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "source_sha": "c54becc9fb7bb9101cac363f389d4a84792016ab",
+  "source_ref": "refs/heads/codex/p7h-hit-suffix-source-20261002",
+  "source_parent": "87e7fdcb47b24e407e81d9d5688714dfee6de35d",
+  "reference_sha": "87e7fdcb47b24e407e81d9d5688714dfee6de35d",
+  "controller_parent": "4015fc0ec563ab8ac0b9483745a7b83e9f630390",
+  "changed_file_sha256": {
+    "engine/core/Cargo.toml": "85e4e04e605c54be8b462918df18fcdc5f48ee60d8179d9e436c98053a702119",
+    "engine/core/src/turn/battle.rs": "2ac9644ab7d3e6623202aa977eb014d5965561456dee92d48528d4db46678c78",
+    "engine/core/src/turn/branch.rs": "05394eaf792163b0dd2e85535344fe458a0124220f90b7de2c855ba8bc53560d",
+    "engine/core/src/turn/frontier.rs": "200777ee324d372cf80dc1c653449db85807e61e247b4608c1ac0c7c478cde4e",
+    "engine/core/src/turn/hit_suffix.rs": "1ea872ef9c6080d0ab85d7de1bbec7ddc902c328319ce46e576aceec7035f1ae",
+    "engine/core/src/turn/hit_suffix_tests.rs": "cf009b6fd4fc9f2e7e207a2ab2ec1eacfd59789992345cf41cf21da42bde4cd2",
+    "engine/core/src/turn/lazy.rs": "f2744179cd9f9e3c4a1269fb3d27890ff822391b674c93c4e3763ed82ad119c4",
+    "engine/core/src/turn/mod.rs": "f0d554b19f383cabe37c47abaf84562320c454590436aee2312318e3592da535",
+    "engine/core/src/turn/moves.rs": "ae2953a5a9f060d093cebf99fd64e4d996fbae138a855c00960c5690422e83f9",
+    "engine/core/src/turn/battle/hit_suffix_checkpoint.rs": "b2967845dac3c20f6b0cdbe1b5854aece92d555ceb4ec48dc8ead3a317de08a8",
+    "engine/core/src/turn/frontier/hit_suffix_driver.rs": "f1e528b4569eec55ec5935b806f3f9d68c0a949b99211627f9a87fd551d79bea"
+  },
+  "feature": "experiment-factored-hit-suffix",
+  "feature_default_on": false,
+  "feature_dependency": "experiment-factored-first-hit",
+  "source_receipt_sha256": "f6b9c02332c08093507fec95deb15a8dd97e2b8f8afea0d257ed839c0d53e392",
+  "source_review_sha256": "1b999da7953aa1c0561fd9d2405f3f3282cc3be63e4fddfec0fe85ab413347bc",
+  "logic_receipt_sha256": "b081b8e60b091f7dab767030bd99df2c18f7632b629fe1dd78a6112d6060dbe6",
+  "core_test_filter": "p7h",
+  "core_tests": [
+    "turn::frontier::p7h::tests::actual_unsupported_faint_error_matches_first_error_without_canonicalization",
+    "turn::frontier::p7h::tests::called_move_and_real_midturn_suspension_keep_existing_contract",
+    "turn::frontier::p7h::tests::chooser_retention_keeps_nonuniform_roll_probability_bits_and_dfs_order",
+    "turn::frontier::p7h::tests::error_after_second_retained_suffix_rolls_back_everything_and_closes_tls",
+    "turn::frontier::p7h::tests::fallback_modes_callbacks_multihit_and_flat_do_not_capture",
+    "turn::frontier::p7h::tests::full_spread_reuses_real_damage_prefix_and_preserves_probability_bits",
+    "turn::frontier::p7h::tests::generic_pending_callback_has_no_concrete_frame_and_preserves_exact_branch_mass",
+    "turn::frontier::p7h::tests::pending_request_blocks_capture_and_error_still_wins_after_capture",
+    "turn::frontier::p7h::tests::resist_berry_prefix_is_retained_once_and_full_tails_preserve_items_history",
+    "turn::frontier::p7h::tests::seeded_lazy_ko_and_threshold_split_match_exact_stage_keys_and_weights"
+  ],
+  "prior_p7f_binding_sha256": "fdc175dbe87096a3a49f8893c961085a600c5c1b040007df31859d68a4785531",
+  "corpus_sha256": "16410bfd800213a7af9f9fd896d5a8e4fb7da39b0a0912192263c1a7625272ec",
+  "plan_ledger_sha256": "2ebfa8608ab59c501790484c5c040e9ac0a5217e665dc92aff9827cf28107bd4"
+}
