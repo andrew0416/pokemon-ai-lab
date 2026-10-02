@@ -119,6 +119,63 @@ fn delayed() -> Toy {
 fn reference_gap(matrix: &Matrix, policy: &Policy<usize>) -> f32 {
     gap(matrix, &policy.equilibrium.rows, &policy.equilibrium.cols)
 }
+
+#[cfg(feature = "experiment-response-sweeps")]
+#[test]
+fn response_sweeps_find_initially_unlikely_counters_on_either_side() {
+    // A pure shallow equilibrium hides a losing continuation in a low-probability
+    // response. Transposition/sign reversal tests both players, with several menus.
+    for n in [4, 8, 12] {
+        for transpose in [false, true] {
+            let (rows, cols) = if transpose { (n, 2) } else { (2, n) };
+            let mut nodes = vec![node(Phase::Turn, 0., rows, cols, vec![])];
+            let mut exact = Vec::new();
+            for r in 0..rows {
+                for c in 0..cols {
+                    let (a, b) = if transpose { (c, r) } else { (r, c) };
+                    let sign = if transpose { -1. } else { 1. };
+                    let shallow = if a == 0 { if b == 0 { 5. } else { 6. } } else { 0. };
+                    let deep = if a == 0 && b == n - 1 { -10. } else { shallow };
+                    let child = nodes.len();
+                    nodes.push(node(Phase::Turn, sign * shallow, 1, 1, vec![vec![(1., child + 1)]]));
+                    nodes.push(terminal(sign * deep));
+                    nodes[0].children.push(vec![(1., child)]);
+                    exact.push(sign * deep);
+                }
+            }
+            let game = Toy { nodes, calls: Counter::new(0) };
+            let mut c = cfg((3 * n + 2) as u64);
+            c.matrix_tolerance = 0.001;
+            let result = search(&game, &Uniform, 0, c).unwrap();
+            let gap = reference_gap(&Matrix::new(rows, cols, exact), &result.policy.unwrap());
+            assert!(gap < 0.02, "n={n} transpose={transpose} gap={gap}");
+            assert!(result.stats.skipped_backups > 0);
+            assert!(result.stats.transitions <= (3 * n + 2) as u64);
+        }
+    }
+}
+
+#[cfg(feature = "experiment-response-sweeps")]
+#[test]
+fn completion_releases_positions_even_when_payoffs_never_change() {
+    // Three turns, chance, and a forced switch at the horizon. Every backup is
+    // value-neutral, but all continuations must finish and all positions be freed.
+    let game = Toy { nodes: vec![
+        node(Phase::Turn, 3., 1, 1, vec![vec![(0.25, 1), (0.75, 1)]]),
+        node(Phase::Turn, 3., 1, 1, vec![vec![(1., 2)]]),
+        node(Phase::Turn, 3., 1, 1, vec![vec![(1., 3)]]),
+        node(Phase::Switch, 3., 2, 1, vec![vec![(1., 4)], vec![(1., 4)]]),
+        terminal(3.),
+    ], calls: Counter::new(0) };
+    let mut c = cfg(100); c.max_turns = 3;
+    let result = search(&game, &Uniform, 0, c).unwrap();
+    assert_eq!(result.stop, Stop::FrontierExhausted);
+    assert_eq!(result.policy.unwrap().equilibrium.value, brute(&game, &0, 3));
+    assert_eq!(result.stats.retained_positions, 0);
+    assert_eq!(result.stats.transitions, 9);
+    assert!(result.stats.peak_positions < result.stats.stored_nodes);
+    assert!(result.stats.skipped_backups > 0);
+}
 fn gap(matrix: &Matrix, x: &[f32], y: &[f32]) -> f32 {
     let upper = (0..matrix.rows)
         .map(|r| {

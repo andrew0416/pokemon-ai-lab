@@ -130,6 +130,7 @@ fn run() -> Result<(), String> {
     if args == ["--fingerprint"] {
         emit(json!({"kind":"fingerprint","quality_feature":cfg!(feature="experiment-search-quality"),
             "budgeted_feature":cfg!(feature="experiment-budgeted-search"),
+            "response_sweeps":cfg!(feature="experiment-response-sweeps"),
             "prepared":cfg!(feature="experiment-prepared-turn"),
             "leaf_endings":cfg!(feature="experiment-leaf-ending-states"),
             "borrowed_keys":cfg!(feature="experiment-borrowed-child-keys"),
@@ -175,7 +176,9 @@ fn run() -> Result<(), String> {
                     s.transitions,json!({"cost":s.cost_used,"turns":s.turn_transitions,
                     "switches":s.switch_transitions,"stored_nodes":s.stored_nodes,
                     "evaluations":s.evaluations,"matrix_solves":s.matrix_solves,
-                    "matrix_iterations":s.matrix_iterations,"updates":s.committed_updates}));
+                    "matrix_iterations":s.matrix_iterations,"updates":s.committed_updates,
+                    "response_sweeps":s.response_sweeps,"skipped_backups":s.skipped_backups,
+                    "retained_positions":s.retained_positions,"peak_positions":s.peak_positions}));
                 started.elapsed().as_secs_f64() >= limit
             }).map_err(|e|e.to_string())?;
             emit(json!({"kind":"done","stop":format!("{:?}",report.stop),

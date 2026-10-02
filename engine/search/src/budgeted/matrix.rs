@@ -12,7 +12,9 @@ pub(super) struct Counts {
 
 pub(super) struct Solution {
     pub equilibrium: Equilibrium,
+    #[cfg(not(feature = "experiment-response-sweeps"))]
     pub row_values: Vec<f32>,
+    #[cfg(not(feature = "experiment-response-sweeps"))]
     pub col_values: Vec<f32>,
 }
 
@@ -122,7 +124,9 @@ pub(super) fn solve<E>(
                     exploitability: gap,
                     iterations: eq.iterations,
                 },
+                #[cfg(not(feature = "experiment-response-sweeps"))]
                 row_values,
+                #[cfg(not(feature = "experiment-response-sweeps"))]
                 col_values,
             });
         }

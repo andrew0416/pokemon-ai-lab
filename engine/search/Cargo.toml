@@ -16,6 +16,7 @@ path = "src/lib.rs"
 [features]
 default = ["cli"]
 experiment-budgeted-search = []
+experiment-response-sweeps = ["experiment-budgeted-search"]
 experiment-search-quality = ["experiment-budgeted-search", "cli"]
 experiment-prepared-turn = ["lab-engine/experiment-prepared-turn"]
 experiment-prepared-turn-observe = ["experiment-prepared-turn", "lab-engine/experiment-prepared-turn-observe"]

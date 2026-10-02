@@ -139,6 +139,10 @@ pub struct Stats {
     pub walks: u64,
     pub frontier_scans: u64,
     pub max_turn_depth: u32,
+    pub response_sweeps: u64,
+    pub skipped_backups: u64,
+    pub retained_positions: usize,
+    pub peak_positions: usize,
 }
 
 #[derive(Clone, Debug)]
@@ -179,7 +183,14 @@ struct Cell {
 }
 
 struct Node<P, A> {
+    #[cfg(not(feature = "experiment-response-sweeps"))]
     position: P,
+    #[cfg(feature = "experiment-response-sweeps")]
+    position: Option<Box<P>>,
+    #[cfg(feature = "experiment-response-sweeps")]
+    complete: bool,
+    #[cfg(feature = "experiment-response-sweeps")]
+    incoming_cell: usize,
     phase: Phase,
     remaining: u32,
     turn_depth: u32,
@@ -187,6 +198,7 @@ struct Node<P, A> {
     actions: [Vec<A>; 2],
     priors: [Vec<f32>; 2],
     visits: [Vec<u64>; 2],
+    #[cfg(not(feature = "experiment-response-sweeps"))]
     walk_visits: u64,
     cells: Vec<Option<Cell>>,
     solution: Option<Solution>,
@@ -194,12 +206,20 @@ struct Node<P, A> {
 }
 
 impl<P, A> Node<P, A> {
+    fn position(&self) -> &P {
+        #[cfg(feature = "experiment-response-sweeps")]
+        { self.position.as_deref().expect("unfinished node retains its position") }
+        #[cfg(not(feature = "experiment-response-sweeps"))]
+        { &self.position }
+    }
     fn leaf(&self) -> bool {
         self.phase == Phase::Terminal || (self.phase == Phase::Turn && self.remaining == 0)
     }
 }
 
+#[cfg(any(test, not(feature = "experiment-response-sweeps")))]
 struct Rng(u64);
+#[cfg(any(test, not(feature = "experiment-response-sweeps")))]
 impl Rng {
     fn unit(&mut self) -> f64 {
         self.0 = self.0.wrapping_add(0x9e3779b97f4a7c15);
@@ -209,6 +229,7 @@ impl Rng {
         z ^= z >> 31;
         ((z >> 11) as f64) * (1.0 / ((1u64 << 53) as f64))
     }
+    #[cfg(not(feature = "experiment-response-sweeps"))]
     fn weighted(&mut self, weights: impl IntoIterator<Item = f64>) -> usize {
         let weights: Vec<_> = weights.into_iter().collect();
         let total: f64 = weights.iter().sum();
@@ -233,7 +254,10 @@ struct Work<'a, D: Domain, P: Prior<D>> {
     config: Config,
     nodes: Vec<Node<D::Position, D::Action>>,
     stats: Stats,
+    #[cfg(not(feature = "experiment-response-sweeps"))]
     rng: Rng,
+    #[cfg(feature = "experiment-response-sweeps")]
+    response_visits: Vec<u64>,
 }
 
 struct Target {
@@ -287,10 +311,13 @@ pub fn search_with_observer<D: Domain, P: Prior<D>>(
     let mut w = Work {
         domain,
         prior,
+        #[cfg(not(feature = "experiment-response-sweeps"))]
         rng: Rng(config.seed),
         config,
         nodes: Vec::new(),
         stats: Stats::default(),
+        #[cfg(feature = "experiment-response-sweeps")]
+        response_visits: Vec::new(),
     };
     w.push_node(position, w.config.max_turns, 0, 0)?;
     let mut incumbent = None;
@@ -315,9 +342,10 @@ pub fn search_with_observer<D: Domain, P: Prior<D>>(
                 if let Some(cell) = target.cell {
                     w.ensure_cell(id, cell)?;
                 }
-                for &ancestor in target.path.iter().rev() {
-                    w.solve_node(ancestor)?;
-                }
+                #[cfg(not(feature = "experiment-response-sweeps"))]
+                for &ancestor in target.path.iter().rev() { w.solve_node(ancestor)?; }
+                #[cfg(feature = "experiment-response-sweeps")]
+                w.backup(&target)?;
                 // Every affected ancestor is now solved against the new continuations.
                 // Only this boundary makes the new root visible to callers.
                 incumbent = Some(w.policy());
@@ -364,8 +392,20 @@ impl<D: Domain, P: Prior<D>> Work<'_, D, P> {
         self.stats.evaluations += 1;
         self.stats.max_turn_depth = self.stats.max_turn_depth.max(turn_depth);
         let id = self.nodes.len();
+        #[cfg(feature = "experiment-response-sweeps")]
+        let complete = phase == Phase::Terminal || (phase == Phase::Turn && remaining == 0);
+        #[cfg(feature = "experiment-response-sweeps")]
+        let position = if complete { None } else {
+            self.stats.retained_positions += 1;
+            self.stats.peak_positions = self.stats.peak_positions.max(self.stats.retained_positions);
+            Some(Box::new(position))
+        };
         self.nodes.push(Node {
             position,
+            #[cfg(feature = "experiment-response-sweeps")]
+            complete,
+            #[cfg(feature = "experiment-response-sweeps")]
+            incoming_cell: 0,
             phase,
             remaining,
             turn_depth,
@@ -373,6 +413,7 @@ impl<D: Domain, P: Prior<D>> Work<'_, D, P> {
             actions: [Vec::new(), Vec::new()],
             priors: [Vec::new(), Vec::new()],
             visits: [Vec::new(), Vec::new()],
+            #[cfg(not(feature = "experiment-response-sweeps"))]
             walk_visits: 0,
             cells: Vec::new(),
             solution: None,
@@ -389,12 +430,12 @@ impl<D: Domain, P: Prior<D>> Work<'_, D, P> {
         for player in 0..2 {
             let actions = self
                 .domain
-                .actions(&node.position, player)
+                .actions(node.position(), player)
                 .map_err(Error::Domain)?;
             if actions.is_empty() {
                 return Err(Error::Domain("nonterminal empty menu".into()).into());
             }
-            let mut priors = self.prior.weights(&node.position, player, &actions);
+            let mut priors = self.prior.weights(node.position(), player, &actions);
             if priors.len() != actions.len() || priors.iter().any(|p| !p.is_finite() || *p < 0.0) {
                 return Err(Error::InvalidPrior.into());
             }
@@ -446,7 +487,7 @@ impl<D: Domain, P: Prior<D>> Work<'_, D, P> {
         let outcomes = self
             .domain
             .transitions(
-                &node.position,
+                node.position(),
                 [&node.actions[0][cell / m], &node.actions[1][cell % m]],
             )
             .map_err(Error::Domain)?;
@@ -475,6 +516,8 @@ impl<D: Domain, P: Prior<D>> Work<'_, D, P> {
                 return Err(Control::Stop(Stop::NodeLimit));
             }
             let child = self.push_node(position, remaining, turn_depth, switch_chain)?;
+            #[cfg(feature = "experiment-response-sweeps")]
+            { self.nodes[child].incoming_cell = cell; }
             // A switch is a decision, not a terminal heuristic leaf. Resolve its matrix
             // even when this turn used the last normal-turn depth unit.
             if self.nodes[child].phase == Phase::Switch {
@@ -528,7 +571,54 @@ impl<D: Domain, P: Prior<D>> Work<'_, D, P> {
         }
         node.value = solution.equilibrium.value;
         node.solution = Some(solution);
+        #[cfg(feature = "experiment-response-sweeps")]
+        self.refresh_complete(id);
         Ok(())
+    }
+
+    /// A matrix entry with zero probability on BOTH axes contributes to neither
+    /// unilateral best response. Changing it leaves this equilibrium, its value,
+    /// all action values, and the measured local gap valid (including approximate RM+).
+    #[cfg(feature = "experiment-response-sweeps")]
+    fn irrelevant_cell(&self, id: usize, cell: Option<usize>) -> bool {
+        let node = &self.nodes[id];
+        let (Some(solution), Some(cell)) = (&node.solution, cell) else { return false; };
+        let cols = node.actions[1].len();
+        solution.equilibrium.rows[cell / cols] == 0.0
+            && solution.equilibrium.cols[cell % cols] == 0.0
+    }
+
+    #[cfg(feature = "experiment-response-sweeps")]
+    fn backup(&mut self, target: &Target) -> Result<(), Control> {
+        let mut changed = true;
+        for index in (0..target.path.len()).rev() {
+            let id = target.path[index];
+            let cell = if index + 1 == target.path.len() { target.cell }
+                else { Some(self.nodes[target.path[index + 1]].incoming_cell) };
+            let old = self.nodes[id].value.to_bits();
+            if changed && !self.irrelevant_cell(id, cell) {
+                self.solve_node(id)?;
+            } else {
+                self.stats.skipped_backups += 1;
+            }
+            // Completion must propagate even when the scalar payoff did not change.
+            self.refresh_complete(id);
+            changed = old != self.nodes[id].value.to_bits();
+        }
+        Ok(())
+    }
+
+    #[cfg(feature = "experiment-response-sweeps")]
+    fn refresh_complete(&mut self, id: usize) {
+        if self.nodes[id].complete { return; }
+        let node = &self.nodes[id];
+        let complete = node.solution.is_some() && node.cells.iter().all(|edge| {
+            edge.as_ref().is_some_and(|edge| edge.outcomes.iter().all(|&(_, child)| self.nodes[child].complete))
+        });
+        if complete {
+            self.nodes[id].complete = true;
+            if self.nodes[id].position.take().is_some() { self.stats.retained_positions -= 1; }
+        }
     }
 
     fn policy(&self) -> Policy<D::Action> {
@@ -544,6 +634,10 @@ impl<D: Domain, P: Prior<D>> Work<'_, D, P> {
     }
 
     fn select(&mut self) -> Option<Target> {
+        #[cfg(feature = "experiment-response-sweeps")]
+        { self.response_target() }
+        #[cfg(not(feature = "experiment-response-sweeps"))]
+        {
         for _ in 0..self.config.walks_before_scan {
             self.stats.walks += 1;
             if let Some(target) = self.walk() {
@@ -552,8 +646,40 @@ impl<D: Domain, P: Prior<D>> Work<'_, D, P> {
         }
         self.stats.frontier_scans += 1;
         self.scan(0, &mut Vec::new())
+        }
     }
 
+    /// Fairly revisit responses to EITHER player's current strategy. A product
+    /// distribution can starve a decisive counter just because its present opponent
+    /// probability is zero. The uniform floor also preserves eventual full coverage.
+    #[cfg(feature = "experiment-response-sweeps")]
+    fn response_target(&mut self) -> Option<Target> {
+        if self.nodes[0].complete { return None; }
+        self.stats.response_sweeps += 1;
+        self.response_visits.resize(self.nodes[0].cells.len(), 0);
+        let root = &self.nodes[0];
+        let eq = &root.solution.as_ref().expect("initial root solved").equilibrium;
+        let cols = root.actions[1].len();
+        let floor = 1.0 / (root.actions[0].len() + cols) as f64;
+        let mut ranked: Vec<_> = (0..root.cells.len()).map(|cell| {
+            let score = (f64::from(eq.rows[cell / cols]) + f64::from(eq.cols[cell % cols]) + floor)
+                / (1.0 + self.response_visits[cell] as f64);
+            (cell, score)
+        }).collect();
+        ranked.sort_unstable_by(|a, b| b.1.total_cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+        for (cell, _) in ranked {
+            let target = if let Some(edge) = &self.nodes[0].cells[cell] {
+                edge.outcomes.iter().find_map(|&(_, child)| self.scan(child, &mut vec![0]))
+            } else { Some(Target { path: vec![0], cell: Some(cell) }) };
+            if let Some(target) = target {
+                self.response_visits[cell] += 1;
+                return Some(target);
+            }
+        }
+        None
+    }
+
+    #[cfg(not(feature = "experiment-response-sweeps"))]
     fn walk(&mut self) -> Option<Target> {
         let mut id = 0;
         let mut path = Vec::new();
@@ -612,6 +738,8 @@ impl<D: Domain, P: Prior<D>> Work<'_, D, P> {
 
     fn scan(&self, id: usize, path: &mut Vec<usize>) -> Option<Target> {
         let node = &self.nodes[id];
+        #[cfg(feature = "experiment-response-sweeps")]
+        if node.complete { return None; }
         if node.leaf() {
             return None;
         }

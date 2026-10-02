@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "parent_source": "a0f7b556e30095e85ce56013c0e7d1f08206f03d",
+  "depth": 2,
+  "side": "p1",
+  "evaluator": "Heuristic",
+  "pruning": "Sensible",
+  "outcome_cap": null,
+  "threads": 1,
+  "target_cpu": "x86-64",
+  "transition_weights": {
+    "turn": 1,
+    "switch": 1
+  },
+  "seeds": [
+    1,
+    7,
+    19
+  ],
+  "work_checkpoints": [
+    32,
+    128,
+    512,
+    2048,
+    8192
+  ],
+  "reference_limit_seconds": 120,
+  "address_space_limit_gib": 4,
+  "features": [
+    "lab-search/experiment-search-quality",
+    "lab-engine/experiment-hurt-readers",
+    "lab-search/experiment-prepared-turn",
+    "lab-search/experiment-leaf-ending-states",
+    "lab-engine/experiment-compact-volatiles",
+    "lab-engine/experiment-replay-action-keys",
+    "lab-search/experiment-borrowed-child-keys"
+  ],
+  "cases": [
+    {
+      "id": "speed-swap-full",
+      "scenario": "engine/oracle/scenarios/psych-up-speed-swap.json",
+      "rolls": "full",
+      "position": 0,
+      "reference": true,
+      "seconds": [
+        0.01,
+        0.05,
+        0.25,
+        1,
+        3
+      ]
+    },
+    {
+      "id": "half-hp-median",
+      "scenario": "engine/oracle/scenarios/super-fang.json",
+      "rolls": "median",
+      "position": 0,
+      "reference": true,
+      "seconds": [
+        0.01,
+        0.05,
+        0.25,
+        1,
+        3
+      ]
+    },
+    {
+      "id": "helping-hand-median",
+      "scenario": "engine/oracle/scenarios/o7-helping-hand.json",
+      "rolls": "median",
+      "position": 0,
+      "reference": true,
+      "seconds": [
+        0.01,
+        0.05,
+        0.25,
+        1,
+        3
+      ]
+    },
+    {
+      "id": "pivot-median",
+      "scenario": "engine/oracle/scenarios/eject-button-uturn.json",
+      "rolls": "median",
+      "position": 0,
+      "reference": true,
+      "seconds": [
+        0.01,
+        0.05,
+        0.25,
+        1,
+        3
+      ]
+    },
+    {
+      "id": "pivot-full",
+      "scenario": "engine/oracle/scenarios/eject-button-uturn.json",
+      "rolls": "full",
+      "position": 0,
+      "reference": true,
+      "seconds": [
+        0.01,
+        0.05,
+        0.25,
+        1,
+        3
+      ]
+    },
+    {
+      "id": "coaching-median",
+      "scenario": "engine/jobs/plan-20260926/gardevoir-vs-coaching-panda.json",
+      "rolls": "median",
+      "position": 0,
+      "reference": false,
+      "seconds": [
+        0.1,
+        0.5,
+        2,
+        5,
+        15
+      ]
+    },
+    {
+      "id": "sand-median",
+      "scenario": "engine/jobs/plan-20260926/starmie-vs-sand-owen.json",
+      "rolls": "median",
+      "position": 0,
+      "reference": false,
+      "seconds": [
+        0.1,
+        0.5,
+        2,
+        5,
+        15
+      ]
+    }
+  ],
+  "candidate_feature": "lab-search/experiment-response-sweeps",
+  "arms": [
+    "baseline",
+    "selective",
+    "revised"
+  ],
+  "completion_diagnostic_seconds": 120
+}
