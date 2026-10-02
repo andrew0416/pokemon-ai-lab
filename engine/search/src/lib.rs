@@ -39,6 +39,8 @@
 #[cfg(feature = "scenario")]
 pub mod api;
 pub mod choice;
+#[cfg(feature = "experiment-budgeted-search")]
+pub mod budgeted;
 pub mod game;
 #[cfg(feature = "scenario")]
 pub mod model;

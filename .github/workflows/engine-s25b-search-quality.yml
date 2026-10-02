@@ -1,0 +1,127 @@
+name: S25b selective search quality pilot
+run-name: S25b same-time completed policies and common reference
+on:
+  push:
+    branches: [codex/s25b-search-quality-20261002]
+permissions:
+  contents: read
+concurrency:
+  group: s25b-search-quality-pilot
+  cancel-in-progress: false
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
+  CARGO_PROFILE_RELEASE_OPT_LEVEL: "3"
+  CARGO_PROFILE_RELEASE_DEBUG: "1"
+  CARGO_PROFILE_RELEASE_LTO: "off"
+  CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
+  RUSTFLAGS: "-C target-cpu=x86-64"
+  RAYON_NUM_THREADS: "1"
+  RUST_MIN_STACK: "16777216"
+  RUST_TEST_THREADS: "1"
+  PYTHONUTF8: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    outputs:
+      manifest_sha256: ${{ steps.build.outputs.manifest_sha256 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@1.98.1
+      - name: Reuse dependency compilation
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-search-quality-deps-v1
+          workspaces: engine -> ../target-s25
+          cache-workspace-crates: false
+          cache-all-crates: false
+          cache-bin: false
+          cache-on-failure: false
+      - name: Fresh logic gates and one immutable executable
+        id: build
+        run: python -B engine/benchmarks/s25_quality/run.py build
+      - name: Preserve binary and verification receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s25-package-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s25-package/
+          if-no-files-found: warn
+          retention-days: 30
+  compare:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        case: [speed-swap-full, half-hp-median, helping-hand-median, pivot-median, pivot-full, coaching-median, sand-median]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: s25-package-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s25-package
+      - name: Reference and same-VM AB/BA completed-policy curves
+        env:
+          PACKAGE_MANIFEST_SHA: ${{ needs.build.outputs.manifest_sha256 }}
+          CASE_ID: ${{ matrix.case }}
+        run: python -B engine/benchmarks/s25_quality/run.py case --case "$CASE_ID"
+      - name: Preserve every timeout, policy and process measurement
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s25-case-${{ matrix.case }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s25-case-${{ matrix.case }}/
+          if-no-files-found: warn
+          retention-days: 30
+  summary:
+    if: always()
+    needs: [build, compare]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: s25-case-*-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s25-results
+      - name: Audit coverage and compare strategies on the same matrix
+        env:
+          PACKAGE_MANIFEST_SHA: ${{ needs.build.outputs.manifest_sha256 }}
+        run: python -B engine/benchmarks/s25_quality/run.py summary
+      - name: Preserve final report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s25-summary-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s25-summary/
+          if-no-files-found: warn
+          retention-days: 30

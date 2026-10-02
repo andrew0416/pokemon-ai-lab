@@ -81,6 +81,9 @@ pub enum Chance {
 
 #[derive(Clone, Copy, Debug)]
 pub struct Config {
+    /// Isolated comparison: keep the default, but allow a common fixed terminal score.
+    #[cfg(feature = "experiment-search-quality")]
+    pub terminal_depth_bonus: bool,
     /// Opt-in experiment; the Cargo feature itself is off by default.
     #[cfg(feature = "experiment-prepared-turn")]
     pub prepared_turn: bool,
@@ -141,6 +144,8 @@ impl Config {
 
     pub fn new(ruleset: Ruleset, us: SideId) -> Config {
         Config {
+            #[cfg(feature = "experiment-search-quality")]
+            terminal_depth_bonus: true,
             #[cfg(feature = "experiment-prepared-turn")]
             prepared_turn: true,
             ruleset,
@@ -574,6 +579,8 @@ impl<'e, const N: usize, E: Evaluator<N> + ?Sized + Sync> Solver<'e, N, E> {
     }
 
     fn terminal(&self, result: BattleResult, depth: u32) -> f32 {
+        #[cfg(feature = "experiment-search-quality")]
+        let depth = if self.config.terminal_depth_bonus { depth } else { 0 };
         match result {
             BattleResult::Win(side) if side == self.config.us => WIN + depth as f32,
             BattleResult::Win(_) => -(WIN + depth as f32),

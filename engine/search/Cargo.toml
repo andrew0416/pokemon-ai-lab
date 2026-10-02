@@ -15,6 +15,8 @@ path = "src/lib.rs"
 # `default-features = false`.
 [features]
 default = ["cli"]
+experiment-budgeted-search = []
+experiment-search-quality = ["experiment-budgeted-search", "cli"]
 experiment-prepared-turn = ["lab-engine/experiment-prepared-turn"]
 experiment-prepared-turn-observe = ["experiment-prepared-turn", "lab-engine/experiment-prepared-turn-observe"]
 # `node`: positions stepped by choice strings over the scenario loader (the Python API's core,
@@ -58,6 +60,16 @@ required-features = ["cli"]
 name = "lab-replay"
 path = "src/bin/lab-replay.rs"
 required-features = ["cli"]
+
+[[bin]]
+name = "lab-budget"
+path = "src/bin/lab-budget.rs"
+required-features = ["cli", "experiment-budgeted-search"]
+
+[[bin]]
+name = "lab-search-quality"
+path = "src/bin/lab-search-quality.rs"
+required-features = ["experiment-search-quality"]
 
 # Experiment: preserve tests while reducing integration-test executable count.
 
