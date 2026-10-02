@@ -1,0 +1,153 @@
+name: P7g full500 paired first-hit timings
+run-name: "P7g same-source OFF ON full500 paired Full API timings"
+on:
+  push:
+    branches: [codex/p7g-full500-timing-20261002]
+permissions:
+  contents: read
+concurrency:
+  group: engine-p7g-full500-timing
+  cancel-in-progress: false
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  RUSTFLAGS: "-Ctarget-cpu=x86-64"
+  CARGO_PROFILE_RELEASE_OPT_LEVEL: "3"
+  CARGO_PROFILE_RELEASE_DEBUG: "1"
+  CARGO_PROFILE_RELEASE_LTO: "off"
+  CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
+  RAYON_NUM_THREADS: "1"
+  RUST_MIN_STACK: "16777216"
+  RUST_TEST_THREADS: "1"
+  PYTHONUTF8: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    outputs:
+      package_sha256: ${{ steps.build.outputs.package_sha256 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: controller
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 87e7fdcb47b24e407e81d9d5688714dfee6de35d
+          path: source
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@1.98.1
+      - name: Pure Python protocol and failure regressions
+        run: python -B -m unittest discover -s controller/engine/benchmarks/p7g_timing -p 'test_*.py' -v
+      - name: Restore and save dependency compilation only
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-p7d-first-hit-deps-v1
+          workspaces: |
+            source/engine -> ../../target-p7g-off
+            source/engine -> ../../target-p7g-on
+          cache-workspace-crates: false
+          cache-all-crates: false
+          cache-bin: false
+          cache-on-failure: false
+          save-if: true
+      - name: Fresh28 named tests and two immutable benchmark binaries
+        id: build
+        run: python -B controller/engine/benchmarks/p7g_timing/timing_run.py build --workspace "$GITHUB_WORKSPACE"
+      - name: Preserve build binaries and raw proofs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-p7g-build-${{ github.run_id }}-${{ github.run_attempt }}
+          path: p7g-build/
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 6
+  timing:
+    name: timing-${{ matrix.shard }}
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: controller
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 87e7fdcb47b24e407e81d9d5688714dfee6de35d
+          path: source
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: engine-p7g-build-${{ github.run_id }}-${{ github.run_attempt }}
+          path: p7g-build
+      - name: Each case warmup OFF ON then three serial ABBA blocks
+        env:
+          PACKAGE_SHA: ${{ needs.build.outputs.package_sha256 }}
+          SHARD: ${{ matrix.shard }}
+        run: python -B controller/engine/benchmarks/p7g_timing/timing_run.py timing --workspace "$GITHUB_WORKSPACE" --shard "$SHARD" --package-sha "$PACKAGE_SHA"
+      - name: Preserve complete and incomplete raw timings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-p7g-timing-${{ matrix.shard }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: p7g-timing-${{ matrix.shard }}-results/
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 6
+  aggregate:
+    if: always()
+    needs: [build, timing]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: controller
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: engine-p7g-build-${{ github.run_id }}-${{ github.run_attempt }}
+          path: p7g-build
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: engine-p7g-timing-*-${{ github.run_id }}-${{ github.run_attempt }}
+          path: downloaded
+          merge-multiple: false
+      - name: Recompute all500 paired ratios from raw timing streams
+        env:
+          PACKAGE_SHA: ${{ needs.build.outputs.package_sha256 }}
+        run: python -B controller/engine/benchmarks/p7g_timing/timing_run.py aggregate --workspace "$GITHUB_WORKSPACE" --package-sha "$PACKAGE_SHA"
+      - name: Preserve explicit aggregate verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-p7g-summary-${{ github.run_id }}-${{ github.run_attempt }}
+          path: p7g-aggregate-results/
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 6
