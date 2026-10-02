@@ -9,6 +9,8 @@ pub struct Options {
     pub workspace: bool,
     pub compiler: bool,
     pub static_values: bool,
+    /// Storage-only observation formatter; consumed by the engine adapter.
+    pub direct_write: bool,
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Settings {

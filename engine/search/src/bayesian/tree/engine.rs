@@ -60,33 +60,54 @@ fn snapshot<const N: usize>(
     us: SideId,
     phase: &str,
 ) -> Result<Observation, String> {
+    snapshot_impl::<N, false>(state, us, phase)
+}
+fn snapshot_impl<const N: usize, const DIRECT: bool>(
+    state: &State<N>,
+    us: SideId,
+    phase: &str,
+) -> Result<Observation, String> {
+    // A single disclosure allowlist feeds both formatting paths. Adding a mechanic's
+    // observation changes both paths together; DIRECT changes storage only.
+    macro_rules! append {
+        ($out:expr, $($args:tt)*) => {{
+            if DIRECT {
+                use std::fmt::Write;
+                write!($out, $($args)*).expect("String formatting failed");
+            } else {
+                ($out).push_str(&format!($($args)*));
+            }
+        }};
+    }
+
     // Explicit allowlist. Never Debug/hash State, Side, Slot, Pokemon or Suspension here:
     // they include hidden counters, bench identity, queue order and committed actions.
     let mut public = format!("{phase}|{}|{:?}|", state.turn, state.result);
     for effect in &state.field {
-        public.push_str(&format!("{},{};", effect.is_active(), effect.value));
+        append!(&mut public, "{},{};", effect.is_active(), effect.value);
     }
     let mut private = [String::new(), String::new()];
     for (physical, side) in state.sides.iter().enumerate() {
         public.push('|');
         for effect in &side.effects {
-            public.push_str(&format!("{},{};", effect.is_active(), effect.value));
+            append!(&mut public, "{},{};", effect.is_active(), effect.value);
         }
         for slot in &side.slots {
             // A last-move field is not a public event log: aborted/called moves need
             // disclosure semantics that this engine API does not preserve.
-            public.push_str(&format!("{:?};{};", slot.boosts, slot.must_switch_out()));
+            append!(&mut public, "{:?};{};", slot.boosts, slot.must_switch_out());
             if let Some(index) = slot.party_index.or(slot.fainted_occupant) {
                 let p = &side.party[index as usize];
                 if p.illusion {
                     return Err("Illusion needs an appearance-aware observer".into());
                 }
-                public.push_str(&format!(
+                append!(
+                    &mut public,
                     "{:?},{},{:?};",
                     p.species,
                     hp_bucket(p.hp, p.max_hp)?,
                     p.status
-                ));
+                );
             } else {
                 public.push_str("empty;");
             }
@@ -94,12 +115,18 @@ fn snapshot<const N: usize>(
         let player = if physical == us.index() { 0 } else { 1 };
         // The owner's request supplies HP, item/ability and PP, not random status timers.
         for p in &side.party {
-            private[player].push_str(&format!(
+            append!(
+                &mut private[player],
                 "{:?},{},{},{:?},{:?},{:?};",
-                p.species, p.hp, p.max_hp, p.status, p.item, p.ability
-            ));
+                p.species,
+                p.hp,
+                p.max_hp,
+                p.status,
+                p.item,
+                p.ability
+            );
             for m in &p.moves {
-                private[player].push_str(&format!("{:?},{};", m.id, m.pp));
+                append!(&mut private[player], "{:?},{};", m.id, m.pp);
             }
         }
     }
@@ -152,6 +179,46 @@ pub fn build<const N: usize, E: Evaluator<N> + ?Sized>(
         })
         .collect();
     builder::build(&domain, &seeds, limits)
+}
+
+#[cfg(feature = "experiment-belief-workspace")]
+struct WritingDomain<'a, const N: usize, E: Evaluator<N> + ?Sized> {
+    inner: SnapshotDomain<'a, N, E>,
+    direct: bool,
+}
+#[cfg(feature = "experiment-belief-workspace")]
+impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for WritingDomain<'_, N, E> {
+    type Position = Position<N>;
+    type Action = Choice<N>;
+    fn phase(&self, p: &Self::Position) -> Result<Phase, String> {
+        self.inner.phase(p)
+    }
+    fn actions(&self, p: &Self::Position, player: usize) -> Result<Vec<Self::Action>, String> {
+        self.inner.actions(p, player)
+    }
+    fn value(&self, p: &Self::Position) -> f32 {
+        self.inner.value(p)
+    }
+    fn transitions(
+        &self,
+        p: &Self::Position,
+        a: [&Self::Action; 2],
+    ) -> Result<Vec<(f64, Self::Position)>, String> {
+        self.inner.transitions(p, a)
+    }
+}
+#[cfg(feature = "experiment-belief-workspace")]
+impl<const N: usize, E: Evaluator<N> + ?Sized> ObservedDomain for WritingDomain<'_, N, E> {
+    fn observation(&self, p: &Position<N>) -> Result<Observation, String> {
+        if !self.direct {
+            return self.inner.observation(p);
+        }
+        let phase = crate::decision(&p.state, p.suspension.as_ref()).map_err(|e| e.to_string())?;
+        snapshot_impl::<N, true>(&p.state, self.inner.inner.us, &format!("{phase:?}"))
+    }
+    fn action_id(&self, p: &Position<N>, player: usize, a: &Choice<N>) -> String {
+        self.inner.action_id(p, player, a)
+    }
 }
 
 /// Selective expansion uses exactly the same root knowledge and observation contract.
@@ -237,6 +304,10 @@ pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
             position: w.position.clone(),
         })
         .collect();
+    let domain = WritingDomain {
+        inner: domain,
+        direct: settings.storage.direct_write,
+    };
     builder::growing::reuse::search(
         &domain,
         &seeds,
@@ -250,6 +321,29 @@ pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn observation_writers_share_disclosure_and_error_contracts() {
+        let mut state = State::<2>::default();
+        state.sides[0].slots[0].party_index = Some(0);
+        for side in [SideId::One, SideId::Two] {
+            for hp in [0, 1, 50, 100, 101] {
+                state.sides[0].party[0].max_hp = 100;
+                state.sides[0].party[0].hp = hp;
+                assert_eq!(
+                    snapshot_impl::<2, false>(&state, side, "Turn"),
+                    snapshot_impl::<2, true>(&state, side, "Turn")
+                );
+            }
+        }
+        assert!(snapshot_impl::<2, true>(&state, SideId::One, "Turn").is_err());
+        state.sides[0].party[0].hp = 50;
+        state.sides[0].party[0].illusion = true;
+        assert_eq!(
+            snapshot_impl::<2, false>(&state, SideId::One, "Switch"),
+            snapshot_impl::<2, true>(&state, SideId::One, "Switch")
+        );
+        assert!(snapshot_impl::<2, true>(&state, SideId::One, "Switch").is_err());
+    }
     #[test]
     fn hp_is_not_exact_and_invalid_health_fails() {
         assert_eq!(hp_bucket(51, 101).unwrap(), 50);
@@ -275,4 +369,47 @@ mod tests {
         state.sides[1].slots[0].substitute_hp = 43;
         assert_eq!(a, snapshot(&state, SideId::One, "Turn").unwrap());
     }
+}
+
+#[cfg(feature = "experiment-belief-workspace")]
+pub fn build_writing<const N: usize, E: Evaluator<N> + ?Sized>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+) -> Result<Built, Error> {
+    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+    let reference = visible(&first.position.state, us, knowledge)?;
+    for w in worlds {
+        if w.position.suspension.is_some() {
+            return Err(Error("root suspended state needs prior action memory; resume using this tree's continuation policy".into()));
+        }
+        if visible(&w.position.state, us, knowledge)? != reference {
+            return Err(Error("worlds disagree on declared known root state".into()));
+        }
+    }
+    let domain = SnapshotDomain {
+        inner: EngineDomain {
+            ruleset,
+            options: EnumerateOptions::default(),
+            pruning: Pruning::All,
+            us,
+            evaluator,
+        },
+    };
+    let seeds: Vec<_> = worlds
+        .iter()
+        .map(|w| Seed {
+            id: w.id.clone(),
+            weight: w.weight,
+            position: w.position.clone(),
+        })
+        .collect();
+    let domain = WritingDomain {
+        inner: domain,
+        direct: true,
+    };
+    builder::build(&domain, &seeds, limits)
 }

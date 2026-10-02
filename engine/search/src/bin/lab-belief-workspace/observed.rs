@@ -190,6 +190,7 @@ pub fn request(
                 workspace: true,
                 compiler: true,
                 static_values: true,
+                direct_write: false,
             },
         )
         .map_err(|e| e.to_string())?;

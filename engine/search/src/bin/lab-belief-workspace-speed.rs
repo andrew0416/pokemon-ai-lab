@@ -33,6 +33,7 @@ enum Method {
     Reusing(growing::Config, growing::reuse::Options),
     ExhaustiveWorkspace,
     ExhaustiveCached,
+    ExhaustiveWriting,
 }
 fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
     match v.get(k) {
@@ -93,9 +94,17 @@ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, 
     let i = black_box(i);
     if matches!(
         variant,
-        Method::Exhaustive | Method::ExhaustiveWorkspace | Method::ExhaustiveCached
+        Method::Exhaustive
+            | Method::ExhaustiveWorkspace
+            | Method::ExhaustiveCached
+            | Method::ExhaustiveWriting
     ) {
-        let built = tree::engine::build(
+        let build = if matches!(variant, Method::ExhaustiveWriting) {
+            tree::engine::build_writing
+        } else {
+            tree::engine::build
+        };
+        let built = build(
             &i.worlds,
             SideId::One,
             Ruleset::CHAMPIONS_MC,
@@ -104,7 +113,10 @@ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, 
             i.limits,
         )
         .map_err(|e| e.to_string())?;
-        let solved = if matches!(variant, Method::ExhaustiveCached) {
+        let solved = if matches!(
+            variant,
+            Method::ExhaustiveCached | Method::ExhaustiveWriting
+        ) {
             tree::workspace::cached::solve(&built.tree, i.solver)
         } else if matches!(variant, Method::ExhaustiveWorkspace) {
             tree::workspace::solve(&built.tree, i.solver)
@@ -260,24 +272,36 @@ fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
         "exhaustive" => Method::Exhaustive,
         "exhaustive-workspace" => Method::ExhaustiveWorkspace,
         "exhaustive-cached" => Method::ExhaustiveCached,
+        "exhaustive-writing" => Method::ExhaustiveWriting,
         "growing" => Method::Growing(config),
         "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all"
-        | "cached" | "all-cached" => Method::Reusing(
+        | "cached" | "all-cached" | "writer" | "all-writer" => Method::Reusing(
             config,
             growing::reuse::Options {
                 in_place: matches!(
                     v["kind"].as_str(),
-                    Some("in-place" | "combined" | "in-place-compiler" | "all" | "all-cached")
+                    Some(
+                        "in-place"
+                            | "combined"
+                            | "in-place-compiler"
+                            | "all"
+                            | "all-cached"
+                            | "all-writer"
+                    )
                 ),
                 workspace: matches!(
                     v["kind"].as_str(),
-                    Some("workspace" | "combined" | "all" | "cached" | "all-cached")
+                    Some("workspace" | "combined" | "all" | "cached" | "all-cached" | "all-writer")
                 ),
                 compiler: matches!(
                     v["kind"].as_str(),
-                    Some("compiler" | "in-place-compiler" | "all" | "all-cached")
+                    Some("compiler" | "in-place-compiler" | "all" | "all-cached" | "all-writer")
                 ),
-                static_values: matches!(v["kind"].as_str(), Some("cached" | "all-cached")),
+                static_values: matches!(
+                    v["kind"].as_str(),
+                    Some("cached" | "all-cached" | "all-writer")
+                ),
+                direct_write: matches!(v["kind"].as_str(), Some("writer" | "all-writer")),
             },
         ),
         _ => return Err("invalid method".into()),

@@ -68,6 +68,34 @@ fn scratch_reuse_matches_reference_kuhn_at_every_check_schedule() {
 
 #[cfg(feature = "experiment-belief-workspace")]
 #[test]
+fn cached_terminal_backups_do_not_hide_positive_reach_underflow() {
+    let t = Tree::new(
+        vec![
+            Node::Chance(vec![(1e-200, 1), (1., 2)]),
+            Node::Chance(vec![(1e-200, 3), (1., 4)]),
+            Node::Terminal(0.),
+            Node::Terminal(1.),
+            Node::Terminal(0.),
+        ],
+        0,
+    )
+    .unwrap();
+    let c = Config {
+        iterations: 2,
+        tolerance: 0.1,
+        check_every: 1,
+    };
+    let reference = solve(&t, c).unwrap_err().to_string();
+    assert!(reference.contains("positive history reach underflow"));
+    assert_eq!(
+        reference,
+        workspace::cached::solve(&t, c).unwrap_err().to_string()
+    );
+    assert_eq!(reference, workspace::solve(&t, c).unwrap_err().to_string());
+}
+
+#[cfg(feature = "experiment-belief-workspace")]
+#[test]
 fn scratch_reuse_matches_scaled_hidden_games_and_invalid_configs() {
     for scale in [0., 1e-300, 1., 1e100] {
         for mass in [0., 0.01, 0.5, 1.] {

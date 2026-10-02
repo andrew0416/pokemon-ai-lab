@@ -229,6 +229,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                                 workspace: true,
                                 compiler: true,
                                 static_values: true,
+                                direct_write: true,
                             },
                         },
                     )
