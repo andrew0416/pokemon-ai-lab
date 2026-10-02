@@ -81,6 +81,11 @@ path = "src/bin/lab-belief.rs"
 required-features = ["cli", "experiment-public-belief"]
 
 [[bin]]
+name = "lab-belief-speed"
+path = "src/bin/lab-belief-speed.rs"
+required-features = ["cli", "experiment-growing-belief"]
+
+[[bin]]
 name = "lab-search-quality"
 path = "src/bin/lab-search-quality.rs"
 required-features = ["experiment-search-quality"]

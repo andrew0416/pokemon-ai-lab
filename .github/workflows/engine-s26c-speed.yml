@@ -1,0 +1,62 @@
+name: S26c speed only
+on:
+  push:
+    branches: [codex/s26c-speed-20261002]
+permissions:
+  contents: read
+concurrency:
+  group: s26c-speed
+  cancel-in-progress: false
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_RELEASE_DEBUG: "0"
+  RUSTFLAGS: "-C target-cpu=x86-64"
+  RUST_MIN_STACK: "16777216"
+  RAYON_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  PYTHONUTF8: "1"
+jobs:
+  speed:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@1.98.1
+        with:
+          components: clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-search-quality-deps-v1
+          workspaces: engine -> ../target-s25
+          cache-workspace-crates: false
+          cache-bin: false
+      - name: Build one portable release binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s26c-speed-results
+          cd engine
+          cargo clippy --locked -p lab-search --bin lab-belief-speed --features experiment-growing-belief -- -D warnings 2>&1 | tee ../s26c-speed-results/clippy.log
+          cargo build --locked --release -p lab-search --bin lab-belief-speed --features experiment-growing-belief 2>&1 | tee ../s26c-speed-results/build.log
+          git rev-parse HEAD > ../s26c-speed-results/source-sha.txt
+          rustc --version > ../s26c-speed-results/rustc.txt
+      - name: Same-runner paired timing
+        run: python -B engine/benchmarks/s26_speed/run.py --binary target-s25/release/lab-belief-speed --out s26c-speed-results/paired
+      - name: Preserve raw timing and eligibility checks
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s26c-speed-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s26c-speed-results/
+          if-no-files-found: error
+          retention-days: 30

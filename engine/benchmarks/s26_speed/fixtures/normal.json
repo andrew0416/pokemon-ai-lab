@@ -1,0 +1,94 @@
+{
+  "description": "Speed Swap then Psych Up: in the setup turn Weavile swaps its stored Speed (177) with Snorlax's (54). Now Snorlax moves first: Swords Dance (+2 Atk), then its Lansat Berry (HP 50 of 235) gives it focusenergy at the Update; Hitmontop's Psych Up copies +2 Atk and focusenergy; the slowed Weavile moves last.",
+  "format": "gen9championsdoublescustomgame",
+  "p1": {
+    "team": [
+      {
+        "species": "Weavile",
+        "item": "",
+        "ability": "Honey Gather",
+        "nature": "Adamant",
+        "evs": {
+          "hp": 32,
+          "atk": 32,
+          "spe": 2
+        },
+        "moves": [
+          "Speed Swap",
+          "Calm Mind"
+        ],
+        "level": 50
+      },
+      {
+        "species": "Hitmontop",
+        "item": "",
+        "ability": "Honey Gather",
+        "nature": "Adamant",
+        "evs": {
+          "hp": 32,
+          "atk": 32,
+          "def": 2
+        },
+        "moves": [
+          "Psych Up",
+          "Calm Mind"
+        ],
+        "level": 50
+      }
+    ],
+    "order": "12"
+  },
+  "p2": {
+    "team": [
+      {
+        "species": "Snorlax",
+        "item": "Lansat Berry",
+        "ability": "Honey Gather",
+        "nature": "Adamant",
+        "evs": {
+          "atk": 32,
+          "def": 30,
+          "spe": 4
+        },
+        "moves": [
+          "Swords Dance",
+          "Calm Mind"
+        ],
+        "level": 50
+      },
+      {
+        "species": "Clefable",
+        "item": "",
+        "ability": "Honey Gather",
+        "nature": "Bold",
+        "evs": {
+          "hp": 32,
+          "def": 32,
+          "spd": 2
+        },
+        "moves": [
+          "Calm Mind"
+        ],
+        "level": 50
+      }
+    ],
+    "order": "12"
+  },
+  "setupTurns": [
+    [
+      "move speedswap 1, move calmmind",
+      "move calmmind, move calmmind"
+    ]
+  ],
+  "patch": {
+    "p2": {
+      "Snorlax": {
+        "hp": 50
+      }
+    }
+  },
+  "turn": {
+    "p1": "move calmmind, move psychup 1",
+    "p2": "move swordsdance, move calmmind"
+  }
+}
