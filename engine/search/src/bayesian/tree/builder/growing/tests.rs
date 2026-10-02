@@ -437,33 +437,51 @@ fn allocation_candidates_match_all_admission_failure_boundaries() {
             for options in [
                 reuse::Options {
                     in_place: false,
-                    workspace: false,
-                    compiler: true,
-                },
-                reuse::Options {
-                    in_place: true,
-                    workspace: false,
-                    compiler: true,
+                    workspace: true,
+                    compiler: false,
+                    static_values: true,
                 },
                 reuse::Options {
                     in_place: true,
                     workspace: true,
                     compiler: true,
+                    static_values: true,
+                },
+                reuse::Options {
+                    in_place: false,
+                    workspace: false,
+                    compiler: true,
+                    static_values: false,
+                },
+                reuse::Options {
+                    in_place: true,
+                    workspace: false,
+                    compiler: true,
+                    static_values: false,
+                },
+                reuse::Options {
+                    in_place: true,
+                    workspace: true,
+                    compiler: true,
+                    static_values: false,
                 },
                 reuse::Options {
                     in_place: true,
                     workspace: false,
                     compiler: false,
+                    static_values: false,
                 },
                 reuse::Options {
                     in_place: false,
                     workspace: true,
                     compiler: false,
+                    static_values: false,
                 },
                 reuse::Options {
                     in_place: true,
                     workspace: true,
                     compiler: false,
+                    static_values: false,
                 },
             ] {
                 let g = Game {
@@ -519,6 +537,7 @@ fn allocation_candidates_keep_zero_mass_and_malformed_domain_behavior() {
                         in_place: true,
                         workspace: true,
                         compiler: true,
+                        static_values: true,
                     }
                 ))
             );

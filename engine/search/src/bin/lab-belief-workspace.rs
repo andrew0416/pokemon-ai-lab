@@ -228,6 +228,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                                 in_place: true,
                                 workspace: true,
                                 compiler: true,
+                                static_values: true,
                             },
                         },
                     )
@@ -286,7 +287,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
     };
     let solved = match growth_solution {
         Some(s) => s,
-        None => tree::workspace::solve(&tree, config).map_err(|e| e.to_string())?,
+        None => tree::workspace::cached::solve(&tree, config).map_err(|e| e.to_string())?,
     };
     let beliefs = tree
         .public_beliefs(&solved.policy)

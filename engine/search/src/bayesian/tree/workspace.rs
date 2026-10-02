@@ -2,6 +2,7 @@
 //! reachable tree, so values/reach overwrite each entry before its next read. No clearing
 //! or history pruning is needed. Arithmetic and update order match the reference solver.
 use super::*;
+pub mod cached;
 
 fn values_into(tree: &Tree, policy: &Policy, values: &mut [f64]) {
     for &id in tree.order.iter().rev() {

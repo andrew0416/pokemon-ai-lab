@@ -8,6 +8,7 @@ pub struct Options {
     pub in_place: bool,
     pub workspace: bool,
     pub compiler: bool,
+    pub static_values: bool,
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Settings {
@@ -32,8 +33,10 @@ fn summary<D: ObservedDomain>(g: &Growing<'_, D>) -> (Stats, usize, usize) {
         g.frontier.len(),
     )
 }
-fn solve(t: &Tree, config: CfrConfig, workspace: bool) -> Result<Solution, Error> {
-    if workspace {
+fn solve(t: &Tree, config: CfrConfig, options: Options) -> Result<Solution, Error> {
+    if options.static_values {
+        tree::workspace::cached::solve(t, config)
+    } else if options.workspace {
         tree::workspace::solve(t, config)
     } else {
         tree::solve(t, config)
@@ -135,7 +138,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
         .map_err(fatal)?;
     work.committed_expansions = work.attempted_expansions;
     let mut t = compile(&growing, options.compiler)?;
-    let mut solved = solve(&t, cfg.solver, options.workspace)?;
+    let mut solved = solve(&t, cfg.solver, options)?;
     work.solves += 1;
     work.cfr_iterations += solved.iterations;
     // Only this compact committed summary is externally observable if admission fails.
@@ -179,7 +182,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
             Ok(()) => {}
         }
         let next = compile(candidate, options.compiler)?;
-        let solution = solve(&next, cfg.solver, options.workspace)?;
+        let solution = solve(&next, cfg.solver, options)?;
         q = scores(&next, &solution.policy)?;
         work.committed_expansions += work.attempted_expansions - before;
         work.solves += 1;

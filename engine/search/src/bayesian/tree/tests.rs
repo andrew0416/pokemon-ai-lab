@@ -58,6 +58,8 @@ fn scratch_reuse_matches_reference_kuhn_at_every_check_schedule() {
                 };
                 let reference = solve(&tree, config).unwrap();
                 let candidate = workspace::solve(&tree, config).unwrap();
+                let cached = workspace::cached::solve(&tree, config).unwrap();
+                assert_eq!(format!("{reference:?}"), format!("{cached:?}"));
                 assert_eq!(format!("{reference:?}"), format!("{candidate:?}"));
             }
         }
@@ -104,6 +106,10 @@ fn scratch_reuse_matches_scaled_hidden_games_and_invalid_configs() {
                 assert_eq!(
                     format!("{:?}", solve(&t, config)),
                     format!("{:?}", workspace::solve(&t, config))
+                );
+                assert_eq!(
+                    format!("{:?}", solve(&t, config)),
+                    format!("{:?}", workspace::cached::solve(&t, config))
                 );
             }
         }
