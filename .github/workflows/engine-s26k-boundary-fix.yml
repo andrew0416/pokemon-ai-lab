@@ -1,0 +1,133 @@
+name: S26k boundary controls with isolated builds
+on:
+  push:
+    branches: [codex/s26k-boundary-fix-20261004]
+permissions:
+  contents: read
+concurrency:
+  group: s26k-boundary-fix
+  cancel-in-progress: false
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s26k-current
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
+  CARGO_PROFILE_RELEASE_DEBUG: "0"
+  RUSTFLAGS: "-C target-cpu=x86-64"
+  RUST_MIN_STACK: "16777216"
+  RUST_TEST_THREADS: "1"
+  RAYON_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  PYTHONUTF8: "1"
+  PYTHONHASHSEED: "0"
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: d90c80b4001e43807d404454280f1511329ef952
+          path: reference-s24
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 2bb9cf595f675d269406bbe783e88154ed517cb4
+          path: reference-s25
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@1.98.1
+        with:
+          components: clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-search-quality-deps-v1
+          workspaces: engine -> ../target-s26k-current
+          cache-workspace-crates: false
+          cache-bin: false
+      - name: Independent oracle dependencies
+        run: python -m pip install numpy==2.2.6 scipy==1.15.3
+      - name: Frozen reference builds with identical benchmark transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s26k-boundary-results "$RUNNER_TEMP/s26k-bins"
+          python -B engine/benchmarks/s26_boundary/prepare_reference.py reference-s24 s24 s26k-boundary-results/references
+          python -B engine/benchmarks/s26_boundary/prepare_reference.py reference-s25 s25 s26k-boundary-results/references
+          for revision in s24 s25; do
+            cargo build --locked --release --target-dir "$RUNNER_TEMP/s26k-target-$revision" --manifest-path "reference-$revision/engine/Cargo.toml" -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee "s26k-boundary-results/reference-$revision-speed.log"
+            cp "$RUNNER_TEMP/s26k-target-$revision/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/$revision-speed"
+          done
+          cargo build --locked --release --target-dir "$RUNNER_TEMP/s26k-target-s25" --manifest-path reference-s25/engine/Cargo.toml -p lab-search --bin lab-phase-speed --features experiment-allocation-audit 2>&1 | tee s26k-boundary-results/reference-s25-memory.log
+          cp "$RUNNER_TEMP/s26k-target-s25/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/s25-memory"
+      - name: Correctness, fallback, and separate portable release builds
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s26k-boundary-results "$RUNNER_TEMP/s26k-bins"
+          cd engine
+          cargo test --locked -p lab-search --lib --features experiment-phase-cost,experiment-snapshot-audit,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26k-boundary-results/instrumented-tests.log
+          cargo test --locked -p lab-search --lib --features experiment-growth-pipeline,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26k-boundary-results/uninstrumented-tests.log
+          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26k-boundary-results/default-off.log
+          cargo check --locked -p lab-search --lib --no-default-features --features experiment-phase-cost 2>&1 | tee ../s26k-boundary-results/no-default.log
+          cargo check --locked -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26k-boundary-results/fallback.log
+          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-phase-cost -- -D warnings 2>&1 | tee ../s26k-boundary-results/instrumented-clippy.log
+          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-growth-pipeline -- -D warnings 2>&1 | tee ../s26k-boundary-results/uninstrumented-clippy.log
+          cargo build --locked -p lab-search --bin lab-belief-workspace --features experiment-snapshot-audit 2>&1 | tee ../s26k-boundary-results/oracle-build.log
+          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee ../s26k-boundary-results/speed-build.log
+          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/speed"
+          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-phase-cost 2>&1 | tee ../s26k-boundary-results/profile-build.log
+          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/profile"
+          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-snapshot-audit 2>&1 | tee ../s26k-boundary-results/audit-build.log
+          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/audit"
+          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-allocation-audit 2>&1 | tee ../s26k-boundary-results/memory-build.log
+          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/memory"
+          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-allocation-audit,experiment-snapshot-audit -- -D warnings 2>&1 | tee ../s26k-boundary-results/audit-clippy.log
+          cargo build --locked --release -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26k-boundary-results/scalar-build.log
+          cp "$CARGO_TARGET_DIR/release/lab-belief-workspace" "$RUNNER_TEMP/s26k-bins/scalar"
+          rustc --edition=2021 -C opt-level=2 -C target-cpu=x86-64 benchmarks/s26_boundary/cpu_probe.rs -o "$RUNNER_TEMP/s26k-bins/cpu-probe"
+          git rev-parse HEAD > ../s26k-boundary-results/source-sha.txt
+          rustc --version > ../s26k-boundary-results/rustc.txt
+          sha256sum "$RUNNER_TEMP/s26k-bins/"* > ../s26k-boundary-results/binaries.sha256
+      - name: Reject accidental reuse across version builds
+        run: python -B engine/benchmarks/s26_boundary/binary_identity.py "$RUNNER_TEMP/s26k-bins" s26k-boundary-results/binary-identity.json
+      - name: Independent pipeline exhaustive BR and LP certificates
+        run: python -B engine/benchmarks/s26_boundary/contract_check.py --binary target-s26k-current/debug/lab-belief-workspace --out s26k-boundary-results/pipeline-lp --require-lp
+      - name: Uninstrumented full-result witnesses
+        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/speed" --out s26k-boundary-results/check --mode check
+      - name: Instrumentation counters and cross-build parity
+        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/profile" --out s26k-boundary-results/profile-check --mode profile-check --parity s26k-boundary-results/check/summary.json
+      - name: Every intermediate snapshot shadow checks
+        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/audit" --out s26k-boundary-results/audit-check --mode check --parity s26k-boundary-results/check/summary.json
+      - name: Uninstrumented A-A and boundary comparison
+        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/speed" --out s26k-boundary-results/paired --mode speed --parity s26k-boundary-results/check/summary.json
+      - name: Same-runner pinned version comparisons and true A-A
+        run: python -B engine/benchmarks/s26_boundary/cross_version.py --s24 "$RUNNER_TEMP/s26k-bins/s24-speed" --s25 "$RUNNER_TEMP/s26k-bins/s25-speed" --current "$RUNNER_TEMP/s26k-bins/speed" --parity s26k-boundary-results/check/summary.json --out s26k-boundary-results/cross-version
+      - name: Separate instrumented phase diagnostics
+        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/profile" --out s26k-boundary-results/profile --mode profile --parity s26k-boundary-results/check/summary.json
+      - name: Ephemeral runner CPU emulator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends qemu-user time
+      - name: Fresh-process allocation and RSS measurements
+        run: python -B engine/benchmarks/s26_boundary/memory_run.py --binary "$RUNNER_TEMP/s26k-bins/memory" --out s26k-boundary-results/memory --parity s26k-boundary-results/check/summary.json
+      - name: Rotated sand RSS repetition in plain and instrumented binaries
+        run: python -B engine/benchmarks/s26_boundary/rss_repeat.py --old-speed "$RUNNER_TEMP/s26k-bins/s25-speed" --old-memory "$RUNNER_TEMP/s26k-bins/s25-memory" --speed "$RUNNER_TEMP/s26k-bins/speed" --memory "$RUNNER_TEMP/s26k-bins/memory" --parity s26k-boundary-results/check/summary.json --out s26k-boundary-results/rss-repeat
+      - name: Non-AVX2 emulated execution and scalar fallback
+        run: python -B engine/benchmarks/s26_boundary/portability.py --binary "$RUNNER_TEMP/s26k-bins/speed" --scalar "$RUNNER_TEMP/s26k-bins/scalar" --probe "$RUNNER_TEMP/s26k-bins/cpu-probe" --out s26k-boundary-results/portability
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s26k-boundary-fix-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s26k-boundary-results/
+          if-no-files-found: error
+          retention-days: 30
