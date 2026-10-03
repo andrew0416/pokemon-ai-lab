@@ -134,6 +134,27 @@ impl<D: ObservedDomain> Builder<'_, D> {
             self.public.insert(public, id);
             id
         };
+        self.mark_private(node, world, public_id, keys);
+    }
+    #[cfg(feature = "experiment-growth-pipeline")]
+    fn mark_borrowed(&mut self, node: usize, world: usize, public: &[String], keys: &[String; 2]) {
+        #[cfg(feature = "experiment-phase-cost")]
+        let _mark = crate::bayesian::tree::phase_cost::Span::new(
+            crate::bayesian::tree::phase_cost::Phase::Boundary,
+        );
+        // Vec<String> borrows [String] with the same Hash/Eq semantics. Interning
+        // order and full equality stay intact; only a miss needs an owned copy.
+        let public_id = if let Some(&id) = self.public.get(public) {
+            id
+        } else {
+            let id = self.public_keys.len();
+            self.public_keys.push(format!("{public:?}"));
+            self.public.insert(public.to_vec(), id);
+            id
+        };
+        self.mark_private(node, world, public_id, keys);
+    }
+    fn mark_private(&mut self, node: usize, world: usize, public_id: usize, keys: &[String; 2]) {
         let mut private = [0; 2];
         for (side, key) in keys.iter().enumerate() {
             private[side] = if let Some(&id) = self.private.get(key) {

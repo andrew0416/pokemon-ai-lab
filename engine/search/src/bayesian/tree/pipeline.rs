@@ -7,6 +7,8 @@ pub struct Settings {
     pub compressed_checks: bool,
     /// Storage-only, byte-identical private history keys; growing requests only.
     pub encoded_history: bool,
+    /// Borrow public history on boundary lookup; clone only when interning a new one.
+    pub borrowed_boundary: bool,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -47,9 +49,9 @@ pub fn solve(
     solver: super::paper::Settings,
     settings: Settings,
 ) -> Result<Run, super::Error> {
-    if settings.encoded_history {
+    if settings.encoded_history || settings.borrowed_boundary {
         return Err(super::Error(
-            "encoded history requires a growing request".into(),
+            "history/boundary storage requires a growing request".into(),
         ));
     }
     let mut metrics = Metrics::default();

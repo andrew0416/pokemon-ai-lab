@@ -135,6 +135,8 @@ impl<P: Clone> Clone for Frontier<P> {
     }
 }
 struct Growing<'a, D: ObservedDomain> {
+    #[cfg(feature = "experiment-growth-pipeline")]
+    borrowed_boundary: bool,
     #[cfg(feature = "experiment-parallel-transitions")]
     batch: Option<&'a dyn Batch<D>>,
     b: Builder<'a, D>,
@@ -159,6 +161,8 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
             },
             #[cfg(feature = "experiment-parallel-transitions")]
             batch: self.batch,
+            #[cfg(feature = "experiment-growth-pipeline")]
+            borrowed_boundary: self.borrowed_boundary,
             root: self.root,
             worlds: self.worlds.clone(),
             frontier: self.frontier.clone(),
@@ -199,6 +203,13 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
             );
             h.memory.keys()
         };
+        #[cfg(feature = "experiment-growth-pipeline")]
+        if self.borrowed_boundary {
+            self.b.mark_borrowed(node, h.world, &h.public, &keys);
+        } else {
+            self.b.mark(node, h.world, h.public.clone(), &keys);
+        }
+        #[cfg(not(feature = "experiment-growth-pipeline"))]
         self.b.mark(node, h.world, h.public.clone(), &keys);
         if h.phase != Phase::Terminal && !(h.phase == Phase::Turn && h.turns == 0) {
             #[cfg(feature = "experiment-phase-cost")]
@@ -572,6 +583,8 @@ pub fn search<D: ObservedDomain, P: Prior>(
     normalize(&mut weights)?;
     let first = domain.observation(&seeds[0].position)?;
     let mut growing = Growing {
+        #[cfg(feature = "experiment-growth-pipeline")]
+        borrowed_boundary: false,
         #[cfg(feature = "experiment-parallel-transitions")]
         batch: None,
         b: Builder {

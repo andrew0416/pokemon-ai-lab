@@ -10,6 +10,7 @@ pub fn parse(v: &Value) -> Result<Settings, String> {
             "incremental_sequence",
             "compressed_checks",
             "encoded_history",
+            "borrowed_boundary",
         ]
         .contains(&key.as_str())
         {
@@ -27,6 +28,7 @@ pub fn parse(v: &Value) -> Result<Settings, String> {
         incremental_sequence: flag("incremental_sequence")?,
         compressed_checks: flag("compressed_checks")?,
         encoded_history: flag("encoded_history")?,
+        borrowed_boundary: flag("borrowed_boundary")?,
     })
 }
 pub fn metrics(m: &Metrics) -> Value {
@@ -43,7 +45,11 @@ pub fn request(v: &Value) -> Result<Option<Settings>, String> {
             .ok_or("pipeline requires explicit paper settings")?,
     )?;
     lab_search::bayesian::tree::pipeline::validate(p, solver).map_err(|e| e.to_string())?;
-    if (p.frontier_index || p.owned_compiler || p.incremental_sequence || p.encoded_history)
+    if (p.frontier_index
+        || p.owned_compiler
+        || p.incremental_sequence
+        || p.encoded_history
+        || p.borrowed_boundary)
         && v.get("growth").is_none()
     {
         return Err("growth pipeline flags require a growing request".into());

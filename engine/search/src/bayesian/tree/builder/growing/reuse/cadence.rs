@@ -88,6 +88,8 @@ fn search_impl<
     normalize(&mut weights)?;
     let first = domain.observation(&seeds[0].position)?;
     let mut growing = Growing {
+        #[cfg(feature = "experiment-growth-pipeline")]
+        borrowed_boundary: false,
         #[cfg(feature = "experiment-parallel-transitions")]
         batch,
         b: Builder {

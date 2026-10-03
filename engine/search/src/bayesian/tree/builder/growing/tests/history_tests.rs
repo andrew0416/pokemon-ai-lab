@@ -56,6 +56,14 @@ impl Prior for TracedPrior {
 
 #[test]
 fn encoded_history_preserves_every_callback_and_atomic_result() {
+    compare(false, false);
+}
+#[test]
+fn borrowed_boundary_preserves_callbacks_keys_and_atomic_results() {
+    compare(true, false);
+    compare(true, true);
+}
+fn compare(boundary: bool, history: bool) {
     for switch in [false, true] {
         for cap in [8, 25, 10000] {
             for budget in [1, 2, 99] {
@@ -102,7 +110,8 @@ fn encoded_history_preserves_every_callback_and_atomic_result() {
                                 owned_compiler: all,
                                 incremental_sequence: all,
                                 compressed_checks: all,
-                                encoded_history: enabled,
+                                encoded_history: if boundary { history } else { enabled },
+                                borrowed_boundary: boundary && enabled,
                             },
                         )
                     };
