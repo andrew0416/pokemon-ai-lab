@@ -182,12 +182,14 @@ pub fn build<const N: usize, E: Evaluator<N> + ?Sized>(
 }
 
 #[cfg(feature = "experiment-belief-workspace")]
-struct WritingDomain<'a, const N: usize, E: Evaluator<N> + ?Sized> {
+struct WritingDomain<'a, const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> {
     inner: SnapshotDomain<'a, N, E>,
     direct: bool,
 }
 #[cfg(feature = "experiment-belief-workspace")]
-impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for WritingDomain<'_, N, E> {
+impl<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> Domain
+    for WritingDomain<'_, N, E, OWNED>
+{
     type Position = Position<N>;
     type Action = Choice<N>;
     fn phase(&self, p: &Self::Position) -> Result<Phase, String> {
@@ -204,11 +206,17 @@ impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for WritingDomain<'_, N, E
         p: &Self::Position,
         a: [&Self::Action; 2],
     ) -> Result<Vec<(f64, Self::Position)>, String> {
+        #[cfg(feature = "experiment-owned-transitions")]
+        if OWNED {
+            return self.inner.inner.transitions_owned(p, a);
+        }
         self.inner.transitions(p, a)
     }
 }
 #[cfg(feature = "experiment-belief-workspace")]
-impl<const N: usize, E: Evaluator<N> + ?Sized> ObservedDomain for WritingDomain<'_, N, E> {
+impl<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> ObservedDomain
+    for WritingDomain<'_, N, E, OWNED>
+{
     fn observation(&self, p: &Position<N>) -> Result<Observation, String> {
         if !self.direct {
             return self.inner.observation(p);
@@ -275,6 +283,32 @@ pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
     limits: Limits,
     settings: builder::growing::reuse::Settings,
 ) -> Result<builder::growing::ResultTree, Error> {
+    growing_storage::<N, E, false>(worlds, us, ruleset, evaluator, knowledge, limits, settings)
+}
+
+#[cfg(feature = "experiment-owned-transitions")]
+pub fn growing_owned<const N: usize, E: Evaluator<N> + ?Sized>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+    settings: builder::growing::reuse::Settings,
+) -> Result<builder::growing::ResultTree, Error> {
+    growing_storage::<N, E, true>(worlds, us, ruleset, evaluator, knowledge, limits, settings)
+}
+
+#[cfg(feature = "experiment-belief-workspace")]
+fn growing_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+    settings: builder::growing::reuse::Settings,
+) -> Result<builder::growing::ResultTree, Error> {
     let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
     let reference = visible(&first.position.state, us, knowledge)?;
     for w in worlds {
@@ -304,7 +338,7 @@ pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
             position: w.position.clone(),
         })
         .collect();
-    let domain = WritingDomain {
+    let domain = WritingDomain::<N, E, OWNED> {
         inner: domain,
         direct: settings.storage.direct_write,
     };
@@ -380,6 +414,30 @@ pub fn build_writing<const N: usize, E: Evaluator<N> + ?Sized>(
     knowledge: &Knowledge,
     limits: Limits,
 ) -> Result<Built, Error> {
+    build_storage::<N, E, false>(worlds, us, ruleset, evaluator, knowledge, limits)
+}
+
+#[cfg(feature = "experiment-owned-transitions")]
+pub fn build_owned<const N: usize, E: Evaluator<N> + ?Sized>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+) -> Result<Built, Error> {
+    build_storage::<N, E, true>(worlds, us, ruleset, evaluator, knowledge, limits)
+}
+
+#[cfg(feature = "experiment-belief-workspace")]
+fn build_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+) -> Result<Built, Error> {
     let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
     let reference = visible(&first.position.state, us, knowledge)?;
     for w in worlds {
@@ -407,7 +465,7 @@ pub fn build_writing<const N: usize, E: Evaluator<N> + ?Sized>(
             position: w.position.clone(),
         })
         .collect();
-    let domain = WritingDomain {
+    let domain = WritingDomain::<N, E, OWNED> {
         inner: domain,
         direct: true,
     };

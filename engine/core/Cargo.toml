@@ -17,6 +17,8 @@ name = "damage"
 harness = false
 
 [features]
+# S26e: move fully merged flat ending states to an opt-in search adapter.
+experiment-owned-endings = ["experiment-leaf-ending-states"]
 experiment-hurt-readers = []
 experiment-prepared-turn = []
 experiment-prepared-turn-observe = ["experiment-prepared-turn"]

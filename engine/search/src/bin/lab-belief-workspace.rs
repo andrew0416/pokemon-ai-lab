@@ -1,4 +1,13 @@
 //! Experimental finite information-tree CLI. See benchmarks/s26_tree/CONTRACT.md.
+#[cfg(not(feature = "experiment-owned-transitions"))]
+use lab_search::bayesian::tree::engine::{
+    build as build_backend, growing_reusing as growing_backend,
+};
+#[cfg(feature = "experiment-owned-transitions")]
+use lab_search::bayesian::tree::engine::{
+    build_owned as build_backend, growing_owned as growing_backend,
+};
+
 use lab_engine::{rules::Ruleset, state::SideId, turn::EnumerateOptions};
 use lab_search::bayesian::{
     engine::{EngineWorld, Knowledge},
@@ -215,7 +224,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
             #[cfg(feature = "experiment-growing-belief")]
             let grown = if let Some(c) = growing_config {
                 Some(
-                    tree::engine::growing_reusing(
+                    growing_backend(
                         &worlds,
                         side,
                         Ruleset::CHAMPIONS_MC,
@@ -242,7 +251,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
             let grown: Option<()> = None;
             let (built, growth_metadata, solution) = match grown {
                 None => (
-                    tree::engine::build(
+                    build_backend(
                         &worlds,
                         side,
                         Ruleset::CHAMPIONS_MC,

@@ -34,6 +34,10 @@ enum Method {
     ExhaustiveWorkspace,
     ExhaustiveCached,
     ExhaustiveWriting,
+    #[cfg(feature = "experiment-owned-transitions")]
+    ExhaustiveOwned,
+    #[cfg(feature = "experiment-owned-transitions")]
+    Owned(growing::Config),
 }
 fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
     match v.get(k) {
@@ -92,6 +96,26 @@ fn load(v: &Value, base: &Path) -> Result<Input, String> {
 }
 fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, String> {
     let i = black_box(i);
+    #[cfg(feature = "experiment-owned-transitions")]
+    if matches!(variant, Method::ExhaustiveOwned) {
+        let built = tree::engine::build_owned(
+            &i.worlds,
+            SideId::One,
+            Ruleset::CHAMPIONS_MC,
+            e,
+            &i.knowledge,
+            i.limits,
+        )
+        .map_err(|e| e.to_string())?;
+        let solved =
+            tree::workspace::cached::solve(&built.tree, i.solver).map_err(|e| e.to_string())?;
+        return Ok(Output {
+            built,
+            solved,
+            growth: None,
+            complete: true,
+        });
+    }
     if matches!(
         variant,
         Method::Exhaustive
@@ -151,6 +175,25 @@ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, 
                 growing::reuse::Settings {
                     growth: *g,
                     storage: *options,
+                },
+            ),
+            #[cfg(feature = "experiment-owned-transitions")]
+            Method::Owned(g) => tree::engine::growing_owned(
+                &i.worlds,
+                SideId::One,
+                Ruleset::CHAMPIONS_MC,
+                e,
+                &i.knowledge,
+                i.limits,
+                growing::reuse::Settings {
+                    growth: *g,
+                    storage: growing::reuse::Options {
+                        in_place: true,
+                        workspace: true,
+                        compiler: true,
+                        static_values: true,
+                        direct_write: true,
+                    },
                 },
             ),
             _ => unreachable!(),
@@ -273,6 +316,10 @@ fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
         "exhaustive-workspace" => Method::ExhaustiveWorkspace,
         "exhaustive-cached" => Method::ExhaustiveCached,
         "exhaustive-writing" => Method::ExhaustiveWriting,
+        #[cfg(feature = "experiment-owned-transitions")]
+        "exhaustive-owned" => Method::ExhaustiveOwned,
+        #[cfg(feature = "experiment-owned-transitions")]
+        "all-owned" => Method::Owned(config),
         "growing" => Method::Growing(config),
         "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all"
         | "cached" | "all-cached" | "writer" | "all-writer" => Method::Reusing(

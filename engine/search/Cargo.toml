@@ -14,6 +14,8 @@ path = "src/lib.rs"
 # (serde); it sits behind the default `cli` feature so hot-path users can turn it off with
 # `default-features = false`.
 [features]
+experiment-owned-transitions = ["experiment-belief-workspace", "lab-engine/experiment-owned-endings"]
+experiment-owned-transitions-observer = ["experiment-owned-transitions", "lab-engine/experiment-leaf-ending-observer"]
 default = ["cli"]
 experiment-bayesian-cfr = ["experiment-budgeted-search"]
 experiment-public-belief = ["experiment-bayesian-cfr"]
@@ -118,3 +120,8 @@ required-features = ["cli", "experiment-belief-workspace"]
 name = "lab-belief-workspace"
 path = "src/bin/lab-belief-workspace.rs"
 required-features = ["cli", "experiment-belief-workspace"]
+
+[[test]]
+name = "owned_transitions"
+path = "tests/owned_transitions.rs"
+required-features = ["experiment-owned-transitions-observer"]

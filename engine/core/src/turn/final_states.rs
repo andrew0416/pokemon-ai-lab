@@ -13,6 +13,27 @@ pub struct FinalStates<const N: usize> {
 }
 
 impl<const N: usize> FinalStates<N> {
+    /// Exact number of merged states, allowing an owning consumer to reserve once.
+    #[cfg(feature = "experiment-owned-endings")]
+    pub fn state_count(&self) -> usize {
+        self.endings.iter().map(Vec::len).sum()
+    }
+
+    /// Move already merged end states to an owning consumer in the same order as `visit`.
+    /// No diff, instruction replay, State clone, or pending-queue clone is needed. The
+    /// batch can only exist after every branch has succeeded and the input is restored.
+    #[cfg(feature = "experiment-owned-endings")]
+    pub fn into_owned(self) -> impl Iterator<Item = (State<N>, f64, Option<Suspension>)> {
+        self.endings
+            .into_iter()
+            .flatten()
+            .map(|(state, pending, probability, _)| {
+                #[cfg(feature = "experiment-leaf-ending-observer")]
+                observer::visited();
+                (state, probability, pending.map(Suspension))
+            })
+    }
+
     /// Consume the batch while borrowing its states in place. Moving each pending queue
     /// into its suspension wrapper copies neither State nor queue. Visitors may stop early;
     /// all unvisited endings are dropped. The caller cannot mutate or retain these borrows.

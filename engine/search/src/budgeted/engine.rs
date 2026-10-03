@@ -117,3 +117,6 @@ impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for EngineDomain<'_, N, E>
         Ok(children)
     }
 }
+
+#[cfg(feature = "experiment-owned-transitions")]
+mod owned;
