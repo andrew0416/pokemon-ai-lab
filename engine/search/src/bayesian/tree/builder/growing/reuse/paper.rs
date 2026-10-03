@@ -1,54 +1,25 @@
-//! Same growing-tree algorithm with optional owned-builder reuse and CFR scratch reuse.
-//! A failed admission terminates this call. Its mutable builder is never published;
-//! the last compiled tree, policy and committed counters are returned atomically.
+//! Isolated paper solvers inside the original atomic cadence admission loop.
+//! Admissions in one selected batch publish atomically after a complete CFR solve.
+//! Budget failure discards the whole pending batch and returns the last solved snapshot.
 use super::*;
-#[cfg(feature = "experiment-growth-cadence")]
-pub mod cadence;
-#[cfg(feature = "experiment-paper-solvers")]
-pub mod paper;
-
-#[derive(Clone, Copy, Debug, Default)]
-pub struct Options {
-    pub in_place: bool,
-    pub workspace: bool,
-    pub compiler: bool,
-    pub static_values: bool,
-    /// Storage-only observation formatter; consumed by the engine adapter.
-    pub direct_write: bool,
+#[derive(Clone, Debug, Default)]
+pub struct PaperStats {
+    pub requests: usize,
+    pub reused: usize,
+    pub compact: usize,
+    pub sequence: usize,
+    pub assessments: usize,
+    pub mapped_information: usize,
+    pub scalar_reach_fallbacks: usize,
+    pub warm_attempted: usize,
+    pub warm_applied: usize,
+    pub virtual_iterations: usize,
 }
-#[derive(Clone, Copy, Debug)]
-pub struct Settings {
-    pub growth: Config,
-    pub storage: Options,
+pub struct PaperResult {
+    pub search: ResultTree,
+    pub stats: PaperStats,
 }
-fn compile<D: ObservedDomain>(g: &Growing<'_, D>, borrowed: bool) -> Result<Tree, Error> {
-    if !borrowed {
-        return g.compile();
-    }
-    let mut t = tree::compiler::compile(&g.b.nodes, g.root)?;
-    t.worlds = g.worlds.clone();
-    t.public_keys = g.b.public_keys.clone();
-    t.private_keys = g.b.private_keys.clone();
-    t.boundaries = g.b.boundaries.clone();
-    Ok(t)
-}
-fn summary<D: ObservedDomain>(g: &Growing<'_, D>) -> (Stats, usize, usize) {
-    (
-        g.b.stats.clone(),
-        g.frontier.values().map(Vec::len).sum(),
-        g.frontier.len(),
-    )
-}
-fn solve(t: &Tree, config: CfrConfig, options: Options) -> Result<Solution, Error> {
-    if options.static_values {
-        tree::workspace::cached::solve(t, config)
-    } else if options.workspace {
-        tree::workspace::solve(t, config)
-    } else {
-        tree::solve(t, config)
-    }
-}
-
+#[allow(clippy::too_many_arguments)]
 pub fn search<D: ObservedDomain, P: Prior>(
     domain: &D,
     seeds: &[Seed<D::Position>],
@@ -56,103 +27,79 @@ pub fn search<D: ObservedDomain, P: Prior>(
     cfg: Config,
     prior: &P,
     options: Options,
-) -> Result<ResultTree, Error> {
-    search_impl::<D, P, false, false>(
+    cadence: usize,
+    solver_settings: tree::paper::Settings,
+) -> Result<PaperResult, Error> {
+    with_batch(
         domain,
         seeds,
         limits,
         cfg,
         prior,
         options,
-        #[cfg(feature = "experiment-parallel-transitions")]
+        cadence,
+        solver_settings,
         None,
     )
 }
-
-#[cfg(feature = "experiment-shared-final-passes")]
-pub fn search_shared<D: ObservedDomain, P: Prior>(
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn with_batch<D: ObservedDomain, P: Prior>(
     domain: &D,
     seeds: &[Seed<D::Position>],
     limits: Limits,
     cfg: Config,
     prior: &P,
     options: Options,
-) -> Result<ResultTree, Error> {
-    search_impl::<D, P, true, false>(
-        domain,
-        seeds,
-        limits,
-        cfg,
-        prior,
-        options,
-        #[cfg(feature = "experiment-parallel-transitions")]
-        None,
-    )
-}
-
-#[cfg(feature = "experiment-incremental-compilation")]
-pub fn search_incremental<D: ObservedDomain, P: Prior>(
-    domain: &D,
-    seeds: &[Seed<D::Position>],
-    limits: Limits,
-    cfg: Config,
-    prior: &P,
-    options: Options,
-) -> Result<ResultTree, Error> {
-    search_impl::<D, P, false, true>(
-        domain,
-        seeds,
-        limits,
-        cfg,
-        prior,
-        options,
-        #[cfg(feature = "experiment-parallel-transitions")]
-        None,
-    )
-}
-
-#[cfg(feature = "experiment-parallel-transitions")]
-pub(crate) fn search_batched<D: ObservedDomain, P: Prior>(
-    domain: &D,
-    seeds: &[Seed<D::Position>],
-    limits: Limits,
-    cfg: Config,
-    prior: &P,
-    options: Options,
-    batch: &dyn Batch<D>,
-) -> Result<ResultTree, Error> {
-    if limits.turns > 1 {
-        search_impl::<D, P, false, true>(
-            domain,
-            seeds,
-            limits,
-            cfg,
-            prior,
-            options,
-            if batch.width() > 1 { Some(batch) } else { None },
-        )
-    } else {
-        search_impl::<D, P, false, false>(
-            domain,
-            seeds,
-            limits,
-            cfg,
-            prior,
-            options,
-            if batch.width() > 1 { Some(batch) } else { None },
-        )
+    cadence: usize,
+    solver_settings: tree::paper::Settings,
+    batch: Option<&dyn Batch<D>>,
+) -> Result<PaperResult, Error> {
+    macro_rules! run {
+        ($n:literal) => {
+            if limits.turns > 1 {
+                search_impl::<D, P, true, $n>(
+                    domain,
+                    seeds,
+                    limits,
+                    cfg,
+                    prior,
+                    options,
+                    solver_settings,
+                    batch,
+                )
+            } else {
+                search_impl::<D, P, false, $n>(
+                    domain,
+                    seeds,
+                    limits,
+                    cfg,
+                    prior,
+                    options,
+                    solver_settings,
+                    batch,
+                )
+            }
+        };
+    }
+    match cadence {
+        1 => run!(1),
+        2 => run!(2),
+        4 => run!(4),
+        _ => Err(Error("cadence must be 1, 2 or 4".into())),
     }
 }
 
-fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTAL: bool>(
+#[allow(clippy::too_many_arguments)]
+fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADENCE: usize>(
     domain: &D,
     seeds: &[Seed<D::Position>],
     limits: Limits,
     cfg: Config,
     prior: &P,
     options: Options,
+    solver_settings: tree::paper::Settings,
     #[cfg(feature = "experiment-parallel-transitions")] batch: Option<&dyn Batch<D>>,
-) -> Result<ResultTree, Error> {
+) -> Result<PaperResult, Error> {
     if cfg.max_expansions == 0
         || cfg.max_walks == 0
         || !cfg.exploration.is_finite()
@@ -256,9 +203,31 @@ fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTA
         }
         compile(g, options.compiler)
     };
+    let mut previous = None;
+    let mut paper_stats = PaperStats::default();
+    let mut solve_paper = |tree: &Tree| -> Result<(Solution, Vec<Vec<f64>>), Error> {
+        let run = tree::paper::solve_from(tree, cfg.solver, solver_settings, previous.as_ref())?;
+        let q = scores(tree, &run.solution.policy)?;
+        if solver_settings.reuse_policy || solver_settings.warm_iterations > 0 {
+            previous = Some(tree::paper::reuse::Snapshot::capture(
+                tree,
+                &run.solution.policy,
+            )?);
+        }
+        paper_stats.requests += 1;
+        paper_stats.reused += usize::from(run.stats.reused);
+        paper_stats.compact += usize::from(run.stats.compact);
+        paper_stats.sequence += usize::from(run.stats.sequence);
+        paper_stats.assessments += run.stats.assessments;
+        paper_stats.mapped_information += run.stats.mapped_information;
+        paper_stats.scalar_reach_fallbacks += run.stats.scalar_reach_fallbacks;
+        paper_stats.warm_attempted += usize::from(run.stats.warm_attempted);
+        paper_stats.warm_applied += usize::from(run.stats.warm_applied);
+        paper_stats.virtual_iterations += run.stats.virtual_iterations;
+        Ok((run.solution, q))
+    };
     let mut t = compile(&growing)?;
-    let (mut solved, mut q) =
-        solve_scored::<SHARED>(&t, cfg.solver, options, needs_scores(&growing, &work, cfg))?;
+    let (mut solved, mut q) = solve_paper(&t)?;
     work.solves += 1;
     work.cfr_iterations += solved.iterations;
     // Only this compact committed summary is externally observable if admission fails.
@@ -266,7 +235,7 @@ fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTA
     let mut committed = summary(&growing);
     let mut random = Random(cfg.seed);
     let mut visits = Visits::new();
-    let stop = loop {
+    let stop = 'growth: loop {
         if growing.frontier.is_empty() {
             break Stop::HorizonComplete;
         }
@@ -276,37 +245,49 @@ fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTA
         if work.walks >= cfg.max_walks {
             break Stop::WalkLimit;
         }
-        work.walks += 1;
-        let selected = select(
-            &t,
-            &solved.policy,
-            &q,
-            prior,
-            &mut visits,
-            &mut random,
-            cfg.exploration,
-        )?;
-        let key = growing
-            .frontier
-            .iter()
-            .find(|(_, g)| g.iter().any(|h| h.node == selected))
-            .map(|(k, _)| k.clone());
-        let Some(key) = key else { continue };
+        // Select distinct existing public groups against ONE fully solved snapshot.
+        // New continuations cannot be selected until the next full solve.
+        let target = CADENCE
+            .min(cfg.max_expansions - work.attempted_expansions)
+            .min(growing.frontier.len());
+        let mut keys = Vec::with_capacity(target);
+        while keys.len() < target && work.walks < cfg.max_walks {
+            work.walks += 1;
+            let selected = select(
+                &t,
+                &solved.policy,
+                &q,
+                prior,
+                &mut visits,
+                &mut random,
+                cfg.exploration,
+            )?;
+            if let Some(key) = growing
+                .frontier
+                .iter()
+                .find(|(_, g)| g.iter().any(|h| h.node == selected))
+                .map(|(k, _)| k.clone())
+            {
+                if !keys.contains(&key) {
+                    keys.push(key);
+                }
+            }
+        }
+        if keys.is_empty() {
+            continue;
+        }
         let mut fork = (!options.in_place).then(|| growing.fork());
         let candidate = fork.as_mut().unwrap_or(&mut growing);
         let before = work.attempted_expansions;
-        match candidate.admit(&key, &mut work, cfg) {
-            Err(Failure::Limit(s)) => break s,
-            Err(Failure::Invalid(e)) => return Err(e),
-            Ok(()) => {}
+        for key in keys {
+            match candidate.admit(&key, &mut work, cfg) {
+                Err(Failure::Limit(s)) => break 'growth s,
+                Err(Failure::Invalid(e)) => return Err(e),
+                Ok(()) => {}
+            }
         }
         let next = compile(candidate)?;
-        let (solution, next_q) = solve_scored::<SHARED>(
-            &next,
-            cfg.solver,
-            options,
-            needs_scores(candidate, &work, cfg),
-        )?;
+        let (solution, next_q) = solve_paper(&next)?;
         q = next_q;
         work.committed_expansions += work.attempted_expansions - before;
         work.solves += 1;
@@ -318,41 +299,19 @@ fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTA
         t = next;
         solved = solution;
     };
-    Ok(ResultTree {
-        built: Built {
-            tree: t,
-            stats: committed.0,
+    Ok(PaperResult {
+        search: ResultTree {
+            built: Built {
+                tree: t,
+                stats: committed.0,
+            },
+            solution: solved,
+            stop,
+            frontier_histories: committed.1,
+            frontier_public_groups: committed.2,
+            horizon_complete: committed.2 == 0,
+            work,
         },
-        solution: solved,
-        stop,
-        frontier_histories: committed.1,
-        frontier_public_groups: committed.2,
-        horizon_complete: committed.2 == 0,
-        work,
+        stats: paper_stats,
     })
-}
-
-fn needs_scores<D: ObservedDomain>(g: &Growing<'_, D>, w: &Work, c: Config) -> bool {
-    !g.frontier.is_empty() && w.attempted_expansions < c.max_expansions && w.walks < c.max_walks
-}
-fn solve_scored<const SHARED: bool>(
-    t: &Tree,
-    config: CfrConfig,
-    options: Options,
-    needed: bool,
-) -> Result<(Solution, Vec<Vec<f64>>), Error> {
-    #[cfg(feature = "experiment-shared-final-passes")]
-    if SHARED && options.static_values {
-        let (s, p) = tree::shared::solve(t, config)?;
-        let q = if needed {
-            scores_from(t, &p.values, &p.reach)
-        } else {
-            Vec::new()
-        };
-        return Ok((s, q));
-    }
-    let _ = needed;
-    let s = solve(t, config, options)?;
-    let q = scores(t, &s.policy)?;
-    Ok((s, q))
 }

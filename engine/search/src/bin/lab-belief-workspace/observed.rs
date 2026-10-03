@@ -191,7 +191,56 @@ pub fn request(
     }
     let domain = Table(states);
     let (built, solution, growth) = if let Some(c) = growth_config(v, config)? {
-        #[cfg(feature = "experiment-growth-cadence")]
+        #[cfg(feature = "experiment-paper-solvers")]
+        let (r, paper_meta) = if let Some(settings) = v["solver"]
+            .get("paper")
+            .map(paper_options::parse)
+            .transpose()?
+        {
+            let r = growing::reuse::paper::search(
+                &domain,
+                &seeds,
+                limits,
+                c,
+                &growing::Uniform,
+                growing::reuse::Options {
+                    in_place: true,
+                    workspace: true,
+                    compiler: true,
+                    static_values: true,
+                    direct_write: false,
+                },
+                cadence(v)?,
+                settings,
+            )
+            .map_err(|e| e.to_string())?;
+            let meta = paper_options::growth(&r.stats);
+            (r.search, Some(meta))
+        } else {
+            (
+                growing::reuse::cadence::search(
+                    &domain,
+                    &seeds,
+                    limits,
+                    c,
+                    &growing::Uniform,
+                    growing::reuse::Options {
+                        in_place: true,
+                        workspace: true,
+                        compiler: true,
+                        static_values: true,
+                        direct_write: false,
+                    },
+                    cadence(v)?,
+                )
+                .map_err(|e| e.to_string())?,
+                None,
+            )
+        };
+        #[cfg(all(
+            feature = "experiment-growth-cadence",
+            not(feature = "experiment-paper-solvers")
+        ))]
         let r = growing::reuse::cadence::search(
             &domain,
             &seeds,
@@ -228,6 +277,13 @@ pub fn request(
         let mut m = metadata(&r);
         #[cfg(feature = "experiment-growth-cadence")]
         cadence_metadata(&mut m, cadence(v)?);
+        #[cfg(feature = "experiment-paper-solvers")]
+        if let Some(meta) = paper_meta {
+            m["regrets"] = json!(
+                "reset or initialize substitute regrets in the new game; see paper warm_applied"
+            );
+            m["paper"] = meta;
+        }
         (r.built, Some(r.solution), m)
     } else {
         (

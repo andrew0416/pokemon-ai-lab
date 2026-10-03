@@ -63,10 +63,17 @@ fn keys(v: &Value, allowed: &[&str]) -> Result<(), String> {
     Ok(())
 }
 
+#[cfg(feature = "experiment-paper-solvers")]
+#[path = "lab-belief-workspace/paper_options.rs"]
+mod paper_options;
+
 fn request(v: &Value, base: &Path) -> Result<Value, String> {
     let mut config = Config::default();
     if let Some(c) = v.get("solver") {
+        #[cfg(not(feature = "experiment-paper-solvers"))]
         keys(c, &["iterations", "tolerance", "check_every"])?;
+        #[cfg(feature = "experiment-paper-solvers")]
+        keys(c, &["iterations", "tolerance", "check_every", "paper"])?;
         config.iterations = integer(c, "iterations", config.iterations)?;
         config.check_every = integer(c, "check_every", config.check_every)?;
         if c.get("tolerance").is_some() {
@@ -81,6 +88,13 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
     {
         return Err("invalid solver config".into());
     }
+    #[cfg(feature = "experiment-paper-solvers")]
+    let paper_settings = v["solver"]
+        .get("paper")
+        .map(paper_options::parse)
+        .transpose()?;
+    #[cfg(feature = "experiment-paper-solvers")]
+    let mut paper_meta = None;
     let mode = string(v, "mode")?;
     let include_keys = boolean(v, "include_keys", false)?;
     let mut growth_solution = None;
@@ -237,18 +251,55 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                     cadence: observed::cadence(v)?,
                     pool: None,
                 };
-                Some(
-                    growing_backend(
+                #[cfg(feature = "experiment-paper-solvers")]
+                let value = if let Some(solver) = paper_settings {
+                    let run = tree::engine::paper::growing(
                         &worlds,
                         side,
                         Ruleset::CHAMPIONS_MC,
                         evaluator.as_ref(),
                         &knowledge,
                         limits,
-                        settings,
+                        tree::engine::paper::Settings {
+                            search: settings.search,
+                            cadence: settings.cadence,
+                            pool: None,
+                            solver,
+                        },
                     )
-                    .map_err(|e| e.to_string())?,
-                )
+                    .map_err(|e| e.to_string())?;
+                    paper_meta = Some(paper_options::growth(&run.stats));
+                    Some(run.search)
+                } else {
+                    Some(
+                        growing_backend(
+                            &worlds,
+                            side,
+                            Ruleset::CHAMPIONS_MC,
+                            evaluator.as_ref(),
+                            &knowledge,
+                            limits,
+                            settings,
+                        )
+                        .map_err(|e| e.to_string())?,
+                    )
+                };
+                #[cfg(not(feature = "experiment-paper-solvers"))]
+                let value = {
+                    Some(
+                        growing_backend(
+                            &worlds,
+                            side,
+                            Ruleset::CHAMPIONS_MC,
+                            evaluator.as_ref(),
+                            &knowledge,
+                            limits,
+                            settings,
+                        )
+                        .map_err(|e| e.to_string())?,
+                    )
+                };
+                value
             } else {
                 None
             };
@@ -305,7 +356,20 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
     };
     let solved = match growth_solution {
         Some(s) => s,
-        None => tree::workspace::cached::solve(&tree, config).map_err(|e| e.to_string())?,
+        None => {
+            #[cfg(feature = "experiment-paper-solvers")]
+            if let Some(settings) = paper_settings {
+                let run = tree::paper::solve(&tree, config, settings).map_err(|e| e.to_string())?;
+                paper_meta = Some(paper_options::stats(&run.stats));
+                run.solution
+            } else {
+                tree::workspace::cached::solve(&tree, config).map_err(|e| e.to_string())?
+            }
+            #[cfg(not(feature = "experiment-paper-solvers"))]
+            {
+                tree::workspace::cached::solve(&tree, config).map_err(|e| e.to_string())?
+            }
+        }
     };
     let beliefs = tree
         .public_beliefs(&solved.policy)
@@ -343,6 +407,10 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
     #[cfg(feature = "experiment-growing-belief")]
     if mode == "observed" {
         result["oracle_tree"] = observed::export(&tree);
+    }
+    #[cfg(feature = "experiment-paper-solvers")]
+    if let Some(meta) = paper_meta {
+        result["paper"] = meta;
     }
     Ok(result)
 }

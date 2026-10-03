@@ -3,6 +3,8 @@
 //! subtree contains no decision node are constant. Every arithmetic reduction preserves
 //! the reference child order. Reach/underflow checks and final assessment are unchanged.
 use super::*;
+#[cfg(feature = "experiment-paper-solvers")]
+pub mod paper;
 
 struct CachedValues {
     values: Vec<f64>,

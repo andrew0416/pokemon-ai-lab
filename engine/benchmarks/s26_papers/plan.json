@@ -1,0 +1,1709 @@
+{
+  "rounds": 7,
+  "sample_ms": 35,
+  "cases": [
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 1,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w1-d2-fixed-gap01",
+      "phase": "fixed",
+      "baseline": {
+        "id": "lcfr-geometric",
+        "paper": {
+          "rule": "lcfr",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "pcfr+",
+          "paper": {
+            "rule": "pcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-15",
+          "paper": {
+            "rule": "hs-dcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-30",
+          "paper": {
+            "rule": "hs-dcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-15",
+          "paper": {
+            "rule": "hs-pcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-30",
+          "paper": {
+            "rule": "hs-pcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-compact",
+          "paper": {
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-compact",
+          "paper": {
+            "rule": "sapcfr+",
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 1,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w1-d2-growing-gap01",
+      "phase": "growing",
+      "baseline": {
+        "reference": true,
+        "paper": {}
+      },
+      "variants": [
+        {
+          "id": "lcfr-control",
+          "paper": {},
+          "exact_control": true
+        },
+        {
+          "id": "checks-geometric",
+          "paper": {
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "policy-gate",
+          "paper": {
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "compact",
+          "paper": {
+            "compact": true
+          }
+        },
+        {
+          "id": "combined",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric",
+            "compact": true,
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "periodic"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 1,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w1-d2-warm-gap01",
+      "phase": "growing",
+      "baseline": {
+        "id": "cfr-simultaneous-cold",
+        "paper": {
+          "rule": "cfr-simultaneous",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "warm8",
+          "paper": {
+            "rule": "cfr-simultaneous",
+            "checks": "geometric",
+            "warm_iterations": 8
+          }
+        },
+        {
+          "id": "warm32",
+          "paper": {
+            "rule": "cfr-simultaneous",
+            "checks": "geometric",
+            "warm_iterations": 32
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        },
+        {
+          "id": "speed",
+          "weight": 7,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
+        }
+      ],
+      "hidden_stats": true,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w2-d2-fixed-gap01",
+      "phase": "fixed",
+      "baseline": {
+        "id": "lcfr-geometric",
+        "paper": {
+          "rule": "lcfr",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "pcfr+",
+          "paper": {
+            "rule": "pcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-15",
+          "paper": {
+            "rule": "hs-dcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-30",
+          "paper": {
+            "rule": "hs-dcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-15",
+          "paper": {
+            "rule": "hs-pcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-30",
+          "paper": {
+            "rule": "hs-pcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-compact",
+          "paper": {
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-compact",
+          "paper": {
+            "rule": "sapcfr+",
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        },
+        {
+          "id": "speed",
+          "weight": 7,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
+        }
+      ],
+      "hidden_stats": true,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w2-d2-growing-gap01",
+      "phase": "growing",
+      "baseline": {
+        "reference": true,
+        "paper": {}
+      },
+      "variants": [
+        {
+          "id": "lcfr-control",
+          "paper": {},
+          "exact_control": true
+        },
+        {
+          "id": "checks-geometric",
+          "paper": {
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "policy-gate",
+          "paper": {
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "compact",
+          "paper": {
+            "compact": true
+          }
+        },
+        {
+          "id": "combined",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric",
+            "compact": true,
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "periodic"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        },
+        {
+          "id": "speed",
+          "weight": 7,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
+        }
+      ],
+      "hidden_stats": true,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w2-d2-warm-gap01",
+      "phase": "growing",
+      "baseline": {
+        "id": "cfr-simultaneous-cold",
+        "paper": {
+          "rule": "cfr-simultaneous",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "warm8",
+          "paper": {
+            "rule": "cfr-simultaneous",
+            "checks": "geometric",
+            "warm_iterations": 8
+          }
+        },
+        {
+          "id": "warm32",
+          "paper": {
+            "rule": "cfr-simultaneous",
+            "checks": "geometric",
+            "warm_iterations": 32
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "pivot",
+          "weight": 1,
+          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 1,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 1,
+      "id": "pivot-w1-d1-fixed-gap01",
+      "phase": "fixed",
+      "baseline": {
+        "id": "lcfr-geometric",
+        "paper": {
+          "rule": "lcfr",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "pcfr+",
+          "paper": {
+            "rule": "pcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-15",
+          "paper": {
+            "rule": "hs-dcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-30",
+          "paper": {
+            "rule": "hs-dcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-15",
+          "paper": {
+            "rule": "hs-pcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-30",
+          "paper": {
+            "rule": "hs-pcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-compact",
+          "paper": {
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-compact",
+          "paper": {
+            "rule": "sapcfr+",
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "pivot",
+          "weight": 1,
+          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 1,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 1,
+      "id": "pivot-w1-d1-growing-gap01",
+      "phase": "growing",
+      "baseline": {
+        "reference": true,
+        "paper": {}
+      },
+      "variants": [
+        {
+          "id": "lcfr-control",
+          "paper": {},
+          "exact_control": true
+        },
+        {
+          "id": "checks-geometric",
+          "paper": {
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "policy-gate",
+          "paper": {
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "compact",
+          "paper": {
+            "compact": true
+          }
+        },
+        {
+          "id": "combined",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric",
+            "compact": true,
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "periodic"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "sand",
+          "weight": 1,
+          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 1,
+        "max_nodes": 200000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "sand-damage-w1-d1-fixed-gap01",
+      "phase": "fixed",
+      "baseline": {
+        "id": "lcfr-geometric",
+        "paper": {
+          "rule": "lcfr",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "pcfr+",
+          "paper": {
+            "rule": "pcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-15",
+          "paper": {
+            "rule": "hs-dcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-30",
+          "paper": {
+            "rule": "hs-dcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-15",
+          "paper": {
+            "rule": "hs-pcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-30",
+          "paper": {
+            "rule": "hs-pcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-compact",
+          "paper": {
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-compact",
+          "paper": {
+            "rule": "sapcfr+",
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "sand",
+          "weight": 1,
+          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 1,
+        "max_nodes": 200000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "sand-damage-w1-d1-growing-gap01",
+      "phase": "growing",
+      "baseline": {
+        "reference": true,
+        "paper": {}
+      },
+      "variants": [
+        {
+          "id": "lcfr-control",
+          "paper": {},
+          "exact_control": true
+        },
+        {
+          "id": "checks-geometric",
+          "paper": {
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "policy-gate",
+          "paper": {
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "compact",
+          "paper": {
+            "compact": true
+          }
+        },
+        {
+          "id": "combined",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric",
+            "compact": true,
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "periodic"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        },
+        {
+          "id": "speed",
+          "weight": 7,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
+        },
+        {
+          "id": "atk",
+          "weight": 2,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
+        },
+        {
+          "id": "spa",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
+        }
+      ],
+      "hidden_stats": true,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 100000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w4-d2-fixed-gap01",
+      "phase": "fixed",
+      "baseline": {
+        "id": "lcfr-geometric",
+        "paper": {
+          "rule": "lcfr",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "pcfr+",
+          "paper": {
+            "rule": "pcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-15",
+          "paper": {
+            "rule": "hs-dcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-30",
+          "paper": {
+            "rule": "hs-dcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-15",
+          "paper": {
+            "rule": "hs-pcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-30",
+          "paper": {
+            "rule": "hs-pcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-compact",
+          "paper": {
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-compact",
+          "paper": {
+            "rule": "sapcfr+",
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        },
+        {
+          "id": "speed",
+          "weight": 7,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
+        },
+        {
+          "id": "atk",
+          "weight": 2,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
+        },
+        {
+          "id": "spa",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
+        }
+      ],
+      "hidden_stats": true,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 100000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w4-d2-growing-gap01",
+      "phase": "growing",
+      "baseline": {
+        "reference": true,
+        "paper": {}
+      },
+      "variants": [
+        {
+          "id": "lcfr-control",
+          "paper": {},
+          "exact_control": true
+        },
+        {
+          "id": "checks-geometric",
+          "paper": {
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "policy-gate",
+          "paper": {
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "compact",
+          "paper": {
+            "compact": true
+          }
+        },
+        {
+          "id": "combined",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric",
+            "compact": true,
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "periodic"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        },
+        {
+          "id": "speed",
+          "weight": 7,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
+        },
+        {
+          "id": "atk",
+          "weight": 2,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
+        },
+        {
+          "id": "spa",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
+        }
+      ],
+      "hidden_stats": true,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 100000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w4-d2-warm-gap01",
+      "phase": "growing",
+      "baseline": {
+        "id": "cfr-simultaneous-cold",
+        "paper": {
+          "rule": "cfr-simultaneous",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "warm8",
+          "paper": {
+            "rule": "cfr-simultaneous",
+            "checks": "geometric",
+            "warm_iterations": 8
+          }
+        },
+        {
+          "id": "warm32",
+          "paper": {
+            "rule": "cfr-simultaneous",
+            "checks": "geometric",
+            "warm_iterations": 32
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 1,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 3,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "narrow-w1-d3-fixed-gap01",
+      "phase": "fixed",
+      "baseline": {
+        "id": "lcfr-geometric",
+        "paper": {
+          "rule": "lcfr",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "pcfr+",
+          "paper": {
+            "rule": "pcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-15",
+          "paper": {
+            "rule": "hs-dcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-30",
+          "paper": {
+            "rule": "hs-dcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-15",
+          "paper": {
+            "rule": "hs-pcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-30",
+          "paper": {
+            "rule": "hs-pcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-compact",
+          "paper": {
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-compact",
+          "paper": {
+            "rule": "sapcfr+",
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 1,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 3,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "narrow-w1-d3-growing-gap01",
+      "phase": "growing",
+      "baseline": {
+        "reference": true,
+        "paper": {}
+      },
+      "variants": [
+        {
+          "id": "lcfr-control",
+          "paper": {},
+          "exact_control": true
+        },
+        {
+          "id": "checks-geometric",
+          "paper": {
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "policy-gate",
+          "paper": {
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "compact",
+          "paper": {
+            "compact": true
+          }
+        },
+        {
+          "id": "combined",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric",
+            "compact": true,
+            "reuse_policy": true
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "periodic"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 1,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 3,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "narrow-w1-d3-warm-gap01",
+      "phase": "growing",
+      "baseline": {
+        "id": "cfr-simultaneous-cold",
+        "paper": {
+          "rule": "cfr-simultaneous",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "warm8",
+          "paper": {
+            "rule": "cfr-simultaneous",
+            "checks": "geometric",
+            "warm_iterations": 8
+          }
+        },
+        {
+          "id": "warm32",
+          "paper": {
+            "rule": "cfr-simultaneous",
+            "checks": "geometric",
+            "warm_iterations": 32
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        },
+        {
+          "id": "speed",
+          "weight": 7,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
+        }
+      ],
+      "hidden_stats": true,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 16384,
+        "tolerance": 0.01,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "stats-w2-d2-fixed-gap001",
+      "phase": "fixed",
+      "baseline": {
+        "id": "lcfr-geometric",
+        "paper": {
+          "rule": "lcfr",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "pcfr+",
+          "paper": {
+            "rule": "pcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-15",
+          "paper": {
+            "rule": "hs-dcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-30",
+          "paper": {
+            "rule": "hs-dcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-15",
+          "paper": {
+            "rule": "hs-pcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-30",
+          "paper": {
+            "rule": "hs-pcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-compact",
+          "paper": {
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-compact",
+          "paper": {
+            "rule": "sapcfr+",
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    },
+    {
+      "worlds": [
+        {
+          "id": "sand",
+          "weight": 1,
+          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 1,
+        "max_nodes": 200000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 16384,
+        "tolerance": 0.01,
+        "check_every": 32
+      },
+      "threads": 4,
+      "id": "sand-damage-w1-d1-fixed-gap001",
+      "phase": "fixed",
+      "baseline": {
+        "id": "lcfr-geometric",
+        "paper": {
+          "rule": "lcfr",
+          "checks": "geometric"
+        }
+      },
+      "variants": [
+        {
+          "id": "dcfr",
+          "paper": {
+            "rule": "dcfr",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "pcfr+",
+          "paper": {
+            "rule": "pcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sapcfr+",
+          "paper": {
+            "rule": "sapcfr+",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-15",
+          "paper": {
+            "rule": "hs-dcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-dcfr-30",
+          "paper": {
+            "rule": "hs-dcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-15",
+          "paper": {
+            "rule": "hs-pcfr-15",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "hs-pcfr-30",
+          "paper": {
+            "rule": "hs-pcfr-30",
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-compact",
+          "paper": {
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-compact",
+          "paper": {
+            "rule": "sapcfr+",
+            "compact": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "lcfr-sequence",
+          "paper": {
+            "sequence": true,
+            "checks": "geometric"
+          }
+        },
+        {
+          "id": "sap-sequence",
+          "paper": {
+            "rule": "sapcfr+",
+            "sequence": true,
+            "checks": "geometric"
+          }
+        }
+      ]
+    }
+  ]
+}

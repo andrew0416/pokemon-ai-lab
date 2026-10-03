@@ -536,5 +536,7 @@ fn build_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
 
 #[cfg(feature = "experiment-growth-cadence")]
 pub mod cadence;
+#[cfg(feature = "experiment-paper-solvers")]
+pub mod paper;
 #[cfg(feature = "experiment-parallel-transitions")]
 pub mod parallel;
