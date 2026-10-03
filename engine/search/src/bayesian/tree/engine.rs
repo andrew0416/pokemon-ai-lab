@@ -534,5 +534,7 @@ fn build_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
     builder::build(&domain, &seeds, limits)
 }
 
+#[cfg(feature = "experiment-growth-cadence")]
+pub mod cadence;
 #[cfg(feature = "experiment-parallel-transitions")]
 pub mod parallel;

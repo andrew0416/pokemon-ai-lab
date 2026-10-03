@@ -41,7 +41,19 @@ pub fn growth_config(v: &Value, solver: Config) -> Result<Option<growing::Config
     let Some(c) = v.get("growth") else {
         return Ok(None);
     };
+    #[cfg(not(feature = "experiment-growth-cadence"))]
     keys(c, &["max_expansions", "max_walks", "exploration", "seed"])?;
+    #[cfg(feature = "experiment-growth-cadence")]
+    keys(
+        c,
+        &[
+            "max_expansions",
+            "max_walks",
+            "exploration",
+            "seed",
+            "cadence",
+        ],
+    )?;
     let mut g = growing::Config {
         solver,
         ..growing::Config::default()
@@ -179,6 +191,24 @@ pub fn request(
     }
     let domain = Table(states);
     let (built, solution, growth) = if let Some(c) = growth_config(v, config)? {
+        #[cfg(feature = "experiment-growth-cadence")]
+        let r = growing::reuse::cadence::search(
+            &domain,
+            &seeds,
+            limits,
+            c,
+            &growing::Uniform,
+            growing::reuse::Options {
+                in_place: true,
+                workspace: true,
+                compiler: true,
+                static_values: true,
+                direct_write: false,
+            },
+            cadence(v)?,
+        )
+        .map_err(|e| e.to_string())?;
+        #[cfg(not(feature = "experiment-growth-cadence"))]
         let r = search_backend(
             &domain,
             &seeds,
@@ -194,7 +224,10 @@ pub fn request(
             },
         )
         .map_err(|e| e.to_string())?;
-        let m = metadata(&r);
+        #[allow(unused_mut)]
+        let mut m = metadata(&r);
+        #[cfg(feature = "experiment-growth-cadence")]
+        cadence_metadata(&mut m, cadence(v)?);
         (r.built, Some(r.solution), m)
     } else {
         (
@@ -221,11 +254,31 @@ pub fn export(t: &Tree) -> Value {
     not(feature = "experiment-shared-final-passes"),
     not(feature = "experiment-incremental-compilation")
 ))]
+#[cfg(not(feature = "experiment-growth-cadence"))]
 use growing::reuse::search as search_backend;
 #[cfg(feature = "experiment-incremental-compilation")]
+#[cfg(not(feature = "experiment-growth-cadence"))]
 use growing::reuse::search_incremental as search_backend;
 #[cfg(all(
     feature = "experiment-shared-final-passes",
     not(feature = "experiment-incremental-compilation")
 ))]
+#[cfg(not(feature = "experiment-growth-cadence"))]
 use growing::reuse::search_shared as search_backend;
+
+#[cfg(feature = "experiment-growth-cadence")]
+pub fn cadence(v: &Value) -> Result<usize, String> {
+    let n = integer(&v["growth"], "cadence", 1)?;
+    if ![1, 2, 4].contains(&n) {
+        return Err("cadence must be 1, 2 or 4".into());
+    }
+    Ok(n)
+}
+
+#[cfg(feature = "experiment-growth-cadence")]
+pub fn cadence_metadata(m: &mut Value, n: usize) {
+    m["solve_cadence"] = json!(n);
+    m["admission_commit"] = json!("selected-batch-atomic");
+    m["selection_snapshot"] = json!("one-solved-snapshot-per-batch");
+    m["regrets"] = json!("reset-after-admission-batch");
+}

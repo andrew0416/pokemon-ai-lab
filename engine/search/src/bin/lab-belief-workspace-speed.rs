@@ -44,6 +44,8 @@ enum Method {
     Incremental(growing::Config),
     #[cfg(feature = "experiment-parallel-transitions")]
     Parallel(growing::Config, rayon::ThreadPool),
+    #[cfg(feature = "experiment-growth-cadence")]
+    Cadence(growing::Config, usize, Option<rayon::ThreadPool>),
 }
 fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
     match v.get(k) {
@@ -262,6 +264,29 @@ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, 
                     },
                 },
             ),
+            #[cfg(feature = "experiment-growth-cadence")]
+            Method::Cadence(g, every, pool) => tree::engine::cadence::growing(
+                &i.worlds,
+                SideId::One,
+                Ruleset::CHAMPIONS_MC,
+                e,
+                &i.knowledge,
+                i.limits,
+                tree::engine::cadence::Settings {
+                    pool: pool.as_ref(),
+                    cadence: *every,
+                    search: growing::reuse::Settings {
+                        growth: *g,
+                        storage: growing::reuse::Options {
+                            in_place: true,
+                            workspace: true,
+                            compiler: true,
+                            static_values: true,
+                            direct_write: true,
+                        },
+                    },
+                },
+            ),
             _ => unreachable!(),
         }
         .map_err(|e| e.to_string())?;
@@ -285,7 +310,7 @@ fn root_policy(o: &Output) -> BTreeMap<String, Vec<f64>> {
 }
 fn diagnostics(o: &Output) -> Value {
     let growth=o.growth.as_ref().map(|(w,stop,frontier)|json!({"attempted_transitions":w.attempted_transitions,
-        "committed_expansions":w.committed_expansions,"walks":w.walks,"solves":w.solves,
+        "attempted_expansions":w.attempted_expansions,"committed_expansions":w.committed_expansions,"walks":w.walks,"solves":w.solves,
         "total_cfr_iterations":w.cfr_iterations,"stop":format!("{stop:?}"),"frontier_groups":frontier}));
     json!({"nodes":o.built.tree.node_count(),"information_sets":o.built.tree.information().len(),
         "transitions":o.built.stats.transitions,"chance_outcomes":o.built.stats.chance_outcomes,
@@ -404,6 +429,26 @@ fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
                     .build()
                     .map_err(|e| e.to_string())?,
             )
+        }
+        #[cfg(feature = "experiment-growth-cadence")]
+        "cadence" => {
+            let every = uint(v, "cadence", 1)?;
+            let threads = uint(v, "threads", 0)?;
+            if ![0, 1, 2, 4].contains(&threads) {
+                return Err("invalid cadence threads".into());
+            }
+            let pool = if threads > 1 {
+                Some(
+                    rayon::ThreadPoolBuilder::new()
+                        .num_threads(threads)
+                        .stack_size(16 * 1024 * 1024)
+                        .build()
+                        .map_err(|e| e.to_string())?,
+                )
+            } else {
+                None
+            };
+            Method::Cadence(config, every, pool)
         }
         "growing" => Method::Growing(config),
         "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all"

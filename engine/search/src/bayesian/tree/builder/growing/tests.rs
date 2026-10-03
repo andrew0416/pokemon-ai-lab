@@ -538,6 +538,24 @@ fn allocation_candidates_match_all_admission_failure_boundaries() {
                     assert_eq!(actual, shared, "shared final passes");
                     assert_eq!(g.calls.get(), expected_calls);
                 }
+                #[cfg(feature = "experiment-growth-cadence")]
+                {
+                    let g = Game {
+                        switch,
+                        ..Game::new()
+                    };
+                    let shared = exact_result(reuse::cadence::search(
+                        &g,
+                        &seeds(),
+                        *limits,
+                        *cfg,
+                        &Uniform,
+                        options,
+                        1,
+                    ));
+                    assert_eq!(actual, shared, "shared final passes");
+                    assert_eq!(g.calls.get(), expected_calls);
+                }
                 assert_eq!(
                     actual, expected,
                     "{limits:?}, {cfg:?}, {options:?}, switch={switch}"
@@ -705,4 +723,145 @@ fn batched_node_caps_and_bad_mass_remain_fail_closed() {
     );
     assert!(result.err().unwrap().to_string().contains("chance mass"));
     assert_eq!(g.calls.get(), 4);
+}
+
+#[cfg(feature = "experiment-growth-cadence")]
+#[test]
+fn cadence_complete_game_and_policies_match_with_fewer_solves() {
+    let options = reuse::Options {
+        in_place: true,
+        workspace: true,
+        compiler: true,
+        static_values: true,
+        direct_write: true,
+    };
+    for seed in [1, 7, 31, u64::MAX] {
+        let cfg = Config {
+            seed,
+            ..config(100)
+        };
+        let reference = reuse::cadence::search(
+            &Game::new(),
+            &seeds(),
+            Limits::default(),
+            cfg,
+            &Uniform,
+            options,
+            1,
+        )
+        .unwrap();
+        let policy = |r: &ResultTree| {
+            r.built
+                .tree
+                .information()
+                .iter()
+                .enumerate()
+                .map(|(i, n)| (n.key.clone(), r.solution.policy[i].clone()))
+                .collect::<BTreeMap<_, _>>()
+        };
+        for every in [2, 4] {
+            let game = Game::new();
+            let actual = reuse::cadence::search(
+                &game,
+                &seeds(),
+                Limits::default(),
+                cfg,
+                &Uniform,
+                options,
+                every,
+            )
+            .unwrap();
+            assert!(actual.horizon_complete);
+            assert_eq!(actual.work.attempted_transitions, game.calls.get());
+            assert_eq!(
+                actual.work.attempted_transitions,
+                reference.work.attempted_transitions
+            );
+            assert_eq!(policy(&reference), policy(&actual));
+            assert_eq!(
+                format!("{:?}", reference.solution.assessment),
+                format!("{:?}", actual.solution.assessment)
+            );
+            assert_eq!(actual.work.solves, 2);
+            assert_eq!(reference.work.solves, 3);
+        }
+    }
+}
+#[cfg(feature = "experiment-growth-cadence")]
+#[test]
+fn cadence_failure_after_a_whole_unsolved_group_returns_previous_solved_root() {
+    let options = reuse::Options {
+        in_place: true,
+        workspace: true,
+        compiler: true,
+        static_values: true,
+        direct_write: true,
+    };
+    let base = reuse::cadence::search(
+        &Game::new(),
+        &seeds(),
+        Limits::default(),
+        config(1),
+        &Uniform,
+        options,
+        4,
+    )
+    .unwrap();
+    let one = reuse::cadence::search(
+        &Game::new(),
+        &seeds(),
+        Limits::default(),
+        config(2),
+        &Uniform,
+        options,
+        1,
+    )
+    .unwrap();
+    let cap = one.work.attempted_transitions + 1;
+    let game = Game::new();
+    let actual = reuse::cadence::search(
+        &game,
+        &seeds(),
+        Limits {
+            max_transitions: cap,
+            ..Limits::default()
+        },
+        config(100),
+        &Uniform,
+        options,
+        4,
+    )
+    .unwrap();
+    assert_eq!(actual.stop, Stop::TransitionLimit);
+    assert_eq!(actual.work.attempted_transitions, cap);
+    assert_eq!(game.calls.get(), cap);
+    assert_eq!(actual.work.solves, 1);
+    assert_eq!(actual.work.committed_expansions, 1);
+    assert!(!actual.horizon_complete);
+    assert_eq!(
+        format!("{:?}", actual.built.tree),
+        format!("{:?}", base.built.tree)
+    );
+    assert_eq!(
+        format!("{:?}", actual.solution),
+        format!("{:?}", base.solution)
+    );
+}
+#[cfg(feature = "experiment-growth-cadence")]
+#[test]
+fn invalid_cadence_never_touches_domain() {
+    for n in [0, 3, usize::MAX] {
+        let game = Game::new();
+        assert!(reuse::cadence::search(
+            &game,
+            &seeds(),
+            Limits::default(),
+            config(100),
+            &Uniform,
+            Default::default(),
+            n
+        )
+        .is_err());
+        assert_eq!(game.calls.get(), 0);
+    }
 }

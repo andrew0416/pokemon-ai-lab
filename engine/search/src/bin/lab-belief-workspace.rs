@@ -221,6 +221,22 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
             let growing_config = observed::growth_config(v, config)?;
             #[cfg(feature = "experiment-growing-belief")]
             let grown = if let Some(c) = growing_config {
+                let settings = tree::builder::growing::reuse::Settings {
+                    growth: c,
+                    storage: tree::builder::growing::reuse::Options {
+                        in_place: true,
+                        workspace: true,
+                        compiler: true,
+                        static_values: true,
+                        direct_write: true,
+                    },
+                };
+                #[cfg(feature = "experiment-growth-cadence")]
+                let settings = tree::engine::cadence::Settings {
+                    search: settings,
+                    cadence: observed::cadence(v)?,
+                    pool: None,
+                };
                 Some(
                     growing_backend(
                         &worlds,
@@ -229,16 +245,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                         evaluator.as_ref(),
                         &knowledge,
                         limits,
-                        tree::builder::growing::reuse::Settings {
-                            growth: c,
-                            storage: tree::builder::growing::reuse::Options {
-                                in_place: true,
-                                workspace: true,
-                                compiler: true,
-                                static_values: true,
-                                direct_write: true,
-                            },
-                        },
+                        settings,
                     )
                     .map_err(|e| e.to_string())?,
                 )
@@ -264,7 +271,10 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                 Some(g) => {
                     #[cfg(feature = "experiment-growing-belief")]
                     {
-                        let meta = observed::metadata(&g);
+                        #[allow(unused_mut)]
+                        let mut meta = observed::metadata(&g);
+                        #[cfg(feature = "experiment-growth-cadence")]
+                        observed::cadence_metadata(&mut meta, observed::cadence(v)?);
                         (g.built, meta, Some(g.solution))
                     }
                     #[cfg(not(feature = "experiment-growing-belief"))]
@@ -385,15 +395,21 @@ mod tests {
 }
 
 #[cfg(feature = "experiment-incremental-compilation")]
+#[cfg(not(feature = "experiment-growth-cadence"))]
 use lab_search::bayesian::tree::engine::growing_incremental as growing_backend;
 #[cfg(all(
     feature = "experiment-owned-transitions",
     not(feature = "experiment-shared-final-passes"),
     not(feature = "experiment-incremental-compilation")
 ))]
+#[cfg(not(feature = "experiment-growth-cadence"))]
 use lab_search::bayesian::tree::engine::growing_owned as growing_backend;
 #[cfg(all(
     feature = "experiment-shared-final-passes",
     not(feature = "experiment-incremental-compilation")
 ))]
+#[cfg(not(feature = "experiment-growth-cadence"))]
 use lab_search::bayesian::tree::engine::growing_shared as growing_backend;
+
+#[cfg(feature = "experiment-growth-cadence")]
+use lab_search::bayesian::tree::engine::cadence::growing as growing_backend;

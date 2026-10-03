@@ -7,11 +7,11 @@ pub struct Settings<'a> {
     /// Persistent caller-owned pool, reused across searches. One thread is serial.
     pub pool: &'a rayon::ThreadPool,
 }
-struct OwnedBatch<'a> {
-    pool: &'a rayon::ThreadPool,
-    ruleset: Ruleset,
-    us: SideId,
-    factored: bool,
+pub(super) struct OwnedBatch<'a> {
+    pub(super) pool: &'a rayon::ThreadPool,
+    pub(super) ruleset: Ruleset,
+    pub(super) us: SideId,
+    pub(super) factored: bool,
 }
 impl<const N: usize, E: Evaluator<N> + ?Sized>
     builder::growing::Batch<WritingDomain<'_, N, E, true>> for OwnedBatch<'_>
