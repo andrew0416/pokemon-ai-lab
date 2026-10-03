@@ -509,6 +509,26 @@ fn allocation_candidates_match_all_admission_failure_boundaries() {
                     "{limits:?}, {cfg:?}, {options:?}, switch={switch}"
                 );
                 assert_eq!(g.calls.get(), expected_calls);
+                #[cfg(feature = "experiment-interned-history")]
+                {
+                    let g = Game {
+                        switch,
+                        ..Game::new()
+                    };
+                    let linked = exact_result(reuse::search_interned(
+                        &g,
+                        &seeds(),
+                        *limits,
+                        *cfg,
+                        &Uniform,
+                        options,
+                    ));
+                    assert_eq!(
+                        linked, expected,
+                        "interned {limits:?}, {cfg:?}, {options:?}, switch={switch}"
+                    );
+                    assert_eq!(g.calls.get(), expected_calls);
+                }
             }
         }
     }
@@ -554,4 +574,166 @@ fn allocation_candidates_keep_zero_mass_and_malformed_domain_behavior() {
         }
     }
     assert_eq!(s[0].position.stage, 0);
+}
+
+#[cfg(feature = "experiment-interned-history")]
+#[test]
+fn interned_builder_preserves_all_domain_calls_errors_and_cursor_beliefs() {
+    use std::cell::RefCell;
+    struct Logged {
+        game: Game,
+        calls: RefCell<Vec<String>>,
+        incomplete_menu: bool,
+    }
+    impl Logged {
+        fn log(&self, op: &str, p: &Position) {
+            self.calls.borrow_mut().push(format!(
+                "{op}:{}:{}:{}:{}:{}",
+                p.world, p.stage, p.own, p.other, p.signal
+            ));
+        }
+    }
+    impl Domain for Logged {
+        type Position = Position;
+        type Action = usize;
+        fn phase(&self, p: &Position) -> Result<Phase, String> {
+            self.log("phase", p);
+            self.game.phase(p)
+        }
+        fn value(&self, p: &Position) -> f32 {
+            self.log("value", p);
+            self.game.value(p)
+        }
+        fn actions(&self, p: &Position, side: usize) -> Result<Vec<usize>, String> {
+            self.log(&format!("actions{side}"), p);
+            if self.incomplete_menu && side == 0 && p.world == 1 {
+                Ok(vec![0])
+            } else {
+                self.game.actions(p, side)
+            }
+        }
+        fn transitions(
+            &self,
+            p: &Position,
+            a: [&usize; 2],
+        ) -> Result<Vec<(f64, Position)>, String> {
+            self.log(&format!("transitions{}{}", a[0], a[1]), p);
+            self.game.transitions(p, a)
+        }
+    }
+    impl ObservedDomain for Logged {
+        fn observation(&self, p: &Position) -> Result<Observation, String> {
+            self.log("observe", p);
+            self.game.observation(p)
+        }
+        fn action_id(&self, p: &Position, side: usize, a: &usize) -> String {
+            self.log(&format!("action-id{side}:{a}"), p);
+            self.game.action_id(p, side, a)
+        }
+    }
+    let options = reuse::Options {
+        in_place: true,
+        workspace: true,
+        compiler: true,
+        static_values: true,
+        direct_write: true,
+    };
+    let mut pairs = 0;
+    for switch in [false, true] {
+        for bad_mass in [false, true] {
+            for incomplete_menu in [false, true] {
+                let s = seeds();
+                let limits = Limits::default();
+                let make = || Logged {
+                    game: Game {
+                        switch,
+                        bad_mass,
+                        ..Game::new()
+                    },
+                    calls: RefCell::default(),
+                    incomplete_menu,
+                };
+                let a = make();
+                let b = make();
+                let reference = super::super::build(&a, &s, limits);
+                let actual = super::super::build_interned(&b, &s, limits);
+                match (reference, actual) {
+                    (Ok(a), Ok(b)) => {
+                        assert_eq!(
+                            format!("{:?}|{:?}", a.tree, a.stats),
+                            format!("{:?}|{:?}", b.tree, b.stats)
+                        );
+                        let policy = tree::solve(&a.tree, config(100).solver).unwrap().policy;
+                        assert_eq!(
+                            format!("{:?}", a.tree.public_beliefs(&policy)),
+                            format!("{:?}", b.tree.public_beliefs(&policy))
+                        );
+                        let o = Game::new().observation(&s[0].position).unwrap();
+                        for cursor in [
+                            Cursor::new(0, None, &o).unwrap(),
+                            Cursor::new(1, Some("w0"), &o).unwrap(),
+                        ] {
+                            assert_eq!(cursor.information(&a.tree), cursor.information(&b.tree));
+                            assert_eq!(
+                                format!("{:?}", cursor.belief(&a.tree, &policy)),
+                                format!("{:?}", cursor.belief(&b.tree, &policy))
+                            );
+                        }
+                    }
+                    (Err(a), Err(b)) => assert_eq!(a, b),
+                    _ => panic!("different exhaustive success/error"),
+                }
+                assert_eq!(a.calls.borrow().as_slice(), b.calls.borrow().as_slice());
+                pairs += 1;
+                for seed in [1, 7, 31, u64::MAX] {
+                    for cap in [1, 2, 100] {
+                        let mut s = seeds();
+                        s[1].weight = 0.;
+                        let cfg = Config {
+                            seed,
+                            ..config(cap)
+                        };
+                        let a = make();
+                        let b = make();
+                        assert_eq!(
+                            exact_result(reuse::search(&a, &s, limits, cfg, &Uniform, options)),
+                            exact_result(reuse::search_interned(
+                                &b, &s, limits, cfg, &Uniform, options
+                            ))
+                        );
+                        assert_eq!(a.calls.borrow().as_slice(), b.calls.borrow().as_slice());
+                        pairs += 1;
+                    }
+                }
+            }
+        }
+    }
+    eprintln!("S26E_HISTORY_DOMAIN_TRACE pairs={pairs}");
+}
+
+#[cfg(feature = "experiment-interned-history-observer")]
+#[test]
+fn real_builder_activates_history_reuse_in_exhaustive_and_growth() {
+    let game = Game::new();
+    let s = seeds();
+    let limits = Limits::default();
+    let options = reuse::Options {
+        in_place: true,
+        workspace: true,
+        compiler: true,
+        static_values: true,
+        direct_write: true,
+    };
+    for growing in [false, true] {
+        history::observer::reset();
+        if growing {
+            reuse::search_interned(&game, &s, limits, config(100), &Uniform, options).unwrap();
+        } else {
+            super::super::build_interned(&game, &s, limits).unwrap();
+        }
+        let counts = history::observer::counts();
+        assert!(counts.advances > 0 && counts.key_formats > 0 && counts.link_reuses > 0);
+        assert!(counts.key_formats < counts.key_requests);
+        eprintln!("S26E_HISTORY_BUILDER growing={growing} {counts:?}");
+    }
 }

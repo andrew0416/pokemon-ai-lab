@@ -6,6 +6,11 @@ use crate::bayesian::{labels, normalize, Error};
 use crate::budgeted::{Domain, Phase};
 use std::collections::HashMap;
 
+mod history;
+#[cfg(feature = "experiment-interned-history-observer")]
+pub use history::observer as history_observer;
+use history::{Histories, Plain};
+
 #[cfg(feature = "experiment-growing-belief")]
 pub mod growing;
 
@@ -55,10 +60,10 @@ pub struct Built {
     pub stats: Stats,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-enum Memory {
-    Type(String),
-    Observe(String, String),
-    Action(String),
+enum Memory<S = String> {
+    Type(S),
+    Observe(S, S),
+    Action(S),
 }
 
 /// Live continuation lookup uses only the acting player's memory. Player 0 cannot
@@ -107,7 +112,8 @@ impl Cursor {
     }
 }
 
-struct Builder<'a, D: ObservedDomain> {
+struct Builder<'a, D: ObservedDomain, H: Histories = Plain> {
+    history: H,
     domain: &'a D,
     limits: Limits,
     nodes: Vec<Node>,
@@ -120,8 +126,8 @@ struct Builder<'a, D: ObservedDomain> {
     boundaries: Vec<Boundary>,
 }
 
-impl<D: ObservedDomain> Builder<'_, D> {
-    fn mark(&mut self, node: usize, world: usize, public: Vec<String>, keys: &[String; 2]) {
+impl<D: ObservedDomain, H: Histories> Builder<'_, D, H> {
+    fn mark(&mut self, node: usize, world: usize, public: Vec<String>, keys: &[H::Key; 2]) {
         let public_id = if let Some(&id) = self.public.get(&public) {
             id
         } else {
@@ -132,12 +138,12 @@ impl<D: ObservedDomain> Builder<'_, D> {
         };
         let mut private = [0; 2];
         for (side, key) in keys.iter().enumerate() {
-            private[side] = if let Some(&id) = self.private.get(key) {
+            private[side] = if let Some(&id) = self.private.get(key.as_ref()) {
                 id
             } else {
                 let id = self.private_keys.len();
-                self.private_keys.push(key.clone());
-                self.private.insert(key.clone(), id);
+                self.private_keys.push(key.as_ref().to_owned());
+                self.private.insert(key.as_ref().to_owned(), id);
                 id
             };
         }
@@ -173,13 +179,13 @@ impl<D: ObservedDomain> Builder<'_, D> {
         &mut self,
         pos: &D::Position,
         world: usize,
-        memory: [Vec<Memory>; 2],
+        memory: [H::Path; 2],
         public: Vec<String>,
         turns: u32,
         decisions: usize,
     ) -> Result<usize, Error> {
         let phase = self.domain.phase(pos)?;
-        let keys = [format!("0:{:?}", memory[0]), format!("1:{:?}", memory[1])];
+        let keys = self.history.keys(&memory);
         if phase == Phase::Terminal || (turns == 0 && phase == Phase::Turn) {
             let value = f64::from(self.domain.value(pos));
             self.stats.leaves += 1;
@@ -202,8 +208,8 @@ impl<D: ObservedDomain> Builder<'_, D> {
             .iter()
             .map(|a| self.domain.action_id(pos, 1, a))
             .collect();
-        self.menu(&keys[0], &row_ids)?;
-        self.menu(&keys[1], &col_ids)?;
+        self.menu(keys[0].as_ref(), &row_ids)?;
+        self.menu(keys[1].as_ref(), &col_ids)?;
         let next_turns = if phase == Phase::Turn {
             self.stats.turn_decisions += 1;
             turns - 1
@@ -244,15 +250,9 @@ impl<D: ObservedDomain> Builder<'_, D> {
                 let mut edges = Vec::new();
                 for (p, child) in children {
                     let observed = self.domain.observation(&child)?;
-                    let mut next = memory.clone();
-                    next[0].push(Memory::Action(row_ids[r].clone()));
-                    next[1].push(Memory::Action(col_ids[c].clone()));
-                    for (side, remembered) in next.iter_mut().enumerate() {
-                        remembered.push(Memory::Observe(
-                            observed.public.clone(),
-                            observed.private[side].clone(),
-                        ));
-                    }
+                    let next = self
+                        .history
+                        .advance(&memory, [&row_ids[r], &col_ids[c]], &observed);
                     let mut trace = public.clone();
                     trace.push(observed.public);
                     let target =
@@ -264,14 +264,14 @@ impl<D: ObservedDomain> Builder<'_, D> {
             // Same key for every hidden row choice: player 1 does NOT observe it.
             self.nodes[col_node] = Node::Decision {
                 player: 1,
-                information: keys[1].clone(),
+                information: keys[1].as_ref().to_owned(),
                 actions: col_ids.clone(),
                 children: col_children,
             };
         }
         self.nodes[row_node] = Node::Decision {
             player: 0,
-            information: keys[0].clone(),
+            information: keys[0].as_ref().to_owned(),
             actions: row_ids,
             children: row_children,
         };
@@ -280,6 +280,23 @@ impl<D: ObservedDomain> Builder<'_, D> {
 }
 
 pub fn build<D: ObservedDomain>(
+    domain: &D,
+    seeds: &[Seed<D::Position>],
+    limits: Limits,
+) -> Result<Built, Error> {
+    build_with::<D, Plain>(domain, seeds, limits)
+}
+
+#[cfg(feature = "experiment-interned-history")]
+pub fn build_interned<D: ObservedDomain>(
+    domain: &D,
+    seeds: &[Seed<D::Position>],
+    limits: Limits,
+) -> Result<Built, Error> {
+    build_with::<D, history::Interned>(domain, seeds, limits)
+}
+
+fn build_with<D: ObservedDomain, H: Histories>(
     domain: &D,
     seeds: &[Seed<D::Position>],
     limits: Limits,
@@ -298,6 +315,7 @@ pub fn build<D: ObservedDomain>(
     normalize(&mut weights)?;
     let first = domain.observation(&seeds[0].position)?;
     let mut b = Builder {
+        history: H::default(),
         domain,
         limits,
         nodes: Vec::new(),
@@ -323,13 +341,7 @@ pub fn build<D: ObservedDomain>(
                 "root worlds do not share our initial information".into(),
             ));
         }
-        let memory = [
-            vec![Memory::Observe(obs.public.clone(), obs.private[0].clone())],
-            vec![
-                Memory::Type(seed.id.clone()),
-                Memory::Observe(obs.public.clone(), obs.private[1].clone()),
-            ],
-        ];
+        let memory = b.history.root(&seed.id, &obs);
         let child = b.walk(
             &seed.position,
             world,

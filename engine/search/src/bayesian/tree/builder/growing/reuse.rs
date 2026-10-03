@@ -17,7 +17,10 @@ pub struct Settings {
     pub growth: Config,
     pub storage: Options,
 }
-fn compile<D: ObservedDomain>(g: &Growing<'_, D>, borrowed: bool) -> Result<Tree, Error> {
+fn compile<D: ObservedDomain, H: Histories>(
+    g: &Growing<'_, D, H>,
+    borrowed: bool,
+) -> Result<Tree, Error> {
     if !borrowed {
         return g.compile();
     }
@@ -28,7 +31,7 @@ fn compile<D: ObservedDomain>(g: &Growing<'_, D>, borrowed: bool) -> Result<Tree
     t.boundaries = g.b.boundaries.clone();
     Ok(t)
 }
-fn summary<D: ObservedDomain>(g: &Growing<'_, D>) -> (Stats, usize, usize) {
+fn summary<D: ObservedDomain, H: Histories>(g: &Growing<'_, D, H>) -> (Stats, usize, usize) {
     (
         g.b.stats.clone(),
         g.frontier.values().map(Vec::len).sum(),
@@ -46,6 +49,29 @@ fn solve(t: &Tree, config: CfrConfig, options: Options) -> Result<Solution, Erro
 }
 
 pub fn search<D: ObservedDomain, P: Prior>(
+    domain: &D,
+    seeds: &[Seed<D::Position>],
+    limits: Limits,
+    cfg: Config,
+    prior: &P,
+    options: Options,
+) -> Result<ResultTree, Error> {
+    search_with::<D, P, Plain>(domain, seeds, limits, cfg, prior, options)
+}
+
+#[cfg(feature = "experiment-interned-history")]
+pub fn search_interned<D: ObservedDomain, P: Prior>(
+    domain: &D,
+    seeds: &[Seed<D::Position>],
+    limits: Limits,
+    cfg: Config,
+    prior: &P,
+    options: Options,
+) -> Result<ResultTree, Error> {
+    search_with::<D, P, history::Interned>(domain, seeds, limits, cfg, prior, options)
+}
+
+fn search_with<D: ObservedDomain, P: Prior, H: Histories>(
     domain: &D,
     seeds: &[Seed<D::Position>],
     limits: Limits,
@@ -81,6 +107,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
     let first = domain.observation(&seeds[0].position)?;
     let mut growing = Growing {
         b: Builder {
+            history: H::default(),
             domain,
             limits,
             nodes: Vec::new(),
@@ -110,10 +137,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
                 )
                 .into());
             }
-            let memory = [
-                Cursor::new(0, None, &obs)?.memory,
-                Cursor::new(1, Some(&s.id), &obs)?.memory,
-            ];
+            let memory = growing.b.history.root(&s.id, &obs);
             let n = growing.leaf(Frontier {
                 node: 0,
                 position: s.position.clone(),

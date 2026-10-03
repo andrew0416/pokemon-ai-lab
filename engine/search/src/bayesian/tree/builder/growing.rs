@@ -95,17 +95,17 @@ impl From<String> for Failure {
 }
 type Attempt<T> = Result<T, Failure>;
 
-struct Frontier<P> {
+struct Frontier<P, M> {
     node: usize,
     position: P,
     world: usize,
-    memory: [Vec<Memory>; 2],
+    memory: [M; 2],
     public: Vec<String>,
     turns: u32,
     decisions: usize,
     phase: Phase,
 }
-impl<P: Clone> Clone for Frontier<P> {
+impl<P: Clone, M: Clone> Clone for Frontier<P, M> {
     fn clone(&self) -> Self {
         Self {
             node: self.node,
@@ -119,16 +119,18 @@ impl<P: Clone> Clone for Frontier<P> {
         }
     }
 }
-struct Growing<'a, D: ObservedDomain> {
-    b: Builder<'a, D>,
+type PublicFrontier<P, M> = BTreeMap<Vec<String>, Vec<Frontier<P, M>>>;
+struct Growing<'a, D: ObservedDomain, H: Histories = Plain> {
+    b: Builder<'a, D, H>,
     root: usize,
     worlds: Vec<String>,
-    frontier: BTreeMap<Vec<String>, Vec<Frontier<D::Position>>>,
+    frontier: PublicFrontier<D::Position, H::Path>,
 }
-impl<'a, D: ObservedDomain> Growing<'a, D> {
+impl<'a, D: ObservedDomain, H: Histories> Growing<'a, D, H> {
     fn fork(&self) -> Self {
         Self {
             b: Builder {
+                history: self.b.history.clone(),
                 domain: self.b.domain,
                 limits: self.b.limits,
                 nodes: self.b.nodes.clone(),
@@ -159,7 +161,7 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
         }
         Ok(self.b.push(n)?)
     }
-    fn leaf(&mut self, mut h: Frontier<D::Position>) -> Attempt<usize> {
+    fn leaf(&mut self, mut h: Frontier<D::Position, H::Path>) -> Attempt<usize> {
         let value = f64::from(self.b.domain.value(&h.position));
         if !value.is_finite() || value.abs() > f64::MAX / 8. {
             return Err(Error("invalid frontier evaluation".into()).into());
@@ -167,10 +169,7 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
         let node = self.push(Node::Terminal(value))?;
         h.node = node;
         self.b.stats.leaves += 1;
-        let keys = [
-            format!("0:{:?}", h.memory[0]),
-            format!("1:{:?}", h.memory[1]),
-        ];
+        let keys = self.b.history.keys(&h.memory);
         self.b.mark(node, h.world, h.public.clone(), &keys);
         if h.phase != Phase::Terminal && !(h.phase == Phase::Turn && h.turns == 0) {
             let group = self.frontier.entry(h.public.clone()).or_default();
@@ -212,12 +211,9 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                 .iter()
                 .map(|a| self.b.domain.action_id(p, 1, a))
                 .collect();
-            let keys = [
-                format!("0:{:?}", h.memory[0]),
-                format!("1:{:?}", h.memory[1]),
-            ];
-            self.b.menu(&keys[0], &rows)?;
-            self.b.menu(&keys[1], &cols)?;
+            let keys = self.b.history.keys(&h.memory);
+            self.b.menu(keys[0].as_ref(), &rows)?;
+            self.b.menu(keys[1].as_ref(), &cols)?;
             let turns = if h.phase == Phase::Turn {
                 self.b.stats.turn_decisions += 1;
                 h.turns - 1
@@ -262,15 +258,10 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                     for (probability, position) in children {
                         let obs = self.b.domain.observation(&position)?;
                         let phase = self.b.domain.phase(&position)?;
-                        let mut memory = h.memory.clone();
-                        memory[0].push(Memory::Action(rows[r].clone()));
-                        memory[1].push(Memory::Action(cols[c].clone()));
-                        for (side, m) in memory.iter_mut().enumerate() {
-                            m.push(Memory::Observe(
-                                obs.public.clone(),
-                                obs.private[side].clone(),
-                            ));
-                        }
+                        let memory = self
+                            .b
+                            .history
+                            .advance(&h.memory, [&rows[r], &cols[c]], &obs);
                         let mut public = h.public.clone();
                         public.push(obs.public);
                         let child = self.leaf(Frontier {
@@ -290,14 +281,14 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                 // Column information must not contain the hidden row commitment.
                 self.b.nodes[col_node] = Node::Decision {
                     player: 1,
-                    information: keys[1].clone(),
+                    information: keys[1].as_ref().to_owned(),
                     actions: cols.clone(),
                     children: col_children,
                 };
             }
             self.b.nodes[h.node] = Node::Decision {
                 player: 0,
-                information: keys[0].clone(),
+                information: keys[0].as_ref().to_owned(),
                 actions: rows,
                 children: row_children,
             };
@@ -467,6 +458,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
     let first = domain.observation(&seeds[0].position)?;
     let mut growing = Growing {
         b: Builder {
+            history: Plain,
             domain,
             limits,
             nodes: Vec::new(),
@@ -496,10 +488,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
                 )
                 .into());
             }
-            let memory = [
-                Cursor::new(0, None, &obs)?.memory,
-                Cursor::new(1, Some(&s.id), &obs)?.memory,
-            ];
+            let memory = growing.b.history.root(&s.id, &obs);
             let n = growing.leaf(Frontier {
                 node: 0,
                 position: s.position.clone(),

@@ -14,6 +14,8 @@ path = "src/lib.rs"
 # (serde); it sits behind the default `cli` feature so hot-path users can turn it off with
 # `default-features = false`.
 [features]
+experiment-interned-history = ["experiment-owned-transitions"]
+experiment-interned-history-observer = ["experiment-interned-history"]
 experiment-owned-transitions = ["experiment-belief-workspace", "lab-engine/experiment-owned-endings"]
 experiment-owned-transitions-observer = ["experiment-owned-transitions", "lab-engine/experiment-leaf-ending-observer"]
 default = ["cli"]
@@ -125,3 +127,8 @@ required-features = ["cli", "experiment-belief-workspace"]
 name = "owned_transitions"
 path = "tests/owned_transitions.rs"
 required-features = ["experiment-owned-transitions-observer"]
+
+[[test]]
+name = "interned_history"
+path = "tests/interned_history.rs"
+required-features = ["experiment-interned-history-observer"]

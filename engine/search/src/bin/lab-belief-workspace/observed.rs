@@ -2,7 +2,13 @@
 //! simulator references only; only supplied observations enter the information key.
 use super::*;
 use lab_search::budgeted::{Domain, Phase};
-use tree::builder::{self, growing, Built, Observation, ObservedDomain, Seed};
+#[cfg(not(feature = "experiment-interned-history"))]
+use tree::builder::{build as build_observed, growing::reuse::search as grow_observed};
+#[cfg(feature = "experiment-interned-history")]
+use tree::builder::{
+    build_interned as build_observed, growing::reuse::search_interned as grow_observed,
+};
+use tree::builder::{growing, Built, Observation, ObservedDomain, Seed};
 
 struct State {
     phase: Phase,
@@ -179,7 +185,7 @@ pub fn request(
     }
     let domain = Table(states);
     let (built, solution, growth) = if let Some(c) = growth_config(v, config)? {
-        let r = growing::reuse::search(
+        let r = grow_observed(
             &domain,
             &seeds,
             limits,
@@ -198,7 +204,7 @@ pub fn request(
         (r.built, Some(r.solution), m)
     } else {
         (
-            builder::build(&domain, &seeds, limits).map_err(|e| e.to_string())?,
+            build_observed(&domain, &seeds, limits).map_err(|e| e.to_string())?,
             None,
             Value::Null,
         )

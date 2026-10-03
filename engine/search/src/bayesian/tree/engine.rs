@@ -283,7 +283,9 @@ pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
     limits: Limits,
     settings: builder::growing::reuse::Settings,
 ) -> Result<builder::growing::ResultTree, Error> {
-    growing_storage::<N, E, false>(worlds, us, ruleset, evaluator, knowledge, limits, settings)
+    growing_storage::<N, E, false, false>(
+        worlds, us, ruleset, evaluator, knowledge, limits, settings,
+    )
 }
 
 #[cfg(feature = "experiment-owned-transitions")]
@@ -296,11 +298,31 @@ pub fn growing_owned<const N: usize, E: Evaluator<N> + ?Sized>(
     limits: Limits,
     settings: builder::growing::reuse::Settings,
 ) -> Result<builder::growing::ResultTree, Error> {
-    growing_storage::<N, E, true>(worlds, us, ruleset, evaluator, knowledge, limits, settings)
+    growing_storage::<N, E, true, false>(
+        worlds, us, ruleset, evaluator, knowledge, limits, settings,
+    )
+}
+
+#[cfg(feature = "experiment-interned-history")]
+pub fn growing_interned<const N: usize, E: Evaluator<N> + ?Sized>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+    settings: builder::growing::reuse::Settings,
+) -> Result<builder::growing::ResultTree, Error> {
+    growing_storage::<N, E, true, true>(worlds, us, ruleset, evaluator, knowledge, limits, settings)
 }
 
 #[cfg(feature = "experiment-belief-workspace")]
-fn growing_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
+fn growing_storage<
+    const N: usize,
+    E: Evaluator<N> + ?Sized,
+    const OWNED: bool,
+    const INTERNED: bool,
+>(
     worlds: &[EngineWorld<N>],
     us: SideId,
     ruleset: Ruleset,
@@ -342,6 +364,17 @@ fn growing_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
         inner: domain,
         direct: settings.storage.direct_write,
     };
+    #[cfg(feature = "experiment-interned-history")]
+    if INTERNED {
+        return builder::growing::reuse::search_interned(
+            &domain,
+            &seeds,
+            limits,
+            settings.growth,
+            &builder::growing::Uniform,
+            settings.storage,
+        );
+    }
     builder::growing::reuse::search(
         &domain,
         &seeds,
@@ -414,7 +447,7 @@ pub fn build_writing<const N: usize, E: Evaluator<N> + ?Sized>(
     knowledge: &Knowledge,
     limits: Limits,
 ) -> Result<Built, Error> {
-    build_storage::<N, E, false>(worlds, us, ruleset, evaluator, knowledge, limits)
+    build_storage::<N, E, false, false>(worlds, us, ruleset, evaluator, knowledge, limits)
 }
 
 #[cfg(feature = "experiment-owned-transitions")]
@@ -426,11 +459,28 @@ pub fn build_owned<const N: usize, E: Evaluator<N> + ?Sized>(
     knowledge: &Knowledge,
     limits: Limits,
 ) -> Result<Built, Error> {
-    build_storage::<N, E, true>(worlds, us, ruleset, evaluator, knowledge, limits)
+    build_storage::<N, E, true, false>(worlds, us, ruleset, evaluator, knowledge, limits)
+}
+
+#[cfg(feature = "experiment-interned-history")]
+pub fn build_interned<const N: usize, E: Evaluator<N> + ?Sized>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+) -> Result<Built, Error> {
+    build_storage::<N, E, true, true>(worlds, us, ruleset, evaluator, knowledge, limits)
 }
 
 #[cfg(feature = "experiment-belief-workspace")]
-fn build_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
+fn build_storage<
+    const N: usize,
+    E: Evaluator<N> + ?Sized,
+    const OWNED: bool,
+    const INTERNED: bool,
+>(
     worlds: &[EngineWorld<N>],
     us: SideId,
     ruleset: Ruleset,
@@ -469,5 +519,9 @@ fn build_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
         inner: domain,
         direct: true,
     };
+    #[cfg(feature = "experiment-interned-history")]
+    if INTERNED {
+        return builder::build_interned(&domain, &seeds, limits);
+    }
     builder::build(&domain, &seeds, limits)
 }
