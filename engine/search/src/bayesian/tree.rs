@@ -12,6 +12,8 @@ pub use workspace::cached::paper;
 #[cfg(feature = "experiment-belief-workspace")]
 pub mod compiler;
 pub mod engine;
+#[cfg(feature = "experiment-growth-pipeline")]
+pub mod pipeline;
 #[cfg(feature = "experiment-shared-final-passes")]
 pub mod shared;
 #[cfg(feature = "experiment-belief-workspace")]

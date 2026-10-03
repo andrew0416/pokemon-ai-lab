@@ -7,6 +7,8 @@
 use super::*;
 #[cfg(feature = "experiment-incremental-compilation")]
 pub(crate) mod incremental;
+#[cfg(feature = "experiment-growth-pipeline")]
+pub(crate) mod owned;
 
 pub fn compile(raw: &[Node], root: usize) -> Result<Tree, Error> {
     if raw.is_empty() || root >= raw.len() {

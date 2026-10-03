@@ -865,3 +865,153 @@ fn invalid_cadence_never_touches_domain() {
         assert_eq!(game.calls.get(), 0);
     }
 }
+
+#[cfg(feature = "experiment-growth-pipeline")]
+#[test]
+fn pipeline_frontier_exact_parity_across_atomic_budgets() {
+    for cadence in [1, 2, 4] {
+        for seed in [0, 1, 999] {
+            for owned_compiler in [false, true] {
+                for budget in [7, 8, 9, 23, 24, 25, 40, 1000] {
+                    for switch in [false, true] {
+                        let a = Game {
+                            switch,
+                            ..Game::new()
+                        };
+                        let b = Game {
+                            switch,
+                            ..Game::new()
+                        };
+                        let limits = Limits {
+                            max_transitions: budget,
+                            ..Limits::default()
+                        };
+                        let cfg = Config {
+                            seed,
+                            ..config(100)
+                        };
+                        let options = reuse::Options {
+                            in_place: true,
+                            compiler: true,
+                            workspace: true,
+                            static_values: true,
+                            direct_write: true,
+                        };
+                        let settings = tree::paper::Settings {
+                            sequence: true,
+                            ..Default::default()
+                        };
+                        let ra = reuse::paper::search(
+                            &a,
+                            &seeds(),
+                            limits,
+                            cfg,
+                            &Uniform,
+                            options,
+                            cadence,
+                            settings,
+                        );
+                        let rb = reuse::pipeline::search(
+                            &b,
+                            &seeds(),
+                            limits,
+                            cfg,
+                            &Uniform,
+                            options,
+                            cadence,
+                            settings,
+                            tree::pipeline::Settings {
+                                frontier_index: true,
+                                owned_compiler,
+                                ..Default::default()
+                            },
+                        );
+                        assert_eq!(a.calls.get(), b.calls.get());
+                        match (ra, rb) {
+                            (Ok(a), Ok(b)) => {
+                                assert_eq!(exact_result(Ok(a.search)), exact_result(Ok(b.search)));
+                                assert_eq!(format!("{:?}", a.stats), format!("{:?}", b.stats));
+                            }
+                            (Err(a), Err(b)) => assert_eq!(a.0, b.0),
+                            _ => panic!("pipeline changed success/error"),
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[cfg(feature = "experiment-growth-pipeline")]
+#[test]
+fn pipeline_delta_game_and_certificates_survive_growth_and_budget_abort() {
+    for cadence in [1, 4] {
+        for expansions in [1, 2, 100] {
+            for cap in [9, 25, 1000] {
+                let game = Game::new();
+                let limits = Limits {
+                    max_transitions: cap,
+                    ..Limits::default()
+                };
+                let options = reuse::Options {
+                    in_place: true,
+                    compiler: true,
+                    workspace: true,
+                    static_values: true,
+                    direct_write: true,
+                };
+                let settings = tree::paper::Settings {
+                    sequence: true,
+                    ..Default::default()
+                };
+                let reference = reuse::paper::search(
+                    &Game::new(),
+                    &seeds(),
+                    limits,
+                    config(expansions),
+                    &Uniform,
+                    options,
+                    cadence,
+                    settings,
+                )
+                .unwrap();
+                let actual = reuse::pipeline::search(
+                    &game,
+                    &seeds(),
+                    limits,
+                    config(expansions),
+                    &Uniform,
+                    options,
+                    cadence,
+                    settings,
+                    tree::pipeline::Settings {
+                        frontier_index: true,
+                        owned_compiler: true,
+                        incremental_sequence: true,
+                        ..Default::default()
+                    },
+                )
+                .unwrap();
+                let a = &actual.search;
+                assert_eq!(a.work.attempted_transitions, game.calls.get());
+                assert_eq!(a.stop, reference.search.stop);
+                assert_eq!(
+                    format!("{:?}", a.built.tree),
+                    format!("{:?}", reference.search.built.tree)
+                );
+                assert_eq!(
+                    format!("{:?}", a.built.tree.assess(&a.solution.policy).unwrap()),
+                    format!("{:?}", a.solution.assessment)
+                );
+                assert!(
+                    (a.solution.assessment.value - reference.search.solution.assessment.value)
+                        .abs()
+                        < 0.02
+                );
+                assert_eq!(actual.metrics.sequence_full_builds, 1);
+                assert_eq!(actual.metrics.sequence_delta_updates, a.work.solves - 1);
+                assert_eq!(actual.metrics.sequence_fallbacks, 0);
+            }
+        }
+    }
+}

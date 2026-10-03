@@ -66,14 +66,31 @@ fn keys(v: &Value, allowed: &[&str]) -> Result<(), String> {
 #[cfg(feature = "experiment-paper-solvers")]
 #[path = "lab-belief-workspace/paper_options.rs"]
 mod paper_options;
+#[cfg(feature = "experiment-growth-pipeline")]
+#[path = "lab-belief-workspace/pipeline_options.rs"]
+mod pipeline_options;
 
 fn request(v: &Value, base: &Path) -> Result<Value, String> {
     let mut config = Config::default();
     if let Some(c) = v.get("solver") {
         #[cfg(not(feature = "experiment-paper-solvers"))]
         keys(c, &["iterations", "tolerance", "check_every"])?;
-        #[cfg(feature = "experiment-paper-solvers")]
+        #[cfg(all(
+            feature = "experiment-paper-solvers",
+            not(feature = "experiment-growth-pipeline")
+        ))]
         keys(c, &["iterations", "tolerance", "check_every", "paper"])?;
+        #[cfg(feature = "experiment-growth-pipeline")]
+        keys(
+            c,
+            &[
+                "iterations",
+                "tolerance",
+                "check_every",
+                "paper",
+                "pipeline",
+            ],
+        )?;
         config.iterations = integer(c, "iterations", config.iterations)?;
         config.check_every = integer(c, "check_every", config.check_every)?;
         if c.get("tolerance").is_some() {
@@ -95,6 +112,8 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
         .transpose()?;
     #[cfg(feature = "experiment-paper-solvers")]
     let mut paper_meta = None;
+    #[cfg(feature = "experiment-growth-pipeline")]
+    let pipeline_settings = pipeline_options::request(v)?;
     let mode = string(v, "mode")?;
     let include_keys = boolean(v, "include_keys", false)?;
     let mut growth_solution = None;
@@ -253,6 +272,44 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                 };
                 #[cfg(feature = "experiment-paper-solvers")]
                 let value = if let Some(solver) = paper_settings {
+                    #[cfg(feature = "experiment-growth-pipeline")]
+                    let run = if let Some(pipeline) = pipeline_settings {
+                        tree::engine::pipeline::growing(
+                            &worlds,
+                            side,
+                            Ruleset::CHAMPIONS_MC,
+                            evaluator.as_ref(),
+                            &knowledge,
+                            limits,
+                            tree::engine::pipeline::Settings {
+                                search: settings.search,
+                                cadence: settings.cadence,
+                                pool: None,
+                                solver,
+                                pipeline,
+                            },
+                        )
+                        .map_err(|e| e.to_string())?
+                    } else {
+                        tree::builder::growing::reuse::pipeline::PaperResult::from(
+                            tree::engine::paper::growing(
+                                &worlds,
+                                side,
+                                Ruleset::CHAMPIONS_MC,
+                                evaluator.as_ref(),
+                                &knowledge,
+                                limits,
+                                tree::engine::paper::Settings {
+                                    search: settings.search,
+                                    cadence: settings.cadence,
+                                    pool: None,
+                                    solver,
+                                },
+                            )
+                            .map_err(|e| e.to_string())?,
+                        )
+                    };
+                    #[cfg(not(feature = "experiment-growth-pipeline"))]
                     let run = tree::engine::paper::growing(
                         &worlds,
                         side,
@@ -268,7 +325,13 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
                         },
                     )
                     .map_err(|e| e.to_string())?;
-                    paper_meta = Some(paper_options::growth(&run.stats));
+                    #[allow(unused_mut)]
+                    let mut meta = paper_options::growth(&run.stats);
+                    #[cfg(feature = "experiment-growth-pipeline")]
+                    if pipeline_settings.is_some() {
+                        meta["pipeline"] = pipeline_options::metrics(&run.metrics);
+                    }
+                    paper_meta = Some(meta);
                     Some(run.search)
                 } else {
                     Some(
@@ -359,8 +422,26 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
         None => {
             #[cfg(feature = "experiment-paper-solvers")]
             if let Some(settings) = paper_settings {
+                #[cfg(feature = "experiment-growth-pipeline")]
+                let (run, pm) = if let Some(pipeline) = pipeline_settings {
+                    let r = tree::pipeline::solve(&tree, config, settings, pipeline)
+                        .map_err(|e| e.to_string())?;
+                    (r.run, Some(pipeline_options::metrics(&r.metrics)))
+                } else {
+                    (
+                        tree::paper::solve(&tree, config, settings).map_err(|e| e.to_string())?,
+                        None,
+                    )
+                };
+                #[cfg(not(feature = "experiment-growth-pipeline"))]
                 let run = tree::paper::solve(&tree, config, settings).map_err(|e| e.to_string())?;
-                paper_meta = Some(paper_options::stats(&run.stats));
+                #[allow(unused_mut)]
+                let mut meta = paper_options::stats(&run.stats);
+                #[cfg(feature = "experiment-growth-pipeline")]
+                if let Some(pm) = pm {
+                    meta["pipeline"] = pm;
+                }
+                paper_meta = Some(meta);
                 run.solution
             } else {
                 tree::workspace::cached::solve(&tree, config).map_err(|e| e.to_string())?

@@ -1,127 +1,24 @@
-//! Opt-in paper-derived solvers. All certificates use the original information tree.
-//! The rule, check schedule, policy reuse and matrix kernel are independent settings.
 use super::*;
-mod compact;
-#[cfg(feature = "experiment-growth-pipeline")]
-pub(crate) mod pipeline;
-pub mod reuse;
-mod sequence;
 #[cfg(test)]
 mod tests;
-mod warm;
-
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
-pub enum Rule {
-    #[default]
-    Lcfr,
-    Cfr,
-    CfrSimultaneous,
-    Dcfr,
-    PcfrPlus,
-    SapcfrPlus,
-    HsDcfr15,
-    HsDcfr30,
-    HsPcfr15,
-    HsPcfr30,
+use crate::bayesian::tree::{
+    compiler::owned::Delta,
+    pipeline::{Metrics, Settings as PipelineSettings},
+};
+#[derive(Default)]
+pub(crate) struct Context {
+    sequence: sequence::incremental::Cache,
 }
-impl Rule {
-    pub fn parse(s: &str) -> Result<Self, Error> {
-        match s {
-            "lcfr" => Ok(Self::Lcfr),
-            "cfr" => Ok(Self::Cfr),
-            "cfr-simultaneous" => Ok(Self::CfrSimultaneous),
-            "dcfr" => Ok(Self::Dcfr),
-            "pcfr+" => Ok(Self::PcfrPlus),
-            "sapcfr+" => Ok(Self::SapcfrPlus),
-            "hs-dcfr-15" => Ok(Self::HsDcfr15),
-            "hs-dcfr-30" => Ok(Self::HsDcfr30),
-            "hs-pcfr-15" => Ok(Self::HsPcfr15),
-            "hs-pcfr-30" => Ok(Self::HsPcfr30),
-            _ => Err(Error("unknown CFR rule".into())),
-        }
-    }
-    fn predictive(self) -> bool {
-        matches!(
-            self,
-            Self::PcfrPlus | Self::SapcfrPlus | Self::HsPcfr15 | Self::HsPcfr30
-        )
-    }
-    // At the beginning of iteration t+1, discount contributions accumulated through t.
-    // HS progress t/n uses the fixed configured horizon, never an estimated stop time.
-    fn discounts(self, t: usize, n: usize) -> (f64, f64, f64) {
-        let time = t as f64;
-        let progress = time / n as f64;
-        let (alpha, beta, gamma) = match self {
-            Self::Lcfr | Self::Cfr | Self::CfrSimultaneous => return (1., 1., 1.),
-            Self::Dcfr => (1.5, 0., 2.),
-            Self::HsDcfr15 => (1. + 3. * progress, -1. - 2. * progress, 15. - 5. * progress),
-            Self::HsDcfr30 => (1. + 3. * progress, -1. - 2. * progress, 30. - 5. * progress),
-            Self::HsPcfr15 => (0., 0., 15. - 5. * progress),
-            Self::HsPcfr30 => (0., 0., 30. - 5. * progress),
-            Self::PcfrPlus | Self::SapcfrPlus => (0., 0., 2.),
-        };
-        let average = (time / (time + 1.)).powf(gamma);
-        if self.predictive() {
-            return (1., 1., average);
-        }
-        if t == 0 {
-            return (0., 0., average);
-        }
-        let p = time.powf(alpha);
-        let q = time.powf(beta);
-        (p / (p + 1.), q / (q + 1.), average)
-    }
-}
-
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
-pub enum Checks {
-    #[default]
-    Periodic,
-    Geometric,
-}
-#[derive(Clone, Copy, Debug, Default)]
-pub struct Settings {
-    pub rule: Rule,
-    pub checks: Checks,
-    pub compact: bool,
-    pub sequence: bool,
-    /// Check a previous average strategy in the NEW game; reset on failure.
-    pub reuse_policy: bool,
-    /// Brown/Sandholm substitute-regret initialization, only for simultaneous CFR.
-    /// Zero disables it. This is virtual history, never counted as executed iterations.
-    pub warm_iterations: usize,
-}
-#[derive(Clone, Debug, Default)]
-pub struct Stats {
-    pub assessments: usize,
-    pub compact: bool,
-    pub matrix_entries: usize,
-    pub sequence: bool,
-    pub sequence_entries: usize,
-    pub scalar_reach_fallbacks: usize,
-    pub mapped_information: usize,
-    pub reuse_attempted: bool,
-    pub reused: bool,
-    pub warm_attempted: bool,
-    pub warm_applied: bool,
-    pub virtual_iterations: usize,
-    pub substitute_root_sum: Option<f64>,
-}
-#[derive(Clone, Debug)]
-pub struct Run {
-    pub solution: Solution,
-    pub stats: Stats,
-}
-
-pub fn solve(tree: &Tree, config: Config, settings: Settings) -> Result<Run, Error> {
-    solve_from(tree, config, settings, None)
-}
-
-pub fn solve_from(
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn solve_from(
     tree: &Tree,
     config: Config,
     settings: Settings,
     previous: Option<&reuse::Snapshot>,
+    pipeline: PipelineSettings,
+    compiler_delta: Option<&Delta>,
+    context: &mut Context,
+    metrics: &mut Metrics,
 ) -> Result<Run, Error> {
     if config.iterations == 0
         || config.iterations > 10_000_000
@@ -139,6 +36,7 @@ pub fn solve_from(
                 .into(),
         ));
     }
+    crate::bayesian::tree::pipeline::validate(pipeline, settings)?;
     let mut stats = Stats::default();
     let mut seed = None;
     if settings.reuse_policy || settings.warm_iterations > 0 {
@@ -194,10 +92,17 @@ pub fn solve_from(
     };
     stats.compact = matrix.is_some();
     stats.matrix_entries = matrix.as_ref().map_or(0, |m| m.entries());
-    let mut sequence = if matrix.is_none() && settings.sequence {
-        sequence::Kernel::new(tree)
+    let mut local_sequence =
+        if matrix.is_none() && settings.sequence && !pipeline.incremental_sequence {
+            sequence::Kernel::new(tree)
+        } else {
+            None
+        };
+    let mut sequence = if matrix.is_none() && settings.sequence && pipeline.incremental_sequence {
+        context.sequence.update(tree, compiler_delta, metrics);
+        context.sequence.kernel.as_mut()
     } else {
-        None
+        local_sequence.as_mut()
     };
     stats.sequence = sequence.is_some();
     stats.sequence_entries = sequence.as_ref().map_or(0, |k| k.entries());
@@ -360,6 +265,21 @@ pub fn solve_from(
                     }
                 })
                 .collect();
+            if pipeline.compressed_checks && t != config.iterations {
+                if let Some(kernel) = sequence.as_mut() {
+                    metrics.compressed_checks += 1;
+                    if let Some(gap) = kernel.gap(tree, &average) {
+                        // Near the threshold, prefer the reference's floating-point
+                        // result. This is a filter, not a published error bound.
+                        let margin =
+                            64. * f64::EPSILON * tree.scale * (1. + tree.information.len() as f64);
+                        if gap > config.tolerance + margin {
+                            metrics.compressed_rejections += 1;
+                            continue;
+                        }
+                    }
+                }
+            }
             let assessment = tree.assess(&average)?;
             stats.assessments += 1;
             let converged = assessment.gap <= config.tolerance;

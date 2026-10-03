@@ -197,6 +197,48 @@ pub fn request(
             .map(paper_options::parse)
             .transpose()?
         {
+            #[cfg(feature = "experiment-growth-pipeline")]
+            let r = if let Some(pipeline) = pipeline_options::request(v)? {
+                growing::reuse::pipeline::search(
+                    &domain,
+                    &seeds,
+                    limits,
+                    c,
+                    &growing::Uniform,
+                    growing::reuse::Options {
+                        in_place: true,
+                        workspace: true,
+                        compiler: true,
+                        static_values: true,
+                        direct_write: false,
+                    },
+                    cadence(v)?,
+                    settings,
+                    pipeline,
+                )
+                .map_err(|e| e.to_string())?
+            } else {
+                growing::reuse::pipeline::PaperResult::from(
+                    growing::reuse::paper::search(
+                        &domain,
+                        &seeds,
+                        limits,
+                        c,
+                        &growing::Uniform,
+                        growing::reuse::Options {
+                            in_place: true,
+                            workspace: true,
+                            compiler: true,
+                            static_values: true,
+                            direct_write: false,
+                        },
+                        cadence(v)?,
+                        settings,
+                    )
+                    .map_err(|e| e.to_string())?,
+                )
+            };
+            #[cfg(not(feature = "experiment-growth-pipeline"))]
             let r = growing::reuse::paper::search(
                 &domain,
                 &seeds,
@@ -214,7 +256,12 @@ pub fn request(
                 settings,
             )
             .map_err(|e| e.to_string())?;
-            let meta = paper_options::growth(&r.stats);
+            #[allow(unused_mut)]
+            let mut meta = paper_options::growth(&r.stats);
+            #[cfg(feature = "experiment-growth-pipeline")]
+            if v["solver"].get("pipeline").is_some() {
+                meta["pipeline"] = pipeline_options::metrics(&r.metrics);
+            }
             (r.search, Some(meta))
         } else {
             (

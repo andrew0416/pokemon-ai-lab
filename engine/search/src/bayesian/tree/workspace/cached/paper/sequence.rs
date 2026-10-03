@@ -3,6 +3,8 @@
 //! one chance-weighted coefficient. Information sets and realization constraints
 //! remain distinct. No observation/history abstraction or terminal sampling.
 use super::*;
+#[cfg(feature = "experiment-growth-pipeline")]
+pub(super) mod incremental;
 pub(super) struct Kernel {
     offsets: Vec<usize>,
     parent: Vec<usize>,
@@ -15,6 +17,48 @@ pub(super) struct Kernel {
     safe: bool,
 }
 impl Kernel {
+    /// Internal stopping filter only. Final/candidate certificates still use Tree.
+    #[cfg(feature = "experiment-growth-pipeline")]
+    pub(super) fn gap(&mut self, tree: &Tree, policy: &Policy) -> Option<f64> {
+        tree.check_policy(policy).ok()?;
+        let mut response = [0.; 2];
+        let mut minimum = [1f64; 2];
+        for player in 0..2 {
+            if !self.prepare(tree, policy, player) {
+                return None;
+            }
+            for &p in &self.realization[..self.counts[1 - player]] {
+                if p > 0. {
+                    minimum[1 - player] = minimum[1 - player].min(p);
+                }
+            }
+            self.gradient[..self.counts[player]].fill(0.);
+            let sign = if player == 0 { 1. } else { -1. };
+            for &(a, b, v) in &self.entries {
+                let (own, other) = if player == 0 { (a, b) } else { (b, a) };
+                self.gradient[own] += sign * v * self.realization[other];
+            }
+            for &i in self.order.iter().rev() {
+                if tree.information[i].player != player {
+                    continue;
+                }
+                let offset = self.offsets[i];
+                let best = self.gradient[offset..offset + tree.information[i].actions.len()]
+                    .iter()
+                    .copied()
+                    .fold(f64::NEG_INFINITY, f64::max);
+                self.gradient[self.parent[i]] += best;
+            }
+            response[player] = self.gradient[0];
+        }
+        // Prefer the original check for subnormal products, whose rounding can
+        // depend on multiplication order. This guard is deliberately conservative.
+        if self.min_chance * minimum[0] * minimum[1] < f64::MIN_POSITIVE {
+            return None;
+        }
+        let gap = ((response[0] + response[1]) * tree.scale).max(0.);
+        gap.is_finite().then_some(gap)
+    }
     pub(super) fn new(tree: &Tree) -> Option<Self> {
         let mut offsets = vec![0; tree.information.len()];
         let mut counts = [1usize; 2];

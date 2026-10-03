@@ -6,6 +6,8 @@ use super::*;
 pub mod cadence;
 #[cfg(feature = "experiment-paper-solvers")]
 pub mod paper;
+#[cfg(feature = "experiment-growth-pipeline")]
+pub mod pipeline;
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Options {

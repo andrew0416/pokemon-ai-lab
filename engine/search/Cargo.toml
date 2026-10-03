@@ -15,6 +15,7 @@ path = "src/lib.rs"
 # `default-features = false`.
 [features]
 experiment-paper-solvers = ["experiment-growth-cadence"]
+experiment-growth-pipeline = ["experiment-paper-solvers"]
 experiment-growth-cadence = ["experiment-parallel-transitions"]
 experiment-parallel-transitions = ["experiment-incremental-compilation"]
 experiment-incremental-compilation = ["experiment-owned-transitions"]
@@ -135,3 +136,8 @@ required-features = ["experiment-owned-transitions-observer"]
 name = "lab-paper-speed"
 path = "src/bin/lab-paper-speed.rs"
 required-features = ["cli", "experiment-paper-solvers"]
+
+[[bin]]
+name = "lab-pipeline-speed"
+path = "src/bin/lab-pipeline-speed.rs"
+required-features = ["cli", "experiment-growth-pipeline"]

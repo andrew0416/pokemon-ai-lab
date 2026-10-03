@@ -540,3 +540,5 @@ pub mod cadence;
 pub mod paper;
 #[cfg(feature = "experiment-parallel-transitions")]
 pub mod parallel;
+#[cfg(feature = "experiment-growth-pipeline")]
+pub mod pipeline;
