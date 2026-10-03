@@ -274,7 +274,13 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                             // Every submitted engine call is attempted work, even if a
                             // preceding result or node allocation rejects the admission.
                             work.attempted_transitions += count;
-                            let results = batch.run(self.b.domain, p, &joints);
+                            let results = {
+                                #[cfg(feature = "experiment-phase-cost")]
+                                let _transition = crate::bayesian::tree::phase_cost::Span::new(
+                                    crate::bayesian::tree::phase_cost::Phase::Transitions,
+                                );
+                                batch.run(self.b.domain, p, &joints)
+                            };
                             if results.len() != count {
                                 return Err(Error("transition batch size mismatch".into()).into());
                             }
@@ -286,6 +292,10 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                             return Err(Failure::Limit(Stop::TransitionLimit));
                         }
                         work.attempted_transitions += 1;
+                        #[cfg(feature = "experiment-phase-cost")]
+                        let _transition = crate::bayesian::tree::phase_cost::Span::new(
+                            crate::bayesian::tree::phase_cost::Phase::Transitions,
+                        );
                         Ok(self.b.domain.transitions(p, [row, col])?)
                     };
                     #[cfg(feature = "experiment-parallel-transitions")]
@@ -362,6 +372,10 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
         Ok(())
     }
     fn admit(&mut self, key: &[String], work: &mut Work, cfg: Config) -> Attempt<()> {
+        #[cfg(feature = "experiment-phase-cost")]
+        let _admit = crate::bayesian::tree::phase_cost::Span::new(
+            crate::bayesian::tree::phase_cost::Phase::Admission,
+        );
         self.expand(key, work, cfg)?;
         // Publishing a snapshot while a pending replacement is priced as a heuristic
         // leaf would change the previous solver's horizon contract. Close ALL switches.
@@ -407,6 +421,10 @@ type Visits = HashMap<String, Vec<u64>>;
 /// CF action values aggregate all member histories before selection. No sampled-world
 /// value or node-wise best response is used as a substitute for information-set Q.
 fn scores(t: &Tree, policy: &Policy) -> Result<Vec<Vec<f64>>, Error> {
+    #[cfg(feature = "experiment-phase-cost")]
+    let _scores = crate::bayesian::tree::phase_cost::Span::new(
+        crate::bayesian::tree::phase_cost::Phase::Scores,
+    );
     let values = t.values(policy);
     let cf = [t.reach(policy, Some(0))?, t.reach(policy, Some(1))?];
     Ok(scores_from(t, &values, &cf))

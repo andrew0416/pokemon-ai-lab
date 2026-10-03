@@ -192,6 +192,10 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
     let mut incremental = tree::compiler::incremental::Cache::default();
     #[allow(unused_mut)]
     let mut compile = |g: &Growing<'_, D>| -> Result<Tree, Error> {
+        #[cfg(feature = "experiment-phase-cost")]
+        let _compile = crate::bayesian::tree::phase_cost::Span::new(
+            crate::bayesian::tree::phase_cost::Phase::Compile,
+        );
         #[cfg(feature = "experiment-incremental-compilation")]
         if INCREMENTAL {
             let mut t = incremental.growing(&g.b.nodes, g.root)?;
@@ -247,6 +251,10 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
         }
         // Select distinct existing public groups against ONE fully solved snapshot.
         // New continuations cannot be selected until the next full solve.
+        #[cfg(feature = "experiment-phase-cost")]
+        let selection_phase = crate::bayesian::tree::phase_cost::Span::new(
+            crate::bayesian::tree::phase_cost::Phase::Selection,
+        );
         let target = CADENCE
             .min(cfg.max_expansions - work.attempted_expansions)
             .min(growing.frontier.len());
@@ -273,6 +281,8 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
                 }
             }
         }
+        #[cfg(feature = "experiment-phase-cost")]
+        drop(selection_phase);
         if keys.is_empty() {
             continue;
         }

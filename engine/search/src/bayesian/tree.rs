@@ -7,6 +7,8 @@
 //! value claims are made. See `builder` and `engine` for observation contracts.
 
 pub mod builder;
+#[cfg(feature = "experiment-phase-cost")]
+pub mod phase_cost;
 #[cfg(feature = "experiment-paper-solvers")]
 pub use workspace::cached::paper;
 #[cfg(feature = "experiment-belief-workspace")]

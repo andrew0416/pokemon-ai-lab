@@ -20,6 +20,10 @@ pub(crate) fn solve_from(
     context: &mut Context,
     metrics: &mut Metrics,
 ) -> Result<Run, Error> {
+    #[cfg(feature = "experiment-phase-cost")]
+    let _solver = crate::bayesian::tree::phase_cost::Span::new(
+        crate::bayesian::tree::phase_cost::Phase::Solver,
+    );
     if config.iterations == 0
         || config.iterations > 10_000_000
         || config.check_every == 0
@@ -47,7 +51,13 @@ pub(crate) fn solve_from(
             if mapped > 0 {
                 if settings.reuse_policy {
                     stats.reuse_attempted = true;
-                    let assessment = tree.assess(&policy)?;
+                    let assessment = {
+                        #[cfg(feature = "experiment-phase-cost")]
+                        let _certificate = crate::bayesian::tree::phase_cost::Span::new(
+                            crate::bayesian::tree::phase_cost::Phase::Certificate,
+                        );
+                        tree.assess(&policy)?
+                    };
                     stats.assessments += 1;
                     if assessment.gap <= config.tolerance {
                         stats.reused = true;
@@ -85,6 +95,10 @@ pub(crate) fn solve_from(
             }
         }
     }
+    #[cfg(feature = "experiment-phase-cost")]
+    let kernel_phase = crate::bayesian::tree::phase_cost::Span::new(
+        crate::bayesian::tree::phase_cost::Phase::Kernel,
+    );
     let mut matrix = if settings.compact {
         compact::Matrix::new(tree)
     } else {
@@ -106,6 +120,8 @@ pub(crate) fn solve_from(
     };
     stats.sequence = sequence.is_some();
     stats.sequence_entries = sequence.as_ref().map_or(0, |k| k.entries());
+    #[cfg(feature = "experiment-phase-cost")]
+    drop(kernel_phase);
     // Do not allocate/initialize the full value workspace if matrix compilation succeeds.
     let mut cache = if matrix.is_none() && sequence.is_none() {
         Some(CachedValues::new(tree))
@@ -121,6 +137,10 @@ pub(crate) fn solve_from(
         }
     ];
     for t in 1..=config.iterations {
+        #[cfg(feature = "experiment-phase-cost")]
+        let _cfr = crate::bayesian::tree::phase_cost::Span::new(
+            crate::bayesian::tree::phase_cost::Phase::Cfr,
+        );
         let (positive, negative, average_discount) =
             settings.rule.discounts(t - 1, config.iterations);
         let weight = if settings.rule == Rule::Lcfr {
@@ -268,7 +288,14 @@ pub(crate) fn solve_from(
             if pipeline.compressed_checks && t != config.iterations {
                 if let Some(kernel) = sequence.as_mut() {
                     metrics.compressed_checks += 1;
-                    if let Some(gap) = kernel.gap(tree, &average) {
+                    let filtered_gap = {
+                        #[cfg(feature = "experiment-phase-cost")]
+                        let _filter = crate::bayesian::tree::phase_cost::Span::new(
+                            crate::bayesian::tree::phase_cost::Phase::CompressedFilter,
+                        );
+                        kernel.gap(tree, &average)
+                    };
+                    if let Some(gap) = filtered_gap {
                         // Near the threshold, prefer the reference's floating-point
                         // result. This is a filter, not a published error bound.
                         let margin =
@@ -280,7 +307,13 @@ pub(crate) fn solve_from(
                     }
                 }
             }
-            let assessment = tree.assess(&average)?;
+            let assessment = {
+                #[cfg(feature = "experiment-phase-cost")]
+                let _certificate = crate::bayesian::tree::phase_cost::Span::new(
+                    crate::bayesian::tree::phase_cost::Phase::Certificate,
+                );
+                tree.assess(&average)?
+            };
             stats.assessments += 1;
             let converged = assessment.gap <= config.tolerance;
             if converged || t == config.iterations {

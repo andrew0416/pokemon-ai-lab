@@ -205,6 +205,10 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
     let mut incremental = tree::compiler::incremental::Cache::default();
     #[allow(unused_mut)]
     let mut compile = |g: &Growing<'_, D>| -> Result<Tree, Error> {
+        #[cfg(feature = "experiment-phase-cost")]
+        let _compile = crate::bayesian::tree::phase_cost::Span::new(
+            crate::bayesian::tree::phase_cost::Phase::Compile,
+        );
         #[cfg(feature = "experiment-incremental-compilation")]
         if INCREMENTAL {
             let mut t = incremental.growing(&g.b.nodes, g.root)?;
@@ -258,6 +262,10 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
         Ok((run.solution, q))
     };
     let mut t = if pipeline_settings.owned_compiler {
+        #[cfg(feature = "experiment-phase-cost")]
+        let _compile = crate::bayesian::tree::phase_cost::Span::new(
+            crate::bayesian::tree::phase_cost::Phase::Compile,
+        );
         let (mut t, _) = owned.growing(None, &growing.b.nodes, growing.root)?;
         t.worlds = growing.worlds.clone();
         t.public_keys = growing.b.public_keys.clone();
@@ -287,6 +295,10 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
         }
         // Select distinct existing public groups against ONE fully solved snapshot.
         // New continuations cannot be selected until the next full solve.
+        #[cfg(feature = "experiment-phase-cost")]
+        let selection_phase = crate::bayesian::tree::phase_cost::Span::new(
+            crate::bayesian::tree::phase_cost::Phase::Selection,
+        );
         let target = CADENCE
             .min(cfg.max_expansions - work.attempted_expansions)
             .min(growing.frontier.len());
@@ -329,6 +341,8 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
             }
             keys
         };
+        #[cfg(feature = "experiment-phase-cost")]
+        drop(selection_phase);
         if keys.is_empty() {
             continue;
         }
@@ -345,6 +359,10 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
         // Admission limits were handled above, while `t` was still intact.
         // Compilation/solver errors return Err, so no old snapshot is promised there.
         let (next, delta) = if pipeline_settings.owned_compiler {
+            #[cfg(feature = "experiment-phase-cost")]
+            let _compile = crate::bayesian::tree::phase_cost::Span::new(
+                crate::bayesian::tree::phase_cost::Phase::Compile,
+            );
             let (mut next, delta) = owned.growing(Some(t), &candidate.b.nodes, candidate.root)?;
             next.worlds = candidate.worlds.clone();
             next.public_keys = candidate.b.public_keys.clone();

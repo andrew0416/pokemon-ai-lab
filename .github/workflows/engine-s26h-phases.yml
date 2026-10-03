@@ -1,0 +1,86 @@
+name: S26h phase costs and clean runtime controls
+on:
+  push:
+    branches: [codex/s26h-phases-20261003]
+permissions:
+  contents: read
+concurrency:
+  group: s26h-phases
+  cancel-in-progress: false
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
+  CARGO_PROFILE_RELEASE_DEBUG: "0"
+  RUSTFLAGS: "-C target-cpu=x86-64"
+  RUST_MIN_STACK: "16777216"
+  RUST_TEST_THREADS: "1"
+  RAYON_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  PYTHONUTF8: "1"
+  PYTHONHASHSEED: "0"
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@1.98.1
+        with:
+          components: clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-search-quality-deps-v1
+          workspaces: engine -> ../target-s25
+          cache-workspace-crates: false
+          cache-bin: false
+      - name: Independent oracle dependencies
+        run: python -m pip install numpy==2.2.6 scipy==1.15.3
+      - name: Correctness, fallback, and separate portable release builds
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s26h-phases-results "$RUNNER_TEMP/s26h-bins"
+          cd engine
+          cargo test --locked -p lab-search --lib --features experiment-phase-cost,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26h-phases-results/instrumented-tests.log
+          cargo test --locked -p lab-search --lib --features experiment-growth-pipeline,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26h-phases-results/uninstrumented-tests.log
+          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26h-phases-results/default-off.log
+          cargo check --locked -p lab-search --lib --no-default-features --features experiment-phase-cost 2>&1 | tee ../s26h-phases-results/no-default.log
+          cargo check --locked -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26h-phases-results/fallback.log
+          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-phase-cost -- -D warnings 2>&1 | tee ../s26h-phases-results/instrumented-clippy.log
+          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-growth-pipeline -- -D warnings 2>&1 | tee ../s26h-phases-results/uninstrumented-clippy.log
+          cargo build --locked -p lab-search --bin lab-belief-workspace --features experiment-phase-cost 2>&1 | tee ../s26h-phases-results/oracle-build.log
+          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee ../s26h-phases-results/speed-build.log
+          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26h-bins/speed"
+          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-phase-cost 2>&1 | tee ../s26h-phases-results/profile-build.log
+          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26h-bins/profile"
+          git rev-parse HEAD > ../s26h-phases-results/source-sha.txt
+          rustc --version > ../s26h-phases-results/rustc.txt
+          sha256sum "$RUNNER_TEMP/s26h-bins/"* > ../s26h-phases-results/binaries.sha256
+      - name: Independent pipeline exhaustive BR and LP certificates
+        run: python -B engine/benchmarks/s26_pipeline/check.py --binary target-s25/debug/lab-belief-workspace --out s26h-phases-results/pipeline-lp --require-lp
+      - name: Uninstrumented full-result witnesses
+        run: python -B engine/benchmarks/s26_phases/run.py --binary "$RUNNER_TEMP/s26h-bins/speed" --out s26h-phases-results/check --mode check
+      - name: Instrumentation counters and cross-build parity
+        run: python -B engine/benchmarks/s26_phases/run.py --binary "$RUNNER_TEMP/s26h-bins/profile" --out s26h-phases-results/profile-check --mode profile-check --parity s26h-phases-results/check/summary.json
+      - name: Uninstrumented A-A and same-path OFF-ON speed
+        run: python -B engine/benchmarks/s26_phases/run.py --binary "$RUNNER_TEMP/s26h-bins/speed" --out s26h-phases-results/paired --mode speed --parity s26h-phases-results/check/summary.json
+      - name: Separate instrumented phase diagnostics
+        run: python -B engine/benchmarks/s26_phases/run.py --binary "$RUNNER_TEMP/s26h-bins/profile" --out s26h-phases-results/profile --mode profile --parity s26h-phases-results/check/summary.json
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s26h-phases-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s26h-phases-results/
+          if-no-files-found: error
+          retention-days: 30

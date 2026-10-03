@@ -16,6 +16,7 @@ path = "src/lib.rs"
 [features]
 experiment-paper-solvers = ["experiment-growth-cadence"]
 experiment-growth-pipeline = ["experiment-paper-solvers"]
+experiment-phase-cost = ["experiment-growth-pipeline"]
 experiment-growth-cadence = ["experiment-parallel-transitions"]
 experiment-parallel-transitions = ["experiment-incremental-compilation"]
 experiment-incremental-compilation = ["experiment-owned-transitions"]
@@ -140,4 +141,9 @@ required-features = ["cli", "experiment-paper-solvers"]
 [[bin]]
 name = "lab-pipeline-speed"
 path = "src/bin/lab-pipeline-speed.rs"
+required-features = ["cli", "experiment-growth-pipeline"]
+
+[[bin]]
+name = "lab-phase-speed"
+path = "src/bin/lab-phase-speed.rs"
 required-features = ["cli", "experiment-growth-pipeline"]
