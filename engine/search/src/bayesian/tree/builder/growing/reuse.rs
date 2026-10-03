@@ -53,6 +53,29 @@ pub fn search<D: ObservedDomain, P: Prior>(
     prior: &P,
     options: Options,
 ) -> Result<ResultTree, Error> {
+    search_impl::<D, P, false>(domain, seeds, limits, cfg, prior, options)
+}
+
+#[cfg(feature = "experiment-shared-final-passes")]
+pub fn search_shared<D: ObservedDomain, P: Prior>(
+    domain: &D,
+    seeds: &[Seed<D::Position>],
+    limits: Limits,
+    cfg: Config,
+    prior: &P,
+    options: Options,
+) -> Result<ResultTree, Error> {
+    search_impl::<D, P, true>(domain, seeds, limits, cfg, prior, options)
+}
+
+fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool>(
+    domain: &D,
+    seeds: &[Seed<D::Position>],
+    limits: Limits,
+    cfg: Config,
+    prior: &P,
+    options: Options,
+) -> Result<ResultTree, Error> {
     if cfg.max_expansions == 0
         || cfg.max_walks == 0
         || !cfg.exploration.is_finite()
@@ -140,13 +163,13 @@ pub fn search<D: ObservedDomain, P: Prior>(
         .map_err(fatal)?;
     work.committed_expansions = work.attempted_expansions;
     let mut t = compile(&growing, options.compiler)?;
-    let mut solved = solve(&t, cfg.solver, options)?;
+    let (mut solved, mut q) =
+        solve_scored::<SHARED>(&t, cfg.solver, options, needs_scores(&growing, &work, cfg))?;
     work.solves += 1;
     work.cfr_iterations += solved.iterations;
     // Only this compact committed summary is externally observable if admission fails.
     // The working builder is private to this call and is discarded on any failed attempt.
     let mut committed = summary(&growing);
-    let mut q = scores(&t, &solved.policy)?;
     let mut random = Random(cfg.seed);
     let mut visits = Visits::new();
     let stop = loop {
@@ -184,8 +207,13 @@ pub fn search<D: ObservedDomain, P: Prior>(
             Ok(()) => {}
         }
         let next = compile(candidate, options.compiler)?;
-        let solution = solve(&next, cfg.solver, options)?;
-        q = scores(&next, &solution.policy)?;
+        let (solution, next_q) = solve_scored::<SHARED>(
+            &next,
+            cfg.solver,
+            options,
+            needs_scores(candidate, &work, cfg),
+        )?;
+        q = next_q;
         work.committed_expansions += work.attempted_expansions - before;
         work.solves += 1;
         work.cfr_iterations += solution.iterations;
@@ -208,4 +236,29 @@ pub fn search<D: ObservedDomain, P: Prior>(
         horizon_complete: committed.2 == 0,
         work,
     })
+}
+
+fn needs_scores<D: ObservedDomain>(g: &Growing<'_, D>, w: &Work, c: Config) -> bool {
+    !g.frontier.is_empty() && w.attempted_expansions < c.max_expansions && w.walks < c.max_walks
+}
+fn solve_scored<const SHARED: bool>(
+    t: &Tree,
+    config: CfrConfig,
+    options: Options,
+    needed: bool,
+) -> Result<(Solution, Vec<Vec<f64>>), Error> {
+    #[cfg(feature = "experiment-shared-final-passes")]
+    if SHARED && options.static_values {
+        let (s, p) = tree::shared::solve(t, config)?;
+        let q = if needed {
+            scores_from(t, &p.values, &p.reach)
+        } else {
+            Vec::new()
+        };
+        return Ok((s, q));
+    }
+    let _ = needed;
+    let s = solve(t, config, options)?;
+    let q = scores(t, &s.policy)?;
+    Ok((s, q))
 }

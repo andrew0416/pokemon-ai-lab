@@ -38,6 +38,8 @@ enum Method {
     ExhaustiveOwned,
     #[cfg(feature = "experiment-owned-transitions")]
     Owned(growing::Config),
+    #[cfg(feature = "experiment-shared-final-passes")]
+    Shared(growing::Config),
 }
 fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
     match v.get(k) {
@@ -196,6 +198,25 @@ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, 
                     },
                 },
             ),
+            #[cfg(feature = "experiment-shared-final-passes")]
+            Method::Shared(g) => tree::engine::growing_shared(
+                &i.worlds,
+                SideId::One,
+                Ruleset::CHAMPIONS_MC,
+                e,
+                &i.knowledge,
+                i.limits,
+                growing::reuse::Settings {
+                    growth: *g,
+                    storage: growing::reuse::Options {
+                        in_place: true,
+                        workspace: true,
+                        compiler: true,
+                        static_values: true,
+                        direct_write: true,
+                    },
+                },
+            ),
             _ => unreachable!(),
         }
         .map_err(|e| e.to_string())?;
@@ -320,6 +341,8 @@ fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
         "exhaustive-owned" => Method::ExhaustiveOwned,
         #[cfg(feature = "experiment-owned-transitions")]
         "all-owned" => Method::Owned(config),
+        #[cfg(feature = "experiment-shared-final-passes")]
+        "all-shared" => Method::Shared(config),
         "growing" => Method::Growing(config),
         "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all"
         | "cached" | "all-cached" | "writer" | "all-writer" => Method::Reusing(

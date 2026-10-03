@@ -352,6 +352,9 @@ type Visits = HashMap<String, Vec<u64>>;
 fn scores(t: &Tree, policy: &Policy) -> Result<Vec<Vec<f64>>, Error> {
     let values = t.values(policy);
     let cf = [t.reach(policy, Some(0))?, t.reach(policy, Some(1))?];
+    Ok(scores_from(t, &values, &cf))
+}
+fn scores_from(t: &Tree, values: &[f64], cf: &[Vec<f64>; 2]) -> Vec<Vec<f64>> {
     let mut result = Vec::new();
     for info in t.information() {
         let mut q = vec![0.; info.actions.len()];
@@ -370,7 +373,7 @@ fn scores(t: &Tree, policy: &Policy) -> Result<Vec<Vec<f64>>, Error> {
         }
         result.push(q);
     }
-    Ok(result)
+    result
 }
 
 fn select<P: Prior>(

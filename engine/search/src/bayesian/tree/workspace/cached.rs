@@ -44,6 +44,13 @@ impl CachedValues {
 }
 
 pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
+    solve_with(tree, config, |p| tree.assess(p).map(|a| (a, ()))).map(|(s, _)| s)
+}
+pub(crate) fn solve_with<T>(
+    tree: &Tree,
+    config: Config,
+    assess: impl Fn(&Policy) -> Result<(Assessment, T), Error>,
+) -> Result<(Solution, T), Error> {
     if config.iterations == 0
         || config.iterations > 10_000_000
         || config.check_every == 0
@@ -107,15 +114,18 @@ pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
                     }
                 })
                 .collect();
-            let assessment = tree.assess(&average)?;
+            let (assessment, passes) = assess(&average)?;
             let converged = assessment.gap <= config.tolerance;
             if converged || t == config.iterations {
-                return Ok(Solution {
-                    policy: average,
-                    assessment,
-                    iterations: t,
-                    converged,
-                });
+                return Ok((
+                    Solution {
+                        policy: average,
+                        assessment,
+                        iterations: t,
+                        converged,
+                    },
+                    passes,
+                ));
             }
         }
     }

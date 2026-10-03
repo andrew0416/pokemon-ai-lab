@@ -1,0 +1,254 @@
+{
+  "rounds": 9,
+  "sample_ms": 100,
+  "cases": [
+    {
+      "id": "stats-w1-d2-shared-growing",
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 1,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "baseline": {
+        "kind": "all-owned",
+        "max_expansions": 10000,
+        "max_walks": 100000,
+        "seed": 1
+      },
+      "variants": [
+        {
+          "kind": "all-shared",
+          "max_expansions": 10000,
+          "max_walks": 100000,
+          "seed": 1,
+          "id": "shared",
+          "comparison": "exact-same-work"
+        }
+      ]
+    },
+    {
+      "id": "stats-w2-d2-shared-growing",
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        },
+        {
+          "id": "speed",
+          "weight": 7,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
+        }
+      ],
+      "hidden_stats": true,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "baseline": {
+        "kind": "all-owned",
+        "max_expansions": 10000,
+        "max_walks": 100000,
+        "seed": 1
+      },
+      "variants": [
+        {
+          "kind": "all-shared",
+          "max_expansions": 10000,
+          "max_walks": 100000,
+          "seed": 1,
+          "id": "shared",
+          "comparison": "exact-same-work"
+        }
+      ]
+    },
+    {
+      "id": "pivot-w1-d1-shared-growing",
+      "worlds": [
+        {
+          "id": "pivot",
+          "weight": 1,
+          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 1,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "baseline": {
+        "kind": "all-owned",
+        "max_expansions": 10000,
+        "max_walks": 100000,
+        "seed": 1
+      },
+      "variants": [
+        {
+          "kind": "all-shared",
+          "max_expansions": 10000,
+          "max_walks": 100000,
+          "seed": 1,
+          "id": "shared",
+          "comparison": "exact-same-work"
+        }
+      ]
+    },
+    {
+      "id": "sand-damage-w1-d1-shared-growing",
+      "worlds": [
+        {
+          "id": "sand",
+          "weight": 1,
+          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 1,
+        "max_nodes": 200000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "baseline": {
+        "kind": "all-owned",
+        "max_expansions": 10000,
+        "max_walks": 100000,
+        "seed": 1
+      },
+      "variants": [
+        {
+          "kind": "all-shared",
+          "max_expansions": 10000,
+          "max_walks": 100000,
+          "seed": 1,
+          "id": "shared",
+          "comparison": "exact-same-work"
+        }
+      ]
+    },
+    {
+      "id": "stats-w4-d2-shared-growing",
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
+        },
+        {
+          "id": "speed",
+          "weight": 7,
+          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
+        },
+        {
+          "id": "atk",
+          "weight": 2,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
+        },
+        {
+          "id": "spa",
+          "weight": 3,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
+        }
+      ],
+      "hidden_stats": true,
+      "limits": {
+        "turns": 2,
+        "max_nodes": 100000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "baseline": {
+        "kind": "all-owned",
+        "max_expansions": 10000,
+        "max_walks": 100000,
+        "seed": 1
+      },
+      "variants": [
+        {
+          "kind": "all-shared",
+          "max_expansions": 10000,
+          "max_walks": 100000,
+          "seed": 1,
+          "id": "shared",
+          "comparison": "exact-same-work"
+        }
+      ]
+    },
+    {
+      "id": "narrow-w1-d3-shared-growing",
+      "worlds": [
+        {
+          "id": "normal",
+          "weight": 1,
+          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
+        }
+      ],
+      "hidden_stats": false,
+      "limits": {
+        "turns": 3,
+        "max_nodes": 50000,
+        "max_transitions": 20000,
+        "max_decisions": 32
+      },
+      "solver": {
+        "iterations": 4096,
+        "tolerance": 0.1,
+        "check_every": 32
+      },
+      "baseline": {
+        "kind": "all-owned",
+        "max_expansions": 10000,
+        "max_walks": 100000,
+        "seed": 1
+      },
+      "variants": [
+        {
+          "kind": "all-shared",
+          "max_expansions": 10000,
+          "max_walks": 100000,
+          "seed": 1,
+          "id": "shared",
+          "comparison": "exact-same-work"
+        }
+      ]
+    }
+  ]
+}

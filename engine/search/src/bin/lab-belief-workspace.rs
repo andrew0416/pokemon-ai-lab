@@ -1,11 +1,9 @@
 //! Experimental finite information-tree CLI. See benchmarks/s26_tree/CONTRACT.md.
+#[cfg(feature = "experiment-owned-transitions")]
+use lab_search::bayesian::tree::engine::build_owned as build_backend;
 #[cfg(not(feature = "experiment-owned-transitions"))]
 use lab_search::bayesian::tree::engine::{
     build as build_backend, growing_reusing as growing_backend,
-};
-#[cfg(feature = "experiment-owned-transitions")]
-use lab_search::bayesian::tree::engine::{
-    build_owned as build_backend, growing_owned as growing_backend,
 };
 
 use lab_engine::{rules::Ruleset, state::SideId, turn::EnumerateOptions};
@@ -385,3 +383,11 @@ mod tests {
             .contains("observation_model"));
     }
 }
+
+#[cfg(all(
+    feature = "experiment-owned-transitions",
+    not(feature = "experiment-shared-final-passes")
+))]
+use lab_search::bayesian::tree::engine::growing_owned as growing_backend;
+#[cfg(feature = "experiment-shared-final-passes")]
+use lab_search::bayesian::tree::engine::growing_shared as growing_backend;

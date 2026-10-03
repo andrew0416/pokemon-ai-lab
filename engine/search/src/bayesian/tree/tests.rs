@@ -59,6 +59,18 @@ fn scratch_reuse_matches_reference_kuhn_at_every_check_schedule() {
                 let reference = solve(&tree, config).unwrap();
                 let candidate = workspace::solve(&tree, config).unwrap();
                 let cached = workspace::cached::solve(&tree, config).unwrap();
+                #[cfg(feature = "experiment-shared-final-passes")]
+                {
+                    let (shared, passes) = shared::solve(&tree, config).unwrap();
+                    assert_eq!(format!("{reference:?}"), format!("{shared:?}"));
+                    assert_eq!(passes.values, tree.values(&shared.policy));
+                    for p in 0..2 {
+                        assert_eq!(
+                            passes.reach[p],
+                            tree.reach(&shared.policy, Some(p)).unwrap()
+                        );
+                    }
+                }
                 assert_eq!(format!("{reference:?}"), format!("{cached:?}"));
                 assert_eq!(format!("{reference:?}"), format!("{candidate:?}"));
             }
@@ -87,6 +99,8 @@ fn cached_terminal_backups_do_not_hide_positive_reach_underflow() {
     };
     let reference = solve(&t, c).unwrap_err().to_string();
     assert!(reference.contains("positive history reach underflow"));
+    #[cfg(feature = "experiment-shared-final-passes")]
+    assert_eq!(reference, shared::solve(&t, c).err().unwrap().to_string());
     assert_eq!(
         reference,
         workspace::cached::solve(&t, c).unwrap_err().to_string()
@@ -131,6 +145,11 @@ fn scratch_reuse_matches_scaled_hidden_games_and_invalid_configs() {
                     ..cfg()
                 },
             ] {
+                #[cfg(feature = "experiment-shared-final-passes")]
+                assert_eq!(
+                    format!("{:?}", solve(&t, config)),
+                    format!("{:?}", shared::solve(&t, config).map(|(s, _)| s))
+                );
                 assert_eq!(
                     format!("{:?}", solve(&t, config)),
                     format!("{:?}", workspace::solve(&t, config))

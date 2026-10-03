@@ -504,6 +504,23 @@ fn allocation_candidates_match_all_admission_failure_boundaries() {
                     &Uniform,
                     options,
                 ));
+                #[cfg(feature = "experiment-shared-final-passes")]
+                {
+                    let g = Game {
+                        switch,
+                        ..Game::new()
+                    };
+                    let shared = exact_result(reuse::search_shared(
+                        &g,
+                        &seeds(),
+                        *limits,
+                        *cfg,
+                        &Uniform,
+                        options,
+                    ));
+                    assert_eq!(actual, shared, "shared final passes");
+                    assert_eq!(g.calls.get(), expected_calls);
+                }
                 assert_eq!(
                     actual, expected,
                     "{limits:?}, {cfg:?}, {options:?}, switch={switch}"

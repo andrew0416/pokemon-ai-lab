@@ -179,7 +179,7 @@ pub fn request(
     }
     let domain = Table(states);
     let (built, solution, growth) = if let Some(c) = growth_config(v, config)? {
-        let r = growing::reuse::search(
+        let r = search_backend(
             &domain,
             &seeds,
             limits,
@@ -216,3 +216,8 @@ pub fn export(t: &Tree) -> Value {
     }).collect();
     json!({"mode":"tree","root":t.root(),"nodes":nodes})
 }
+
+#[cfg(not(feature = "experiment-shared-final-passes"))]
+use growing::reuse::search as search_backend;
+#[cfg(feature = "experiment-shared-final-passes")]
+use growing::reuse::search_shared as search_backend;

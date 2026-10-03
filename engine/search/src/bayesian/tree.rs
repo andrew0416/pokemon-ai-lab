@@ -7,11 +7,13 @@
 //! value claims are made. See `builder` and `engine` for observation contracts.
 
 pub mod builder;
-pub mod engine;
-#[cfg(feature = "experiment-belief-workspace")]
-pub mod workspace;
 #[cfg(feature = "experiment-belief-workspace")]
 pub mod compiler;
+pub mod engine;
+#[cfg(feature = "experiment-shared-final-passes")]
+pub mod shared;
+#[cfg(feature = "experiment-belief-workspace")]
+pub mod workspace;
 use super::{labels, probability, strategy, Config, Error};
 use std::collections::HashMap;
 
@@ -299,6 +301,15 @@ impl Tree {
         policy: &Policy,
         player: usize,
     ) -> Result<(f64, Vec<Option<usize>>), Error> {
+        self.response_with_reach(policy, player)
+            .map(|(value, actions, _)| (value, actions))
+    }
+    #[allow(clippy::type_complexity)]
+    fn response_with_reach(
+        &self,
+        policy: &Policy,
+        player: usize,
+    ) -> Result<(f64, Vec<Option<usize>>, Vec<f64>), Error> {
         self.check_policy(policy)?;
         if player > 1 {
             return Err(Error("invalid player".into()));
@@ -314,7 +325,7 @@ impl Tree {
             visiting: vec![false; self.information.len()],
         };
         let value = work.node(self.root)? * self.scale;
-        Ok((value, work.chosen))
+        Ok((value, work.chosen, work.cf))
     }
     /// Diagnostics under the supplied strategy. Zero-reach public histories have no
     /// posterior (never an invented uniform belief). History weights retain hidden queued
