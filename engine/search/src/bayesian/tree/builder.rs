@@ -122,6 +122,10 @@ struct Builder<'a, D: ObservedDomain> {
 
 impl<D: ObservedDomain> Builder<'_, D> {
     fn mark(&mut self, node: usize, world: usize, public: Vec<String>, keys: &[String; 2]) {
+        #[cfg(feature = "experiment-phase-cost")]
+        let _mark = crate::bayesian::tree::phase_cost::Span::new(
+            crate::bayesian::tree::phase_cost::Phase::Boundary,
+        );
         let public_id = if let Some(&id) = self.public.get(&public) {
             id
         } else {

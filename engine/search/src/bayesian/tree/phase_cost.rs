@@ -17,8 +17,16 @@ pub enum Phase {
     CompressedFilter,
     Scores,
     Selection,
+    Menu,
+    Observation,
+    PositionPhase,
+    History,
+    Keys,
+    Boundary,
+    Evaluate,
+    Frontier,
 }
-pub const NAMES: [&str; 11] = [
+pub const NAMES: [&str; 19] = [
     "compute_other",
     "admission_other",
     "transitions",
@@ -30,6 +38,14 @@ pub const NAMES: [&str; 11] = [
     "compressed_filter",
     "scores",
     "selection",
+    "menu",
+    "observation",
+    "position_phase",
+    "history_copy",
+    "history_keys",
+    "boundary_mark",
+    "leaf_evaluation",
+    "frontier_insert",
 ];
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Entry {

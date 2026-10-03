@@ -12,10 +12,31 @@ pub(crate) struct Delta {
 }
 #[derive(Default)]
 pub(crate) struct Cache {
+    #[cfg(feature = "experiment-snapshot-audit")]
+    audit_raw: Vec<Node>,
     terminals: Vec<usize>,
     ids: HashMap<String, usize>,
 }
 impl Cache {
+    pub(crate) fn growing(
+        &mut self,
+        previous: Option<Tree>,
+        raw: &[Node],
+        root: usize,
+    ) -> Result<(Tree, Delta), Error> {
+        #[cfg(feature = "experiment-snapshot-audit")]
+        if previous.is_some() {
+            crate::bayesian::tree::snapshot_audit::append_only(&self.audit_raw, raw)?;
+        }
+        let result = self.growing_unchecked(previous, raw, root)?;
+        #[cfg(feature = "experiment-snapshot-audit")]
+        {
+            crate::bayesian::tree::snapshot_audit::compiled(raw, root, &result.0)?;
+            self.audit_raw = raw.to_vec();
+        }
+        Ok(result)
+    }
+
     fn reset(&mut self, tree: &Tree) {
         self.terminals = tree
             .nodes
@@ -30,7 +51,7 @@ impl Cache {
             .map(|(i, v)| (v.key.clone(), i))
             .collect();
     }
-    pub(crate) fn growing(
+    fn growing_unchecked(
         &mut self,
         previous: Option<Tree>,
         raw: &[Node],

@@ -177,19 +177,35 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
         Ok(self.b.push(n)?)
     }
     fn leaf(&mut self, mut h: Frontier<D::Position>) -> Attempt<usize> {
-        let value = f64::from(self.b.domain.value(&h.position));
+        let value = {
+            #[cfg(feature = "experiment-phase-cost")]
+            let _eval = crate::bayesian::tree::phase_cost::Span::new(
+                crate::bayesian::tree::phase_cost::Phase::Evaluate,
+            );
+            f64::from(self.b.domain.value(&h.position))
+        };
         if !value.is_finite() || value.abs() > f64::MAX / 8. {
             return Err(Error("invalid frontier evaluation".into()).into());
         }
         let node = self.push(Node::Terminal(value))?;
         h.node = node;
         self.b.stats.leaves += 1;
-        let keys = [
-            format!("0:{:?}", h.memory[0]),
-            format!("1:{:?}", h.memory[1]),
-        ];
+        let keys = {
+            #[cfg(feature = "experiment-phase-cost")]
+            let _keys = crate::bayesian::tree::phase_cost::Span::new(
+                crate::bayesian::tree::phase_cost::Phase::Keys,
+            );
+            [
+                format!("0:{:?}", h.memory[0]),
+                format!("1:{:?}", h.memory[1]),
+            ]
+        };
         self.b.mark(node, h.world, h.public.clone(), &keys);
         if h.phase != Phase::Terminal && !(h.phase == Phase::Turn && h.turns == 0) {
+            #[cfg(feature = "experiment-phase-cost")]
+            let _frontier = crate::bayesian::tree::phase_cost::Span::new(
+                crate::bayesian::tree::phase_cost::Phase::Frontier,
+            );
             let group = self.frontier.entry(h.public.clone()).or_default();
             if group
                 .first()
@@ -219,6 +235,10 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                 return Err(Failure::Limit(Stop::DecisionLimit));
             }
             let p = &h.position;
+            #[cfg(feature = "experiment-phase-cost")]
+            let menu_span = crate::bayesian::tree::phase_cost::Span::new(
+                crate::bayesian::tree::phase_cost::Phase::Menu,
+            );
             let left = self.b.domain.actions(p, 0)?;
             let right = self.b.domain.actions(p, 1)?;
             let rows: Vec<_> = left
@@ -235,6 +255,8 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
             ];
             self.b.menu(&keys[0], &rows)?;
             self.b.menu(&keys[1], &cols)?;
+            #[cfg(feature = "experiment-phase-cost")]
+            drop(menu_span);
             let turns = if h.phase == Phase::Turn {
                 self.b.stats.turn_decisions += 1;
                 h.turns - 1
@@ -327,8 +349,24 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                     col_children.push(chance);
                     let mut edges = Vec::new();
                     for (probability, position) in children {
-                        let obs = self.b.domain.observation(&position)?;
-                        let phase = self.b.domain.phase(&position)?;
+                        let obs = {
+                            #[cfg(feature = "experiment-phase-cost")]
+                            let _obs = crate::bayesian::tree::phase_cost::Span::new(
+                                crate::bayesian::tree::phase_cost::Phase::Observation,
+                            );
+                            self.b.domain.observation(&position)?
+                        };
+                        let phase = {
+                            #[cfg(feature = "experiment-phase-cost")]
+                            let _phase = crate::bayesian::tree::phase_cost::Span::new(
+                                crate::bayesian::tree::phase_cost::Phase::PositionPhase,
+                            );
+                            self.b.domain.phase(&position)?
+                        };
+                        #[cfg(feature = "experiment-phase-cost")]
+                        let history_span = crate::bayesian::tree::phase_cost::Span::new(
+                            crate::bayesian::tree::phase_cost::Phase::History,
+                        );
                         let mut memory = h.memory.clone();
                         memory[0].push(Memory::Action(rows[r].clone()));
                         memory[1].push(Memory::Action(cols[c].clone()));
@@ -340,6 +378,8 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                         }
                         let mut public = h.public.clone();
                         public.push(obs.public);
+                        #[cfg(feature = "experiment-phase-cost")]
+                        drop(history_span);
                         let child = self.leaf(Frontier {
                             node: 0,
                             position,

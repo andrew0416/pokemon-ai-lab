@@ -6,6 +6,8 @@ use super::*;
 
 #[derive(Default)]
 pub(crate) struct Cache {
+    #[cfg(feature = "experiment-snapshot-audit")]
+    audit_raw: Vec<Node>,
     nodes: Vec<Compiled>,
     terminals: Vec<usize>,
     information: Vec<Information>,
@@ -15,6 +17,18 @@ pub(crate) struct Cache {
 }
 impl Cache {
     pub(crate) fn growing(&mut self, raw: &[Node], root: usize) -> Result<Tree, Error> {
+        #[cfg(feature = "experiment-snapshot-audit")]
+        crate::bayesian::tree::snapshot_audit::append_only(&self.audit_raw, raw)?;
+        let result = self.growing_unchecked(raw, root)?;
+        #[cfg(feature = "experiment-snapshot-audit")]
+        {
+            crate::bayesian::tree::snapshot_audit::compiled(raw, root, &result)?;
+            self.audit_raw = raw.to_vec();
+        }
+        Ok(result)
+    }
+
+    fn growing_unchecked(&mut self, raw: &[Node], root: usize) -> Result<Tree, Error> {
         // On a validation error the reference determines the exact original error
         // order. The caller discards this cache when compilation fails.
         self.update(raw, root)

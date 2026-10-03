@@ -1,4 +1,7 @@
-//! Equal-gap benchmark. Fixed-tree and full-growing costs are separate experiments.
+#[cfg(feature = "experiment-allocation-audit")]
+#[path = "lab-phase-speed/heap.rs"]
+mod heap;
+// Equal-gap benchmark with independent diagnostic builds.
 use lab_engine::{eval::Evaluator, rules::Ruleset, state::SideId, turn::EnumerateOptions};
 use lab_search::{
     bayesian::{
@@ -317,7 +320,14 @@ fn main() -> std::process::ExitCode {
     let work = || -> Result<(), String> {
         let args: Vec<_> = std::env::args().skip(1).collect();
         if args.len() != 2
-            || !["--check", "--measure", "--profile", "--profile-check"].contains(&args[0].as_str())
+            || ![
+                "--check",
+                "--measure",
+                "--profile",
+                "--profile-check",
+                "--memory",
+            ]
+            .contains(&args[0].as_str())
         {
             return Err(
                 "usage: lab-phase-speed --check|--measure|--profile|--profile-check case.json"
@@ -332,7 +342,11 @@ fn main() -> std::process::ExitCode {
         {
             return Err("performance measurements require GitHub Actions".into());
         }
-        if measure && cfg!(feature = "experiment-phase-cost") {
+        if measure
+            && (cfg!(feature = "experiment-phase-cost")
+                || cfg!(feature = "experiment-allocation-audit")
+                || cfg!(feature = "experiment-snapshot-audit"))
+        {
             return Err("instrumented builds cannot supply headline speed measurements".into());
         }
         if profile && !cfg!(feature = "experiment-phase-cost") {
@@ -374,6 +388,39 @@ fn main() -> std::process::ExitCode {
             None
         };
         let baseline = &v["baseline"];
+        #[cfg(feature = "experiment-snapshot-audit")]
+        tree::snapshot_audit::reset();
+        if args[0] == "--memory" {
+            #[cfg(feature = "experiment-allocation-audit")]
+            {
+                tree::allocation_audit::reset();
+                let before = heap::begin();
+                let r = compute(&i, e.as_ref(), &fixed, pool.as_ref(), baseline)?;
+                let after = heap::sample();
+                let cache = tree::allocation_audit::get();
+                let signature = witness(&r, &fixed);
+                let diag = r.diagnostics(&fixed);
+                let before_drop = heap::sample();
+                drop(r);
+                let dropped = heap::sample();
+                let retained = (dropped.live as i128)
+                    - (before_drop.live as i128 - after.live as i128)
+                    - before.live as i128;
+                return emit(
+                    json!({"type":"memory","variant":baseline["id"],"witness":signature,"diagnostics":diag,
+                    "baseline_requested_bytes":before.live,"peak_requested_bytes":after.peak,"peak_above_baseline_bytes":after.peak.saturating_sub(before.live),
+                    "returned_live_above_baseline_bytes":after.live as i128-before.live as i128,
+                    "retained_after_result_drop_bytes":retained,"result_drop_freed_bytes":before_drop.live.saturating_sub(dropped.live),
+                    "allocations":after.allocations-before.allocations,"reallocations":after.reallocations-before.reallocations,
+                    "frees":after.frees-before.frees,"requested_growth_bytes":after.allocated_bytes-before.allocated_bytes,
+                    "cache":{"finishes":cache.finishes,"rank_slots_processed":cache.rank_slots_processed,"max_buckets":cache.max_buckets,
+                    "max_empty_buckets":cache.max_empty_buckets,"max_leaf_slots":cache.max_leaf_slots,"max_entries":cache.max_entries,
+                    "bucket_capacity":cache.bucket_capacity,"leaf_capacity":cache.leaf_capacity},"timing":false}),
+                );
+            }
+            #[cfg(not(feature = "experiment-allocation-audit"))]
+            return Err("memory audit requires experiment-allocation-audit".into());
+        }
         let variants = v["variants"].as_array().ok_or("variants")?;
         let reference = compute(&i, e.as_ref(), &fixed, pool.as_ref(), baseline)?;
         let canonical_reference = canonical(reference.tree(&fixed));
@@ -500,6 +547,13 @@ fn main() -> std::process::ExitCode {
             unreachable!();
         }
         if !measure {
+            #[cfg(feature = "experiment-snapshot-audit")]
+            {
+                let c = tree::snapshot_audit::counters();
+                emit(
+                    json!({"type":"audit","compiled_snapshots":c.compiled_snapshots,"sequence_snapshots":c.sequence_snapshots,"contractions":c.contractions,"gap_checks":c.gap_checks}),
+                )?;
+            }
             return emit(json!({"type":"checked","timing":false}));
         }
         drop(reference);

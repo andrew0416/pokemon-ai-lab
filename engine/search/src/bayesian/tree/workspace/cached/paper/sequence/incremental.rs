@@ -33,6 +33,69 @@ impl Cache {
         delta: Option<&Delta>,
         metrics: &mut Metrics,
     ) {
+        self.update_inner(tree, delta, metrics);
+        #[cfg(feature = "experiment-snapshot-audit")]
+        self.audit(tree);
+    }
+    #[cfg(feature = "experiment-snapshot-audit")]
+    fn audit(&mut self, tree: &Tree) {
+        let Some(candidate) = self.kernel.as_mut() else {
+            return;
+        };
+        let Some(mut reference) = Kernel::new(tree) else {
+            return;
+        };
+        let mut contractions = 0;
+        let mut gaps = 0;
+        for kind in 0..4 {
+            let mut policy = tree.uniform();
+            for (i, row) in policy.iter_mut().enumerate() {
+                if kind == 1 {
+                    for (a, v) in row.iter_mut().enumerate() {
+                        *v = (i + a + 1) as f64;
+                    }
+                    let total: f64 = row.iter().sum();
+                    for v in row {
+                        *v /= total;
+                    }
+                } else if kind == 2 {
+                    row.fill(0.);
+                    let n = row.len();
+                    row[i % n] = 1.;
+                } else if kind == 3 && row.len() > 1 {
+                    row.fill(1e-200);
+                    row[0] = 1. - (row.len() - 1) as f64 * 1e-200;
+                }
+            }
+            for player in 0..2 {
+                let a = reference.prepare(tree, &policy, player);
+                let b = candidate.prepare(tree, &policy, player);
+                if a && b {
+                    let mut x: Policy = policy.iter().map(|r| vec![0.; r.len()]).collect();
+                    let mut y = x.clone();
+                    reference.accumulate(tree, &policy, player, &mut x, 1.);
+                    candidate.accumulate(tree, &policy, player, &mut y, 1.);
+                    for (a, b) in x.iter().flatten().zip(y.iter().flatten()) {
+                        assert!(
+                            (a - b).abs() <= 1e-10 * (1. + a.abs() + b.abs()),
+                            "audit: sequence gradient mismatch"
+                        );
+                    }
+                    contractions += 1;
+                }
+            }
+            if let (Some(gap), Ok(a)) = (candidate.gap(tree, &policy), tree.assess(&policy)) {
+                assert!(
+                    (gap - a.gap).abs() <= 1e-9 * (1. + tree.scale + gap.abs() + a.gap.abs()),
+                    "audit: sequence BR mismatch"
+                );
+                gaps += 1;
+            }
+        }
+        crate::bayesian::tree::snapshot_audit::sequence(contractions, gaps);
+    }
+
+    fn update_inner(&mut self, tree: &Tree, delta: Option<&Delta>, metrics: &mut Metrics) {
         if let Some(d) = delta.filter(|d| !d.rebuilt) {
             if self.kernel.is_some() && self.advance(tree, d, metrics).is_some() {
                 metrics.sequence_delta_updates += 1;
@@ -224,6 +287,14 @@ impl Cache {
         let width = kernel.counts[0].max(kernel.counts[1]);
         kernel.realization.resize(width, 0.);
         kernel.gradient.resize(width, 0.);
+        #[cfg(feature = "experiment-allocation-audit")]
+        crate::bayesian::tree::allocation_audit::record(
+            self.buckets.len(),
+            kernel.entries.len(),
+            self.leaves.len(),
+            self.buckets.capacity(),
+            self.leaves.capacity(),
+        );
         self.scale = tree.scale;
         Some(())
     }

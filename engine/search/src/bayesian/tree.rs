@@ -6,9 +6,13 @@
 //! No independent perfect-information continuation solves or belief-independent neural
 //! value claims are made. See `builder` and `engine` for observation contracts.
 
+#[cfg(feature = "experiment-allocation-audit")]
+pub mod allocation_audit;
 pub mod builder;
 #[cfg(feature = "experiment-phase-cost")]
 pub mod phase_cost;
+#[cfg(feature = "experiment-snapshot-audit")]
+pub mod snapshot_audit;
 #[cfg(feature = "experiment-paper-solvers")]
 pub use workspace::cached::paper;
 #[cfg(feature = "experiment-belief-workspace")]
