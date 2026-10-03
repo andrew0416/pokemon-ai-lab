@@ -5,6 +5,8 @@
 //! Own histories are persistent integer links while validating; chance siblings share
 //! their link IDs. Full own sequences are materialized once per information set.
 use super::*;
+#[cfg(feature = "experiment-incremental-compilation")]
+pub(crate) mod incremental;
 
 pub fn compile(raw: &[Node], root: usize) -> Result<Tree, Error> {
     if raw.is_empty() || root >= raw.len() {
@@ -69,6 +71,15 @@ pub fn compile(raw: &[Node], root: usize) -> Result<Tree, Error> {
             }
         });
     }
+    finish(nodes, root, information, scale)
+}
+
+fn finish(
+    nodes: Vec<Compiled>,
+    root: usize,
+    mut information: Vec<Information>,
+    scale: f64,
+) -> Result<Tree, Error> {
     let mut seen = vec![false; nodes.len()];
     let mut order = Vec::new();
     // Link 0 represents the empty history. Interning (previous, info, action) means

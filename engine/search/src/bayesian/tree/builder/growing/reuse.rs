@@ -53,7 +53,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
     prior: &P,
     options: Options,
 ) -> Result<ResultTree, Error> {
-    search_impl::<D, P, false>(domain, seeds, limits, cfg, prior, options)
+    search_impl::<D, P, false, false>(domain, seeds, limits, cfg, prior, options)
 }
 
 #[cfg(feature = "experiment-shared-final-passes")]
@@ -65,10 +65,22 @@ pub fn search_shared<D: ObservedDomain, P: Prior>(
     prior: &P,
     options: Options,
 ) -> Result<ResultTree, Error> {
-    search_impl::<D, P, true>(domain, seeds, limits, cfg, prior, options)
+    search_impl::<D, P, true, false>(domain, seeds, limits, cfg, prior, options)
 }
 
-fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool>(
+#[cfg(feature = "experiment-incremental-compilation")]
+pub fn search_incremental<D: ObservedDomain, P: Prior>(
+    domain: &D,
+    seeds: &[Seed<D::Position>],
+    limits: Limits,
+    cfg: Config,
+    prior: &P,
+    options: Options,
+) -> Result<ResultTree, Error> {
+    search_impl::<D, P, false, true>(domain, seeds, limits, cfg, prior, options)
+}
+
+fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTAL: bool>(
     domain: &D,
     seeds: &[Seed<D::Position>],
     limits: Limits,
@@ -162,7 +174,22 @@ fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool>(
         .admit(&[first.public], &mut work, cfg)
         .map_err(fatal)?;
     work.committed_expansions = work.attempted_expansions;
-    let mut t = compile(&growing, options.compiler)?;
+    #[cfg(feature = "experiment-incremental-compilation")]
+    let mut incremental = tree::compiler::incremental::Cache::default();
+    #[allow(unused_mut)]
+    let mut compile = |g: &Growing<'_, D>| -> Result<Tree, Error> {
+        #[cfg(feature = "experiment-incremental-compilation")]
+        if INCREMENTAL {
+            let mut t = incremental.growing(&g.b.nodes, g.root)?;
+            t.worlds = g.worlds.clone();
+            t.public_keys = g.b.public_keys.clone();
+            t.private_keys = g.b.private_keys.clone();
+            t.boundaries = g.b.boundaries.clone();
+            return Ok(t);
+        }
+        compile(g, options.compiler)
+    };
+    let mut t = compile(&growing)?;
     let (mut solved, mut q) =
         solve_scored::<SHARED>(&t, cfg.solver, options, needs_scores(&growing, &work, cfg))?;
     work.solves += 1;
@@ -206,7 +233,7 @@ fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool>(
             Err(Failure::Invalid(e)) => return Err(e),
             Ok(()) => {}
         }
-        let next = compile(candidate, options.compiler)?;
+        let next = compile(candidate)?;
         let (solution, next_q) = solve_scored::<SHARED>(
             &next,
             cfg.solver,

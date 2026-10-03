@@ -283,7 +283,7 @@ pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
     limits: Limits,
     settings: builder::growing::reuse::Settings,
 ) -> Result<builder::growing::ResultTree, Error> {
-    growing_storage::<N, E, false, false>(
+    growing_storage::<N, E, false, false, false>(
         worlds, us, ruleset, evaluator, knowledge, limits, settings,
     )
 }
@@ -298,7 +298,7 @@ pub fn growing_owned<const N: usize, E: Evaluator<N> + ?Sized>(
     limits: Limits,
     settings: builder::growing::reuse::Settings,
 ) -> Result<builder::growing::ResultTree, Error> {
-    growing_storage::<N, E, true, false>(
+    growing_storage::<N, E, true, false, false>(
         worlds, us, ruleset, evaluator, knowledge, limits, settings,
     )
 }
@@ -313,7 +313,24 @@ pub fn growing_shared<const N: usize, E: Evaluator<N> + ?Sized>(
     limits: Limits,
     settings: builder::growing::reuse::Settings,
 ) -> Result<builder::growing::ResultTree, Error> {
-    growing_storage::<N, E, true, true>(worlds, us, ruleset, evaluator, knowledge, limits, settings)
+    growing_storage::<N, E, true, true, false>(
+        worlds, us, ruleset, evaluator, knowledge, limits, settings,
+    )
+}
+
+#[cfg(feature = "experiment-incremental-compilation")]
+pub fn growing_incremental<const N: usize, E: Evaluator<N> + ?Sized>(
+    worlds: &[EngineWorld<N>],
+    us: SideId,
+    ruleset: Ruleset,
+    evaluator: &E,
+    knowledge: &Knowledge,
+    limits: Limits,
+    settings: builder::growing::reuse::Settings,
+) -> Result<builder::growing::ResultTree, Error> {
+    growing_storage::<N, E, true, false, true>(
+        worlds, us, ruleset, evaluator, knowledge, limits, settings,
+    )
 }
 
 #[cfg(feature = "experiment-belief-workspace")]
@@ -322,6 +339,7 @@ fn growing_storage<
     E: Evaluator<N> + ?Sized,
     const OWNED: bool,
     const SHARED: bool,
+    const INCREMENTAL: bool,
 >(
     worlds: &[EngineWorld<N>],
     us: SideId,
@@ -364,6 +382,17 @@ fn growing_storage<
         inner: domain,
         direct: settings.storage.direct_write,
     };
+    #[cfg(feature = "experiment-incremental-compilation")]
+    if INCREMENTAL {
+        return builder::growing::reuse::search_incremental(
+            &domain,
+            &seeds,
+            limits,
+            settings.growth,
+            &builder::growing::Uniform,
+            settings.storage,
+        );
+    }
     #[cfg(feature = "experiment-shared-final-passes")]
     if SHARED {
         return builder::growing::reuse::search_shared(

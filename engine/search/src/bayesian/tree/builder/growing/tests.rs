@@ -521,6 +521,23 @@ fn allocation_candidates_match_all_admission_failure_boundaries() {
                     assert_eq!(actual, shared, "shared final passes");
                     assert_eq!(g.calls.get(), expected_calls);
                 }
+                #[cfg(feature = "experiment-incremental-compilation")]
+                {
+                    let g = Game {
+                        switch,
+                        ..Game::new()
+                    };
+                    let shared = exact_result(reuse::search_incremental(
+                        &g,
+                        &seeds(),
+                        *limits,
+                        *cfg,
+                        &Uniform,
+                        options,
+                    ));
+                    assert_eq!(actual, shared, "shared final passes");
+                    assert_eq!(g.calls.get(), expected_calls);
+                }
                 assert_eq!(
                     actual, expected,
                     "{limits:?}, {cfg:?}, {options:?}, switch={switch}"

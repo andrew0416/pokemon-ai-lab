@@ -384,10 +384,16 @@ mod tests {
     }
 }
 
+#[cfg(feature = "experiment-incremental-compilation")]
+use lab_search::bayesian::tree::engine::growing_incremental as growing_backend;
 #[cfg(all(
     feature = "experiment-owned-transitions",
-    not(feature = "experiment-shared-final-passes")
+    not(feature = "experiment-shared-final-passes"),
+    not(feature = "experiment-incremental-compilation")
 ))]
 use lab_search::bayesian::tree::engine::growing_owned as growing_backend;
-#[cfg(feature = "experiment-shared-final-passes")]
+#[cfg(all(
+    feature = "experiment-shared-final-passes",
+    not(feature = "experiment-incremental-compilation")
+))]
 use lab_search::bayesian::tree::engine::growing_shared as growing_backend;

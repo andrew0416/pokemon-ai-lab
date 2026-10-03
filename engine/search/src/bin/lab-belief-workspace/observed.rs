@@ -217,7 +217,15 @@ pub fn export(t: &Tree) -> Value {
     json!({"mode":"tree","root":t.root(),"nodes":nodes})
 }
 
-#[cfg(not(feature = "experiment-shared-final-passes"))]
+#[cfg(all(
+    not(feature = "experiment-shared-final-passes"),
+    not(feature = "experiment-incremental-compilation")
+))]
 use growing::reuse::search as search_backend;
-#[cfg(feature = "experiment-shared-final-passes")]
+#[cfg(feature = "experiment-incremental-compilation")]
+use growing::reuse::search_incremental as search_backend;
+#[cfg(all(
+    feature = "experiment-shared-final-passes",
+    not(feature = "experiment-incremental-compilation")
+))]
 use growing::reuse::search_shared as search_backend;
