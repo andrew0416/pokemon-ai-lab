@@ -128,7 +128,7 @@ fn search_impl<
                 node: 0,
                 position: s.position.clone(),
                 world,
-                memory,
+                memory: History::raw(memory),
                 public: vec![obs.public],
                 turns: limits.turns,
                 decisions: 0,

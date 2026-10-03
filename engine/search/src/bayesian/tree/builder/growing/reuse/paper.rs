@@ -167,7 +167,7 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
                 node: 0,
                 position: s.position.clone(),
                 world,
-                memory,
+                memory: History::raw(memory),
                 public: vec![obs.public],
                 turns: limits.turns,
                 decisions: 0,

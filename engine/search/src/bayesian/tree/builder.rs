@@ -55,10 +55,10 @@ pub struct Built {
     pub stats: Stats,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-enum Memory {
-    Type(String),
-    Observe(String, String),
-    Action(String),
+enum Memory<S = String> {
+    Type(S),
+    Observe(S, S),
+    Action(S),
 }
 
 /// Live continuation lookup uses only the acting player's memory. Player 0 cannot

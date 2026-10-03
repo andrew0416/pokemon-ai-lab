@@ -10,6 +10,8 @@ use super::super::{self as tree, Compiled, Information, Policy, Solution};
 use super::*;
 use crate::bayesian::Config as CfrConfig;
 use std::collections::BTreeMap;
+mod history;
+use history::History;
 #[cfg(feature = "experiment-belief-workspace")]
 pub mod reuse;
 #[cfg(feature = "experiment-parallel-transitions")]
@@ -112,7 +114,7 @@ struct Frontier<P> {
     node: usize,
     position: P,
     world: usize,
-    memory: [Vec<Memory>; 2],
+    memory: History,
     public: Vec<String>,
     turns: u32,
     decisions: usize,
@@ -195,10 +197,7 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
             let _keys = crate::bayesian::tree::phase_cost::Span::new(
                 crate::bayesian::tree::phase_cost::Phase::Keys,
             );
-            [
-                format!("0:{:?}", h.memory[0]),
-                format!("1:{:?}", h.memory[1]),
-            ]
+            h.memory.keys()
         };
         self.b.mark(node, h.world, h.public.clone(), &keys);
         if h.phase != Phase::Terminal && !(h.phase == Phase::Turn && h.turns == 0) {
@@ -249,10 +248,7 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                 .iter()
                 .map(|a| self.b.domain.action_id(p, 1, a))
                 .collect();
-            let keys = [
-                format!("0:{:?}", h.memory[0]),
-                format!("1:{:?}", h.memory[1]),
-            ];
+            let keys = h.memory.keys();
             self.b.menu(&keys[0], &rows)?;
             self.b.menu(&keys[1], &cols)?;
             #[cfg(feature = "experiment-phase-cost")]
@@ -367,15 +363,7 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                         let history_span = crate::bayesian::tree::phase_cost::Span::new(
                             crate::bayesian::tree::phase_cost::Phase::History,
                         );
-                        let mut memory = h.memory.clone();
-                        memory[0].push(Memory::Action(rows[r].clone()));
-                        memory[1].push(Memory::Action(cols[c].clone()));
-                        for (side, m) in memory.iter_mut().enumerate() {
-                            m.push(Memory::Observe(
-                                obs.public.clone(),
-                                obs.private[side].clone(),
-                            ));
-                        }
+                        let memory = h.memory.advance([&rows[r], &cols[c]], &obs);
                         let mut public = h.public.clone();
                         public.push(obs.public);
                         #[cfg(feature = "experiment-phase-cost")]
@@ -624,7 +612,7 @@ pub fn search<D: ObservedDomain, P: Prior>(
                 node: 0,
                 position: s.position.clone(),
                 world,
-                memory,
+                memory: History::raw(memory),
                 public: vec![obs.public],
                 turns: limits.turns,
                 decisions: 0,

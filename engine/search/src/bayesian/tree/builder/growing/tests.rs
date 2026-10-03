@@ -1,6 +1,8 @@
 use super::*;
 use crate::budgeted::Domain;
 use std::cell::Cell;
+#[cfg(feature = "experiment-growth-pipeline")]
+mod history_tests;
 
 #[derive(Clone)]
 struct Position {

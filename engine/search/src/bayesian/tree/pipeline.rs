@@ -5,6 +5,8 @@ pub struct Settings {
     pub owned_compiler: bool,
     pub incremental_sequence: bool,
     pub compressed_checks: bool,
+    /// Storage-only, byte-identical private history keys; growing requests only.
+    pub encoded_history: bool,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -45,6 +47,11 @@ pub fn solve(
     solver: super::paper::Settings,
     settings: Settings,
 ) -> Result<Run, super::Error> {
+    if settings.encoded_history {
+        return Err(super::Error(
+            "encoded history requires a growing request".into(),
+        ));
+    }
     let mut metrics = Metrics::default();
     let run = solve_from(
         tree,
