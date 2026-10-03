@@ -42,6 +42,8 @@ enum Method {
     Shared(growing::Config),
     #[cfg(feature = "experiment-incremental-compilation")]
     Incremental(growing::Config),
+    #[cfg(feature = "experiment-parallel-transitions")]
+    Parallel(growing::Config, rayon::ThreadPool),
 }
 fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
     match v.get(k) {
@@ -238,6 +240,28 @@ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, 
                     },
                 },
             ),
+            #[cfg(feature = "experiment-parallel-transitions")]
+            Method::Parallel(g, pool) => tree::engine::parallel::growing(
+                &i.worlds,
+                SideId::One,
+                Ruleset::CHAMPIONS_MC,
+                e,
+                &i.knowledge,
+                i.limits,
+                tree::engine::parallel::Settings {
+                    pool,
+                    search: growing::reuse::Settings {
+                        growth: *g,
+                        storage: growing::reuse::Options {
+                            in_place: true,
+                            workspace: true,
+                            compiler: true,
+                            static_values: true,
+                            direct_write: true,
+                        },
+                    },
+                },
+            ),
             _ => unreachable!(),
         }
         .map_err(|e| e.to_string())?;
@@ -366,6 +390,21 @@ fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
         "all-shared" => Method::Shared(config),
         #[cfg(feature = "experiment-incremental-compilation")]
         "all-incremental" => Method::Incremental(config),
+        #[cfg(feature = "experiment-parallel-transitions")]
+        "parallel" => {
+            let threads = uint(v, "threads", 1)?;
+            if ![1, 2, 4].contains(&threads) {
+                return Err("parallel threads must be 1,2,4".into());
+            }
+            Method::Parallel(
+                config,
+                rayon::ThreadPoolBuilder::new()
+                    .num_threads(threads)
+                    .stack_size(16 * 1024 * 1024)
+                    .build()
+                    .map_err(|e| e.to_string())?,
+            )
+        }
         "growing" => Method::Growing(config),
         "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all"
         | "cached" | "all-cached" | "writer" | "all-writer" => Method::Reusing(

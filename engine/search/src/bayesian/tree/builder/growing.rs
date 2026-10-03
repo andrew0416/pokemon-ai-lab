@@ -12,6 +12,19 @@ use crate::bayesian::Config as CfrConfig;
 use std::collections::BTreeMap;
 #[cfg(feature = "experiment-belief-workspace")]
 pub mod reuse;
+#[cfg(feature = "experiment-parallel-transitions")]
+type Outcomes<P> = Result<Vec<(f64, P)>, String>;
+/// Sealed inside this crate: production implementation is the immutable engine only.
+#[cfg(feature = "experiment-parallel-transitions")]
+pub(crate) trait Batch<D: ObservedDomain> {
+    fn width(&self) -> usize;
+    fn run(
+        &self,
+        domain: &D,
+        p: &D::Position,
+        joints: &[[&D::Action; 2]],
+    ) -> Vec<Outcomes<D::Position>>;
+}
 
 #[derive(Clone, Copy, Debug)]
 pub struct Config {
@@ -120,6 +133,8 @@ impl<P: Clone> Clone for Frontier<P> {
     }
 }
 struct Growing<'a, D: ObservedDomain> {
+    #[cfg(feature = "experiment-parallel-transitions")]
+    batch: Option<&'a dyn Batch<D>>,
     b: Builder<'a, D>,
     root: usize,
     worlds: Vec<String>,
@@ -140,6 +155,8 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                 private_keys: self.b.private_keys.clone(),
                 boundaries: self.b.boundaries.clone(),
             },
+            #[cfg(feature = "experiment-parallel-transitions")]
+            batch: self.batch,
             root: self.root,
             worlds: self.worlds.clone(),
             frontier: self.frontier.clone(),
@@ -226,19 +243,59 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
                 h.turns
             };
             self.b.stats.leaves -= 1;
+            #[cfg(feature = "experiment-parallel-transitions")]
+            let mut prefetched = std::collections::VecDeque::new();
             let mut row_children = Vec::new();
             for (r, row) in left.iter().enumerate() {
                 let col_node = self.push(Node::Terminal(0.))?;
                 row_children.push(col_node);
                 let mut col_children = Vec::new();
                 for (c, col) in right.iter().enumerate() {
-                    if work.attempted_transitions >= self.b.limits.max_transitions {
-                        return Err(Failure::Limit(Stop::TransitionLimit));
+                    #[cfg(feature = "experiment-parallel-transitions")]
+                    if let Some(batch) = self.batch {
+                        if prefetched.is_empty() {
+                            let remaining =
+                                self.b.limits.max_transitions - work.attempted_transitions;
+                            if remaining == 0 {
+                                return Err(Failure::Limit(Stop::TransitionLimit));
+                            }
+                            let start = r * right.len() + c;
+                            let count = batch
+                                .width()
+                                .min(4)
+                                .min(remaining)
+                                .min(left.len() * right.len() - start);
+                            if count == 0 {
+                                return Err(Error("empty transition batch".into()).into());
+                            }
+                            let joints: Vec<_> = (start..start + count)
+                                .map(|n| [&left[n / right.len()], &right[n % right.len()]])
+                                .collect();
+                            // Every submitted engine call is attempted work, even if a
+                            // preceding result or node allocation rejects the admission.
+                            work.attempted_transitions += count;
+                            let results = batch.run(self.b.domain, p, &joints);
+                            if results.len() != count {
+                                return Err(Error("transition batch size mismatch".into()).into());
+                            }
+                            prefetched = results.into();
+                        }
                     }
-                    // Charge before calling the engine, including failed invocations.
-                    work.attempted_transitions += 1;
+                    let mut serial = || -> Result<_, Failure> {
+                        if work.attempted_transitions >= self.b.limits.max_transitions {
+                            return Err(Failure::Limit(Stop::TransitionLimit));
+                        }
+                        work.attempted_transitions += 1;
+                        Ok(self.b.domain.transitions(p, [row, col])?)
+                    };
+                    #[cfg(feature = "experiment-parallel-transitions")]
+                    let children = match prefetched.pop_front() {
+                        Some(v) => v?,
+                        None => serial()?,
+                    };
+                    #[cfg(not(feature = "experiment-parallel-transitions"))]
+                    let children = serial()?;
                     self.b.stats.transitions += 1;
-                    let children = self.b.domain.transitions(p, [row, col])?;
                     if children.is_empty()
                         || children
                             .iter()
@@ -469,6 +526,8 @@ pub fn search<D: ObservedDomain, P: Prior>(
     normalize(&mut weights)?;
     let first = domain.observation(&seeds[0].position)?;
     let mut growing = Growing {
+        #[cfg(feature = "experiment-parallel-transitions")]
+        batch: None,
         b: Builder {
             domain,
             limits,

@@ -360,3 +360,95 @@ fn partial_growth_limits_return_the_identical_committed_tree_and_solution() {
         assert_eq!(worlds[0].position.state, p.state);
     }
 }
+
+#[cfg(feature = "experiment-parallel-transitions")]
+#[test]
+fn parallel_seats_context_and_stateful_evaluator_preserve_order() {
+    use lab_engine::eval::Evaluator;
+    struct Trace {
+        owner: std::thread::ThreadId,
+        values: std::cell::RefCell<Vec<String>>,
+    }
+    impl Evaluator<2> for Trace {
+        fn evaluate(&self, s: &lab_engine::state::State<2>) -> f32 {
+            assert_eq!(self.owner, std::thread::current().id());
+            self.values.borrow_mut().push(s.position_hash().to_string());
+            Heuristic.evaluate(s)
+        }
+    }
+    for factored in [false, true] {
+        let _scope = FactoredScope::new(factored);
+        for seat in [SideId::One, SideId::Two] {
+            for threads in [1, 2, 4] {
+                let pool = rayon::ThreadPoolBuilder::new()
+                    .num_threads(threads)
+                    .stack_size(16 * 1024 * 1024)
+                    .build()
+                    .unwrap();
+                let (position, _) = fixture("psych-up-speed-swap", RollMode::Full);
+                let before = position.state.clone();
+                let worlds = [EngineWorld {
+                    id: "known".into(),
+                    weight: 1.,
+                    position,
+                }];
+                let config = tree::builder::growing::reuse::Settings {
+                    growth: tree::builder::growing::Config {
+                        max_expansions: 2,
+                        max_walks: 64,
+                        solver: bayesian::Config {
+                            iterations: 32,
+                            check_every: 16,
+                            tolerance: 0.1,
+                        },
+                        ..Default::default()
+                    },
+                    storage: tree::builder::growing::reuse::Options {
+                        in_place: true,
+                        workspace: true,
+                        compiler: true,
+                        static_values: true,
+                        direct_write: true,
+                    },
+                };
+                let aeval = Trace {
+                    owner: std::thread::current().id(),
+                    values: Default::default(),
+                };
+                let beval = Trace {
+                    owner: std::thread::current().id(),
+                    values: Default::default(),
+                };
+                let a = tree::engine::growing_incremental(
+                    &worlds,
+                    seat,
+                    Ruleset::CHAMPIONS_MC,
+                    &aeval,
+                    &Default::default(),
+                    Default::default(),
+                    config,
+                )
+                .unwrap();
+                let b = tree::engine::parallel::growing(
+                    &worlds,
+                    seat,
+                    Ruleset::CHAMPIONS_MC,
+                    &beval,
+                    &Default::default(),
+                    Default::default(),
+                    tree::engine::parallel::Settings {
+                        search: config,
+                        pool: &pool,
+                    },
+                )
+                .unwrap();
+                assert_eq!(format!("{:?}", a.built.tree), format!("{:?}", b.built.tree));
+                assert_eq!(format!("{:?}", a.solution), format!("{:?}", b.solution));
+                assert_eq!(format!("{:?}", a.work), format!("{:?}", b.work));
+                assert_eq!(*aeval.values.borrow(), *beval.values.borrow());
+                assert!(!aeval.values.borrow().is_empty());
+                assert_eq!(worlds[0].position.state, before);
+            }
+        }
+    }
+}

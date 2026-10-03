@@ -589,3 +589,120 @@ fn allocation_candidates_keep_zero_mass_and_malformed_domain_behavior() {
     }
     assert_eq!(s[0].position.stage, 0);
 }
+
+#[cfg(feature = "experiment-parallel-transitions")]
+struct TestBatch;
+#[cfg(feature = "experiment-parallel-transitions")]
+impl Batch<Game> for TestBatch {
+    fn width(&self) -> usize {
+        4
+    }
+    fn run(&self, d: &Game, p: &Position, a: &[[&usize; 2]]) -> Vec<Outcomes<Position>> {
+        a.iter().map(|a| d.transitions(p, *a)).collect()
+    }
+}
+#[cfg(feature = "experiment-parallel-transitions")]
+#[test]
+fn batched_attempts_are_real_bounded_and_failed_admissions_keep_solved_snapshot() {
+    let options = reuse::Options {
+        in_place: true,
+        workspace: true,
+        compiler: true,
+        static_values: true,
+        direct_write: true,
+    };
+    for switch in [false, true] {
+        for cap in 1..50 {
+            let g = Game {
+                switch,
+                ..Game::new()
+            };
+            let limits = Limits {
+                max_transitions: cap,
+                ..Limits::default()
+            };
+            let expected = search(
+                &Game {
+                    switch,
+                    ..Game::new()
+                },
+                &seeds(),
+                limits,
+                config(100),
+                &Uniform,
+            );
+            let actual = reuse::search_batched(
+                &g,
+                &seeds(),
+                limits,
+                config(100),
+                &Uniform,
+                options,
+                &TestBatch,
+            );
+            assert!(g.calls.get() <= cap);
+            match (expected, actual) {
+                (Ok(a), Ok(mut b)) => {
+                    assert_eq!(b.work.attempted_transitions, g.calls.get());
+                    assert!(b.work.attempted_transitions >= a.work.attempted_transitions);
+                    b.work.attempted_transitions = a.work.attempted_transitions;
+                    assert_eq!(exact_result(Ok(a)), exact_result(Ok(b)));
+                }
+                (Err(a), Err(b)) => assert_eq!(a.to_string(), b.to_string()),
+                _ => panic!("batch budget changed publication boundary"),
+            }
+        }
+    }
+}
+#[cfg(feature = "experiment-parallel-transitions")]
+#[test]
+fn batched_node_caps_and_bad_mass_remain_fail_closed() {
+    let options = reuse::Options {
+        in_place: true,
+        workspace: true,
+        compiler: true,
+        static_values: true,
+        direct_write: true,
+    };
+    for cap in 1..140 {
+        let limits = Limits {
+            max_nodes: cap,
+            ..Limits::default()
+        };
+        let g = Game::new();
+        let expected = search(&Game::new(), &seeds(), limits, config(100), &Uniform);
+        let actual = reuse::search_batched(
+            &g,
+            &seeds(),
+            limits,
+            config(100),
+            &Uniform,
+            options,
+            &TestBatch,
+        );
+        match (expected, actual) {
+            (Ok(a), Ok(mut b)) => {
+                assert_eq!(b.work.attempted_transitions, g.calls.get());
+                b.work.attempted_transitions = a.work.attempted_transitions;
+                assert_eq!(exact_result(Ok(a)), exact_result(Ok(b)));
+            }
+            (Err(a), Err(b)) => assert_eq!(a.to_string(), b.to_string()),
+            _ => panic!("batch node budget changed snapshot"),
+        }
+    }
+    let g = Game {
+        bad_mass: true,
+        ..Game::new()
+    };
+    let result = reuse::search_batched(
+        &g,
+        &seeds(),
+        Limits::default(),
+        config(100),
+        &Uniform,
+        options,
+        &TestBatch,
+    );
+    assert!(result.err().unwrap().to_string().contains("chance mass"));
+    assert_eq!(g.calls.get(), 4);
+}

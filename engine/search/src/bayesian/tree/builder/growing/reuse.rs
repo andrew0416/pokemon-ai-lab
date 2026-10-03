@@ -53,7 +53,16 @@ pub fn search<D: ObservedDomain, P: Prior>(
     prior: &P,
     options: Options,
 ) -> Result<ResultTree, Error> {
-    search_impl::<D, P, false, false>(domain, seeds, limits, cfg, prior, options)
+    search_impl::<D, P, false, false>(
+        domain,
+        seeds,
+        limits,
+        cfg,
+        prior,
+        options,
+        #[cfg(feature = "experiment-parallel-transitions")]
+        None,
+    )
 }
 
 #[cfg(feature = "experiment-shared-final-passes")]
@@ -65,7 +74,16 @@ pub fn search_shared<D: ObservedDomain, P: Prior>(
     prior: &P,
     options: Options,
 ) -> Result<ResultTree, Error> {
-    search_impl::<D, P, true, false>(domain, seeds, limits, cfg, prior, options)
+    search_impl::<D, P, true, false>(
+        domain,
+        seeds,
+        limits,
+        cfg,
+        prior,
+        options,
+        #[cfg(feature = "experiment-parallel-transitions")]
+        None,
+    )
 }
 
 #[cfg(feature = "experiment-incremental-compilation")]
@@ -77,7 +95,49 @@ pub fn search_incremental<D: ObservedDomain, P: Prior>(
     prior: &P,
     options: Options,
 ) -> Result<ResultTree, Error> {
-    search_impl::<D, P, false, true>(domain, seeds, limits, cfg, prior, options)
+    search_impl::<D, P, false, true>(
+        domain,
+        seeds,
+        limits,
+        cfg,
+        prior,
+        options,
+        #[cfg(feature = "experiment-parallel-transitions")]
+        None,
+    )
+}
+
+#[cfg(feature = "experiment-parallel-transitions")]
+pub(crate) fn search_batched<D: ObservedDomain, P: Prior>(
+    domain: &D,
+    seeds: &[Seed<D::Position>],
+    limits: Limits,
+    cfg: Config,
+    prior: &P,
+    options: Options,
+    batch: &dyn Batch<D>,
+) -> Result<ResultTree, Error> {
+    if limits.turns > 1 {
+        search_impl::<D, P, false, true>(
+            domain,
+            seeds,
+            limits,
+            cfg,
+            prior,
+            options,
+            if batch.width() > 1 { Some(batch) } else { None },
+        )
+    } else {
+        search_impl::<D, P, false, false>(
+            domain,
+            seeds,
+            limits,
+            cfg,
+            prior,
+            options,
+            if batch.width() > 1 { Some(batch) } else { None },
+        )
+    }
 }
 
 fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTAL: bool>(
@@ -87,6 +147,7 @@ fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTA
     cfg: Config,
     prior: &P,
     options: Options,
+    #[cfg(feature = "experiment-parallel-transitions")] batch: Option<&dyn Batch<D>>,
 ) -> Result<ResultTree, Error> {
     if cfg.max_expansions == 0
         || cfg.max_walks == 0
@@ -115,6 +176,8 @@ fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTA
     normalize(&mut weights)?;
     let first = domain.observation(&seeds[0].position)?;
     let mut growing = Growing {
+        #[cfg(feature = "experiment-parallel-transitions")]
+        batch,
         b: Builder {
             domain,
             limits,

@@ -98,6 +98,9 @@ pub use final_states::observer as final_state_observer;
 #[cfg(feature = "experiment-leaf-ending-states")]
 pub use final_states::{try_enumerate_turn_final_states, FinalStates};
 pub use frontier::{Factored, FactoredOptions, FactoredOutcome, FactoredScope};
+/// Capture the calling thread's enumeration mode before dispatching immutable jobs.
+#[cfg(feature = "experiment-owned-endings")]
+pub fn factored_mode() -> bool { frontier::factored_active() }
 use order::{
     ORDER_BEFORE_TURN, ORDER_BEFORE_TURN_MOVE, ORDER_MEGA, ORDER_MOVE, ORDER_PRIORITY_CHARGE,
     ORDER_SWITCH,
