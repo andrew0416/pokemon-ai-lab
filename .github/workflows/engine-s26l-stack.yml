@@ -1,0 +1,84 @@
+name: S26l retained stack direct comparison
+on:
+  push:
+    branches: [codex/s26l-stack-20261004]
+permissions:
+  contents: read
+concurrency:
+  group: s26l-stack
+  cancel-in-progress: false
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  CARGO_BUILD_JOBS: "2"
+  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s26l-selected
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
+  CARGO_PROFILE_RELEASE_DEBUG: "0"
+  RUSTFLAGS: "-C target-cpu=x86-64"
+  RUST_MIN_STACK: "16777216"
+  RUST_TEST_THREADS: "1"
+  RAYON_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  PYTHONUTF8: "1"
+  PYTHONHASHSEED: "0"
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: d90c80b4001e43807d404454280f1511329ef952
+          path: reference-s24
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@1.98.1
+        with:
+          components: clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: engine-search-quality-deps-v1
+          workspaces: engine -> ../target-s26l-selected
+          cache-workspace-crates: false
+          cache-bin: false
+      - name: Pin both unchanged libraries
+        run: python -B engine/benchmarks/s26_stack/provenance.py reference-s24 s26l-stack-results
+      - name: Isolated portable builds and focused CLI lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/s26l-bins"
+          cargo build --locked --release --target-dir "$RUNNER_TEMP/s26l-baseline-target" --manifest-path reference-s24/engine/Cargo.toml -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee s26l-stack-results/baseline-build.log
+          cp "$RUNNER_TEMP/s26l-baseline-target/release/lab-phase-speed" "$RUNNER_TEMP/s26l-bins/baseline"
+          cd engine
+          cargo clippy --locked -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline -- -D warnings 2>&1 | tee ../s26l-stack-results/cli-clippy.log
+          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee ../s26l-stack-results/selected-build.log
+          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26l-bins/selected"
+          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-phase-cost 2>&1 | tee ../s26l-stack-results/profile-build.log
+          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26l-bins/profile"
+          git rev-parse HEAD > ../s26l-stack-results/source-sha.txt
+          rustc --version > ../s26l-stack-results/rustc.txt
+          sha256sum "$RUNNER_TEMP/s26l-bins/"* > ../s26l-stack-results/binaries.sha256
+          test "$(sha256sum "$RUNNER_TEMP/s26l-bins/baseline" | cut -d' ' -f1)" != "$(sha256sum "$RUNNER_TEMP/s26l-bins/selected" | cut -d' ' -f1)"
+      - name: Cross-version complete outcomes and search work
+        run: python -B engine/benchmarks/s26_stack/run.py --reference "$RUNNER_TEMP/s26l-bins/baseline" --selected "$RUNNER_TEMP/s26l-bins/selected" --out s26l-stack-results/check --mode check
+      - name: Direct retained-stack speed and A-A controls
+        run: python -B engine/benchmarks/s26_stack/run.py --reference "$RUNNER_TEMP/s26l-bins/baseline" --selected "$RUNNER_TEMP/s26l-bins/selected" --out s26l-stack-results/speed --mode speed --parity s26l-stack-results/check/summary.json
+      - name: Separate retained-stack phase and call diagnostics
+        run: python -B engine/benchmarks/s26_stack/run.py --selected "$RUNNER_TEMP/s26l-bins/profile" --out s26l-stack-results/profile --mode profile --parity s26l-stack-results/check/summary.json
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s26l-stack-${{ github.run_id }}-${{ github.run_attempt }}
+          path: s26l-stack-results/
+          if-no-files-found: error
+          retention-days: 30

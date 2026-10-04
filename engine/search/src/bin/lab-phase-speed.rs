@@ -268,8 +268,9 @@ fn compute(
         .map_err(|e| e.to_string())
     }
 }
-fn witness(r: &ResultRun, fixed: &Option<Built>) -> String {
+fn witnesses(r: &ResultRun, fixed: &Option<Built>) -> (String, String) {
     use std::fmt::Write;
+    #[derive(Clone)]
     struct Digest(u128, u64);
     impl Write for Digest {
         fn write_str(&mut self, s: &str) -> std::fmt::Result {
@@ -281,16 +282,23 @@ fn witness(r: &ResultRun, fixed: &Option<Built>) -> String {
         }
     }
     let mut h = Digest(0x6c62272e07bb014262b821756295c58d, 0);
-    write!(
-        &mut h,
-        "{:?}|{:?}|{}",
-        r.tree(fixed),
-        r.solution(),
-        r.diagnostics(fixed)
+    write!(&mut h, "{:?}|{:?}|", r.tree(fixed), r.solution()).unwrap();
+    let mut semantic = h.clone();
+    let mut diag = r.diagnostics(fixed);
+    write!(&mut h, "{diag}").unwrap();
+    let object = diag.as_object_mut().expect("diagnostics object");
+    object.remove("pipeline");
+    object.remove("paper");
+    write!(&mut semantic, "{diag}").unwrap();
+    (
+        format!("fnv1a128:{:032x}:{}", h.0, h.1),
+        format!("fnv1a128:{:032x}:{}", semantic.0, semantic.1),
     )
-    .unwrap();
-    format!("fnv1a128:{:032x}:{}", h.0, h.1)
 }
+fn witness(r: &ResultRun, fixed: &Option<Built>) -> String {
+    witnesses(r, fixed).0
+}
+
 fn emit(v: Value) -> Result<(), String> {
     println!("{}", serde_json::to_string(&v).map_err(|e| e.to_string())?);
     std::io::stdout().flush().map_err(|e| e.to_string())
@@ -326,6 +334,8 @@ fn main() -> std::process::ExitCode {
                 "--profile",
                 "--profile-check",
                 "--memory",
+                "--worker",
+                "--worker-check",
             ]
             .contains(&args[0].as_str())
         {
@@ -335,14 +345,16 @@ fn main() -> std::process::ExitCode {
             );
         }
         let measure = args[0] == "--measure";
+        let worker = args[0] == "--worker" || args[0] == "--worker-check";
+        let worker_timing = args[0] == "--worker";
         let profile = args[0] == "--profile" || args[0] == "--profile-check";
         let profile_check = args[0] == "--profile-check";
-        if (measure || (profile && !profile_check))
+        if (measure || worker_timing || (profile && !profile_check))
             && std::env::var("GITHUB_ACTIONS").as_deref() != Ok("true")
         {
             return Err("performance measurements require GitHub Actions".into());
         }
-        if measure
+        if (measure || worker_timing)
             && (cfg!(feature = "experiment-phase-cost")
                 || cfg!(feature = "experiment-allocation-audit")
                 || cfg!(feature = "experiment-snapshot-audit"))
@@ -387,6 +399,40 @@ fn main() -> std::process::ExitCode {
         } else {
             None
         };
+        if worker {
+            emit(json!({"type":"ready","timing":worker_timing}))?;
+            let stdin = std::io::stdin();
+            let mut line = String::new();
+            loop {
+                line.clear();
+                if stdin.read_line(&mut line).map_err(|e| e.to_string())? == 0 {
+                    break;
+                }
+                let request: Value = serde_json::from_str(&line).map_err(|e| e.to_string())?;
+                let count = uint(&request, "count", 1)?;
+                if !(1..=64).contains(&count) {
+                    return Err("invalid worker sample count".into());
+                }
+                let variant = &request["variant"];
+                let (ns, result) = if worker_timing {
+                    timed(&i, e.as_ref(), &fixed, pool.as_ref(), variant, count)?
+                } else {
+                    (0., compute(&i, e.as_ref(), &fixed, pool.as_ref(), variant)?)
+                };
+                let (full, semantic) = witnesses(&result, &fixed);
+                let mut row = json!({"type":"sample","timing":worker_timing,
+                    "witness":full,"semantic_witness":semantic,"diagnostics":result.diagnostics(&fixed)});
+                if worker_timing {
+                    row["ns_per_solve"] = json!(ns);
+                    row["count"] = json!(count);
+                }
+                // Finish result destruction before acknowledging the sample, so a
+                // different worker cannot overlap it with the next timed compute.
+                drop(result);
+                emit(row)?;
+            }
+            return Ok(());
+        }
         let baseline = &v["baseline"];
         #[cfg(feature = "experiment-snapshot-audit")]
         tree::snapshot_audit::reset();
