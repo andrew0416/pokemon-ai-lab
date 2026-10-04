@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "COMPLETED_PILOT_DEFAULT_OFF",
+  "completed_at": "2026-10-02T10:47:58.110746+00:00",
+  "source_sha": "a0f7b556e30095e85ce56013c0e7d1f08206f03d",
+  "run_id": 36995572342,
+  "run_wall_seconds": 203,
+  "trials": 42,
+  "references": 5,
+  "rust_tests": 62,
+  "python_tests": 5,
+  "audit_sha256": "099e7c2ab078b3fc2a7da1580a98c701281d5563095c74444056e87e724bbfd9",
+  "results_sha256": "7020cdedd35079f9a5a9341b577fd8dae275dee08f38d56bcf8159ac283116be",
+  "vault_new_notes": 3,
+  "vault_install_receipt_sha256": "bbac9de51b0fc041cf392899a6bdedaf855737072e1c9bcefdb3086c8b879200",
+  "vault_added_errors": 0,
+  "vault_existing_errors": 14,
+  "production_adopted": false,
+  "KEEP_R1_changed": false,
+  "followups_proposed": [
+    "S25d-selective-finite-budget-reliability",
+    "S25e-selective-backup-matrix-cost",
+    "S25f-selective-state-memory"
+  ]
+}

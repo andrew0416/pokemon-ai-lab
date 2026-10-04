@@ -1,0 +1,60 @@
+{
+  "source_sha": "70d5b0b463dc2cab2deb365c67ffcb2e2e7f95b8",
+  "directions_implemented": 4,
+  "independent_and_cumulative_tested": true,
+  "production_adopted": false,
+  "default_off": true,
+  "decisions": [
+    {
+      "variant": "frontier-index",
+      "meaningful_cases": 4,
+      "within_runner_faster": [],
+      "within_runner_slower": [],
+      "disposition": "no-measured-benefit-keep-off",
+      "production_adopted": false,
+      "default_on": false,
+      "scope": "bounded single-runner experiment; no cross-run confidence or win-rate inference"
+    },
+    {
+      "variant": "owned-compiler",
+      "meaningful_cases": 4,
+      "within_runner_faster": [],
+      "within_runner_slower": [],
+      "disposition": "no-measured-benefit-keep-off",
+      "production_adopted": false,
+      "default_on": false,
+      "scope": "bounded single-runner experiment; no cross-run confidence or win-rate inference"
+    },
+    {
+      "variant": "delta-kernel",
+      "meaningful_cases": 4,
+      "within_runner_faster": [],
+      "within_runner_slower": [],
+      "disposition": "no-measured-benefit-keep-off",
+      "production_adopted": false,
+      "default_on": false,
+      "scope": "bounded single-runner experiment; no cross-run confidence or win-rate inference"
+    },
+    {
+      "variant": "compressed-checks",
+      "meaningful_cases": 6,
+      "within_runner_faster": [],
+      "within_runner_slower": [],
+      "disposition": "no-measured-benefit-keep-off",
+      "production_adopted": false,
+      "default_on": false,
+      "scope": "bounded single-runner experiment; no cross-run confidence or win-rate inference"
+    },
+    {
+      "variant": "all-four",
+      "meaningful_cases": 6,
+      "within_runner_faster": [],
+      "within_runner_slower": [],
+      "disposition": "no-measured-benefit-keep-off",
+      "production_adopted": false,
+      "default_on": false,
+      "scope": "bounded single-runner experiment; no cross-run confidence or win-rate inference"
+    }
+  ],
+  "remaining": "Only follow-up candidate replication/selection is proposed; requested four implementations and their bounded evaluation are complete."
+}

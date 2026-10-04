@@ -1,0 +1,424 @@
+{
+  "source_sha": "d32fd5ae016e6fc23465b6e63de209919469e7ed",
+  "parent": "8143386044d9690bb195cda7702887df7038a41d",
+  "run": 37088113085,
+  "passed": true,
+  "cpu": "AMD EPYC 7763 64-Core Processor",
+  "binary_sha256": "caefe9f6f2a52b679cc92c7ca9e506ff97cbb1d75e5ff1e3fd4cd1e4769d467c",
+  "artifact_sha256": "224680969af0d56e07aa7ad6833c41aeda7cd99c15fdd9e210867fd7f62c90d6",
+  "cases": 6,
+  "treatments": 6,
+  "paired_blocks": 54,
+  "timing_samples": 216,
+  "timed_solves": 378,
+  "comparison_contracts": [
+    "exact-same-work"
+  ],
+  "test_counts": {
+    "core": 101,
+    "owned": 6,
+    "on": 90,
+    "off": 17,
+    "cli": 1
+  },
+  "bootstrap_recomputed": true,
+  "lp_inherited": false,
+  "lp_certificates": {
+    "tree-lp": 49,
+    "growing-lp": 96
+  },
+  "wins_evaluated": false,
+  "shared_git_unchanged": true,
+  "groups": [
+    {
+      "case": "stats-w1-d2-incremental-growing",
+      "mode": "incremental",
+      "baseline_ms": 97.5002195,
+      "candidate_ms": 93.49461775,
+      "ratio": 0.958916997617631,
+      "reduction_percent": 4.108300238236895,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.958916997617631,
+          "ratio_bootstrap95": [
+            0.9566499255001458,
+            0.9615092691422429
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 97.084706,
+              "candidate_ms": 92.677035,
+              "ratio": 0.9545997389125328
+            },
+            {
+              "baseline_ms": 98.3767625,
+              "candidate_ms": 93.6085955,
+              "ratio": 0.9515315723060108
+            },
+            {
+              "baseline_ms": 97.8349635,
+              "candidate_ms": 94.3181045,
+              "ratio": 0.9640531475232779
+            },
+            {
+              "baseline_ms": 97.5002195,
+              "candidate_ms": 93.49461775,
+              "ratio": 0.958916997617631
+            },
+            {
+              "baseline_ms": 97.8548895,
+              "candidate_ms": 93.61287275,
+              "ratio": 0.9566499255001457
+            },
+            {
+              "baseline_ms": 97.3237855,
+              "candidate_ms": 93.43226625,
+              "ratio": 0.9600147155188492
+            },
+            {
+              "baseline_ms": 97.3732225,
+              "candidate_ms": 93.625256,
+              "ratio": 0.9615092691422429
+            },
+            {
+              "baseline_ms": 97.4035995,
+              "candidate_ms": 93.44416875,
+              "ratio": 0.9593502625126292
+            },
+            {
+              "baseline_ms": 97.568662,
+              "candidate_ms": 93.3949845,
+              "ratio": 0.9572231758184816
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2-incremental-growing",
+      "mode": "incremental",
+      "baseline_ms": 180.2838955,
+      "candidate_ms": 172.565597,
+      "ratio": 0.9573179891775058,
+      "reduction_percent": 4.268201082249423,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9573179891775058,
+          "ratio_bootstrap95": [
+            0.9522663057848221,
+            0.9664523330181656
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 178.9614255,
+              "candidate_ms": 171.322992,
+              "ratio": 0.9573179891775058
+            },
+            {
+              "baseline_ms": 182.7275815,
+              "candidate_ms": 174.005319,
+              "ratio": 0.952266305784822
+            },
+            {
+              "baseline_ms": 181.1544515,
+              "candidate_ms": 174.0712565,
+              "ratio": 0.9608996911676775
+            },
+            {
+              "baseline_ms": 228.948583,
+              "candidate_ms": 172.3501095,
+              "ratio": 0.752789588132109
+            },
+            {
+              "baseline_ms": 178.555725,
+              "candidate_ms": 172.565597,
+              "ratio": 0.9664523330181656
+            },
+            {
+              "baseline_ms": 181.059982,
+              "candidate_ms": 172.5742365,
+              "ratio": 0.9531329595514928
+            },
+            {
+              "baseline_ms": 180.2838955,
+              "candidate_ms": 183.04809,
+              "ratio": 1.015332453807556
+            },
+            {
+              "baseline_ms": 178.48497,
+              "candidate_ms": 172.116208,
+              "ratio": 0.964317656551137
+            },
+            {
+              "baseline_ms": 180.248119,
+              "candidate_ms": 172.046583,
+              "ratio": 0.9544986319663064
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "pivot-w1-d1-incremental-growing",
+      "mode": "incremental",
+      "baseline_ms": 24.496610625,
+      "candidate_ms": 24.9331885,
+      "ratio": 1.0134385417301641,
+      "reduction_percent": -1.3438541730164122,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.0134385417301641,
+          "ratio_bootstrap95": [
+            1.0032750159835568,
+            1.0339504805247839
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 24.496610625,
+              "candidate_ms": 25.410530125,
+              "ratio": 1.037307997991661
+            },
+            {
+              "baseline_ms": 24.371000125,
+              "candidate_ms": 25.0854485,
+              "ratio": 1.029315513164645
+            },
+            {
+              "baseline_ms": 27.30755,
+              "candidate_ms": 24.9331885,
+              "ratio": 0.913051097590227
+            },
+            {
+              "baseline_ms": 24.538930375,
+              "candidate_ms": 24.792908625,
+              "ratio": 1.0103500130657181
+            },
+            {
+              "baseline_ms": 24.382210125,
+              "candidate_ms": 25.209997875,
+              "ratio": 1.0339504805247839
+            },
+            {
+              "baseline_ms": 24.612208125,
+              "candidate_ms": 24.6928135,
+              "ratio": 1.0032750159835568
+            },
+            {
+              "baseline_ms": 24.408349625,
+              "candidate_ms": 24.73636225,
+              "ratio": 1.0134385417301641
+            },
+            {
+              "baseline_ms": 24.597419375,
+              "candidate_ms": 24.8477705,
+              "ratio": 1.010177942701357
+            },
+            {
+              "baseline_ms": 24.484886125,
+              "candidate_ms": 24.969799375,
+              "ratio": 1.0198045948641308
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "sand-damage-w1-d1-incremental-growing",
+      "mode": "incremental",
+      "baseline_ms": 316.5369295,
+      "candidate_ms": 315.0866795,
+      "ratio": 0.9970500447996535,
+      "reduction_percent": 0.2949955200346466,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9970500447996535,
+          "ratio_bootstrap95": [
+            0.9887214125607795,
+            1.0029178130276355
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 318.502464,
+              "candidate_ms": 317.562896,
+              "ratio": 0.9970500447996535
+            },
+            {
+              "baseline_ms": 319.497204,
+              "candidate_ms": 318.1224685,
+              "ratio": 0.9956971908273726
+            },
+            {
+              "baseline_ms": 315.2101675,
+              "candidate_ms": 318.167957,
+              "ratio": 1.009383547248678
+            },
+            {
+              "baseline_ms": 315.012906,
+              "candidate_ms": 315.001289,
+              "ratio": 0.999963122145859
+            },
+            {
+              "baseline_ms": 314.104088,
+              "candidate_ms": 315.020585,
+              "ratio": 1.0029178130276355
+            },
+            {
+              "baseline_ms": 316.5369295,
+              "candidate_ms": 315.5189935,
+              "ratio": 0.9967841477403351
+            },
+            {
+              "baseline_ms": 314.657971,
+              "candidate_ms": 313.912928,
+              "ratio": 0.9976322131690096
+            },
+            {
+              "baseline_ms": 317.411956,
+              "candidate_ms": 313.8319975,
+              "ratio": 0.9887214125607796
+            },
+            {
+              "baseline_ms": 325.125279,
+              "candidate_ms": 315.0866795,
+              "ratio": 0.9691239034661467
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w4-d2-incremental-growing",
+      "mode": "incremental",
+      "baseline_ms": 360.290808,
+      "candidate_ms": 343.0507185,
+      "ratio": 0.9543526765054253,
+      "reduction_percent": 4.564732349457468,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9543526765054253,
+          "ratio_bootstrap95": [
+            0.9512746020431362,
+            0.9589771878600389
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 356.951827,
+              "candidate_ms": 341.535617,
+              "ratio": 0.9568115111510552
+            },
+            {
+              "baseline_ms": 360.387061,
+              "candidate_ms": 343.0507185,
+              "ratio": 0.9518952138517537
+            },
+            {
+              "baseline_ms": 360.290808,
+              "candidate_ms": 342.735495,
+              "ratio": 0.9512746020431362
+            },
+            {
+              "baseline_ms": 356.915417,
+              "candidate_ms": 340.6231835,
+              "ratio": 0.9543526765054253
+            },
+            {
+              "baseline_ms": 355.150149,
+              "candidate_ms": 342.7661,
+              "ratio": 0.9651301033242703
+            },
+            {
+              "baseline_ms": 363.9943735,
+              "candidate_ms": 345.409149,
+              "ratio": 0.9489409016922621
+            },
+            {
+              "baseline_ms": 360.816394,
+              "candidate_ms": 345.588788,
+              "ratio": 0.9577968012174082
+            },
+            {
+              "baseline_ms": 359.7176115,
+              "candidate_ms": 344.9609835,
+              "ratio": 0.9589771878600389
+            },
+            {
+              "baseline_ms": 362.082096,
+              "candidate_ms": 344.899833,
+              "ratio": 0.9525459469280139
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "narrow-w1-d3-incremental-growing",
+      "mode": "incremental",
+      "baseline_ms": 67.76508575,
+      "candidate_ms": 61.28431475,
+      "ratio": 0.9059323593196299,
+      "reduction_percent": 9.40676406803701,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9059323593196299,
+          "ratio_bootstrap95": [
+            0.9008749912082186,
+            0.9074133110657974
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 68.436849,
+              "candidate_ms": 62.10050775,
+              "ratio": 0.9074133110657974
+            },
+            {
+              "baseline_ms": 67.76508575,
+              "candidate_ms": 61.19716775,
+              "ratio": 0.9030781422718114
+            },
+            {
+              "baseline_ms": 67.71767925,
+              "candidate_ms": 61.37744575,
+              "ratio": 0.9063725518916096
+            },
+            {
+              "baseline_ms": 67.647782,
+              "candidate_ms": 61.28431475,
+              "ratio": 0.9059323593196299
+            },
+            {
+              "baseline_ms": 67.47813325,
+              "candidate_ms": 61.23298925,
+              "ratio": 0.9074493661989382
+            },
+            {
+              "baseline_ms": 67.79914175,
+              "candidate_ms": 61.07285625,
+              "ratio": 0.900790993419913
+            },
+            {
+              "baseline_ms": 67.48705275,
+              "candidate_ms": 61.1963885,
+              "ratio": 0.9067870948031583
+            },
+            {
+              "baseline_ms": 68.09271275,
+              "candidate_ms": 61.343022,
+              "ratio": 0.9008749912082185
+            },
+            {
+              "baseline_ms": 67.7753445,
+              "candidate_ms": 61.39355575,
+              "ratio": 0.9058390806113865
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

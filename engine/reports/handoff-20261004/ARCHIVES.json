@@ -1,0 +1,330 @@
+[
+  {
+    "experiment": "s10-static-backup-20261003",
+    "path": "archives/s10-static-backup-20261003/s26c-static-37032057405-1.zip",
+    "sha256": "05d7f0c41d8fdb707cc3c079905240ce3e3c39ec83d97122ff16097b68c902dc",
+    "bytes": 487687,
+    "files": 500,
+    "uncompressed_bytes": 4134505
+  },
+  {
+    "experiment": "s11-night-confirm-20261003",
+    "path": "archives/s11-night-confirm-20261003/s26c-confirm-37033041022-1.zip",
+    "sha256": "47f4e9eb775bb75e9516b4986a44010f02166772e4a943984db16c02d96484bc",
+    "bytes": 48846,
+    "files": 55,
+    "uncompressed_bytes": 312127
+  },
+  {
+    "experiment": "s12-observation-writer-20261003",
+    "path": "archives/s12-observation-writer-20261003/s26c-writer-37034440983-1.zip",
+    "sha256": "af8b577e63134e2685dbf33d3e8b8c7dcfa540e77a745d38b08b01915d3e70e9",
+    "bytes": 474928,
+    "files": 494,
+    "uncompressed_bytes": 3927705
+  },
+  {
+    "experiment": "s14-owned-transitions-20261003",
+    "path": "archives/s14-owned-transitions-20261003/s26e-owned-37083242086-1.zip",
+    "sha256": "6d506dcd63f23e4443bcbf64f9b7c7f218c99109c90c632f3989d6d9de1f5dfc",
+    "bytes": 467834,
+    "files": 497,
+    "uncompressed_bytes": 3750685
+  },
+  {
+    "experiment": "s15-interned-history-20261003",
+    "path": "archives/s15-interned-history-20261003/s26e-history-37085660921-1.zip",
+    "sha256": "e313652de2660f9ea3a3113525e181bf811d627a4d74e01ee2fdaefaab447944",
+    "bytes": 469191,
+    "files": 498,
+    "uncompressed_bytes": 3754158
+  },
+  {
+    "experiment": "s16-shared-final-passes-20261003",
+    "path": "archives/s16-shared-final-passes-20261003/s26e-shared-37087415542-1.zip",
+    "sha256": "f103a78a06330ea6df0f99cbbf6aef1d17e0e5edc2ded6e3f3f1e9e597fe5c9b",
+    "bytes": 454026,
+    "files": 479,
+    "uncompressed_bytes": 3668764
+  },
+  {
+    "experiment": "s17-incremental-compiler-20261003",
+    "path": "archives/s17-incremental-compiler-20261003/s26e-incremental-37088113085-1.zip",
+    "sha256": "224680969af0d56e07aa7ad6833c41aeda7cd99c15fdd9e210867fd7f62c90d6",
+    "bytes": 454128,
+    "files": 479,
+    "uncompressed_bytes": 3669016
+  },
+  {
+    "experiment": "s18-parallel-transitions-20261003",
+    "path": "archives/s18-parallel-transitions-20261003/s26e-parallel-37088881275-1.zip",
+    "sha256": "7e93156454bc9372200a3f5bd68e4b966adf0ae2f00160cb895d9c2c9ca90cc5",
+    "bytes": 463061,
+    "files": 479,
+    "uncompressed_bytes": 3815506
+  },
+  {
+    "experiment": "s19-growth-cadence-20261003",
+    "path": "archives/s19-growth-cadence-20261003/s26e-cadence-37089670577-1.zip",
+    "sha256": "cb4ad7f8958e4e806c4647eb4d1f92e7838c0d6478200e802ff052e2b730f2c6",
+    "bytes": 1079684,
+    "files": 999,
+    "uncompressed_bytes": 9198237
+  },
+  {
+    "experiment": "s2-search-quality-20261002",
+    "path": "archives/s2-search-quality-20261002/s25-case-coaching-median-36995572342-1.zip",
+    "sha256": "547adfc15da5b89138e783d9f9678e9f94012140e3cf247c04df8b51667cbbd4",
+    "bytes": 52778,
+    "files": 26,
+    "uncompressed_bytes": 566853
+  },
+  {
+    "experiment": "s2-search-quality-20261002",
+    "path": "archives/s2-search-quality-20261002/s25-case-half-hp-median-36995572342-1.zip",
+    "sha256": "a5441d7c2ba940d1d2bc5018ab65ef2cad383c50dc08cb03db27eb4268f49b76",
+    "bytes": 86349,
+    "files": 29,
+    "uncompressed_bytes": 803488
+  },
+  {
+    "experiment": "s2-search-quality-20261002",
+    "path": "archives/s2-search-quality-20261002/s25-case-helping-hand-median-36995572342-1.zip",
+    "sha256": "e08dd755ba463724dbe15c7435edac62697937959aef601a26dc33ec2f3d5a87",
+    "bytes": 165829,
+    "files": 29,
+    "uncompressed_bytes": 1930277
+  },
+  {
+    "experiment": "s2-search-quality-20261002",
+    "path": "archives/s2-search-quality-20261002/s25-case-pivot-full-36995572342-1.zip",
+    "sha256": "5a97e068e05d6b7109f2d2d2c2469e739bbe4afca5f409c3ad2e0511f9f8632d",
+    "bytes": 104380,
+    "files": 29,
+    "uncompressed_bytes": 1292436
+  },
+  {
+    "experiment": "s2-search-quality-20261002",
+    "path": "archives/s2-search-quality-20261002/s25-case-pivot-median-36995572342-1.zip",
+    "sha256": "64c6f4b980928fc46d3735e71b420d66e5f6565307afd65f4ea1d5cabd411b7d",
+    "bytes": 41681,
+    "files": 29,
+    "uncompressed_bytes": 408716
+  },
+  {
+    "experiment": "s2-search-quality-20261002",
+    "path": "archives/s2-search-quality-20261002/s25-case-sand-median-36995572342-1.zip",
+    "sha256": "dd5e0ebd0d7ed507e7c50057ef91987abf4d09718913eb3041473cf84c8b4a37",
+    "bytes": 41480,
+    "files": 26,
+    "uncompressed_bytes": 466081
+  },
+  {
+    "experiment": "s2-search-quality-20261002",
+    "path": "archives/s2-search-quality-20261002/s25-case-speed-swap-full-36995572342-1.zip",
+    "sha256": "349202ba09ed1241f1e613e19140ac892b5e23602c1ebb1b1b854755f2c86e27",
+    "bytes": 88633,
+    "files": 29,
+    "uncompressed_bytes": 1079885
+  },
+  {
+    "experiment": "s2-search-quality-20261002",
+    "path": "archives/s2-search-quality-20261002/s25-package-36995572342-1.zip",
+    "sha256": "6b828916eca12e6f9dca3908e500e561f294325f35cb640f5d711f272f3a43fb",
+    "bytes": 6492612,
+    "files": 7,
+    "uncompressed_bytes": 27039027
+  },
+  {
+    "experiment": "s2-search-quality-20261002",
+    "path": "archives/s2-search-quality-20261002/s25-summary-36995572342-1.zip",
+    "sha256": "8e23d0a6ae57f62810b1577c42b0b6de5a3afc678408b19a8538dacb6e303d93",
+    "bytes": 2854,
+    "files": 2,
+    "uncompressed_bytes": 22765
+  },
+  {
+    "experiment": "s21-paper-solvers-20261003",
+    "path": "archives/s21-paper-solvers-20261003/s26f-papers-37119405706-1.zip",
+    "sha256": "7bc666ff3947a1fc328f1b5a43ff82ab7ac675746ff22683cbd076ca758ebc6a",
+    "bytes": 3035468,
+    "files": 3409,
+    "uncompressed_bytes": 21612336
+  },
+  {
+    "experiment": "s22-growth-pipeline-20261003",
+    "path": "archives/s22-growth-pipeline-20261003/s26g-pipeline-37123954718-1.zip",
+    "sha256": "9067f23873572e4910b7ea3a960175b960242ba1d99edd543a0c473bbe9b09c8",
+    "bytes": 5036701,
+    "files": 5429,
+    "uncompressed_bytes": 36117163
+  },
+  {
+    "experiment": "s23-phase-cost-20261003",
+    "path": "archives/s23-phase-cost-20261003/s26h-phases-37126805142-1.zip",
+    "sha256": "9d4012187f78bcfa9dd96c05ff9de309071cd6baa175bfccd70b5b72ecdc533c",
+    "bytes": 2264375,
+    "files": 2149,
+    "uncompressed_bytes": 17112817
+  },
+  {
+    "experiment": "s24-admission-audit-20261003",
+    "path": "archives/s24-admission-audit-20261003/s26i-audit-37130044447-1.zip",
+    "sha256": "d20b0787fdc3bf46a5693a6ab6eff7ff614fd7e89f8dc970a0fa59e582ed4887",
+    "bytes": 7671712,
+    "files": 6850,
+    "uncompressed_bytes": 59962992
+  },
+  {
+    "experiment": "s25-history-keys-20261003",
+    "path": "archives/s25-history-keys-20261003/s26j-history-37131081510-1.zip",
+    "sha256": "2481291f665195135494929d8fb634842335b865d7c0ce552fd50e561a1c1887",
+    "bytes": 7583192,
+    "files": 6310,
+    "uncompressed_bytes": 79801626
+  },
+  {
+    "experiment": "s26-borrowed-boundary-20261004",
+    "path": "archives/s26-borrowed-boundary-20261004/s26k-boundary-37162947674-1.zip",
+    "sha256": "f0f95d46e1d7ce0e02aaee10cef39cce138184ff6aacefe99189b6e9f03be5ae",
+    "bytes": 13494715,
+    "files": 10275,
+    "uncompressed_bytes": 147499743
+  },
+  {
+    "experiment": "s26-borrowed-boundary-r2-20261004",
+    "path": "archives/s26-borrowed-boundary-r2-20261004/s26k-boundary-fix-37163534085-1.zip",
+    "sha256": "1b64d8cb475a0b5262969f3ffbc615087a39c19d6ea8902633713b6a1c95dcc6",
+    "bytes": 14339734,
+    "files": 11681,
+    "uncompressed_bytes": 152502516
+  },
+  {
+    "experiment": "s27-selected-stack-20261004",
+    "path": "archives/s27-selected-stack-20261004/s26l-stack-37173941021-1.zip",
+    "sha256": "94de42e21028cd4fc3c0326212dd04e9206b4550bc3d3cf1ae6acdadade5c7e6",
+    "bytes": 138863,
+    "files": 144,
+    "uncompressed_bytes": 1693035
+  },
+  {
+    "experiment": "s3-response-sweeps-20261002",
+    "path": "archives/s3-response-sweeps-20261002/s25d-case-coaching-median-36999721226-1.zip",
+    "sha256": "cebea50a2affbc2e14c210b642c8e34fbfef53b4401212daa7ce6ff106f3116a",
+    "bytes": 78455,
+    "files": 38,
+    "uncompressed_bytes": 886039
+  },
+  {
+    "experiment": "s3-response-sweeps-20261002",
+    "path": "archives/s3-response-sweeps-20261002/s25d-case-half-hp-median-36999721226-1.zip",
+    "sha256": "2bc035a2781f409be09f696b1174ba38150d4b936e64121b23e915ab935fe08b",
+    "bytes": 877056,
+    "files": 47,
+    "uncompressed_bytes": 16792092
+  },
+  {
+    "experiment": "s3-response-sweeps-20261002",
+    "path": "archives/s3-response-sweeps-20261002/s25d-case-helping-hand-median-36999721226-1.zip",
+    "sha256": "fb07bb949b1f1cc96bd246d31ed0adfed3088e6d67c6443c5ca6bd41e0208d5e",
+    "bytes": 326199,
+    "files": 41,
+    "uncompressed_bytes": 4586926
+  },
+  {
+    "experiment": "s3-response-sweeps-20261002",
+    "path": "archives/s3-response-sweeps-20261002/s25d-case-pivot-full-36999721226-1.zip",
+    "sha256": "8e54a6250e61913fba350c3efbb8932c5e382be15d0660541a65d8175dd4cb47",
+    "bytes": 204515,
+    "files": 41,
+    "uncompressed_bytes": 2978238
+  },
+  {
+    "experiment": "s3-response-sweeps-20261002",
+    "path": "archives/s3-response-sweeps-20261002/s25d-case-pivot-median-36999721226-1.zip",
+    "sha256": "9067e98f151cc2cfb0884668756484643a1803e58b4e0926149521dd88725dda",
+    "bytes": 69432,
+    "files": 41,
+    "uncompressed_bytes": 826605
+  },
+  {
+    "experiment": "s3-response-sweeps-20261002",
+    "path": "archives/s3-response-sweeps-20261002/s25d-case-sand-median-36999721226-1.zip",
+    "sha256": "342009ea35a619369fa7f58000397a14493722eb0188dbf7dc142d87291e62bd",
+    "bytes": 64620,
+    "files": 38,
+    "uncompressed_bytes": 774488
+  },
+  {
+    "experiment": "s3-response-sweeps-20261002",
+    "path": "archives/s3-response-sweeps-20261002/s25d-case-speed-swap-full-36999721226-1.zip",
+    "sha256": "1edeed32dd92ed7de498ab9b8134fbfcc3db0206ceeed2f93fd70b81f3ccfb40",
+    "bytes": 160857,
+    "files": 41,
+    "uncompressed_bytes": 2358338
+  },
+  {
+    "experiment": "s3-response-sweeps-20261002",
+    "path": "archives/s3-response-sweeps-20261002/s25d-package-36999721226-1.zip",
+    "sha256": "158916c637f08a189e92a2b6c0251275dd8fe30343b33c898a96f7cc92a9bc15",
+    "bytes": 13004719,
+    "files": 11,
+    "uncompressed_bytes": 54087647
+  },
+  {
+    "experiment": "s3-response-sweeps-20261002",
+    "path": "archives/s3-response-sweeps-20261002/s25d-summary-36999721226-1.zip",
+    "sha256": "134dcc0b3a264e658dd08947fcde77c70f2ebe8477ed93cb06b39c7d1b2f16e6",
+    "bytes": 3283,
+    "files": 2,
+    "uncompressed_bytes": 32406
+  },
+  {
+    "experiment": "s4-bayesian-cfr-20261002",
+    "path": "archives/s4-bayesian-cfr-20261002/s26-correctness-37008543602-1.zip",
+    "sha256": "519c44d125584651a148d04500ccb8e4483b54faa7be948cdd2c0ae622712e56",
+    "bytes": 88492,
+    "files": 225,
+    "uncompressed_bytes": 207498
+  },
+  {
+    "experiment": "s5-public-belief-20261002",
+    "path": "archives/s5-public-belief-20261002/s26b-correctness-37014537106-1.zip",
+    "sha256": "d64f70dfadcfd6d7ccb4f75c275b471a6c86e3cf951d12f3f06e1828187ddfb0",
+    "bytes": 174676,
+    "files": 373,
+    "uncompressed_bytes": 584368
+  },
+  {
+    "experiment": "s6-growing-belief-20261002",
+    "path": "archives/s6-growing-belief-20261002/s26c-correctness-37020601917-1.zip",
+    "sha256": "902d89c90338c23f43154c8b3e3691a728a86471ac0946adb42605bb9aa05c57",
+    "bytes": 518506,
+    "files": 671,
+    "uncompressed_bytes": 3763443
+  },
+  {
+    "experiment": "s7-belief-speed-20261002",
+    "path": "archives/s7-belief-speed-20261002/s26c-speed-37025196260-1.zip",
+    "sha256": "f8edbb467f3184ccc1f50bdb031e7cd9199fede9c7280ab5c1d074b1336c800e",
+    "bytes": 29026,
+    "files": 19,
+    "uncompressed_bytes": 303267
+  },
+  {
+    "experiment": "s8-belief-workspace-20261003",
+    "path": "archives/s8-belief-workspace-20261003/s26c-workspace-37029881806-1.zip",
+    "sha256": "f3891892390297af67e990992db76db93eb56c7028e80c0d20d5933c97a87954",
+    "bytes": 478871,
+    "files": 500,
+    "uncompressed_bytes": 3982224
+  },
+  {
+    "experiment": "s9-belief-compiler-20261003",
+    "path": "archives/s9-belief-compiler-20261003/s26c-compiler-37030978967-1.zip",
+    "sha256": "d607c82c1bdf1561f878f20e2eaeedc3294d4973c38fee8a6d15eb4d2f5ed8fe",
+    "bytes": 476360,
+    "files": 488,
+    "uncompressed_bytes": 4042486
+  }
+]

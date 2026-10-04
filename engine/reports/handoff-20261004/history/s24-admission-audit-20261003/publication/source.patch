@@ -1,0 +1,4157 @@
+diff --git a/.github/workflows/engine-s26i-audit.yml b/.github/workflows/engine-s26i-audit.yml
+new file mode 100644
+index 0000000..9abd778
+--- /dev/null
++++ b/.github/workflows/engine-s26i-audit.yml
+@@ -0,0 +1,104 @@
++name: S26i detailed admission, memory, snapshots and portability
++on:
++  push:
++    branches: [codex/s26i-audit-20261003]
++permissions:
++  contents: read
++concurrency:
++  group: s26i-audit
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  CARGO_PROFILE_RELEASE_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  RAYON_NUM_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++  PYTHONHASHSEED: "0"
++jobs:
++  compare:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 35
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Independent oracle dependencies
++        run: python -m pip install numpy==2.2.6 scipy==1.15.3
++      - name: Correctness, fallback, and separate portable release builds
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26i-audit-results "$RUNNER_TEMP/s26i-bins"
++          cd engine
++          cargo test --locked -p lab-search --lib --features experiment-phase-cost,experiment-snapshot-audit,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26i-audit-results/instrumented-tests.log
++          cargo test --locked -p lab-search --lib --features experiment-growth-pipeline,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26i-audit-results/uninstrumented-tests.log
++          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26i-audit-results/default-off.log
++          cargo check --locked -p lab-search --lib --no-default-features --features experiment-phase-cost 2>&1 | tee ../s26i-audit-results/no-default.log
++          cargo check --locked -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26i-audit-results/fallback.log
++          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-phase-cost -- -D warnings 2>&1 | tee ../s26i-audit-results/instrumented-clippy.log
++          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-growth-pipeline -- -D warnings 2>&1 | tee ../s26i-audit-results/uninstrumented-clippy.log
++          cargo build --locked -p lab-search --bin lab-belief-workspace --features experiment-snapshot-audit 2>&1 | tee ../s26i-audit-results/oracle-build.log
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee ../s26i-audit-results/speed-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26i-bins/speed"
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-phase-cost 2>&1 | tee ../s26i-audit-results/profile-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26i-bins/profile"
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-snapshot-audit 2>&1 | tee ../s26i-audit-results/audit-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26i-bins/audit"
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-allocation-audit 2>&1 | tee ../s26i-audit-results/memory-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26i-bins/memory"
++          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-allocation-audit,experiment-snapshot-audit -- -D warnings 2>&1 | tee ../s26i-audit-results/audit-clippy.log
++          cargo build --locked --release -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26i-audit-results/scalar-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-belief-workspace" "$RUNNER_TEMP/s26i-bins/scalar"
++          rustc --edition=2021 -C opt-level=2 -C target-cpu=x86-64 benchmarks/s26_audit/cpu_probe.rs -o "$RUNNER_TEMP/s26i-bins/cpu-probe"
++          git rev-parse HEAD > ../s26i-audit-results/source-sha.txt
++          rustc --version > ../s26i-audit-results/rustc.txt
++          sha256sum "$RUNNER_TEMP/s26i-bins/"* > ../s26i-audit-results/binaries.sha256
++      - name: Independent pipeline exhaustive BR and LP certificates
++        run: python -B engine/benchmarks/s26_audit/contract_check.py --binary target-s25/debug/lab-belief-workspace --out s26i-audit-results/pipeline-lp --require-lp
++      - name: Uninstrumented full-result witnesses
++        run: python -B engine/benchmarks/s26_audit/run.py --binary "$RUNNER_TEMP/s26i-bins/speed" --out s26i-audit-results/check --mode check
++      - name: Instrumentation counters and cross-build parity
++        run: python -B engine/benchmarks/s26_audit/run.py --binary "$RUNNER_TEMP/s26i-bins/profile" --out s26i-audit-results/profile-check --mode profile-check --parity s26i-audit-results/check/summary.json
++      - name: Every intermediate snapshot shadow checks
++        run: python -B engine/benchmarks/s26_audit/run.py --binary "$RUNNER_TEMP/s26i-bins/audit" --out s26i-audit-results/audit-check --mode check --parity s26i-audit-results/check/summary.json
++      - name: Uninstrumented A-A and many-snapshot confirmation
++        run: python -B engine/benchmarks/s26_audit/run.py --binary "$RUNNER_TEMP/s26i-bins/speed" --out s26i-audit-results/paired --mode speed --parity s26i-audit-results/check/summary.json
++      - name: Separate instrumented phase diagnostics
++        run: python -B engine/benchmarks/s26_audit/run.py --binary "$RUNNER_TEMP/s26i-bins/profile" --out s26i-audit-results/profile --mode profile --parity s26i-audit-results/check/summary.json
++      - name: Fresh-process allocation and RSS measurements
++        run: python -B engine/benchmarks/s26_audit/memory_run.py --binary "$RUNNER_TEMP/s26i-bins/memory" --out s26i-audit-results/memory --parity s26i-audit-results/check/summary.json
++      - name: Ephemeral runner CPU emulator
++        run: |
++          sudo apt-get update -qq
++          sudo apt-get install -y --no-install-recommends qemu-user time
++      - name: Non-AVX2 emulated execution and scalar fallback
++        run: python -B engine/benchmarks/s26_audit/portability.py --binary "$RUNNER_TEMP/s26i-bins/speed" --scalar "$RUNNER_TEMP/s26i-bins/scalar" --probe "$RUNNER_TEMP/s26i-bins/cpu-probe" --out s26i-audit-results/portability
++      - name: Preserve evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26i-audit-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26i-audit-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_audit/README.md b/engine/benchmarks/s26_audit/README.md
+new file mode 100644
+index 0000000..213ffbd
+--- /dev/null
++++ b/engine/benchmarks/s26_audit/README.md
+@@ -0,0 +1,42 @@
++# S26i audit definitions
++
++Frozen parent S23. Four separate build modes: uninstrumented speed, phase-only
++diagnostics, expensive intermediate snapshot shadows, and allocation diagnostics.
++Every diagnostic is default OFF and refused by headline speed mode.
++
++The phase ledger now splits menu generation, observations, phase queries, history
++copy/append, history Debug keys, public/private boundary registration, evaluation,
++and frontier insertion. Exclusive wall costs remain exactly additive; per-call
++clock overhead is present only in this diagnostic build. Worker CPU time is not
++summed into caller wall time.
++
++Speed confirmation uses the two many-snapshot conditions (15 and 25 solves),
++16 comparisons including true original/new-OFF AA, 15 alternating paired blocks.
++This is a second runner session, not proof on all computers or all game sizes.
++
++Allocation mode launches a fresh process for each workload/configuration/repeat
++(8 × 7 × 3 = 168). A System-delegating allocator counts requested Rust bytes and
++calls across worker threads. Counters are never reset while allocations survive;
++only the peak baseline is reset immediately before compute. Reallocation counts
++positive requested growth, not internal allocator traffic or usable size. Process
++RSS is /usr/bin/time's peak for that one child and includes load/pool/runtime.
++Result-drop accounting subtracts allocations held by diagnostic metadata. These
++measurements are not speed measurements. Cache shape reports retained empty
++buckets, capacities and rank slots processed; shape tracking itself allocates no
++trace vectors. Performance builds contain none of this tracking.
++
++Snapshot audit checks the private append-only/old-nonterminal-immutable contract,
++then compares every successful incremental compilation with a fresh full compile.
++It compares incremental sequence gradients under four policies and original-tree
++BR gaps at each cache update. Conservative fallback differences are allowed.
++Generated compiler tests use 64 seeds and up to 24 replacements each, including
++canonical ID remapping, changing players/actions, scale changes and tiny chance.
++The independent oracle uses a new seed and 64 growing games plus 29 fixed games,
++with partial budgets and atomic pending-batch failure. These are generic contracts,
++not a claim that every possible future Pokemon gimmick has already been tested.
++
++Portability uses QEMU user emulation with the Nehalem CPU model. A compiled CPUID
++probe must observe AVX=false, AVX2=false, SSE2=true. Native and emulated results
++must match for two bounded engine workloads × three settings and a legacy scalar
++tree CLI. This is explicitly emulated execution, not physical old-CPU testing and
++not a performance comparison. Nothing is installed on the user's desktop.
+diff --git a/engine/benchmarks/s26_audit/contract_check.py b/engine/benchmarks/s26_audit/contract_check.py
+new file mode 100644
+index 0000000..c2882a2
+--- /dev/null
++++ b/engine/benchmarks/s26_audit/contract_check.py
+@@ -0,0 +1,131 @@
++"""New seeds and matrix families, independent strategic-form BR, optional required LP.
++
++Fixture builders and the oracle are extracted from the inherited Python oracle,
++not from the Rust solver. Local checks do not need SciPy; CI requires it.
++Different rules need not return identical policies. Every certificate must match
++exhaustive pure plans for the actual exported game, including partial growth.
++"""
++from pathlib import Path
++import argparse,ast,copy,hashlib,itertools,json,math,random,subprocess
++import numpy as np
++
++HERE=Path(__file__).resolve().parent
++def helpers(path,names):
++    module=ast.parse(path.read_text(encoding='utf-8'))
++    selected=[n for n in module.body if isinstance(n,ast.FunctionDef) and n.name in names]
++    assert {n.name for n in selected}==set(names)
++    scope=dict(np=np,itertools=itertools)
++    exec(compile(ast.Module(body=selected,type_ignores=[]),str(path),'exec'),scope)
++    return [scope[n] for n in names]
++generated,kuhn,normal_form=helpers(HERE.parent/'s26_tree/check.py',['generated','kuhn','normal_form'])
++observed,canonical=helpers(HERE.parent/'s26_tree/growing_check.py',['generated','canonical'])
++RULES=['lcfr','cfr','cfr-simultaneous','dcfr','pcfr+','sapcfr+','hs-dcfr-15','hs-dcfr-30','hs-pcfr-15','hs-pcfr-30']
++
++def matrix_case(rng,i):
++    # Chance after each joint choice, varying player order and utility offsets.
++    rows=2+i%3;cols=2+(i//3)%2;nodes=[None];children=[]
++    def add(n):nodes.append(n);return len(nodes)-1
++    first=i%2;other=1-first
++    for a in range(rows):
++        n=add(None);children.append(n);leaves=[]
++        for b in range(cols):
++            value=rng.randrange(-10,11)+(1000 if i%4==0 else 0)
++            chance=add(None);leaves.append(chance)
++            x=add(dict(type='terminal',value=value));y=add(dict(type='terminal',value=-value/3))
++            p=0. if i%5==0 else (i%3+1)/4
++            nodes[chance]=dict(type='chance',edges=[dict(probability=p,child=x),dict(probability=1-p,child=y)])
++        nodes[n]=dict(type='decision',player=other,information='second',actions=[f'c{b}' for b in range(cols)],children=leaves)
++    nodes[0]=dict(type='decision',player=first,information='first',actions=[f'r{a}' for a in range(rows)],children=children)
++    return dict(mode='tree',root=0,nodes=nodes,include_keys=True,solver=dict(iterations=4096,tolerance=.02,check_every=32))
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
++    p.add_argument('--require-lp',action='store_true');p.add_argument('--small',action='store_true');a=p.parse_args()
++    linprog=None
++    if a.require_lp:from scipy.optimize import linprog
++    a.out.mkdir(parents=True,exist_ok=False);binary=a.binary.resolve();rng=random.Random(261004731);records=[];lp_cache={}
++    def run(name,q,ok=True):
++        path=a.out/(name+'-request.json');path.write_text(json.dumps(q),encoding='utf-8')
++        child=subprocess.run([str(binary),str(path.resolve())],capture_output=True,timeout=90)
++        (a.out/(name+'-result.json')).write_bytes(child.stdout);(a.out/(name+'-stderr.txt')).write_bytes(child.stderr)
++        assert (child.returncode==0)==ok,(name,child.stderr.decode(errors='replace'))
++        return json.loads(child.stdout) if ok else None
++    def certify(name,q,r):
++        game=r.get('oracle_tree',q);key=json.dumps(dict(root=game['root'],nodes=game['nodes']),sort_keys=True)
++        if key not in lp_cache:
++            keys,plans,A=normal_form(game);n,m=A.shape;value=None
++            if linprog:
++                lp=linprog(np.r_[np.zeros(n),-1.],A_ub=np.c_[-A.T,np.ones(m)],b_ub=np.zeros(m),
++                    A_eq=np.array([np.r_[np.ones(n),0.]]),b_eq=[1.],bounds=[(0,None)]*n+[(None,None)],method='highs')
++                assert lp.success,lp.message
++                value=-lp.fun
++            lp_cache[key]=keys,plans,A,value
++        keys,plans,A,value=lp_cache[key];lookup={i['key']:i for i in r['policies']}
++        assert set(lookup)==set(keys[0]+keys[1])
++        for v in lookup.values():assert min(v['probabilities'])>=0 and abs(sum(v['probabilities'])-1)<1e-10
++        pure=[np.array([math.prod(lookup[k]['probabilities'][act] for k,act in zip(keys[player],plan)) for plan in plans[player]]) for player in range(2)]
++        lower=float(min(pure[0]@A));upper=float(max(A@pure[1]));profile=float(pure[0]@A@pure[1]);gap=upper-lower
++        for k,v in [('value',profile),('lower',lower),('upper',upper),('finite_game_gap',gap)]:
++            assert abs(r[k]-v)<1e-7,(name,k,r[k],v)
++        if value is not None:assert lower-1e-7<=value<=upper+1e-7,(name,value,lower,upper)
++        converge=r.get('surrogate_converged',r['converged'])
++        assert converge==(r['finite_game_gap']<=q['solver']['tolerance'])
++        paper=r.get('paper',(r.get('metadata',{}).get('growth') or {}).get('paper',{})) or {}
++        records.append(dict(case=name,gap=gap,iterations=r['iterations'],converged=converge,lp_value=value,paper=paper))
++        return value
++    tree_count=4 if a.small else 16;matrix_count=4 if a.small else 12
++    cases=[(f'new-hidden-{i}',generated(rng,i)) for i in range(tree_count)]
++    cases += [(f'matrix-{i}',matrix_case(rng,i)) for i in range(matrix_count)]+[('kuhn',kuhn())]
++    for name,q in cases:
++        q['solver'].update(iterations=8192,tolerance=.02)
++        original=run(name+'-original',q);certify(name+'-original',q,original)
++        variants=[(dict(rule=r,sequence=True,checks='periodic'),dict(compressed_checks=True)) for r in ['lcfr','cfr-simultaneous','dcfr','sapcfr+']]
++        variants.append((dict(sequence=True),{}))
++        reference_request=copy.deepcopy(q);reference_request['solver']['paper']=dict(sequence=True)
++        reference=run(name+'-sequence',reference_request);certify(name+'-sequence',reference_request,reference)
++        for i,(setting,pipeline) in enumerate(variants):
++            request=copy.deepcopy(q);request['solver'].update(paper=setting,pipeline=pipeline);tag=name+f'-p{i}'
++            r=run(tag,request);value=certify(tag,request,r)
++            if not pipeline:
++                for field in ['policies','value','lower','upper','finite_game_gap','iterations','converged']:assert r[field]==reference[field],(name,field)
++            if name=='kuhn' and value is not None:assert abs(value+1/18)<1e-10
++    allflags=dict(frontier_index=True,owned_compiler=True,incremental_sequence=True,compressed_checks=True)
++    growth_settings=[(dict(sequence=True),p) for p in [dict(),dict(frontier_index=True),dict(owned_compiler=True),dict(owned_compiler=True,incremental_sequence=True),dict(compressed_checks=True),allflags]]
++    growth_settings += [(dict(sequence=True,reuse_policy=True),allflags),(dict(sequence=True,rule='cfr-simultaneous',warm_iterations=8),allflags)]
++    growth_count=3 if a.small else 64
++    for i in range(growth_count):
++        q=observed(rng,i);q['solver'].update(iterations=8192,tolerance=.03,paper=dict(sequence=True))
++        full=run(f'growth-{i}-full',q);certify(f'growth-{i}-full',q,full)
++        for budget in [1,2,99]:
++            control=copy.deepcopy(q);control['growth']=dict(cadence=4,max_expansions=budget,max_walks=1000,seed=i+1)
++            original=run(f'growth-{i}-budget{budget}-control',control);certify(f'growth-{i}-budget{budget}-control',control,original)
++            for v,(setting,pipeline) in enumerate(growth_settings):
++                request=copy.deepcopy(control);request['solver'].update(paper=setting,pipeline=pipeline)
++                tag=f'growth-{i}-v{v}-budget{budget}';r=run(tag,request);certify(tag,request,r)
++                g=r['metadata']['growth'];assert g['committed_expansions']==(3 if budget==99 else budget)
++                assert r['converged']==(g['horizon_complete'] and r['surrogate_converged'])
++                if v<3:
++                    for field in ['policies','value','lower','upper','finite_game_gap','iterations','converged']:assert r[field]==original[field],(tag,field)
++                    for field in ['walks','solves','total_cfr_iterations','attempted_transitions','committed_expansions']:assert g[field]==original['metadata']['growth'][field],(tag,field)
++                if budget==99:assert canonical(r['oracle_tree'])==canonical(full['oracle_tree'])
++                else:assert r['full_horizon_gap'] is None and r['certificate_scope']=='current-fixed-leaf-surrogate-only'
++    # Abort after a complete pending group plus part of the next: no unsolved publish.
++    q=observed(rng,2);q['solver'].update(paper=dict(sequence=True),pipeline=allflags);q['growth']=dict(max_expansions=1,seed=1,cadence=4)
++    root=run('rollback-root',q);q['growth'].update(max_expansions=2,cadence=1);one=run('rollback-one',q)
++    cap=one['metadata']['growth']['attempted_transitions']+1;q['growth'].update(max_expansions=100,cadence=4);q['limits']['max_transitions']=cap
++    r=run('rollback-batch',q);certify('rollback-batch',q,r)
++    assert r['policies']==root['policies'] and canonical(r['oracle_tree'])==canonical(root['oracle_tree'])
++    g=r['metadata']['growth'];assert g['attempted_transitions']==cap and g['committed_expansions']==1 and g['solves']==1 and g['stop']=='TransitionLimit'
++    for index,pipeline in enumerate([dict(unknown=True),dict(frontier_index=1),dict(incremental_sequence=True)]):
++        q['solver'].update(paper=dict(sequence=True),pipeline=pipeline);run(f'invalid-pipeline-{index}',q,False)
++    q['solver'].update(paper=dict(),pipeline=dict(compressed_checks=True));run('invalid-check-kernel',q,False)
++    q['solver'].update(paper=dict(sequence=True,compact=True),pipeline=allflags);run('invalid-compact',q,False)
++    q['solver'].pop('paper');run('missing-explicit-paper',q,False)
++    fixed=kuhn();fixed['solver'].update(paper=dict(sequence=True),pipeline=dict(owned_compiler=True));run('invalid-fixed-growth-flag',fixed,False)
++    summary=dict(passed=True,certificates=len(records),distinct_fixed_games=len(cases),distinct_growing_games=growth_count,
++        new_seed=261004731,independent_exhaustive_best_responses=True,independent_lp=a.require_lp,
++        converged=sum(r['converged'] for r in records),warm_applications=sum(r['paper'].get('warm_applied',0) for r in records),
++        reuse_acceptances=sum(r['paper'].get('reused',0) for r in records),atomic_rollback=True,performance=False,
++        binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),cases=records)
++    (a.out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8');print(json.dumps({k:v for k,v in summary.items() if k!='cases'}))
++if __name__=='__main__':main()
+diff --git a/engine/benchmarks/s26_audit/cpu_probe.rs b/engine/benchmarks/s26_audit/cpu_probe.rs
+new file mode 100644
+index 0000000..554ddd7
+--- /dev/null
++++ b/engine/benchmarks/s26_audit/cpu_probe.rs
+@@ -0,0 +1,7 @@
++fn main() {
++    let avx=std::arch::is_x86_feature_detected!("avx");
++    let avx2=std::arch::is_x86_feature_detected!("avx2");
++    let sse2=std::arch::is_x86_feature_detected!("sse2");
++    println!("{{\"avx\":{avx},\"avx2\":{avx2},\"sse2\":{sse2}}}");
++    if std::env::args().any(|a|a=="--require-no-avx") {assert!(!avx && !avx2 && sse2);}
++}
+diff --git a/engine/benchmarks/s26_audit/memory_run.py b/engine/benchmarks/s26_audit/memory_run.py
+new file mode 100644
+index 0000000..99a9271
+--- /dev/null
++++ b/engine/benchmarks/s26_audit/memory_run.py
+@@ -0,0 +1,37 @@
++"""Independent process per configuration; allocator diagnostics are not timings."""
++from pathlib import Path
++import argparse,copy,hashlib,json,os,subprocess,sys
++import run as common
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--parity',type=Path,required=True);p.add_argument('--local-check',action='store_true');a=p.parse_args()
++    if not a.local_check and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Memory experiment runs on the GitHub runner; --local-check validates accounting only.')
++    a.out.mkdir(parents=True);plan=json.loads((common.HERE/'plan.json').read_bytes());reference=json.loads(a.parity.read_bytes());rows=[]
++    env=dict(os.environ,LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
++    cases=plan['profile_cases'][-1:] if a.local_check else plan['profile_cases']
++    for case in cases:
++        choices=[case['baseline'],*case['variants']]
++        if a.local_check:choices=[v for v in choices if v['id'] in ('new-off','all-four')]
++        for variant in choices:
++            for repeat in range(1 if a.local_check else 3):
++                request=copy.deepcopy(case);request['baseline']=variant;request['variants']=[]
++                for w in request['worlds']:w['scenario']=(common.HERE.parents[2]/w['scenario']).as_posix()
++                tag=case['id']+'-'+variant['id']+'-'+str(repeat);path=a.out/(tag+'.json');common.write(path,request)
++                command=[str(a.binary.resolve()),'--memory',str(path.resolve())]
++                rss=a.out/(tag+'-rss.txt')
++                if not a.local_check:command=['/usr/bin/time','-f','%M','-o',str(rss.resolve()),*command]
++                result=subprocess.run(command,capture_output=True,env=env,timeout=300)
++                (a.out/(tag+'-stderr.txt')).write_bytes(result.stderr)
++                assert result.returncode==0,(tag,result.stderr.decode(errors='replace'))
++                data=json.loads(result.stdout);assert data['type']=='memory' and not data['timing']
++                expected=reference['witnesses'][case['id']+'|'+common.route(variant)]
++                assert dict(witness=data['witness'],diagnostics=data['diagnostics'])==expected
++                assert data['peak_requested_bytes']>=data['baseline_requested_bytes']
++                assert data['peak_above_baseline_bytes']>=data['returned_live_above_baseline_bytes']
++                assert data['allocations']>0 and data['result_drop_freed_bytes']>0
++                if not a.local_check:data['process_peak_rss_kib']=int(rss.read_text());assert data['process_peak_rss_kib']<512*1024
++                common.write(a.out/(tag+'-result.json'),data)
++                rows.append(dict(case=case['id'],repeat=repeat,**data))
++        print(json.dumps(dict(case=case['id'],passed=True)),flush=True)
++    common.write(a.out/'summary.json',dict(passed=True,source_sha=os.environ.get('GITHUB_SHA'),timing=False,local_accounting_check=a.local_check,configuration_processes=len(rows),rows=rows,
++        binary_sha256=hashlib.sha256(a.binary.read_bytes()).hexdigest(),scope='Rust requested heap bytes include parallel workers; RSS fresh child process peak includes load/pool, allocator metadata and non-Rust memory; allocator instrumentation excluded from speed'))
++if __name__=='__main__':main()
+diff --git a/engine/benchmarks/s26_audit/plan.json b/engine/benchmarks/s26_audit/plan.json
+new file mode 100644
+index 0000000..d13606d
+--- /dev/null
++++ b/engine/benchmarks/s26_audit/plan.json
+@@ -0,0 +1,1354 @@
++{
++  "rounds": 15,
++  "sample_ms": 50,
++  "profile_rounds": 5,
++  "cases": [
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-cadence1-old-control",
++      "phase": "growing",
++      "cadence": 1,
++      "workload": "stats-w4-d2-cadence1",
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "original-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        }
++      ],
++      "comparison_group": "old-control"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-cadence1-new-control",
++      "phase": "growing",
++      "cadence": 1,
++      "workload": "stats-w4-d2-cadence1",
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        }
++      ],
++      "comparison_group": "new-control"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-cadence1-delta-control",
++      "phase": "growing",
++      "cadence": 1,
++      "workload": "stats-w4-d2-cadence1",
++      "baseline": {
++        "id": "owned",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "owned_compiler": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ],
++      "comparison_group": "delta-control"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-cadence1-old-control",
++      "phase": "growing",
++      "cadence": 1,
++      "workload": "narrow-w1-d3-cadence1",
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "original-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        }
++      ],
++      "comparison_group": "old-control"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-cadence1-new-control",
++      "phase": "growing",
++      "cadence": 1,
++      "workload": "narrow-w1-d3-cadence1",
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        }
++      ],
++      "comparison_group": "new-control"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-cadence1-delta-control",
++      "phase": "growing",
++      "cadence": 1,
++      "workload": "narrow-w1-d3-cadence1",
++      "baseline": {
++        "id": "owned",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "owned_compiler": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ],
++      "comparison_group": "delta-control"
++    }
++  ],
++  "profile_cases": [
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w1-d2",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w2-d2",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 1,
++      "id": "pivot-w1-d1",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "sand-damage-w1-d1",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-cadence1",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-cadence1",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "index",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "owned",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "compressed",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "all-four",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true
++          }
++        },
++        {
++          "id": "delta",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "owned_compiler": true,
++            "incremental_sequence": true
++          }
++        }
++      ]
++    }
++  ],
++  "basis": "S22; identical-path A/A; old/new-OFF path control; new-path OFF/ON; dependency-matched owned/delta",
++  "headline": "uninstrumented generic x86-64 compute only",
++  "phase_scope": "separate instrumented caller wall time; exclusive rows sum to compute; teardown separately reported"
++}
+diff --git a/engine/benchmarks/s26_audit/portability.py b/engine/benchmarks/s26_audit/portability.py
+new file mode 100644
+index 0000000..8187ad1
+--- /dev/null
++++ b/engine/benchmarks/s26_audit/portability.py
+@@ -0,0 +1,31 @@
++"""Non-AVX2 CPU emulation, explicitly not real old-hardware timing."""
++from pathlib import Path
++import argparse,copy,json,os,subprocess
++import run as common
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--scalar',type=Path,required=True);p.add_argument('--probe',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
++    assert os.environ.get('GITHUB_ACTIONS')=='true';a.out.mkdir(parents=True)
++    prefix=['qemu-x86_64','-cpu','Nehalem'];env=dict(os.environ,LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1')
++    def execute(name,command):
++        r=subprocess.run(command,capture_output=True,timeout=300,env=env)
++        (a.out/(name+'-stdout.txt')).write_bytes(r.stdout);(a.out/(name+'-stderr.txt')).write_bytes(r.stderr)
++        assert r.returncode==0,(name,r.stderr.decode(errors='replace'));return r.stdout
++    version=execute('qemu-version',['qemu-x86_64','--version']).decode().splitlines()[0]
++    cpu=json.loads(execute('cpu-probe',[*prefix,str(a.probe.resolve()),'--require-no-avx']))
++    assert cpu==dict(avx=False,avx2=False,sse2=True)
++    plan=json.loads((common.HERE/'plan.json').read_bytes());cases=[plan['profile_cases'][0],plan['profile_cases'][-1]];captured=[]
++    for case in cases:
++        q=copy.deepcopy(case);q['threads']=1;q['variants']=[v for v in q['variants'] if v['id'] in ('new-off','all-four')]
++        for w in q['worlds']:w['scenario']=(common.HERE.parents[2]/w['scenario']).as_posix()
++        path=a.out/(q['id']+'.json');common.write(path,q)
++        args=[str(a.binary.resolve()),'--check',str(path.resolve())]
++        native=execute(q['id']+'-native',args);emulated=execute(q['id']+'-nehalem',prefix+args)
++        assert [json.loads(x) for x in native.splitlines()]==[json.loads(x) for x in emulated.splitlines()]
++        captured.append(q['id'])
++    def decision(player,key,children):return dict(type='decision',player=player,information=key,actions=['A','B'],children=children)
++    q=dict(mode='tree',root=0,nodes=[decision(0,'row',[1,2]),decision(1,'column',[3,4]),decision(1,'column',[5,6]),*[dict(type='terminal',value=v) for v in (1,-1,-1,1)]],solver=dict(iterations=256,tolerance=.01,check_every=32))
++    path=a.out/'scalar.json';common.write(path,q);args=[str(a.scalar.resolve()),str(path.resolve())]
++    native=json.loads(execute('scalar-native',args));emulated=json.loads(execute('scalar-nehalem',prefix+args));assert native==emulated
++    common.write(a.out/'summary.json',dict(passed=True,source_sha=os.environ.get('GITHUB_SHA'),qemu=version,cpu_model='Nehalem',cpuid=cpu,engine_workloads=captured,engine_configurations=6,scalar_legacy_equal=True,actual_old_hardware=False,emulated=True,timing=False))
++    print('Non-AVX2 emulated engine and legacy scalar results match native.')
++if __name__=='__main__':main()
+diff --git a/engine/benchmarks/s26_audit/run.py b/engine/benchmarks/s26_audit/run.py
+new file mode 100644
+index 0000000..c50da59
+--- /dev/null
++++ b/engine/benchmarks/s26_audit/run.py
+@@ -0,0 +1,130 @@
++"""Clean path controls, separate instrumentation, portable same-binary speed pairs."""
++from pathlib import Path
++import argparse, copy, hashlib, importlib.util, json, math, os, platform, statistics, subprocess, sys
++
++HERE = Path(__file__).resolve().parent
++spec = importlib.util.spec_from_file_location('s22_summary', HERE.parent/'s26_pipeline/run.py')
++old = importlib.util.module_from_spec(spec); spec.loader.exec_module(old)
++write = old.write
++
++def route(v):
++    assert set(v) <= {'id', 'paper', 'pipeline', 'exact_control'}
++    return json.dumps({k:x for k,x in v.items() if k not in ('id','exact_control')},sort_keys=True,separators=(',',':'))
++
++def validate_plan(p):
++    assert len(p['profile_cases']) == 8 and len(p['cases']) == 6
++    assert sum(len(c['variants']) for c in p['cases']) == 16
++    for c in p['cases']:
++        b=c['baseline']; variants=c['variants']; group=c['comparison_group']
++        if group in ('old-control','new-control'):
++            assert route(b)==route(variants[0]), 'A/A must use identical API and parameters'
++            assert variants[0]['exact_control']
++        if group=='old-control':
++            assert 'pipeline' not in b and variants[1]['pipeline']=={}
++            assert b['paper']==variants[1]['paper']
++        elif group=='new-control':
++            assert b['pipeline']=={} and all('pipeline' in v for v in variants)
++            assert all(b['paper']==v['paper'] for v in variants)
++        elif group=='delta-control':
++            assert b['pipeline']=={'owned_compiler':True}
++            assert variants[0]['pipeline']=={'owned_compiler':True,'incremental_sequence':True}
++        else: raise AssertionError(group)
++    assert {c['cadence'] for c in p['profile_cases']}=={1,4}
++
++def collect_witnesses(case, rows, out):
++    workload=case.get('workload',case['id'])
++    pre=[(case['baseline'], next(r for r in rows if r['type']=='baseline'))]
++    pre += [(r['variant'], r) for r in rows if r['type']=='validation']
++    assert len(pre)==1+len(case['variants'])
++    for variant,row in pre:
++        key=workload+'|'+route(variant)
++        value=dict(witness=row['witness'],diagnostics=row['diagnostics'])
++        if key in out: assert out[key]==value, 'same API arguments changed result or work'
++        out[key]=value
++
++def profile_summary(rows):
++    grouped={}
++    for r in rows:
++        if r['type']!='profile':continue
++        assert r['balanced']
++        assert sum(p['exclusive_ns'] for p in r['phases'])==r['compute_ns']
++        grouped.setdefault(r['variant'],[]).append(r)
++    result=[]
++    for variant, samples in grouped.items():
++        result.append(dict(variant=variant,samples=len(samples),diagnostics=samples[0]['diagnostics'],
++            compute_ms=statistics.median(r['compute_ns']/1e6 for r in samples),
++            returned_result_drop_ms=statistics.median(r['returned_result_drop_ns']/1e6 for r in samples),
++            phases=[dict(phase=p['phase'],calls=p['calls'],
++                aggregate_exclusive_percent=100*sum(r['phases'][i]['exclusive_ns'] for r in samples)/sum(r['compute_ns'] for r in samples),
++                exclusive_ms=statistics.median(r['phases'][i]['exclusive_ns']/1e6 for r in samples),
++                inclusive_ms=statistics.median(r['phases'][i]['inclusive_ns']/1e6 for r in samples),
++                exclusive_percent=statistics.median(100*r['phases'][i]['exclusive_ns']/r['compute_ns'] for r in samples))
++                for i,p in enumerate(samples[0]['phases'])]))
++    return result
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
++    p.add_argument('--mode',choices=['check','speed','profile','profile-check'],required=True)
++    p.add_argument('--parity',type=Path);a=p.parse_args()
++    timing=a.mode in ('speed','profile')
++    if timing and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Local performance runs are disabled. Use check or profile-check.')
++    plan=json.loads((HERE/'plan.json').read_bytes());validate_plan(plan)
++    binary=a.binary.resolve();repo=HERE.parents[2];a.out.mkdir(parents=True,exist_ok=False)
++    env=dict(os.environ,LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',PYTHONHASHSEED='0')
++    metadata=dict(platform=platform.platform(),python=sys.version,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
++        source_sha=os.environ.get('GITHUB_SHA'),mode=a.mode,timing=timing,plan_sha256=hashlib.sha256((HERE/'plan.json').read_bytes()).hexdigest(),
++        portable='-C target-cpu=x86-64; no AVX2 requirement',enumeration='flat',
++        scope='compute excludes loading/JSON/returned result drop; phase mode separately reports result drop; transitions are caller wall time including scheduling/wait, not worker CPU sums',
++        witness='streaming FNV-1a-128 and byte length of full Tree, Solution and diagnostic text; noncryptographic cross-build regression witness; evidence files use SHA256')
++    if timing:
++        allowed=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,set(allowed[:4]))
++        metadata.update(available_cpus=allowed,parallel_cpus=allowed[:4],load_before=os.getloadavg(),cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0])
++    write(a.out/'environment.json',metadata)
++    conditions=plan['cases'] if a.mode=='speed' else plan['profile_cases']
++    statuses=[];results=[];profiles=[];witnesses={};audits=[]
++    flag={'speed':'--measure','check':'--check','profile':'--profile','profile-check':'--profile-check'}[a.mode]
++    for case in conditions:
++        request=copy.deepcopy(case)
++        for world in request['worlds']:world['scenario']=(repo/world['scenario']).as_posix()
++        for k in ('rounds','sample_ms','profile_rounds'):request[k]=plan[k]
++        request_path=a.out/(case['id']+'-request.json');write(request_path,request)
++        log=a.out/(case['id']+'-raw.jsonl');err=a.out/(case['id']+'-stderr.txt')
++        with log.open('wb') as stdout,err.open('wb') as stderr:
++            try: code=subprocess.run([str(binary),flag,str(request_path.resolve())],env=env,stdout=stdout,stderr=stderr,timeout=300).returncode
++            except subprocess.TimeoutExpired:code=-999
++        status=dict(case=case['id'],exit_code=code)
++        if timing:
++            import resource
++            status['cumulative_child_peak_rss_kib']=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
++            if status['cumulative_child_peak_rss_kib']>512*1024:code=status['exit_code']=-998
++        if code==0:
++            rows=[json.loads(s) for s in log.read_text().splitlines()]
++            assert rows[-1]['type']=={'check':'checked','profile-check':'checked','speed':'completed','profile':'profiled'}[a.mode]
++            collect_witnesses(case,rows,witnesses)
++            audits.extend(dict(case=case['id'],**r) for r in rows if r['type']=='audit')
++            if a.mode=='speed':
++                found=old.summarize(rows)
++                assert all(r['censored'] or len(r['pairs'])==plan['rounds'] for r in found)
++                results.extend(dict(case=case['id'],workload=case['workload'],comparison_group=case['comparison_group'],**r) for r in found)
++            elif a.mode=='profile':profiles.extend(dict(case=case['id'],**r) for r in profile_summary(rows))
++            elif a.mode=='profile-check':
++                measured=[r for r in rows if r['type']=='profile']
++                assert len(measured)==1+len(case['variants'])
++                assert all('compute_ns' not in r and all(set(p)=={'phase','calls'} for p in r['phases']) for r in measured)
++        else:status['error']=err.read_text(errors='replace')[-2000:]
++        statuses.append(status);print(json.dumps(status),flush=True)
++        if code:break
++    parity=False
++    if a.parity:
++        reference=json.loads(a.parity.read_bytes());assert reference['passed']
++        assert all(reference['witnesses'].get(k)==v for k,v in witnesses.items()), 'instrumented/uninstrumented full result/work witnesses differ'
++        parity=True
++    passed=len(statuses)==len(conditions) and all(s['exit_code']==0 for s in statuses)
++    summary=dict(passed=passed,timing=timing,mode=a.mode,source_sha=os.environ.get('GITHUB_SHA'),cases=statuses,
++        results=results,profiles=profiles,witnesses=witnesses,audits=audits,cross_build_parity=parity,paired_rounds=plan['rounds'],
++        wins_evaluated=False,engine_unchanged=True,search_algorithm_unchanged=True)
++    if timing:summary['load_after']=os.getloadavg()
++    write(a.out/'summary.json',summary)
++    raise SystemExit(0 if passed else 1)
++
++if __name__=='__main__':main()
+diff --git a/engine/search/Cargo.toml b/engine/search/Cargo.toml
+index 079121d..a6e7f31 100644
+--- a/engine/search/Cargo.toml
++++ b/engine/search/Cargo.toml
+@@ -17,6 +17,8 @@ path = "src/lib.rs"
+ experiment-paper-solvers = ["experiment-growth-cadence"]
+ experiment-growth-pipeline = ["experiment-paper-solvers"]
+ experiment-phase-cost = ["experiment-growth-pipeline"]
++experiment-snapshot-audit = ["experiment-growth-pipeline"]
++experiment-allocation-audit = ["experiment-growth-pipeline"]
+ experiment-growth-cadence = ["experiment-parallel-transitions"]
+ experiment-parallel-transitions = ["experiment-incremental-compilation"]
+ experiment-incremental-compilation = ["experiment-owned-transitions"]
+diff --git a/engine/search/src/bayesian/tree.rs b/engine/search/src/bayesian/tree.rs
+index 382bc97..355be6e 100644
+--- a/engine/search/src/bayesian/tree.rs
++++ b/engine/search/src/bayesian/tree.rs
+@@ -1,589 +1,593 @@
+-//! Bounded extensive-form CFR with perfect recall and strategy-induced public beliefs.
+-//!
+-//! Histories remain separate in the tree; indistinguishable decision histories share a
+-//! regret table. Simultaneous choices are represented sequentially WITHOUT disclosing the
+-//! first choice. The certificate is for this fully built, finite, fixed-leaf game only.
+-//! No independent perfect-information continuation solves or belief-independent neural
+-//! value claims are made. See `builder` and `engine` for observation contracts.
+-
+-pub mod builder;
+-#[cfg(feature = "experiment-phase-cost")]
+-pub mod phase_cost;
+-#[cfg(feature = "experiment-paper-solvers")]
+-pub use workspace::cached::paper;
+-#[cfg(feature = "experiment-belief-workspace")]
+-pub mod compiler;
+-pub mod engine;
+-#[cfg(feature = "experiment-growth-pipeline")]
+-pub mod pipeline;
+-#[cfg(feature = "experiment-shared-final-passes")]
+-pub mod shared;
+-#[cfg(feature = "experiment-belief-workspace")]
+-pub mod workspace;
+-use super::{labels, probability, strategy, Config, Error};
+-use std::collections::HashMap;
+-
+-#[derive(Clone, Debug)]
+-pub enum Node {
+-    Terminal(f64),
+-    Chance(Vec<(f64, usize)>),
+-    Decision {
+-        player: usize,
+-        information: String,
+-        actions: Vec<String>,
+-        children: Vec<usize>,
+-    },
+-}
+-#[derive(Clone, Debug)]
+-enum Compiled {
+-    Terminal(f64),
+-    Chance(Vec<(f64, usize)>),
+-    Decision { info: usize, children: Vec<usize> },
+-}
+-#[derive(Clone, Debug)]
+-pub struct Information {
+-    pub player: usize,
+-    pub key: String,
+-    pub actions: Vec<String>,
+-    pub nodes: Vec<usize>,
+-    /// Validated identical own information/action sequence at every member history.
+-    pub own_sequence: Vec<(usize, usize)>,
+-}
+-#[derive(Clone, Debug)]
+-pub struct Boundary {
+-    pub node: usize,
+-    pub world: usize,
+-    pub public: usize,
+-    pub private: [usize; 2],
+-}
+-#[derive(Clone, Debug)]
+-pub struct Tree {
+-    nodes: Vec<Compiled>,
+-    root: usize,
+-    order: Vec<usize>,
+-    information: Vec<Information>,
+-    scale: f64,
+-    pub(crate) worlds: Vec<String>,
+-    pub(crate) public_keys: Vec<String>,
+-    pub(crate) private_keys: Vec<String>,
+-    pub(crate) boundaries: Vec<Boundary>,
+-}
+-pub type Policy = Vec<Vec<f64>>;
+-
+-fn multiply(a: f64, b: f64) -> Result<f64, Error> {
+-    let v = a * b;
+-    if a > 0. && b > 0. && v == 0. {
+-        return Err(Error(
+-            "positive history reach underflow; history was not dropped".into(),
+-        ));
+-    }
+-    Ok(v)
+-}
+-
+-impl Tree {
+-    /// All nodes must form one reachable tree (no shared history nodes/cycles). Information
+-    /// keys can repeat only with the same owner, menu, and complete own action recall.
+-    pub fn new(raw: Vec<Node>, root: usize) -> Result<Self, Error> {
+-        if raw.is_empty() || root >= raw.len() {
+-            return Err(Error("invalid root".into()));
+-        }
+-        let mut nodes = Vec::with_capacity(raw.len());
+-        let mut information: Vec<Information> = Vec::new();
+-        let mut ids = HashMap::new();
+-        let mut scale = 0f64;
+-        for node in raw {
+-            nodes.push(match node {
+-                Node::Terminal(v) => {
+-                    if !v.is_finite() || v.abs() > f64::MAX / 8. {
+-                        return Err(Error("invalid terminal value".into()));
+-                    }
+-                    scale = scale.max(v.abs());
+-                    Compiled::Terminal(v)
+-                }
+-                Node::Chance(edges) => {
+-                    if edges.is_empty()
+-                        || edges
+-                            .iter()
+-                            .any(|(p, _)| !p.is_finite() || *p < 0. || *p > 1.)
+-                        || (edges.iter().map(|v| v.0).sum::<f64>() - 1.).abs() > 1e-10
+-                    {
+-                        return Err(Error("chance probabilities must sum to one".into()));
+-                    }
+-                    Compiled::Chance(edges)
+-                }
+-                Node::Decision {
+-                    player,
+-                    information: key,
+-                    actions,
+-                    children,
+-                } => {
+-                    if player > 1 || key.is_empty() || actions.len() != children.len() {
+-                        return Err(Error("invalid information/menu".into()));
+-                    }
+-                    labels(actions.iter().map(String::as_str), "action ID")?;
+-                    let info = if let Some(&i) = ids.get(&key) {
+-                        let existing: &Information = &information[i];
+-                        if existing.player != player || existing.actions != actions {
+-                            return Err(Error(format!("inconsistent information set: {key}")));
+-                        }
+-                        i
+-                    } else {
+-                        let i = information.len();
+-                        ids.insert(key.clone(), i);
+-                        information.push(Information {
+-                            player,
+-                            key,
+-                            actions,
+-                            nodes: Vec::new(),
+-                            own_sequence: Vec::new(),
+-                        });
+-                        i
+-                    };
+-                    Compiled::Decision { info, children }
+-                }
+-            });
+-        }
+-        let mut seen = vec![false; nodes.len()];
+-        let mut order = Vec::new();
+-        let mut stack = vec![(root, [Vec::new(), Vec::new()], 0usize)];
+-        while let Some((id, sequences, depth)) = stack.pop() {
+-            if id >= nodes.len() || seen[id] || depth > 512 {
+-                return Err(Error(
+-                    "tree has invalid/shared/cyclic nodes or exceeds depth 512".into(),
+-                ));
+-            }
+-            seen[id] = true;
+-            order.push(id);
+-            match &nodes[id] {
+-                Compiled::Terminal(_) => {}
+-                Compiled::Chance(edges) => {
+-                    for &(_, child) in edges.iter().rev() {
+-                        stack.push((child, sequences.clone(), depth + 1));
+-                    }
+-                }
+-                Compiled::Decision { info, children } => {
+-                    let i = &mut information[*info];
+-                    if i.nodes.is_empty() {
+-                        i.own_sequence = sequences[i.player].clone();
+-                    } else if i.own_sequence != sequences[i.player] {
+-                        return Err(Error(format!("imperfect recall in {}", i.key)));
+-                    }
+-                    i.nodes.push(id);
+-                    for (a, &child) in children.iter().enumerate().rev() {
+-                        let mut next = sequences.clone();
+-                        next[i.player].push((*info, a));
+-                        stack.push((child, next, depth + 1));
+-                    }
+-                }
+-            }
+-        }
+-        if seen.iter().any(|v| !*v) {
+-            return Err(Error("unreachable tree node".into()));
+-        }
+-        Ok(Self {
+-            nodes,
+-            root,
+-            order,
+-            information,
+-            scale: scale.max(f64::MIN_POSITIVE),
+-            worlds: Vec::new(),
+-            public_keys: Vec::new(),
+-            private_keys: Vec::new(),
+-            boundaries: Vec::new(),
+-        })
+-    }
+-    pub fn information(&self) -> &[Information] {
+-        &self.information
+-    }
+-    pub fn node_count(&self) -> usize {
+-        self.nodes.len()
+-    }
+-    /// Developer/oracle export, NOT an observation supplied to the playing agent.
+-    #[cfg(feature = "experiment-growing-belief")]
+-    pub fn export_nodes(&self) -> Vec<Node> {
+-        self.nodes
+-            .iter()
+-            .map(|n| match n {
+-                Compiled::Terminal(v) => Node::Terminal(*v),
+-                Compiled::Chance(e) => Node::Chance(e.clone()),
+-                Compiled::Decision { info, children } => Node::Decision {
+-                    player: self.information[*info].player,
+-                    information: self.information[*info].key.clone(),
+-                    actions: self.information[*info].actions.clone(),
+-                    children: children.clone(),
+-                },
+-            })
+-            .collect()
+-    }
+-    pub fn root(&self) -> usize {
+-        self.root
+-    }
+-    pub fn worlds(&self) -> &[String] {
+-        &self.worlds
+-    }
+-    pub fn boundaries(&self) -> &[Boundary] {
+-        &self.boundaries
+-    }
+-    pub fn information_at(&self, node: usize) -> Option<usize> {
+-        match self.nodes.get(node) {
+-            Some(Compiled::Decision { info, .. }) => Some(*info),
+-            _ => None,
+-        }
+-    }
+-    pub fn uniform(&self) -> Policy {
+-        self.information
+-            .iter()
+-            .map(|i| vec![1. / i.actions.len() as f64; i.actions.len()])
+-            .collect()
+-    }
+-    fn check_policy(&self, policy: &Policy) -> Result<(), Error> {
+-        if policy.len() != self.information.len() {
+-            return Err(Error("information policy count mismatch".into()));
+-        }
+-        for (i, p) in self.information.iter().zip(policy) {
+-            probability(p, i.actions.len())?;
+-        }
+-        Ok(())
+-    }
+-    fn values(&self, policy: &Policy) -> Vec<f64> {
+-        let mut values = vec![0.; self.nodes.len()];
+-        for &id in self.order.iter().rev() {
+-            values[id] = match &self.nodes[id] {
+-                Compiled::Terminal(v) => v / self.scale,
+-                Compiled::Chance(edges) => edges.iter().map(|(p, n)| p * values[*n]).sum(),
+-                Compiled::Decision { info, children } => children
+-                    .iter()
+-                    .zip(&policy[*info])
+-                    .map(|(n, p)| p * values[*n])
+-                    .sum(),
+-            };
+-        }
+-        values
+-    }
+-    /// `omit` removes that player's realization reach for counterfactual regret/BR.
+-    fn reach(&self, policy: &Policy, omit: Option<usize>) -> Result<Vec<f64>, Error> {
+-        let mut reach = vec![0.; self.nodes.len()];
+-        reach[self.root] = 1.;
+-        for &id in &self.order {
+-            match &self.nodes[id] {
+-                Compiled::Terminal(_) => {}
+-                Compiled::Chance(edges) => {
+-                    for &(p, n) in edges {
+-                        reach[n] = multiply(reach[id], p)?;
+-                    }
+-                }
+-                Compiled::Decision { info, children } => {
+-                    for (a, &n) in children.iter().enumerate() {
+-                        reach[n] = multiply(
+-                            reach[id],
+-                            if omit == Some(self.information[*info].player) {
+-                                1.
+-                            } else {
+-                                policy[*info][a]
+-                            },
+-                        )?;
+-                    }
+-                }
+-            }
+-        }
+-        Ok(reach)
+-    }
+-    pub fn assess(&self, policy: &Policy) -> Result<Assessment, Error> {
+-        self.check_policy(policy)?;
+-        let value = self.values(policy)[self.root] * self.scale;
+-        let upper = self.best_response(policy, 0)?.0;
+-        let lower = self.best_response(policy, 1)?.0;
+-        Ok(Assessment {
+-            value,
+-            lower,
+-            upper,
+-            gap: (upper - lower).max(0.),
+-        })
+-    }
+-    /// A pure best response with ONE chosen action per information set, including
+-    /// off-policy histories. Maximizing each physical node independently is invalid.
+-    pub fn best_response(
+-        &self,
+-        policy: &Policy,
+-        player: usize,
+-    ) -> Result<(f64, Vec<Option<usize>>), Error> {
+-        self.response_with_reach(policy, player)
+-            .map(|(value, actions, _)| (value, actions))
+-    }
+-    #[allow(clippy::type_complexity)]
+-    fn response_with_reach(
+-        &self,
+-        policy: &Policy,
+-        player: usize,
+-    ) -> Result<(f64, Vec<Option<usize>>, Vec<f64>), Error> {
+-        self.check_policy(policy)?;
+-        if player > 1 {
+-            return Err(Error("invalid player".into()));
+-        }
+-        let cf = self.reach(policy, Some(player))?;
+-        let mut work = Response {
+-            tree: self,
+-            policy,
+-            player,
+-            cf,
+-            memo: vec![None; self.nodes.len()],
+-            chosen: vec![None; self.information.len()],
+-            visiting: vec![false; self.information.len()],
+-        };
+-        let value = work.node(self.root)? * self.scale;
+-        Ok((value, work.chosen, work.cf))
+-    }
+-    /// Diagnostics under the supplied strategy. Zero-reach public histories have no
+-    /// posterior (never an invented uniform belief). History weights retain hidden queued
+-    /// action alternatives even when those alternatives belong to the same world.
+-    pub fn public_beliefs(&self, policy: &Policy) -> Result<Vec<PublicBelief>, Error> {
+-        self.beliefs(policy, &self.public_keys, |b| Some(b.public))
+-    }
+-    /// A player's posterior also conditions on remembered own actions and private
+-    /// observations. Public belief alone is insufficient after a hidden own commitment.
+-    /// This works at horizon endpoints as well as at decision nodes.
+-    pub fn private_belief(
+-        &self,
+-        player: usize,
+-        key: &str,
+-        policy: &Policy,
+-    ) -> Result<Option<PublicBelief>, Error> {
+-        if player > 1 {
+-            return Err(Error("invalid belief owner".into()));
+-        }
+-        let id = self.private_keys.iter().position(|v| v == key);
+-        let keys = [key.to_owned()];
+-        let mut result = self.beliefs(policy, &keys, |b| {
+-            (Some(b.private[player]) == id).then_some(0)
+-        })?;
+-        let belief = result.remove(0);
+-        Ok((!belief.histories.is_empty()).then_some(belief))
+-    }
+-    fn beliefs(
+-        &self,
+-        policy: &Policy,
+-        keys: &[String],
+-        select: impl Fn(&Boundary) -> Option<usize>,
+-    ) -> Result<Vec<PublicBelief>, Error> {
+-        self.check_policy(policy)?;
+-        let reach = self.reach(policy, None)?;
+-        let values = self.values(policy);
+-        let mut result: Vec<_> = keys
+-            .iter()
+-            .enumerate()
+-            .map(|(id, key)| PublicBelief {
+-                id,
+-                key: key.clone(),
+-                reach: 0.,
+-                posterior: None,
+-                world_values: vec![None; self.worlds.len()],
+-                histories: Vec::new(),
+-            })
+-            .collect();
+-        let mut masses = vec![vec![0.; self.worlds.len()]; result.len()];
+-        let mut sums = masses.clone();
+-        for b in &self.boundaries {
+-            let Some(group) = select(b) else {
+-                continue;
+-            };
+-            let r = reach[b.node];
+-            let out = &mut result[group];
+-            out.reach += r;
+-            out.histories.push((b.node, r));
+-            masses[group][b.world] += r;
+-            if r > 0.0 {
+-                // Conditional averaging avoids multiplying a tiny world reach by a
+-                // small scaled payoff and then attempting to divide the underflow away.
+-                let alpha = r / masses[group][b.world];
+-                sums[group][b.world] += alpha * (values[b.node] - sums[group][b.world]);
+-            }
+-        }
+-        for (id, out) in result.iter_mut().enumerate() {
+-            if out.reach > 0. {
+-                out.posterior = Some(masses[id].iter().map(|v| v / out.reach).collect());
+-                for (w, v) in out.world_values.iter_mut().enumerate() {
+-                    if masses[id][w] > 0. {
+-                        *v = Some(sums[id][w] * self.scale);
+-                    }
+-                }
+-                for (_, r) in &mut out.histories {
+-                    *r /= out.reach;
+-                }
+-            }
+-        }
+-        Ok(result)
+-    }
+-}
+-
+-struct Response<'a> {
+-    tree: &'a Tree,
+-    policy: &'a Policy,
+-    player: usize,
+-    cf: Vec<f64>,
+-    memo: Vec<Option<f64>>,
+-    chosen: Vec<Option<usize>>,
+-    visiting: Vec<bool>,
+-}
+-impl Response<'_> {
+-    fn node(&mut self, id: usize) -> Result<f64, Error> {
+-        if let Some(v) = self.memo[id] {
+-            return Ok(v);
+-        }
+-        let v = match &self.tree.nodes[id] {
+-            Compiled::Terminal(v) => v / self.tree.scale,
+-            Compiled::Chance(edges) => {
+-                let mut v = 0.;
+-                for &(p, n) in edges {
+-                    v += p * self.node(n)?;
+-                }
+-                v
+-            }
+-            Compiled::Decision { info, children } => {
+-                let i = *info;
+-                if self.tree.information[i].player != self.player {
+-                    let mut v = 0.;
+-                    for (a, &n) in children.iter().enumerate() {
+-                        v += self.policy[i][a] * self.node(n)?;
+-                    }
+-                    v
+-                } else {
+-                    if self.chosen[i].is_none() {
+-                        if self.visiting[i] {
+-                            return Err(Error("cyclic information dependencies".into()));
+-                        }
+-                        self.visiting[i] = true;
+-                        let mut scores = vec![0.; children.len()];
+-                        for &member in &self.tree.information[i].nodes {
+-                            let Compiled::Decision { children, .. } = &self.tree.nodes[member]
+-                            else {
+-                                unreachable!()
+-                            };
+-                            for (a, &child) in children.iter().enumerate() {
+-                                scores[a] += self.cf[member] * self.node(child)?;
+-                            }
+-                        }
+-                        let sign = if self.player == 0 { 1. } else { -1. };
+-                        let mut best = 0;
+-                        for a in 1..scores.len() {
+-                            if sign * scores[a] > sign * scores[best] {
+-                                best = a;
+-                            }
+-                        }
+-                        self.chosen[i] = Some(best);
+-                        self.visiting[i] = false;
+-                    }
+-                    self.node(children[self.chosen[i].unwrap()])?
+-                }
+-            }
+-        };
+-        self.memo[id] = Some(v);
+-        Ok(v)
+-    }
+-}
+-
+-#[derive(Clone, Debug)]
+-pub struct Assessment {
+-    pub value: f64,
+-    pub lower: f64,
+-    pub upper: f64,
+-    pub gap: f64,
+-}
+-#[derive(Clone, Debug)]
+-pub struct PublicBelief {
+-    pub id: usize,
+-    pub key: String,
+-    pub reach: f64,
+-    pub posterior: Option<Vec<f64>>,
+-    pub world_values: Vec<Option<f64>>,
+-    pub histories: Vec<(usize, f64)>,
+-}
+-#[derive(Clone, Debug)]
+-pub struct Solution {
+-    pub policy: Policy,
+-    pub assessment: Assessment,
+-    pub iterations: usize,
+-    pub converged: bool,
+-}
+-
+-/// Full-tree alternating linear CFR. Each pass freezes all policies, accumulates the
+-/// counterfactual regret of ALL histories in an information set, then updates that side.
+-/// The average uses t * own realization reach ONCE per information set, not chance reach
+-/// or number of member histories. This distinction matters beyond a single matrix game.
+-pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
+-    if config.iterations == 0
+-        || config.iterations > 10_000_000
+-        || config.check_every == 0
+-        || !config.tolerance.is_finite()
+-        || config.tolerance < 0.
+-    {
+-        return Err(Error("invalid CFR configuration".into()));
+-    }
+-    let mut policy = tree.uniform();
+-    let mut regrets: Policy = policy.iter().map(|p| vec![0.; p.len()]).collect();
+-    let mut sums = regrets.clone();
+-    let mut total = vec![0.; policy.len()];
+-    for t in 1..=config.iterations {
+-        let weight = t as f64 / config.iterations as f64;
+-        for player in 0..2 {
+-            let values = tree.values(&policy);
+-            let cf = tree.reach(&policy, Some(player))?;
+-            let sign = if player == 0 { 1. } else { -1. };
+-            for (i, info) in tree.information.iter().enumerate() {
+-                if info.player == player {
+-                    for &node in &info.nodes {
+-                        let Compiled::Decision { children, .. } = &tree.nodes[node] else {
+-                            unreachable!()
+-                        };
+-                        for (a, &child) in children.iter().enumerate() {
+-                            regrets[i][a] +=
+-                                weight * cf[node] * sign * (values[child] - values[node]);
+-                        }
+-                    }
+-                }
+-            }
+-            for (i, info) in tree.information.iter().enumerate() {
+-                if info.player == player {
+-                    strategy(&regrets[i], &mut policy[i]);
+-                }
+-            }
+-        }
+-        for (i, info) in tree.information.iter().enumerate() {
+-            let mut own = 1.;
+-            for &(j, a) in &info.own_sequence {
+-                own = multiply(own, policy[j][a])?;
+-            }
+-            let w = multiply(weight, own)?;
+-            total[i] += w;
+-            for (s, &p) in sums[i].iter_mut().zip(&policy[i]) {
+-                *s += w * p;
+-            }
+-        }
+-        if t % config.check_every == 0 || t == config.iterations {
+-            let average: Policy = sums
+-                .iter()
+-                .enumerate()
+-                .map(|(i, p)| {
+-                    if total[i] > 0. {
+-                        p.iter().map(|v| v / total[i]).collect()
+-                    } else {
+-                        vec![1. / p.len() as f64; p.len()]
+-                    }
+-                })
+-                .collect();
+-            let assessment = tree.assess(&average)?;
+-            let converged = assessment.gap <= config.tolerance;
+-            if converged || t == config.iterations {
+-                return Ok(Solution {
+-                    policy: average,
+-                    assessment,
+-                    iterations: t,
+-                    converged,
+-                });
+-            }
+-        }
+-    }
+-    unreachable!()
+-}
+-
+-#[cfg(test)]
+-mod tests;
++//! Bounded extensive-form CFR with perfect recall and strategy-induced public beliefs.
++//!
++//! Histories remain separate in the tree; indistinguishable decision histories share a
++//! regret table. Simultaneous choices are represented sequentially WITHOUT disclosing the
++//! first choice. The certificate is for this fully built, finite, fixed-leaf game only.
++//! No independent perfect-information continuation solves or belief-independent neural
++//! value claims are made. See `builder` and `engine` for observation contracts.
++
++#[cfg(feature = "experiment-allocation-audit")]
++pub mod allocation_audit;
++pub mod builder;
++#[cfg(feature = "experiment-phase-cost")]
++pub mod phase_cost;
++#[cfg(feature = "experiment-snapshot-audit")]
++pub mod snapshot_audit;
++#[cfg(feature = "experiment-paper-solvers")]
++pub use workspace::cached::paper;
++#[cfg(feature = "experiment-belief-workspace")]
++pub mod compiler;
++pub mod engine;
++#[cfg(feature = "experiment-growth-pipeline")]
++pub mod pipeline;
++#[cfg(feature = "experiment-shared-final-passes")]
++pub mod shared;
++#[cfg(feature = "experiment-belief-workspace")]
++pub mod workspace;
++use super::{labels, probability, strategy, Config, Error};
++use std::collections::HashMap;
++
++#[derive(Clone, Debug)]
++pub enum Node {
++    Terminal(f64),
++    Chance(Vec<(f64, usize)>),
++    Decision {
++        player: usize,
++        information: String,
++        actions: Vec<String>,
++        children: Vec<usize>,
++    },
++}
++#[derive(Clone, Debug)]
++enum Compiled {
++    Terminal(f64),
++    Chance(Vec<(f64, usize)>),
++    Decision { info: usize, children: Vec<usize> },
++}
++#[derive(Clone, Debug)]
++pub struct Information {
++    pub player: usize,
++    pub key: String,
++    pub actions: Vec<String>,
++    pub nodes: Vec<usize>,
++    /// Validated identical own information/action sequence at every member history.
++    pub own_sequence: Vec<(usize, usize)>,
++}
++#[derive(Clone, Debug)]
++pub struct Boundary {
++    pub node: usize,
++    pub world: usize,
++    pub public: usize,
++    pub private: [usize; 2],
++}
++#[derive(Clone, Debug)]
++pub struct Tree {
++    nodes: Vec<Compiled>,
++    root: usize,
++    order: Vec<usize>,
++    information: Vec<Information>,
++    scale: f64,
++    pub(crate) worlds: Vec<String>,
++    pub(crate) public_keys: Vec<String>,
++    pub(crate) private_keys: Vec<String>,
++    pub(crate) boundaries: Vec<Boundary>,
++}
++pub type Policy = Vec<Vec<f64>>;
++
++fn multiply(a: f64, b: f64) -> Result<f64, Error> {
++    let v = a * b;
++    if a > 0. && b > 0. && v == 0. {
++        return Err(Error(
++            "positive history reach underflow; history was not dropped".into(),
++        ));
++    }
++    Ok(v)
++}
++
++impl Tree {
++    /// All nodes must form one reachable tree (no shared history nodes/cycles). Information
++    /// keys can repeat only with the same owner, menu, and complete own action recall.
++    pub fn new(raw: Vec<Node>, root: usize) -> Result<Self, Error> {
++        if raw.is_empty() || root >= raw.len() {
++            return Err(Error("invalid root".into()));
++        }
++        let mut nodes = Vec::with_capacity(raw.len());
++        let mut information: Vec<Information> = Vec::new();
++        let mut ids = HashMap::new();
++        let mut scale = 0f64;
++        for node in raw {
++            nodes.push(match node {
++                Node::Terminal(v) => {
++                    if !v.is_finite() || v.abs() > f64::MAX / 8. {
++                        return Err(Error("invalid terminal value".into()));
++                    }
++                    scale = scale.max(v.abs());
++                    Compiled::Terminal(v)
++                }
++                Node::Chance(edges) => {
++                    if edges.is_empty()
++                        || edges
++                            .iter()
++                            .any(|(p, _)| !p.is_finite() || *p < 0. || *p > 1.)
++                        || (edges.iter().map(|v| v.0).sum::<f64>() - 1.).abs() > 1e-10
++                    {
++                        return Err(Error("chance probabilities must sum to one".into()));
++                    }
++                    Compiled::Chance(edges)
++                }
++                Node::Decision {
++                    player,
++                    information: key,
++                    actions,
++                    children,
++                } => {
++                    if player > 1 || key.is_empty() || actions.len() != children.len() {
++                        return Err(Error("invalid information/menu".into()));
++                    }
++                    labels(actions.iter().map(String::as_str), "action ID")?;
++                    let info = if let Some(&i) = ids.get(&key) {
++                        let existing: &Information = &information[i];
++                        if existing.player != player || existing.actions != actions {
++                            return Err(Error(format!("inconsistent information set: {key}")));
++                        }
++                        i
++                    } else {
++                        let i = information.len();
++                        ids.insert(key.clone(), i);
++                        information.push(Information {
++                            player,
++                            key,
++                            actions,
++                            nodes: Vec::new(),
++                            own_sequence: Vec::new(),
++                        });
++                        i
++                    };
++                    Compiled::Decision { info, children }
++                }
++            });
++        }
++        let mut seen = vec![false; nodes.len()];
++        let mut order = Vec::new();
++        let mut stack = vec![(root, [Vec::new(), Vec::new()], 0usize)];
++        while let Some((id, sequences, depth)) = stack.pop() {
++            if id >= nodes.len() || seen[id] || depth > 512 {
++                return Err(Error(
++                    "tree has invalid/shared/cyclic nodes or exceeds depth 512".into(),
++                ));
++            }
++            seen[id] = true;
++            order.push(id);
++            match &nodes[id] {
++                Compiled::Terminal(_) => {}
++                Compiled::Chance(edges) => {
++                    for &(_, child) in edges.iter().rev() {
++                        stack.push((child, sequences.clone(), depth + 1));
++                    }
++                }
++                Compiled::Decision { info, children } => {
++                    let i = &mut information[*info];
++                    if i.nodes.is_empty() {
++                        i.own_sequence = sequences[i.player].clone();
++                    } else if i.own_sequence != sequences[i.player] {
++                        return Err(Error(format!("imperfect recall in {}", i.key)));
++                    }
++                    i.nodes.push(id);
++                    for (a, &child) in children.iter().enumerate().rev() {
++                        let mut next = sequences.clone();
++                        next[i.player].push((*info, a));
++                        stack.push((child, next, depth + 1));
++                    }
++                }
++            }
++        }
++        if seen.iter().any(|v| !*v) {
++            return Err(Error("unreachable tree node".into()));
++        }
++        Ok(Self {
++            nodes,
++            root,
++            order,
++            information,
++            scale: scale.max(f64::MIN_POSITIVE),
++            worlds: Vec::new(),
++            public_keys: Vec::new(),
++            private_keys: Vec::new(),
++            boundaries: Vec::new(),
++        })
++    }
++    pub fn information(&self) -> &[Information] {
++        &self.information
++    }
++    pub fn node_count(&self) -> usize {
++        self.nodes.len()
++    }
++    /// Developer/oracle export, NOT an observation supplied to the playing agent.
++    #[cfg(feature = "experiment-growing-belief")]
++    pub fn export_nodes(&self) -> Vec<Node> {
++        self.nodes
++            .iter()
++            .map(|n| match n {
++                Compiled::Terminal(v) => Node::Terminal(*v),
++                Compiled::Chance(e) => Node::Chance(e.clone()),
++                Compiled::Decision { info, children } => Node::Decision {
++                    player: self.information[*info].player,
++                    information: self.information[*info].key.clone(),
++                    actions: self.information[*info].actions.clone(),
++                    children: children.clone(),
++                },
++            })
++            .collect()
++    }
++    pub fn root(&self) -> usize {
++        self.root
++    }
++    pub fn worlds(&self) -> &[String] {
++        &self.worlds
++    }
++    pub fn boundaries(&self) -> &[Boundary] {
++        &self.boundaries
++    }
++    pub fn information_at(&self, node: usize) -> Option<usize> {
++        match self.nodes.get(node) {
++            Some(Compiled::Decision { info, .. }) => Some(*info),
++            _ => None,
++        }
++    }
++    pub fn uniform(&self) -> Policy {
++        self.information
++            .iter()
++            .map(|i| vec![1. / i.actions.len() as f64; i.actions.len()])
++            .collect()
++    }
++    fn check_policy(&self, policy: &Policy) -> Result<(), Error> {
++        if policy.len() != self.information.len() {
++            return Err(Error("information policy count mismatch".into()));
++        }
++        for (i, p) in self.information.iter().zip(policy) {
++            probability(p, i.actions.len())?;
++        }
++        Ok(())
++    }
++    fn values(&self, policy: &Policy) -> Vec<f64> {
++        let mut values = vec![0.; self.nodes.len()];
++        for &id in self.order.iter().rev() {
++            values[id] = match &self.nodes[id] {
++                Compiled::Terminal(v) => v / self.scale,
++                Compiled::Chance(edges) => edges.iter().map(|(p, n)| p * values[*n]).sum(),
++                Compiled::Decision { info, children } => children
++                    .iter()
++                    .zip(&policy[*info])
++                    .map(|(n, p)| p * values[*n])
++                    .sum(),
++            };
++        }
++        values
++    }
++    /// `omit` removes that player's realization reach for counterfactual regret/BR.
++    fn reach(&self, policy: &Policy, omit: Option<usize>) -> Result<Vec<f64>, Error> {
++        let mut reach = vec![0.; self.nodes.len()];
++        reach[self.root] = 1.;
++        for &id in &self.order {
++            match &self.nodes[id] {
++                Compiled::Terminal(_) => {}
++                Compiled::Chance(edges) => {
++                    for &(p, n) in edges {
++                        reach[n] = multiply(reach[id], p)?;
++                    }
++                }
++                Compiled::Decision { info, children } => {
++                    for (a, &n) in children.iter().enumerate() {
++                        reach[n] = multiply(
++                            reach[id],
++                            if omit == Some(self.information[*info].player) {
++                                1.
++                            } else {
++                                policy[*info][a]
++                            },
++                        )?;
++                    }
++                }
++            }
++        }
++        Ok(reach)
++    }
++    pub fn assess(&self, policy: &Policy) -> Result<Assessment, Error> {
++        self.check_policy(policy)?;
++        let value = self.values(policy)[self.root] * self.scale;
++        let upper = self.best_response(policy, 0)?.0;
++        let lower = self.best_response(policy, 1)?.0;
++        Ok(Assessment {
++            value,
++            lower,
++            upper,
++            gap: (upper - lower).max(0.),
++        })
++    }
++    /// A pure best response with ONE chosen action per information set, including
++    /// off-policy histories. Maximizing each physical node independently is invalid.
++    pub fn best_response(
++        &self,
++        policy: &Policy,
++        player: usize,
++    ) -> Result<(f64, Vec<Option<usize>>), Error> {
++        self.response_with_reach(policy, player)
++            .map(|(value, actions, _)| (value, actions))
++    }
++    #[allow(clippy::type_complexity)]
++    fn response_with_reach(
++        &self,
++        policy: &Policy,
++        player: usize,
++    ) -> Result<(f64, Vec<Option<usize>>, Vec<f64>), Error> {
++        self.check_policy(policy)?;
++        if player > 1 {
++            return Err(Error("invalid player".into()));
++        }
++        let cf = self.reach(policy, Some(player))?;
++        let mut work = Response {
++            tree: self,
++            policy,
++            player,
++            cf,
++            memo: vec![None; self.nodes.len()],
++            chosen: vec![None; self.information.len()],
++            visiting: vec![false; self.information.len()],
++        };
++        let value = work.node(self.root)? * self.scale;
++        Ok((value, work.chosen, work.cf))
++    }
++    /// Diagnostics under the supplied strategy. Zero-reach public histories have no
++    /// posterior (never an invented uniform belief). History weights retain hidden queued
++    /// action alternatives even when those alternatives belong to the same world.
++    pub fn public_beliefs(&self, policy: &Policy) -> Result<Vec<PublicBelief>, Error> {
++        self.beliefs(policy, &self.public_keys, |b| Some(b.public))
++    }
++    /// A player's posterior also conditions on remembered own actions and private
++    /// observations. Public belief alone is insufficient after a hidden own commitment.
++    /// This works at horizon endpoints as well as at decision nodes.
++    pub fn private_belief(
++        &self,
++        player: usize,
++        key: &str,
++        policy: &Policy,
++    ) -> Result<Option<PublicBelief>, Error> {
++        if player > 1 {
++            return Err(Error("invalid belief owner".into()));
++        }
++        let id = self.private_keys.iter().position(|v| v == key);
++        let keys = [key.to_owned()];
++        let mut result = self.beliefs(policy, &keys, |b| {
++            (Some(b.private[player]) == id).then_some(0)
++        })?;
++        let belief = result.remove(0);
++        Ok((!belief.histories.is_empty()).then_some(belief))
++    }
++    fn beliefs(
++        &self,
++        policy: &Policy,
++        keys: &[String],
++        select: impl Fn(&Boundary) -> Option<usize>,
++    ) -> Result<Vec<PublicBelief>, Error> {
++        self.check_policy(policy)?;
++        let reach = self.reach(policy, None)?;
++        let values = self.values(policy);
++        let mut result: Vec<_> = keys
++            .iter()
++            .enumerate()
++            .map(|(id, key)| PublicBelief {
++                id,
++                key: key.clone(),
++                reach: 0.,
++                posterior: None,
++                world_values: vec![None; self.worlds.len()],
++                histories: Vec::new(),
++            })
++            .collect();
++        let mut masses = vec![vec![0.; self.worlds.len()]; result.len()];
++        let mut sums = masses.clone();
++        for b in &self.boundaries {
++            let Some(group) = select(b) else {
++                continue;
++            };
++            let r = reach[b.node];
++            let out = &mut result[group];
++            out.reach += r;
++            out.histories.push((b.node, r));
++            masses[group][b.world] += r;
++            if r > 0.0 {
++                // Conditional averaging avoids multiplying a tiny world reach by a
++                // small scaled payoff and then attempting to divide the underflow away.
++                let alpha = r / masses[group][b.world];
++                sums[group][b.world] += alpha * (values[b.node] - sums[group][b.world]);
++            }
++        }
++        for (id, out) in result.iter_mut().enumerate() {
++            if out.reach > 0. {
++                out.posterior = Some(masses[id].iter().map(|v| v / out.reach).collect());
++                for (w, v) in out.world_values.iter_mut().enumerate() {
++                    if masses[id][w] > 0. {
++                        *v = Some(sums[id][w] * self.scale);
++                    }
++                }
++                for (_, r) in &mut out.histories {
++                    *r /= out.reach;
++                }
++            }
++        }
++        Ok(result)
++    }
++}
++
++struct Response<'a> {
++    tree: &'a Tree,
++    policy: &'a Policy,
++    player: usize,
++    cf: Vec<f64>,
++    memo: Vec<Option<f64>>,
++    chosen: Vec<Option<usize>>,
++    visiting: Vec<bool>,
++}
++impl Response<'_> {
++    fn node(&mut self, id: usize) -> Result<f64, Error> {
++        if let Some(v) = self.memo[id] {
++            return Ok(v);
++        }
++        let v = match &self.tree.nodes[id] {
++            Compiled::Terminal(v) => v / self.tree.scale,
++            Compiled::Chance(edges) => {
++                let mut v = 0.;
++                for &(p, n) in edges {
++                    v += p * self.node(n)?;
++                }
++                v
++            }
++            Compiled::Decision { info, children } => {
++                let i = *info;
++                if self.tree.information[i].player != self.player {
++                    let mut v = 0.;
++                    for (a, &n) in children.iter().enumerate() {
++                        v += self.policy[i][a] * self.node(n)?;
++                    }
++                    v
++                } else {
++                    if self.chosen[i].is_none() {
++                        if self.visiting[i] {
++                            return Err(Error("cyclic information dependencies".into()));
++                        }
++                        self.visiting[i] = true;
++                        let mut scores = vec![0.; children.len()];
++                        for &member in &self.tree.information[i].nodes {
++                            let Compiled::Decision { children, .. } = &self.tree.nodes[member]
++                            else {
++                                unreachable!()
++                            };
++                            for (a, &child) in children.iter().enumerate() {
++                                scores[a] += self.cf[member] * self.node(child)?;
++                            }
++                        }
++                        let sign = if self.player == 0 { 1. } else { -1. };
++                        let mut best = 0;
++                        for a in 1..scores.len() {
++                            if sign * scores[a] > sign * scores[best] {
++                                best = a;
++                            }
++                        }
++                        self.chosen[i] = Some(best);
++                        self.visiting[i] = false;
++                    }
++                    self.node(children[self.chosen[i].unwrap()])?
++                }
++            }
++        };
++        self.memo[id] = Some(v);
++        Ok(v)
++    }
++}
++
++#[derive(Clone, Debug)]
++pub struct Assessment {
++    pub value: f64,
++    pub lower: f64,
++    pub upper: f64,
++    pub gap: f64,
++}
++#[derive(Clone, Debug)]
++pub struct PublicBelief {
++    pub id: usize,
++    pub key: String,
++    pub reach: f64,
++    pub posterior: Option<Vec<f64>>,
++    pub world_values: Vec<Option<f64>>,
++    pub histories: Vec<(usize, f64)>,
++}
++#[derive(Clone, Debug)]
++pub struct Solution {
++    pub policy: Policy,
++    pub assessment: Assessment,
++    pub iterations: usize,
++    pub converged: bool,
++}
++
++/// Full-tree alternating linear CFR. Each pass freezes all policies, accumulates the
++/// counterfactual regret of ALL histories in an information set, then updates that side.
++/// The average uses t * own realization reach ONCE per information set, not chance reach
++/// or number of member histories. This distinction matters beyond a single matrix game.
++pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
++    if config.iterations == 0
++        || config.iterations > 10_000_000
++        || config.check_every == 0
++        || !config.tolerance.is_finite()
++        || config.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    let mut policy = tree.uniform();
++    let mut regrets: Policy = policy.iter().map(|p| vec![0.; p.len()]).collect();
++    let mut sums = regrets.clone();
++    let mut total = vec![0.; policy.len()];
++    for t in 1..=config.iterations {
++        let weight = t as f64 / config.iterations as f64;
++        for player in 0..2 {
++            let values = tree.values(&policy);
++            let cf = tree.reach(&policy, Some(player))?;
++            let sign = if player == 0 { 1. } else { -1. };
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    for &node in &info.nodes {
++                        let Compiled::Decision { children, .. } = &tree.nodes[node] else {
++                            unreachable!()
++                        };
++                        for (a, &child) in children.iter().enumerate() {
++                            regrets[i][a] +=
++                                weight * cf[node] * sign * (values[child] - values[node]);
++                        }
++                    }
++                }
++            }
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    strategy(&regrets[i], &mut policy[i]);
++                }
++            }
++        }
++        for (i, info) in tree.information.iter().enumerate() {
++            let mut own = 1.;
++            for &(j, a) in &info.own_sequence {
++                own = multiply(own, policy[j][a])?;
++            }
++            let w = multiply(weight, own)?;
++            total[i] += w;
++            for (s, &p) in sums[i].iter_mut().zip(&policy[i]) {
++                *s += w * p;
++            }
++        }
++        if t % config.check_every == 0 || t == config.iterations {
++            let average: Policy = sums
++                .iter()
++                .enumerate()
++                .map(|(i, p)| {
++                    if total[i] > 0. {
++                        p.iter().map(|v| v / total[i]).collect()
++                    } else {
++                        vec![1. / p.len() as f64; p.len()]
++                    }
++                })
++                .collect();
++            let assessment = tree.assess(&average)?;
++            let converged = assessment.gap <= config.tolerance;
++            if converged || t == config.iterations {
++                return Ok(Solution {
++                    policy: average,
++                    assessment,
++                    iterations: t,
++                    converged,
++                });
++            }
++        }
++    }
++    unreachable!()
++}
++
++#[cfg(test)]
++mod tests;
+diff --git a/engine/search/src/bayesian/tree/allocation_audit.rs b/engine/search/src/bayesian/tree/allocation_audit.rs
+new file mode 100644
+index 0000000..1ac3f36
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/allocation_audit.rs
+@@ -0,0 +1,38 @@
++//! Fixed-size observation of persistent sequence cache shape; diagnostic only.
++use std::cell::Cell;
++#[derive(Clone, Copy, Debug, Default)]
++pub struct Stats {
++    pub finishes: usize,
++    pub rank_slots_processed: usize,
++    pub max_buckets: usize,
++    pub max_empty_buckets: usize,
++    pub max_leaf_slots: usize,
++    pub max_entries: usize,
++    pub bucket_capacity: usize,
++    pub leaf_capacity: usize,
++}
++thread_local! {static DATA:Cell<Stats>=Cell::new(Stats::default());}
++pub fn reset() {
++    DATA.set(Stats::default());
++}
++pub fn get() -> Stats {
++    DATA.get()
++}
++pub(crate) fn record(
++    buckets: usize,
++    entries: usize,
++    leaves: usize,
++    bucket_capacity: usize,
++    leaf_capacity: usize,
++) {
++    let mut s = DATA.get();
++    s.finishes += 1;
++    s.rank_slots_processed += leaves;
++    s.max_buckets = s.max_buckets.max(buckets);
++    s.max_empty_buckets = s.max_empty_buckets.max(buckets - entries);
++    s.max_leaf_slots = s.max_leaf_slots.max(leaves);
++    s.max_entries = s.max_entries.max(entries);
++    s.bucket_capacity = s.bucket_capacity.max(bucket_capacity);
++    s.leaf_capacity = s.leaf_capacity.max(leaf_capacity);
++    DATA.set(s);
++}
+diff --git a/engine/search/src/bayesian/tree/builder.rs b/engine/search/src/bayesian/tree/builder.rs
+index a71a0ab..7021168 100644
+--- a/engine/search/src/bayesian/tree/builder.rs
++++ b/engine/search/src/bayesian/tree/builder.rs
+@@ -122,6 +122,10 @@ struct Builder<'a, D: ObservedDomain> {
+ 
+ impl<D: ObservedDomain> Builder<'_, D> {
+     fn mark(&mut self, node: usize, world: usize, public: Vec<String>, keys: &[String; 2]) {
++        #[cfg(feature = "experiment-phase-cost")]
++        let _mark = crate::bayesian::tree::phase_cost::Span::new(
++            crate::bayesian::tree::phase_cost::Phase::Boundary,
++        );
+         let public_id = if let Some(&id) = self.public.get(&public) {
+             id
+         } else {
+diff --git a/engine/search/src/bayesian/tree/builder/growing.rs b/engine/search/src/bayesian/tree/builder/growing.rs
+index 4739a66..2062246 100644
+--- a/engine/search/src/bayesian/tree/builder/growing.rs
++++ b/engine/search/src/bayesian/tree/builder/growing.rs
+@@ -177,19 +177,35 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
+         Ok(self.b.push(n)?)
+     }
+     fn leaf(&mut self, mut h: Frontier<D::Position>) -> Attempt<usize> {
+-        let value = f64::from(self.b.domain.value(&h.position));
++        let value = {
++            #[cfg(feature = "experiment-phase-cost")]
++            let _eval = crate::bayesian::tree::phase_cost::Span::new(
++                crate::bayesian::tree::phase_cost::Phase::Evaluate,
++            );
++            f64::from(self.b.domain.value(&h.position))
++        };
+         if !value.is_finite() || value.abs() > f64::MAX / 8. {
+             return Err(Error("invalid frontier evaluation".into()).into());
+         }
+         let node = self.push(Node::Terminal(value))?;
+         h.node = node;
+         self.b.stats.leaves += 1;
+-        let keys = [
+-            format!("0:{:?}", h.memory[0]),
+-            format!("1:{:?}", h.memory[1]),
+-        ];
++        let keys = {
++            #[cfg(feature = "experiment-phase-cost")]
++            let _keys = crate::bayesian::tree::phase_cost::Span::new(
++                crate::bayesian::tree::phase_cost::Phase::Keys,
++            );
++            [
++                format!("0:{:?}", h.memory[0]),
++                format!("1:{:?}", h.memory[1]),
++            ]
++        };
+         self.b.mark(node, h.world, h.public.clone(), &keys);
+         if h.phase != Phase::Terminal && !(h.phase == Phase::Turn && h.turns == 0) {
++            #[cfg(feature = "experiment-phase-cost")]
++            let _frontier = crate::bayesian::tree::phase_cost::Span::new(
++                crate::bayesian::tree::phase_cost::Phase::Frontier,
++            );
+             let group = self.frontier.entry(h.public.clone()).or_default();
+             if group
+                 .first()
+@@ -219,6 +235,10 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
+                 return Err(Failure::Limit(Stop::DecisionLimit));
+             }
+             let p = &h.position;
++            #[cfg(feature = "experiment-phase-cost")]
++            let menu_span = crate::bayesian::tree::phase_cost::Span::new(
++                crate::bayesian::tree::phase_cost::Phase::Menu,
++            );
+             let left = self.b.domain.actions(p, 0)?;
+             let right = self.b.domain.actions(p, 1)?;
+             let rows: Vec<_> = left
+@@ -235,6 +255,8 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
+             ];
+             self.b.menu(&keys[0], &rows)?;
+             self.b.menu(&keys[1], &cols)?;
++            #[cfg(feature = "experiment-phase-cost")]
++            drop(menu_span);
+             let turns = if h.phase == Phase::Turn {
+                 self.b.stats.turn_decisions += 1;
+                 h.turns - 1
+@@ -327,8 +349,24 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
+                     col_children.push(chance);
+                     let mut edges = Vec::new();
+                     for (probability, position) in children {
+-                        let obs = self.b.domain.observation(&position)?;
+-                        let phase = self.b.domain.phase(&position)?;
++                        let obs = {
++                            #[cfg(feature = "experiment-phase-cost")]
++                            let _obs = crate::bayesian::tree::phase_cost::Span::new(
++                                crate::bayesian::tree::phase_cost::Phase::Observation,
++                            );
++                            self.b.domain.observation(&position)?
++                        };
++                        let phase = {
++                            #[cfg(feature = "experiment-phase-cost")]
++                            let _phase = crate::bayesian::tree::phase_cost::Span::new(
++                                crate::bayesian::tree::phase_cost::Phase::PositionPhase,
++                            );
++                            self.b.domain.phase(&position)?
++                        };
++                        #[cfg(feature = "experiment-phase-cost")]
++                        let history_span = crate::bayesian::tree::phase_cost::Span::new(
++                            crate::bayesian::tree::phase_cost::Phase::History,
++                        );
+                         let mut memory = h.memory.clone();
+                         memory[0].push(Memory::Action(rows[r].clone()));
+                         memory[1].push(Memory::Action(cols[c].clone()));
+@@ -340,6 +378,8 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
+                         }
+                         let mut public = h.public.clone();
+                         public.push(obs.public);
++                        #[cfg(feature = "experiment-phase-cost")]
++                        drop(history_span);
+                         let child = self.leaf(Frontier {
+                             node: 0,
+                             position,
+diff --git a/engine/search/src/bayesian/tree/compiler/incremental.rs b/engine/search/src/bayesian/tree/compiler/incremental.rs
+index 77ad941..1527511 100644
+--- a/engine/search/src/bayesian/tree/compiler/incremental.rs
++++ b/engine/search/src/bayesian/tree/compiler/incremental.rs
+@@ -6,6 +6,8 @@ use super::*;
+ 
+ #[derive(Default)]
+ pub(crate) struct Cache {
++    #[cfg(feature = "experiment-snapshot-audit")]
++    audit_raw: Vec<Node>,
+     nodes: Vec<Compiled>,
+     terminals: Vec<usize>,
+     information: Vec<Information>,
+@@ -15,6 +17,18 @@ pub(crate) struct Cache {
+ }
+ impl Cache {
+     pub(crate) fn growing(&mut self, raw: &[Node], root: usize) -> Result<Tree, Error> {
++        #[cfg(feature = "experiment-snapshot-audit")]
++        crate::bayesian::tree::snapshot_audit::append_only(&self.audit_raw, raw)?;
++        let result = self.growing_unchecked(raw, root)?;
++        #[cfg(feature = "experiment-snapshot-audit")]
++        {
++            crate::bayesian::tree::snapshot_audit::compiled(raw, root, &result)?;
++            self.audit_raw = raw.to_vec();
++        }
++        Ok(result)
++    }
++
++    fn growing_unchecked(&mut self, raw: &[Node], root: usize) -> Result<Tree, Error> {
+         // On a validation error the reference determines the exact original error
+         // order. The caller discards this cache when compilation fails.
+         self.update(raw, root)
+diff --git a/engine/search/src/bayesian/tree/compiler/owned.rs b/engine/search/src/bayesian/tree/compiler/owned.rs
+index 28c7c34..b5b5d5a 100644
+--- a/engine/search/src/bayesian/tree/compiler/owned.rs
++++ b/engine/search/src/bayesian/tree/compiler/owned.rs
+@@ -12,10 +12,31 @@ pub(crate) struct Delta {
+ }
+ #[derive(Default)]
+ pub(crate) struct Cache {
++    #[cfg(feature = "experiment-snapshot-audit")]
++    audit_raw: Vec<Node>,
+     terminals: Vec<usize>,
+     ids: HashMap<String, usize>,
+ }
+ impl Cache {
++    pub(crate) fn growing(
++        &mut self,
++        previous: Option<Tree>,
++        raw: &[Node],
++        root: usize,
++    ) -> Result<(Tree, Delta), Error> {
++        #[cfg(feature = "experiment-snapshot-audit")]
++        if previous.is_some() {
++            crate::bayesian::tree::snapshot_audit::append_only(&self.audit_raw, raw)?;
++        }
++        let result = self.growing_unchecked(previous, raw, root)?;
++        #[cfg(feature = "experiment-snapshot-audit")]
++        {
++            crate::bayesian::tree::snapshot_audit::compiled(raw, root, &result.0)?;
++            self.audit_raw = raw.to_vec();
++        }
++        Ok(result)
++    }
++
+     fn reset(&mut self, tree: &Tree) {
+         self.terminals = tree
+             .nodes
+@@ -30,7 +51,7 @@ impl Cache {
+             .map(|(i, v)| (v.key.clone(), i))
+             .collect();
+     }
+-    pub(crate) fn growing(
++    fn growing_unchecked(
+         &mut self,
+         previous: Option<Tree>,
+         raw: &[Node],
+diff --git a/engine/search/src/bayesian/tree/phase_cost.rs b/engine/search/src/bayesian/tree/phase_cost.rs
+index 48db149..4b857da 100644
+--- a/engine/search/src/bayesian/tree/phase_cost.rs
++++ b/engine/search/src/bayesian/tree/phase_cost.rs
+@@ -1,189 +1,205 @@
+-//! Opt-in diagnostic wall-clock spans, absent from uninstrumented builds.
+-//! Only the calling thread is recorded. A transition batch includes scheduling
+-//! and waiting; worker CPU times are deliberately not added to elapsed time.
+-use std::{cell::RefCell, marker::PhantomData, rc::Rc, time::Instant};
+-
+-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+-#[repr(usize)]
+-pub enum Phase {
+-    Compute,
+-    Admission,
+-    Transitions,
+-    Compile,
+-    Solver,
+-    Kernel,
+-    Cfr,
+-    Certificate,
+-    CompressedFilter,
+-    Scores,
+-    Selection,
+-}
+-pub const NAMES: [&str; 11] = [
+-    "compute_other",
+-    "admission_other",
+-    "transitions",
+-    "compile",
+-    "solver_setup_cleanup",
+-    "kernel",
+-    "cfr",
+-    "certificate",
+-    "compressed_filter",
+-    "scores",
+-    "selection",
+-];
+-#[derive(Clone, Copy, Debug, Default)]
+-pub struct Entry {
+-    pub calls: u64,
+-    pub inclusive_ns: u128,
+-    pub exclusive_ns: u128,
+-}
+-#[derive(Debug)]
+-pub struct Report {
+-    pub entries: [Entry; NAMES.len()],
+-}
+-impl Report {
+-    pub fn total_ns(&self) -> u128 {
+-        self.entries[Phase::Compute as usize].inclusive_ns
+-    }
+-    pub fn balanced(&self) -> bool {
+-        self.entries.iter().map(|x| x.exclusive_ns).sum::<u128>() == self.total_ns()
+-    }
+-}
+-struct Frame {
+-    phase: Phase,
+-    start: Instant,
+-    children: u128,
+-}
+-struct Ledger {
+-    entries: [Entry; NAMES.len()],
+-    stack: Vec<Frame>,
+-}
+-impl Ledger {
+-    fn close(&mut self, phase: Phase, elapsed: u128, children: u128) {
+-        let row = &mut self.entries[phase as usize];
+-        row.calls += 1;
+-        row.inclusive_ns += elapsed;
+-        row.exclusive_ns += elapsed
+-            .checked_sub(children)
+-            .expect("nested phase accounting");
+-        if let Some(parent) = self.stack.last_mut() {
+-            parent.children += elapsed;
+-        }
+-    }
+-}
+-thread_local! { static ACTIVE: RefCell<Option<Ledger>> = const { RefCell::new(None) }; }
+-
+-/// Thread-bound RAII guard; errors and unwinding close nested spans as usual.
+-pub struct Span {
+-    active: bool,
+-    phase: Phase,
+-    _thread: PhantomData<Rc<()>>,
+-}
+-impl Span {
+-    pub fn new(phase: Phase) -> Self {
+-        let active = ACTIVE.with_borrow_mut(|state| {
+-            if let Some(l) = state {
+-                l.stack.push(Frame {
+-                    phase,
+-                    start: Instant::now(),
+-                    children: 0,
+-                });
+-                true
+-            } else {
+-                false
+-            }
+-        });
+-        Self {
+-            active,
+-            phase,
+-            _thread: PhantomData,
+-        }
+-    }
+-}
+-impl Drop for Span {
+-    fn drop(&mut self) {
+-        if self.active {
+-            ACTIVE.with_borrow_mut(|state| {
+-                let l = state.as_mut().expect("phase session outlived by span");
+-                let frame = l.stack.pop().expect("phase stack underflow");
+-                assert_eq!(frame.phase, self.phase, "phase spans must close in order");
+-                l.close(
+-                    frame.phase,
+-                    frame.start.elapsed().as_nanos(),
+-                    frame.children,
+-                );
+-            });
+-        }
+-    }
+-}
+-struct Session;
+-impl Drop for Session {
+-    fn drop(&mut self) {
+-        ACTIVE.with_borrow_mut(|s| *s = None);
+-    }
+-}
+-pub fn record<T>(f: impl FnOnce() -> T) -> (T, Report) {
+-    ACTIVE.with_borrow_mut(|s| {
+-        assert!(s.is_none(), "nested recording session");
+-        *s = Some(Ledger {
+-            entries: [Entry::default(); NAMES.len()],
+-            stack: Vec::with_capacity(16),
+-        });
+-    });
+-    let _session = Session;
+-    let root = Span::new(Phase::Compute);
+-    let value = f();
+-    drop(root);
+-    let report = ACTIVE.with_borrow_mut(|s| {
+-        let l = s.take().unwrap();
+-        assert!(l.stack.is_empty());
+-        Report { entries: l.entries }
+-    });
+-    assert!(report.balanced());
+-    (value, report)
+-}
+-
+-#[cfg(test)]
+-mod tests {
+-    use super::*;
+-    #[test]
+-    fn nested_wall_costs_do_not_double_count_and_workers_are_isolated() {
+-        let (value, r) = record(|| {
+-            let _outer = Span::new(Phase::Admission);
+-            {
+-                let _inner = Span::new(Phase::Transitions);
+-                std::thread::spawn(|| {
+-                    let _s = Span::new(Phase::Transitions);
+-                })
+-                .join()
+-                .unwrap();
+-            }
+-            42
+-        });
+-        assert_eq!(value, 42);
+-        assert!(r.balanced());
+-        assert_eq!(r.entries[Phase::Transitions as usize].calls, 1);
+-        assert_eq!(r.entries[Phase::Admission as usize].calls, 1);
+-        assert!(
+-            r.entries[Phase::Admission as usize].inclusive_ns
+-                >= r.entries[Phase::Transitions as usize].inclusive_ns
+-        );
+-    }
+-    #[test]
+-    fn errors_and_panics_restore_the_next_session() {
+-        let (v, r) = record(|| -> Result<(), ()> {
+-            let _s = Span::new(Phase::Compile);
+-            Err(())
+-        });
+-        assert!(v.is_err());
+-        assert!(r.balanced());
+-        let failed = std::panic::catch_unwind(|| {
+-            record(|| {
+-                let _s = Span::new(Phase::Cfr);
+-                panic!("test");
+-            })
+-        });
+-        assert!(failed.is_err());
+-        assert!(record(|| ()).1.balanced());
+-    }
+-}
++//! Opt-in diagnostic wall-clock spans, absent from uninstrumented builds.
++//! Only the calling thread is recorded. A transition batch includes scheduling
++//! and waiting; worker CPU times are deliberately not added to elapsed time.
++use std::{cell::RefCell, marker::PhantomData, rc::Rc, time::Instant};
++
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++#[repr(usize)]
++pub enum Phase {
++    Compute,
++    Admission,
++    Transitions,
++    Compile,
++    Solver,
++    Kernel,
++    Cfr,
++    Certificate,
++    CompressedFilter,
++    Scores,
++    Selection,
++    Menu,
++    Observation,
++    PositionPhase,
++    History,
++    Keys,
++    Boundary,
++    Evaluate,
++    Frontier,
++}
++pub const NAMES: [&str; 19] = [
++    "compute_other",
++    "admission_other",
++    "transitions",
++    "compile",
++    "solver_setup_cleanup",
++    "kernel",
++    "cfr",
++    "certificate",
++    "compressed_filter",
++    "scores",
++    "selection",
++    "menu",
++    "observation",
++    "position_phase",
++    "history_copy",
++    "history_keys",
++    "boundary_mark",
++    "leaf_evaluation",
++    "frontier_insert",
++];
++#[derive(Clone, Copy, Debug, Default)]
++pub struct Entry {
++    pub calls: u64,
++    pub inclusive_ns: u128,
++    pub exclusive_ns: u128,
++}
++#[derive(Debug)]
++pub struct Report {
++    pub entries: [Entry; NAMES.len()],
++}
++impl Report {
++    pub fn total_ns(&self) -> u128 {
++        self.entries[Phase::Compute as usize].inclusive_ns
++    }
++    pub fn balanced(&self) -> bool {
++        self.entries.iter().map(|x| x.exclusive_ns).sum::<u128>() == self.total_ns()
++    }
++}
++struct Frame {
++    phase: Phase,
++    start: Instant,
++    children: u128,
++}
++struct Ledger {
++    entries: [Entry; NAMES.len()],
++    stack: Vec<Frame>,
++}
++impl Ledger {
++    fn close(&mut self, phase: Phase, elapsed: u128, children: u128) {
++        let row = &mut self.entries[phase as usize];
++        row.calls += 1;
++        row.inclusive_ns += elapsed;
++        row.exclusive_ns += elapsed
++            .checked_sub(children)
++            .expect("nested phase accounting");
++        if let Some(parent) = self.stack.last_mut() {
++            parent.children += elapsed;
++        }
++    }
++}
++thread_local! { static ACTIVE: RefCell<Option<Ledger>> = const { RefCell::new(None) }; }
++
++/// Thread-bound RAII guard; errors and unwinding close nested spans as usual.
++pub struct Span {
++    active: bool,
++    phase: Phase,
++    _thread: PhantomData<Rc<()>>,
++}
++impl Span {
++    pub fn new(phase: Phase) -> Self {
++        let active = ACTIVE.with_borrow_mut(|state| {
++            if let Some(l) = state {
++                l.stack.push(Frame {
++                    phase,
++                    start: Instant::now(),
++                    children: 0,
++                });
++                true
++            } else {
++                false
++            }
++        });
++        Self {
++            active,
++            phase,
++            _thread: PhantomData,
++        }
++    }
++}
++impl Drop for Span {
++    fn drop(&mut self) {
++        if self.active {
++            ACTIVE.with_borrow_mut(|state| {
++                let l = state.as_mut().expect("phase session outlived by span");
++                let frame = l.stack.pop().expect("phase stack underflow");
++                assert_eq!(frame.phase, self.phase, "phase spans must close in order");
++                l.close(
++                    frame.phase,
++                    frame.start.elapsed().as_nanos(),
++                    frame.children,
++                );
++            });
++        }
++    }
++}
++struct Session;
++impl Drop for Session {
++    fn drop(&mut self) {
++        ACTIVE.with_borrow_mut(|s| *s = None);
++    }
++}
++pub fn record<T>(f: impl FnOnce() -> T) -> (T, Report) {
++    ACTIVE.with_borrow_mut(|s| {
++        assert!(s.is_none(), "nested recording session");
++        *s = Some(Ledger {
++            entries: [Entry::default(); NAMES.len()],
++            stack: Vec::with_capacity(16),
++        });
++    });
++    let _session = Session;
++    let root = Span::new(Phase::Compute);
++    let value = f();
++    drop(root);
++    let report = ACTIVE.with_borrow_mut(|s| {
++        let l = s.take().unwrap();
++        assert!(l.stack.is_empty());
++        Report { entries: l.entries }
++    });
++    assert!(report.balanced());
++    (value, report)
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn nested_wall_costs_do_not_double_count_and_workers_are_isolated() {
++        let (value, r) = record(|| {
++            let _outer = Span::new(Phase::Admission);
++            {
++                let _inner = Span::new(Phase::Transitions);
++                std::thread::spawn(|| {
++                    let _s = Span::new(Phase::Transitions);
++                })
++                .join()
++                .unwrap();
++            }
++            42
++        });
++        assert_eq!(value, 42);
++        assert!(r.balanced());
++        assert_eq!(r.entries[Phase::Transitions as usize].calls, 1);
++        assert_eq!(r.entries[Phase::Admission as usize].calls, 1);
++        assert!(
++            r.entries[Phase::Admission as usize].inclusive_ns
++                >= r.entries[Phase::Transitions as usize].inclusive_ns
++        );
++    }
++    #[test]
++    fn errors_and_panics_restore_the_next_session() {
++        let (v, r) = record(|| -> Result<(), ()> {
++            let _s = Span::new(Phase::Compile);
++            Err(())
++        });
++        assert!(v.is_err());
++        assert!(r.balanced());
++        let failed = std::panic::catch_unwind(|| {
++            record(|| {
++                let _s = Span::new(Phase::Cfr);
++                panic!("test");
++            })
++        });
++        assert!(failed.is_err());
++        assert!(record(|| ()).1.balanced());
++    }
++}
+diff --git a/engine/search/src/bayesian/tree/snapshot_audit.rs b/engine/search/src/bayesian/tree/snapshot_audit.rs
+new file mode 100644
+index 0000000..89b070e
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/snapshot_audit.rs
+@@ -0,0 +1,161 @@
++//! Expensive, opt-in shadow checks; never enabled in performance binaries.
++use super::*;
++use std::cell::Cell;
++#[derive(Clone, Copy, Debug, Default)]
++pub struct Counters {
++    pub compiled_snapshots: usize,
++    pub sequence_snapshots: usize,
++    pub contractions: usize,
++    pub gap_checks: usize,
++}
++thread_local! { static COUNTERS: Cell<Counters> = Cell::new(Counters::default()); }
++pub fn counters() -> Counters {
++    COUNTERS.get()
++}
++pub fn reset() {
++    COUNTERS.set(Counters::default());
++}
++pub(crate) fn sequence(contractions: usize, gap_checks: usize) {
++    let mut c = COUNTERS.get();
++    c.sequence_snapshots += 1;
++    c.contractions += contractions;
++    c.gap_checks += gap_checks;
++    COUNTERS.set(c);
++}
++pub(crate) fn append_only(old: &[Node], raw: &[Node]) -> Result<(), Error> {
++    if raw.len() < old.len() {
++        return Err(Error("audit: append-only node count shrank".into()));
++    }
++    for (i, (a, b)) in old.iter().zip(raw).enumerate() {
++        let same = match (a, b) {
++            (Node::Terminal(_), _) => true,
++            (Node::Chance(x), Node::Chance(y)) => {
++                x.len() == y.len()
++                    && x.iter()
++                        .zip(y)
++                        .all(|((p, a), (q, b))| p.to_bits() == q.to_bits() && a == b)
++            }
++            (
++                Node::Decision {
++                    player: a,
++                    information: b,
++                    actions: c,
++                    children: d,
++                },
++                Node::Decision {
++                    player: e,
++                    information: f,
++                    actions: g,
++                    children: h,
++                },
++            ) => a == e && b == f && c == g && d == h,
++            _ => false,
++        };
++        if !same {
++            return Err(Error(format!("audit: old nonterminal changed at {i}")));
++        }
++    }
++    Ok(())
++}
++pub(crate) fn compiled(raw: &[Node], root: usize, actual: &Tree) -> Result<(), Error> {
++    let reference = compiler::compile(raw, root)?;
++    if format!("{actual:?}") != format!("{reference:?}") {
++        return Err(Error(
++            "audit: incremental/full compiled snapshot mismatch".into(),
++        ));
++    }
++    let mut c = COUNTERS.get();
++    c.compiled_snapshots += 1;
++    COUNTERS.set(c);
++    Ok(())
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn contract_rejects_mutated_old_decisions_and_chance_but_allows_leaf_replacement() {
++        let old = vec![Node::Chance(vec![(1., 1)]), Node::Terminal(0.)];
++        let mut changed = old.clone();
++        changed[0] = Node::Chance(vec![(0.5, 1), (0.5, 2)]);
++        changed.push(Node::Terminal(1.));
++        assert!(append_only(&old, &changed).is_err());
++        changed = old.clone();
++        changed[1] = Node::Decision {
++            player: 0,
++            information: "new mechanic".into(),
++            actions: vec!["A".into()],
++            children: vec![2],
++        };
++        changed.push(Node::Terminal(1.));
++        assert!(append_only(&old, &changed).is_ok());
++        let older = changed.clone();
++        if let Node::Decision { actions, .. } = &mut changed[1] {
++            actions[0] = "changed action".into();
++        }
++        assert!(append_only(&older, &changed).is_err());
++    }
++    #[test]
++    fn generated_intermediate_compilers_match_for_many_seeds_and_scale_changes() {
++        reset();
++        for seed in 1..=64u64 {
++            let mut random = seed;
++            let mut next = || {
++                random = random.wrapping_mul(6364136223846793005).wrapping_add(1);
++                random
++            };
++            let mut raw = vec![
++                Node::Chance(vec![(0.5, 1), (0.5, 2)]),
++                Node::Terminal(1e50),
++                Node::Terminal(-1.),
++            ];
++            let mut owned = compiler::owned::Cache::default();
++            let mut legacy = compiler::incremental::Cache::default();
++            let (mut current, _) = owned.growing(None, &raw, 0).unwrap();
++            legacy.growing(&raw, 0).unwrap();
++            for step in 0..24 {
++                let leaves: Vec<_> = raw
++                    .iter()
++                    .enumerate()
++                    .filter_map(|(i, n)| matches!(n, Node::Terminal(_)).then_some(i))
++                    .collect();
++                let leaf = leaves[(next() as usize) % leaves.len()];
++                let start = raw.len();
++                let value = (next() % 1000) as f64 / 13. - 30.;
++                raw[leaf] = if step % 3 == 0 {
++                    let p = match step % 4 {
++                        0 => 0.,
++                        1 => 1e-150,
++                        2 => 0.25,
++                        _ => 1.,
++                    };
++                    Node::Chance(vec![(p, start), (1. - p, start + 1)])
++                } else {
++                    Node::Decision {
++                        player: (next() % 2) as usize,
++                        information: format!("mechanic-{seed}-{step}"),
++                        actions: vec!["same spec A".into(), "same spec B".into()],
++                        children: vec![start, start + 1],
++                    }
++                };
++                raw.extend([Node::Terminal(value), Node::Terminal(-value)]);
++                let expected = compiler::compile(&raw, 0);
++                let candidate = owned.growing(Some(current), &raw, 0);
++                let old = legacy.growing(&raw, 0);
++                match expected {
++                    Ok(t) => {
++                        current = candidate.unwrap().0;
++                        assert_eq!(format!("{current:?}"), format!("{t:?}"));
++                        assert_eq!(format!("{:?}", old.unwrap()), format!("{t:?}"));
++                    }
++                    Err(e) => {
++                        assert_eq!(candidate.err().unwrap().0, e.0);
++                        assert_eq!(old.err().unwrap().0, e.0);
++                        break;
++                    }
++                }
++            }
++        }
++        assert!(counters().compiled_snapshots > 2000);
++    }
++}
+diff --git a/engine/search/src/bayesian/tree/workspace/cached/paper/sequence/incremental.rs b/engine/search/src/bayesian/tree/workspace/cached/paper/sequence/incremental.rs
+index e0c5981..d3da24e 100644
+--- a/engine/search/src/bayesian/tree/workspace/cached/paper/sequence/incremental.rs
++++ b/engine/search/src/bayesian/tree/workspace/cached/paper/sequence/incremental.rs
+@@ -33,6 +33,69 @@ impl Cache {
+         delta: Option<&Delta>,
+         metrics: &mut Metrics,
+     ) {
++        self.update_inner(tree, delta, metrics);
++        #[cfg(feature = "experiment-snapshot-audit")]
++        self.audit(tree);
++    }
++    #[cfg(feature = "experiment-snapshot-audit")]
++    fn audit(&mut self, tree: &Tree) {
++        let Some(candidate) = self.kernel.as_mut() else {
++            return;
++        };
++        let Some(mut reference) = Kernel::new(tree) else {
++            return;
++        };
++        let mut contractions = 0;
++        let mut gaps = 0;
++        for kind in 0..4 {
++            let mut policy = tree.uniform();
++            for (i, row) in policy.iter_mut().enumerate() {
++                if kind == 1 {
++                    for (a, v) in row.iter_mut().enumerate() {
++                        *v = (i + a + 1) as f64;
++                    }
++                    let total: f64 = row.iter().sum();
++                    for v in row {
++                        *v /= total;
++                    }
++                } else if kind == 2 {
++                    row.fill(0.);
++                    let n = row.len();
++                    row[i % n] = 1.;
++                } else if kind == 3 && row.len() > 1 {
++                    row.fill(1e-200);
++                    row[0] = 1. - (row.len() - 1) as f64 * 1e-200;
++                }
++            }
++            for player in 0..2 {
++                let a = reference.prepare(tree, &policy, player);
++                let b = candidate.prepare(tree, &policy, player);
++                if a && b {
++                    let mut x: Policy = policy.iter().map(|r| vec![0.; r.len()]).collect();
++                    let mut y = x.clone();
++                    reference.accumulate(tree, &policy, player, &mut x, 1.);
++                    candidate.accumulate(tree, &policy, player, &mut y, 1.);
++                    for (a, b) in x.iter().flatten().zip(y.iter().flatten()) {
++                        assert!(
++                            (a - b).abs() <= 1e-10 * (1. + a.abs() + b.abs()),
++                            "audit: sequence gradient mismatch"
++                        );
++                    }
++                    contractions += 1;
++                }
++            }
++            if let (Some(gap), Ok(a)) = (candidate.gap(tree, &policy), tree.assess(&policy)) {
++                assert!(
++                    (gap - a.gap).abs() <= 1e-9 * (1. + tree.scale + gap.abs() + a.gap.abs()),
++                    "audit: sequence BR mismatch"
++                );
++                gaps += 1;
++            }
++        }
++        crate::bayesian::tree::snapshot_audit::sequence(contractions, gaps);
++    }
++
++    fn update_inner(&mut self, tree: &Tree, delta: Option<&Delta>, metrics: &mut Metrics) {
+         if let Some(d) = delta.filter(|d| !d.rebuilt) {
+             if self.kernel.is_some() && self.advance(tree, d, metrics).is_some() {
+                 metrics.sequence_delta_updates += 1;
+@@ -224,6 +287,14 @@ impl Cache {
+         let width = kernel.counts[0].max(kernel.counts[1]);
+         kernel.realization.resize(width, 0.);
+         kernel.gradient.resize(width, 0.);
++        #[cfg(feature = "experiment-allocation-audit")]
++        crate::bayesian::tree::allocation_audit::record(
++            self.buckets.len(),
++            kernel.entries.len(),
++            self.leaves.len(),
++            self.buckets.capacity(),
++            self.leaves.capacity(),
++        );
+         self.scale = tree.scale;
+         Some(())
+     }
+diff --git a/engine/search/src/bin/lab-phase-speed.rs b/engine/search/src/bin/lab-phase-speed.rs
+index a9b2f76..9fee528 100644
+--- a/engine/search/src/bin/lab-phase-speed.rs
++++ b/engine/search/src/bin/lab-phase-speed.rs
+@@ -1,4 +1,7 @@
+-//! Equal-gap benchmark. Fixed-tree and full-growing costs are separate experiments.
++#[cfg(feature = "experiment-allocation-audit")]
++#[path = "lab-phase-speed/heap.rs"]
++mod heap;
++// Equal-gap benchmark with independent diagnostic builds.
+ use lab_engine::{eval::Evaluator, rules::Ruleset, state::SideId, turn::EnumerateOptions};
+ use lab_search::{
+     bayesian::{
+@@ -317,7 +320,14 @@ fn main() -> std::process::ExitCode {
+     let work = || -> Result<(), String> {
+         let args: Vec<_> = std::env::args().skip(1).collect();
+         if args.len() != 2
+-            || !["--check", "--measure", "--profile", "--profile-check"].contains(&args[0].as_str())
++            || ![
++                "--check",
++                "--measure",
++                "--profile",
++                "--profile-check",
++                "--memory",
++            ]
++            .contains(&args[0].as_str())
+         {
+             return Err(
+                 "usage: lab-phase-speed --check|--measure|--profile|--profile-check case.json"
+@@ -332,7 +342,11 @@ fn main() -> std::process::ExitCode {
+         {
+             return Err("performance measurements require GitHub Actions".into());
+         }
+-        if measure && cfg!(feature = "experiment-phase-cost") {
++        if measure
++            && (cfg!(feature = "experiment-phase-cost")
++                || cfg!(feature = "experiment-allocation-audit")
++                || cfg!(feature = "experiment-snapshot-audit"))
++        {
+             return Err("instrumented builds cannot supply headline speed measurements".into());
+         }
+         if profile && !cfg!(feature = "experiment-phase-cost") {
+@@ -374,6 +388,39 @@ fn main() -> std::process::ExitCode {
+             None
+         };
+         let baseline = &v["baseline"];
++        #[cfg(feature = "experiment-snapshot-audit")]
++        tree::snapshot_audit::reset();
++        if args[0] == "--memory" {
++            #[cfg(feature = "experiment-allocation-audit")]
++            {
++                tree::allocation_audit::reset();
++                let before = heap::begin();
++                let r = compute(&i, e.as_ref(), &fixed, pool.as_ref(), baseline)?;
++                let after = heap::sample();
++                let cache = tree::allocation_audit::get();
++                let signature = witness(&r, &fixed);
++                let diag = r.diagnostics(&fixed);
++                let before_drop = heap::sample();
++                drop(r);
++                let dropped = heap::sample();
++                let retained = (dropped.live as i128)
++                    - (before_drop.live as i128 - after.live as i128)
++                    - before.live as i128;
++                return emit(
++                    json!({"type":"memory","variant":baseline["id"],"witness":signature,"diagnostics":diag,
++                    "baseline_requested_bytes":before.live,"peak_requested_bytes":after.peak,"peak_above_baseline_bytes":after.peak.saturating_sub(before.live),
++                    "returned_live_above_baseline_bytes":after.live as i128-before.live as i128,
++                    "retained_after_result_drop_bytes":retained,"result_drop_freed_bytes":before_drop.live.saturating_sub(dropped.live),
++                    "allocations":after.allocations-before.allocations,"reallocations":after.reallocations-before.reallocations,
++                    "frees":after.frees-before.frees,"requested_growth_bytes":after.allocated_bytes-before.allocated_bytes,
++                    "cache":{"finishes":cache.finishes,"rank_slots_processed":cache.rank_slots_processed,"max_buckets":cache.max_buckets,
++                    "max_empty_buckets":cache.max_empty_buckets,"max_leaf_slots":cache.max_leaf_slots,"max_entries":cache.max_entries,
++                    "bucket_capacity":cache.bucket_capacity,"leaf_capacity":cache.leaf_capacity},"timing":false}),
++                );
++            }
++            #[cfg(not(feature = "experiment-allocation-audit"))]
++            return Err("memory audit requires experiment-allocation-audit".into());
++        }
+         let variants = v["variants"].as_array().ok_or("variants")?;
+         let reference = compute(&i, e.as_ref(), &fixed, pool.as_ref(), baseline)?;
+         let canonical_reference = canonical(reference.tree(&fixed));
+@@ -500,6 +547,13 @@ fn main() -> std::process::ExitCode {
+             unreachable!();
+         }
+         if !measure {
++            #[cfg(feature = "experiment-snapshot-audit")]
++            {
++                let c = tree::snapshot_audit::counters();
++                emit(
++                    json!({"type":"audit","compiled_snapshots":c.compiled_snapshots,"sequence_snapshots":c.sequence_snapshots,"contractions":c.contractions,"gap_checks":c.gap_checks}),
++                )?;
++            }
+             return emit(json!({"type":"checked","timing":false}));
+         }
+         drop(reference);
+diff --git a/engine/search/src/bin/lab-phase-speed/heap.rs b/engine/search/src/bin/lab-phase-speed/heap.rs
+new file mode 100644
+index 0000000..cd18a50
+--- /dev/null
++++ b/engine/search/src/bin/lab-phase-speed/heap.rs
+@@ -0,0 +1,79 @@
++//! Diagnostic allocator only. Requested Rust heap bytes, not malloc usable size.
++//! Live accounting is always on in this build, including allocations before a sample,
++//! so frees crossing the sample boundary cannot underflow a reset counter.
++use std::alloc::{GlobalAlloc, Layout, System};
++use std::sync::atomic::{AtomicU64, Ordering::SeqCst};
++static LIVE: AtomicU64 = AtomicU64::new(0);
++static PEAK: AtomicU64 = AtomicU64::new(0);
++static ALLOC: AtomicU64 = AtomicU64::new(0);
++static FREE: AtomicU64 = AtomicU64::new(0);
++static REALLOC: AtomicU64 = AtomicU64::new(0);
++static BYTES: AtomicU64 = AtomicU64::new(0);
++pub struct Tracking;
++#[global_allocator]
++static GLOBAL: Tracking = Tracking;
++fn add(n: usize) {
++    let live = LIVE.fetch_add(n as u64, SeqCst) + n as u64;
++    PEAK.fetch_max(live, SeqCst);
++    BYTES.fetch_add(n as u64, SeqCst);
++}
++// Delegation preserves System's allocation, alignment and failure contracts.
++unsafe impl GlobalAlloc for Tracking {
++    unsafe fn alloc(&self, l: Layout) -> *mut u8 {
++        let p = System.alloc(l);
++        if !p.is_null() {
++            ALLOC.fetch_add(1, SeqCst);
++            add(l.size());
++        }
++        p
++    }
++    unsafe fn alloc_zeroed(&self, l: Layout) -> *mut u8 {
++        let p = System.alloc_zeroed(l);
++        if !p.is_null() {
++            ALLOC.fetch_add(1, SeqCst);
++            add(l.size());
++        }
++        p
++    }
++    unsafe fn dealloc(&self, p: *mut u8, l: Layout) {
++        System.dealloc(p, l);
++        LIVE.fetch_sub(l.size() as u64, SeqCst);
++        FREE.fetch_add(1, SeqCst);
++    }
++    unsafe fn realloc(&self, p: *mut u8, l: Layout, n: usize) -> *mut u8 {
++        let q = System.realloc(p, l, n);
++        if !q.is_null() {
++            REALLOC.fetch_add(1, SeqCst);
++            if n >= l.size() {
++                add(n - l.size());
++            } else {
++                LIVE.fetch_sub((l.size() - n) as u64, SeqCst);
++            }
++        }
++        q
++    }
++}
++#[derive(Clone, Copy)]
++pub struct Sample {
++    pub live: u64,
++    pub peak: u64,
++    pub allocations: u64,
++    pub frees: u64,
++    pub reallocations: u64,
++    pub allocated_bytes: u64,
++}
++pub fn sample() -> Sample {
++    Sample {
++        live: LIVE.load(SeqCst),
++        peak: PEAK.load(SeqCst),
++        allocations: ALLOC.load(SeqCst),
++        frees: FREE.load(SeqCst),
++        reallocations: REALLOC.load(SeqCst),
++        allocated_bytes: BYTES.load(SeqCst),
++    }
++}
++pub fn begin() -> Sample {
++    let s = sample();
++    PEAK.store(s.live, SeqCst);
++    s
++}

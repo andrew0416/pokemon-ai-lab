@@ -1,0 +1,96 @@
+{
+  "parent": "673e9720882aaad4173743282202ea1217eee598",
+  "branch": "codex/s26c-confirm-20261003",
+  "workflow": ".github/workflows/engine-s26c-confirm.yml",
+  "inherited_unchanged": 4145,
+  "changed_sha256": {
+    ".github/workflows/engine-s26c-confirm.yml": "ad416223005e7641c16d1331a83a3fef0cf2652768d931451d3595e5990214ff",
+    "engine/benchmarks/s26_confirm/fixtures/atk.json": "af0bf5ae8f98c452e3868b209ca7c64ab43840eb10886a5c0290efe5bc2940aa",
+    "engine/benchmarks/s26_confirm/fixtures/narrow.json": "2d92fd20972b642de9396e647142224ff26d7bed08bb03fffc4374c116cdc490",
+    "engine/benchmarks/s26_confirm/fixtures/spa.json": "6087363af4ca688eac1d2b60c75dc95be09f81b49e36d5eeb1953053a47e56a1",
+    "engine/benchmarks/s26_confirm/plan.json": "7aeb12f3eff0df66fe0d46b5ed8a2c82f2fbb944af2c989653edce73292d4d16",
+    "engine/benchmarks/s26_confirm/run.py": "0a2a82ba907b93320a45e2e65711bdb72e0421f785afc13062b6cc9054bfcd81",
+    "engine/search/src/bin/lab-belief-workspace-speed.rs": "4c4f950fdc8c245e250949929b7a13d4acb4b33f02058ef93d7ca41fb7ff2c64"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-compiler.yml": {
+      "branches": [
+        "codex/s26c-compiler-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-growing-belief.yml": {
+      "branches": [
+        "codex/s26c-growing-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-speed.yml": {
+      "branches": [
+        "codex/s26c-speed-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-static.yml": {
+      "branches": [
+        "codex/s26c-static-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-workspace.yml": {
+      "branches": [
+        "codex/s26c-workspace-20261003"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": true,
+  "correctness_scope": "unchanged tested kernels; broader engine exact parity and finite-game comparison",
+  "limitations": "single-runner bounded fixtures; exact same work per pair; no wins/strength evaluation",
+  "source_sha": "c830e52dd104743a2f0cc55f07e6b4018bc9591a",
+  "tree": "1a21d82085979d3053df8f23debb76e40bc10045",
+  "patch_sha256": "c29a075816d5d5849fc290b8f6915def3679694e7f601915d7bbd0f1736eebd4",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

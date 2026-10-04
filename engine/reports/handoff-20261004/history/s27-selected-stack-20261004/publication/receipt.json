@@ -1,0 +1,155 @@
+{
+  "parent": "2bb9cf595f675d269406bbe783e88154ed517cb4",
+  "branch": "codex/s26l-stack-20261004",
+  "workflow": ".github/workflows/engine-s26l-stack.yml",
+  "inherited_unchanged": 4234,
+  "changed_sha256": {
+    ".github/workflows/engine-s26l-stack.yml": "3cdc7e4aa3df8de26583f5c1d95bbee466c6aa5e56e4639f69d2b75ecb7092fe",
+    "engine/benchmarks/s26_stack/README.md": "0d66639b47be1149e64ac60c99ebaac3758496198b970ab499ec582b8163053d",
+    "engine/benchmarks/s26_stack/plan.json": "2cf3f1fe4d08f07bcfe73bb4d2a1abd58762744046082a8dd275bf64806c3102",
+    "engine/benchmarks/s26_stack/provenance.py": "eae5e414f9093a760fdfee99342b3b6ceefd22ae2f1c4deabf94af504750613c",
+    "engine/benchmarks/s26_stack/run.py": "39f65a8df1da8e57353c55d53d1f013f3e7df2a485e4e7026cc6f74f59a66260",
+    "engine/search/src/bin/lab-phase-speed.rs": "8b33f8e05a9c0ab2178ff4b4cd892c498e598275007f71bbe51bdc9f013c9bd4"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-compiler.yml": {
+      "branches": [
+        "codex/s26c-compiler-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-confirm.yml": {
+      "branches": [
+        "codex/s26c-confirm-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-growing-belief.yml": {
+      "branches": [
+        "codex/s26c-growing-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-speed.yml": {
+      "branches": [
+        "codex/s26c-speed-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-static.yml": {
+      "branches": [
+        "codex/s26c-static-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-workspace.yml": {
+      "branches": [
+        "codex/s26c-workspace-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-writer.yml": {
+      "branches": [
+        "codex/s26c-writer-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-cadence.yml": {
+      "branches": [
+        "codex/s26e-cadence-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-incremental.yml": {
+      "branches": [
+        "codex/s26e-incremental-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-owned.yml": {
+      "branches": [
+        "codex/s26e-owned-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-parallel.yml": {
+      "branches": [
+        "codex/s26e-parallel-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-shared.yml": {
+      "branches": [
+        "codex/s26e-shared-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26f-papers.yml": {
+      "branches": [
+        "codex/s26f-papers-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26g-pipeline.yml": {
+      "branches": [
+        "codex/s26g-pipeline-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26h-phases.yml": {
+      "branches": [
+        "codex/s26h-phases-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26i-audit.yml": {
+      "branches": [
+        "codex/s26i-audit-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26j-history.yml": {
+      "branches": [
+        "codex/s26j-history-20261003"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": true,
+  "correctness_scope": "retained S25 library byte-identical; full tree/solution/search-work witness across versions; original full witnesses per route; common benchmark transport; existing S24/S25 oracle and portability evidence preserved",
+  "limitations": "single-runner bounded fixtures; equal-gap comparisons with censored caps; no wins/strength evaluation",
+  "source_sha": "8c1bd43c0589ea74b99de439f38ae6f24cf87fd5",
+  "tree": "df1a19316ed48b03fb127b3b17b7fddbf355fdcf",
+  "patch_sha256": "fd60af2c44b5b0fe8984924814db5834ba57744339ed8ce463530d7fd70546c6",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

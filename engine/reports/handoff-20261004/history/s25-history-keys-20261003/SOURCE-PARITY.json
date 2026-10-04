@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "parent": "d90c80b4001e43807d404454280f1511329ef952",
+  "production_engine_unchanged": true,
+  "default_off": true,
+  "changed_sha256": {
+    ".github/workflows/engine-s26j-history.yml": "653dd92a4832e8aa4f217abc1e75b3a5bf654c8cad56a5879f905c82dd496ae1",
+    "engine/benchmarks/s26_history/README.md": "b24ad0d32bfe15378ab366d5e3f43ee89cf08d8cc02088f78a63f5a8756c3029",
+    "engine/benchmarks/s26_history/contract_check.py": "21279ad96db7478e8b1af37b414db6a558bc0e0ced17dc2cf1d1aef45c8d920d",
+    "engine/benchmarks/s26_history/cpu_probe.rs": "ceb69d57cb057cea1442f18bfc00d97d2b49db7aa2cb21708bf1a57e2acda26f",
+    "engine/benchmarks/s26_history/memory_run.py": "966eb7b216d8a0a44bb9ff76cdaa84e274909da08a5fb97e544f69f26429d3f6",
+    "engine/benchmarks/s26_history/plan.json": "cc6f291058427e826b893f64f63ed6554d4db67383a4b16467c4142b98ed6f43",
+    "engine/benchmarks/s26_history/portability.py": "3adebac6d4bc107b0a673e9c4df07bdeab0e55e2684ceed510b769b804d6b615",
+    "engine/benchmarks/s26_history/run.py": "b07e36d541ef64c40b069dca828db849fea5128d044f5e80df7cb34696e92907",
+    "engine/search/src/bayesian/tree/builder.rs": "e0b1cc559dce47e5b7ca69b761e489f119abae7874bdfabc48bf657e488203c6",
+    "engine/search/src/bayesian/tree/builder/growing.rs": "4b0d73ce1a9765e46ffd7d49116705d58c91b6905a801ad744e2ca12ad13b221",
+    "engine/search/src/bayesian/tree/builder/growing/history.rs": "ae4e3a9208c12bbf8ecd792121d86c079b665920985b6a639160f405ec09dcef",
+    "engine/search/src/bayesian/tree/builder/growing/reuse.rs": "fdfc190bdbb479d5d1586e94e6206079b0b6b0c424b4f0f70029a7126fd1c50d",
+    "engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs": "1aad1a610bc4229320793477f62d261aa109df7e6df483a251851d6a19415664",
+    "engine/search/src/bayesian/tree/builder/growing/reuse/paper.rs": "880ab0ab28f86e563736d3accdaf0630c61b011e4fd1775d164a4c5d31b77349",
+    "engine/search/src/bayesian/tree/builder/growing/reuse/pipeline.rs": "5f234b1ac63c305cd04b4f0ee78e8de239262646877868956372906e5778a0a0",
+    "engine/search/src/bayesian/tree/builder/growing/tests.rs": "6a049c5f8cae4d1e7b9e2e93e140116198c2c15c0f43dddbb649b740918117a5",
+    "engine/search/src/bayesian/tree/builder/growing/tests/history_tests.rs": "bdb1eb277a3671117ccc98c48ebdf5e262ed87689e1455feed2093fc17b80360",
+    "engine/search/src/bayesian/tree/pipeline.rs": "a19b48ee15e397c3cf7782b913c99b49397b1c5e895252c6c4ee38b8ff912f87",
+    "engine/search/src/bin/lab-belief-workspace/pipeline_options.rs": "8de984124f88a5f37f42693f1c16d99e4e89eca429bdf89b9cf560a2fe0bd1e9"
+  },
+  "inherited_unchanged": 4216
+}

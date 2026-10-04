@@ -1,0 +1,3803 @@
+diff --git a/.github/workflows/engine-s26e-cadence.yml b/.github/workflows/engine-s26e-cadence.yml
+new file mode 100644
+index 0000000..9aac2bf
+--- /dev/null
++++ b/.github/workflows/engine-s26e-cadence.yml
+@@ -0,0 +1,80 @@
++name: S26e growth solve cadence parity and speed
++on:
++  push:
++    branches: [codex/s26e-cadence-20261003]
++permissions:
++  contents: read
++concurrency:
++  group: s26e-cadence
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  CARGO_PROFILE_RELEASE_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  RAYON_NUM_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++jobs:
++  compare:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 25
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Independent oracle dependencies
++        run: python -m pip install numpy==2.2.6 scipy==1.15.3
++      - name: Correctness and portable release binary
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26e-cadence-results
++          cd engine
++          cargo test --locked -p lab-engine --lib --features experiment-owned-endings 2>&1 | tee ../s26e-cadence-results/core.log
++          cargo test --locked -p lab-search --test owned_transitions --features experiment-growth-cadence,experiment-owned-transitions-observer -- --nocapture 2>&1 | tee ../s26e-cadence-results/owned.log
++          cargo test --locked -p lab-search --lib --features experiment-growth-cadence,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26e-cadence-results/on.log
++          cargo test --locked -p lab-search --bin lab-belief-workspace --features experiment-growth-cadence 2>&1 | tee ../s26e-cadence-results/cli.log
++          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26e-cadence-results/off.log
++          cargo check --locked -p lab-search --bin lab-belief-workspace --bin lab-belief-workspace-speed --features experiment-belief-workspace 2>&1 | tee ../s26e-cadence-results/fallback-build.log
++          cargo check --locked -p lab-search --lib --no-default-features --features experiment-growth-cadence 2>&1 | tee ../s26e-cadence-results/library.log
++          cargo clippy --locked -p lab-search --lib --bin lab-belief-workspace --bin lab-belief-workspace-speed --test owned_transitions --features experiment-growth-cadence,experiment-owned-transitions-observer -- -D warnings 2>&1 | tee ../s26e-cadence-results/clippy.log
++          cargo build --locked -p lab-search --bin lab-belief-workspace --features experiment-growth-cadence 2>&1 | tee ../s26e-cadence-results/debug-build.log
++          cargo build --locked --release -p lab-search --bin lab-belief-workspace-speed --features experiment-growth-cadence 2>&1 | tee ../s26e-cadence-results/release-build.log
++          git rev-parse HEAD > ../s26e-cadence-results/source-sha.txt
++          rustc --version > ../s26e-cadence-results/rustc.txt
++      - name: Independent full-tree LP certificates
++        run: python -B engine/benchmarks/s26_tree/check.py --binary target-s25/debug/lab-belief-workspace --out s26e-cadence-results/tree-lp
++      - name: Independent growing-tree LP certificates and rollback
++        run: python -B engine/benchmarks/s26_tree/growing_check.py --binary target-s25/debug/lab-belief-workspace --out s26e-cadence-results/growing-lp
++      - name: Cadence independent LP and pending-batch rollback
++        run: python -B engine/benchmarks/s26_cadence/check.py --binary target-s25/debug/lab-belief-workspace --out s26e-cadence-results/cadence-lp
++      - name: Same-work control and same finite-game comparison
++        run: python -B engine/benchmarks/s26_cadence/run.py --binary target-s25/release/lab-belief-workspace-speed --out s26e-cadence-results/paired
++      - name: Preserve evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26e-cadence-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26e-cadence-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_cadence/check.py b/engine/benchmarks/s26_cadence/check.py
+new file mode 100644
+index 0000000..e903899
+--- /dev/null
++++ b/engine/benchmarks/s26_cadence/check.py
+@@ -0,0 +1,60 @@
++"""Independent normal-form LP for cadence snapshots, with pending-batch rollback.
++
++24 existing generated games; 168 certificates across full and cadence2/4 budgets.
++This is not 168 distinct new games, nor a win-rate test.
++"""
++from pathlib import Path
++import argparse,copy,hashlib,json,random,subprocess,sys
++sys.path.insert(0,str(Path(__file__).resolve().parent.parent/'s26_tree'))
++from growing_check import generated,canonical,certificate
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
++    a.out.mkdir(parents=True,exist_ok=False);binary=a.binary.resolve();rng=random.Random(26100227);records=[]
++    def run(name,request,ok=True):
++        path=a.out/(name+'-request.json');path.write_text(json.dumps(request),encoding='utf-8')
++        child=subprocess.run([str(binary),str(path.resolve())],capture_output=True,timeout=90)
++        (a.out/(name+'-result.json')).write_bytes(child.stdout);(a.out/(name+'-stderr.txt')).write_bytes(child.stderr)
++        assert (child.returncode==0)==ok,(name,child.stderr.decode())
++        return json.loads(child.stdout) if ok else None
++    for case in range(24):
++        request=generated(rng,case);name=f'case-{case:02}'
++        full=run(name+'-full',request);ref=certificate(full);records.append(dict(case=name+'-full',**ref))
++        for cadence in [2,4]:
++            for budget in [1,2,99]:
++                q=copy.deepcopy(request);q['growth']=dict(cadence=cadence,max_expansions=budget,max_walks=1000,seed=case+1)
++                tag=name+f'-cadence{cadence}-budget{budget}';r=run(tag,q);cert=certificate(r);g=r['metadata']['growth']
++                assert g['solve_cadence']==cadence
++                assert r['surrogate_converged']==(r['finite_game_gap']<=q['solver']['tolerance'])
++                assert r['converged']==(g['horizon_complete'] and r['surrogate_converged'])
++                assert g['attempted_transitions']==g['committed_transitions']
++                expected=3 if budget==99 else budget
++                assert g['committed_expansions']==expected and g['frontier_public_groups']==3-expected
++                if budget==99:
++                    assert g['horizon_complete'] and r['converged'] and g['solves']==2
++                    assert canonical(r['oracle_tree'])==canonical(full['oracle_tree'])
++                    assert {i['key']:i['probabilities'] for i in r['policies']}=={i['key']:i['probabilities'] for i in full['policies']}
++                    assert abs(cert['lp_value']-ref['lp_value'])<1e-8
++                    assert g['attempted_transitions']==full['metadata']['transitions']
++                else:
++                    assert not g['horizon_complete'] and r['full_horizon_gap'] is None
++                    assert r['certificate_scope']=='current-fixed-leaf-surrogate-only'
++                records.append(dict(case=tag,**cert))
++    q=generated(rng,2);q['growth']=dict(max_expansions=1,seed=1,cadence=4)
++    root=run('rollback-root',q)
++    q['growth'].update(max_expansions=2,cadence=1);one=run('rollback-one-group',q)
++    cap=one['metadata']['growth']['attempted_transitions']+1
++    q['growth'].update(max_expansions=100,cadence=4);q['limits']['max_transitions']=cap
++    r=run('rollback-pending-complete-group-plus-partial',q)
++    assert r['policies']==root['policies'] and canonical(r['oracle_tree'])==canonical(root['oracle_tree'])
++    g=r['metadata']['growth'];assert g['attempted_transitions']==cap and g['committed_expansions']==1 and g['solves']==1
++    assert g['stop']=='TransitionLimit' and not g['horizon_complete'] and r['full_horizon_gap'] is None
++    certificate(r)
++    q['limits']['max_transitions']=root['metadata']['growth']['attempted_transitions']-1;run('incomplete-root',q,False)
++    q['growth']['cadence']=3;run('invalid-cadence',q,False)
++    summary=dict(passed=len(records),generated_games=24,lp_certificates=len(records),cadences=[2,4],full_growth_matches=48,
++        pending_batch_rollback=True,root_rejection=True,invalid_cadence=True,performance=False,
++        cases=records,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest())
++    (a.out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8')
++    print(json.dumps({k:v for k,v in summary.items() if k!='cases'}))
++if __name__=='__main__':main()
+diff --git a/engine/benchmarks/s26_cadence/plan.json b/engine/benchmarks/s26_cadence/plan.json
+new file mode 100644
+index 0000000..e210e20
+--- /dev/null
++++ b/engine/benchmarks/s26_cadence/plan.json
+@@ -0,0 +1,391 @@
++{
++  "rounds": 9,
++  "sample_ms": 100,
++  "cases": [
++    {
++      "id": "stats-w1-d2-cadence-growing",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "parallel",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1,
++        "threads": 4
++      },
++      "variants": [
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-1",
++          "comparison": "exact-same-work",
++          "threads": 4,
++          "cadence": 1
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-2",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 2
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-4",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 4
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-cadence-growing",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "parallel",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1,
++        "threads": 4
++      },
++      "variants": [
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-1",
++          "comparison": "exact-same-work",
++          "threads": 4,
++          "cadence": 1
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-2",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 2
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-4",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 4
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1-cadence-growing",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "all-owned",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-1",
++          "comparison": "exact-same-work",
++          "threads": 0,
++          "cadence": 1
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-2",
++          "comparison": "same-finite-game",
++          "threads": 0,
++          "cadence": 2
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-4",
++          "comparison": "same-finite-game",
++          "threads": 0,
++          "cadence": 4
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1-cadence-growing",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "parallel",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1,
++        "threads": 4
++      },
++      "variants": [
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-1",
++          "comparison": "exact-same-work",
++          "threads": 4,
++          "cadence": 1
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-2",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 2
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-4",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 4
++        }
++      ]
++    },
++    {
++      "id": "stats-w4-d2-cadence-growing",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "parallel",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1,
++        "threads": 4
++      },
++      "variants": [
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-1",
++          "comparison": "exact-same-work",
++          "threads": 4,
++          "cadence": 1
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-2",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 2
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-4",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 4
++        }
++      ]
++    },
++    {
++      "id": "narrow-w1-d3-cadence-growing",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "parallel",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1,
++        "threads": 4
++      },
++      "variants": [
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-1",
++          "comparison": "exact-same-work",
++          "threads": 4,
++          "cadence": 1
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-2",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 2
++        },
++        {
++          "kind": "cadence",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "cadence-4",
++          "comparison": "same-finite-game",
++          "threads": 4,
++          "cadence": 4
++        }
++      ]
++    }
++  ]
++}
+diff --git a/engine/benchmarks/s26_cadence/run.py b/engine/benchmarks/s26_cadence/run.py
+new file mode 100644
+index 0000000..6359c2c
+--- /dev/null
++++ b/engine/benchmarks/s26_cadence/run.py
+@@ -0,0 +1,81 @@
++"""Bounded single-runner speed-only comparison; paired blocks, one release binary."""
++from pathlib import Path
++import argparse,copy,hashlib,json,math,os,platform,random,statistics,subprocess,sys,time
++
++def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8')
++def summarize(rows):
++    base=next(r['diagnostics'] for r in rows if r['type']=='baseline');results=[]
++    for validation in [r for r in rows if r['type']=='validation']:
++        variant=validation['variant'];pairs=[]
++        for r in rows:
++            if r['type']!='paired' or r['variant']!=variant['id']:continue
++            b=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='baseline')
++            c=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='candidate')
++            assert min(b,c)>0 and math.isfinite(b+c)
++            pairs.append(dict(block=r['block'],baseline_ms=b/1e6,candidate_ms=c/1e6,ratio=c/b))
++        rng=random.Random(261003);ratios=[p['ratio'] for p in pairs]
++        bootstrap=sorted(statistics.median(rng.choices(ratios,k=len(ratios))) for _ in range(4000))
++        ratio=statistics.median(ratios)
++        results.append(dict(variant=variant,diagnostics=validation['diagnostics'],pairs=pairs,
++            baseline_ms=statistics.median(p['baseline_ms'] for p in pairs),candidate_ms=statistics.median(p['candidate_ms'] for p in pairs),
++            ratio_median=ratio,time_reduction_percent=100*(1-ratio),speedup=1/ratio,
++            ratio_bootstrap95=[bootstrap[100],bootstrap[3899]],baseline_diagnostics=base,
++            comparison=variant.get('comparison','exact-same-work')))
++    return results
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
++    if not a.check and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Timing is restricted to the authorized GitHub runner; use --check locally.')
++    here=Path(__file__).resolve().parent;repo=here.parents[2];plan=json.loads((here/'plan.json').read_bytes());binary=a.binary.resolve()
++    a.out.mkdir(parents=True,exist_ok=False)
++    env=dict(os.environ,LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
++    metadata=dict(platform=platform.platform(),python=sys.version,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
++        source_sha=os.environ.get('GITHUB_SHA'),runner_os=os.environ.get('RUNNER_OS'),timing=not a.check,
++        mode='generic x86-64 release; one binary runtime selection',enumeration='flat; LAB_ENGINE_FACTORED=0',plan_sha256=hashlib.sha256((here/'plan.json').read_bytes()).hexdigest())
++    if not a.check:
++        allowed=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,set(allowed[:4]))
++        metadata.update(available_cpus=allowed,pinned_cpu=allowed[0],parallel_cpus=allowed[:4],load_before=os.getloadavg(),
++            cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0],sample_scope='build + CFR to result; excludes loading/JSON/final result destruction')
++    write(a.out/'environment.json',metadata);all_results=[];statuses=[]
++    for case in plan['cases']:
++        request=copy.deepcopy(case)
++        for world in request['worlds']:world['scenario']=(repo/world['scenario']).as_posix()
++        request['rounds']=plan['rounds'];request['sample_ms']=plan['sample_ms']
++        path=a.out/(case['id']+'-request.json');write(path,request)
++        log=a.out/(case['id']+'-raw.jsonl');error=a.out/(case['id']+'-stderr.txt')
++        with log.open('wb') as stdout,error.open('wb') as stderr:
++            try:
++                run=subprocess.run([str(binary),'--check' if a.check else '--measure',str(path.resolve())],stdout=stdout,stderr=stderr,env=env,timeout=300)
++                code=run.returncode
++            except subprocess.TimeoutExpired:code=-999
++        status=dict(case=case['id'],exit_code=code)
++        if not a.check:
++            import resource
++            peak=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
++            status['cumulative_child_peak_rss_kib']=peak
++            if peak > 512*1024: code=status['exit_code']=-998
++        if code==0:
++            rows=[json.loads(s) for s in log.read_text().splitlines()]
++            assert rows[-1]['type']==('checked' if a.check else 'completed')
++            if not a.check:
++                results=summarize(rows)
++                assert all(len(r['pairs'])==plan['rounds'] for r in results)
++                all_results.extend(dict(case=case['id'],**r) for r in results)
++        else:status['error']=error.read_text(errors='replace')[-3000:]
++        statuses.append(status);print(json.dumps(status),flush=True)
++    passed=all(s['exit_code']==0 for s in statuses)
++    summary=dict(passed=passed,timing=not a.check,paired_rounds=plan['rounds'],cases=statuses,results=all_results,
++        wins_evaluated=False,engine_unchanged=False,search_workspace_candidate=True,owned_transition_candidate=True,source_sha=os.environ.get('GITHUB_SHA'))
++    if not a.check:summary['load_after']=os.getloadavg()
++    write(a.out/'summary.json',summary)
++    if not a.check:
++        lines=['# S26e growth-cadence speed-only benchmark','',
++            'One generic x86-64 release binary; serial baseline and bounded Rayon pools share up to four permitted runner CPUs. Nine ABBA/BAAB blocks; fixed identical selection seed.',
++            'Intervals describe paired block variability on this runner, not variability between machines. Same-work pairs preserve all counters; finite-game pairs preserve the entire canonical tree and policy but growing performs intermediate solves.','',
++            '| Case | Variant | Baseline ms | Candidate ms | Time reduction | Complete horizon |',
++            '|---|---|---:|---:|---:|---|']
++        for r in all_results:
++            lines.append(f"| {r['case']} | {r['variant']['id']} | {r['baseline_ms']:.3f} | {r['candidate_ms']:.3f} | {r['time_reduction_percent']:+.2f}% | {r['diagnostics']['horizon_complete']} |")
++        (a.out/'RESULTS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
++    raise SystemExit(0 if passed else 1)
++if __name__=='__main__':main()
+diff --git a/engine/search/Cargo.toml b/engine/search/Cargo.toml
+index 31b7b0f..2ae6d18 100644
+--- a/engine/search/Cargo.toml
++++ b/engine/search/Cargo.toml
+@@ -14,6 +14,7 @@ path = "src/lib.rs"
+ # (serde); it sits behind the default `cli` feature so hot-path users can turn it off with
+ # `default-features = false`.
+ [features]
++experiment-growth-cadence = ["experiment-parallel-transitions"]
+ experiment-parallel-transitions = ["experiment-incremental-compilation"]
+ experiment-incremental-compilation = ["experiment-owned-transitions"]
+ experiment-shared-final-passes = ["experiment-owned-transitions"]
+diff --git a/engine/search/src/bayesian/tree/builder/growing/reuse.rs b/engine/search/src/bayesian/tree/builder/growing/reuse.rs
+index 5874bf7..b17146f 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/reuse.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/reuse.rs
+@@ -2,6 +2,8 @@
+ //! A failed admission terminates this call. Its mutable builder is never published;
+ //! the last compiled tree, policy and committed counters are returned atomically.
+ use super::*;
++#[cfg(feature = "experiment-growth-cadence")]
++pub mod cadence;
+ 
+ #[derive(Clone, Copy, Debug, Default)]
+ pub struct Options {
+diff --git a/engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs b/engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs
+new file mode 100644
+index 0000000..a0b5039
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs
+@@ -0,0 +1,258 @@
++//! Experimental solve cadence. Regrets restart from zero for EACH changed game.
++//! Admissions in one selected batch publish atomically after a complete CFR solve.
++//! Budget failure discards the whole pending batch and returns the last solved snapshot.
++use super::*;
++pub fn search<D: ObservedDomain, P: Prior>(
++    domain: &D,
++    seeds: &[Seed<D::Position>],
++    limits: Limits,
++    cfg: Config,
++    prior: &P,
++    options: Options,
++    cadence: usize,
++) -> Result<ResultTree, Error> {
++    with_batch(domain, seeds, limits, cfg, prior, options, cadence, None)
++}
++#[allow(clippy::too_many_arguments)]
++pub(crate) fn with_batch<D: ObservedDomain, P: Prior>(
++    domain: &D,
++    seeds: &[Seed<D::Position>],
++    limits: Limits,
++    cfg: Config,
++    prior: &P,
++    options: Options,
++    cadence: usize,
++    batch: Option<&dyn Batch<D>>,
++) -> Result<ResultTree, Error> {
++    macro_rules! run {
++        ($n:literal) => {
++            if limits.turns > 1 {
++                search_impl::<D, P, false, true, $n>(
++                    domain, seeds, limits, cfg, prior, options, batch,
++                )
++            } else {
++                search_impl::<D, P, false, false, $n>(
++                    domain, seeds, limits, cfg, prior, options, batch,
++                )
++            }
++        };
++    }
++    match cadence {
++        1 => run!(1),
++        2 => run!(2),
++        4 => run!(4),
++        _ => Err(Error("cadence must be 1, 2 or 4".into())),
++    }
++}
++
++#[allow(clippy::too_many_arguments)]
++fn search_impl<
++    D: ObservedDomain,
++    P: Prior,
++    const SHARED: bool,
++    const INCREMENTAL: bool,
++    const CADENCE: usize,
++>(
++    domain: &D,
++    seeds: &[Seed<D::Position>],
++    limits: Limits,
++    cfg: Config,
++    prior: &P,
++    options: Options,
++    #[cfg(feature = "experiment-parallel-transitions")] batch: Option<&dyn Batch<D>>,
++) -> Result<ResultTree, Error> {
++    if cfg.max_expansions == 0
++        || cfg.max_walks == 0
++        || !cfg.exploration.is_finite()
++        || cfg.exploration < 0.
++        || limits.turns == 0
++        || limits.turns > 32
++        || limits.max_decisions == 0
++        || limits.max_decisions > 128
++        || limits.max_nodes == 0
++        || limits.max_transitions == 0
++    {
++        return Err(Error("invalid growing-tree configuration".into()));
++    }
++    // Validate solver configuration before any domain calls or transition work.
++    if cfg.solver.iterations == 0
++        || cfg.solver.iterations > 10_000_000
++        || cfg.solver.check_every == 0
++        || !cfg.solver.tolerance.is_finite()
++        || cfg.solver.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    labels(seeds.iter().map(|s| s.id.as_str()), "world ID")?;
++    let mut weights: Vec<_> = seeds.iter().map(|s| s.weight).collect();
++    normalize(&mut weights)?;
++    let first = domain.observation(&seeds[0].position)?;
++    let mut growing = Growing {
++        #[cfg(feature = "experiment-parallel-transitions")]
++        batch,
++        b: Builder {
++            domain,
++            limits,
++            nodes: Vec::new(),
++            stats: Stats::default(),
++            menus: HashMap::new(),
++            public: HashMap::new(),
++            public_keys: Vec::new(),
++            private: HashMap::new(),
++            private_keys: Vec::new(),
++            boundaries: Vec::new(),
++        },
++        root: 0,
++        worlds: seeds.iter().map(|s| s.id.clone()).collect(),
++        frontier: BTreeMap::new(),
++    };
++    let initial = (|| -> Attempt<()> {
++        growing.root = growing.push(Node::Terminal(0.))?;
++        let mut edges = Vec::new();
++        for (world, (s, weight)) in seeds.iter().zip(weights).enumerate() {
++            let obs = domain.observation(&s.position)?;
++            if obs.public != first.public
++                || obs.private[0] != first.private[0]
++                || domain.phase(&s.position)? != Phase::Turn
++            {
++                return Err(Error(
++                    "root worlds must share our initial information at a normal turn".into(),
++                )
++                .into());
++            }
++            let memory = [
++                Cursor::new(0, None, &obs)?.memory,
++                Cursor::new(1, Some(&s.id), &obs)?.memory,
++            ];
++            let n = growing.leaf(Frontier {
++                node: 0,
++                position: s.position.clone(),
++                world,
++                memory,
++                public: vec![obs.public],
++                turns: limits.turns,
++                decisions: 0,
++                phase: Phase::Turn,
++            })?;
++            edges.push((weight, n));
++        }
++        growing.b.nodes[growing.root] = Node::Chance(edges);
++        Ok(())
++    })();
++    let fatal = |e: Failure| match e {
++        Failure::Invalid(e) => e,
++        Failure::Limit(s) => Error(format!("root incomplete: {s:?}; no strategy returned")),
++    };
++    initial.map_err(fatal)?;
++    let mut work = Work::default();
++    growing
++        .admit(&[first.public], &mut work, cfg)
++        .map_err(fatal)?;
++    work.committed_expansions = work.attempted_expansions;
++    #[cfg(feature = "experiment-incremental-compilation")]
++    let mut incremental = tree::compiler::incremental::Cache::default();
++    #[allow(unused_mut)]
++    let mut compile = |g: &Growing<'_, D>| -> Result<Tree, Error> {
++        #[cfg(feature = "experiment-incremental-compilation")]
++        if INCREMENTAL {
++            let mut t = incremental.growing(&g.b.nodes, g.root)?;
++            t.worlds = g.worlds.clone();
++            t.public_keys = g.b.public_keys.clone();
++            t.private_keys = g.b.private_keys.clone();
++            t.boundaries = g.b.boundaries.clone();
++            return Ok(t);
++        }
++        compile(g, options.compiler)
++    };
++    let mut t = compile(&growing)?;
++    let (mut solved, mut q) =
++        solve_scored::<SHARED>(&t, cfg.solver, options, needs_scores(&growing, &work, cfg))?;
++    work.solves += 1;
++    work.cfr_iterations += solved.iterations;
++    // Only this compact committed summary is externally observable if admission fails.
++    // The working builder is private to this call and is discarded on any failed attempt.
++    let mut committed = summary(&growing);
++    let mut random = Random(cfg.seed);
++    let mut visits = Visits::new();
++    let stop = 'growth: loop {
++        if growing.frontier.is_empty() {
++            break Stop::HorizonComplete;
++        }
++        if work.attempted_expansions >= cfg.max_expansions {
++            break Stop::ExpansionLimit;
++        }
++        if work.walks >= cfg.max_walks {
++            break Stop::WalkLimit;
++        }
++        // Select distinct existing public groups against ONE fully solved snapshot.
++        // New continuations cannot be selected until the next full solve.
++        let target = CADENCE
++            .min(cfg.max_expansions - work.attempted_expansions)
++            .min(growing.frontier.len());
++        let mut keys = Vec::with_capacity(target);
++        while keys.len() < target && work.walks < cfg.max_walks {
++            work.walks += 1;
++            let selected = select(
++                &t,
++                &solved.policy,
++                &q,
++                prior,
++                &mut visits,
++                &mut random,
++                cfg.exploration,
++            )?;
++            if let Some(key) = growing
++                .frontier
++                .iter()
++                .find(|(_, g)| g.iter().any(|h| h.node == selected))
++                .map(|(k, _)| k.clone())
++            {
++                if !keys.contains(&key) {
++                    keys.push(key);
++                }
++            }
++        }
++        if keys.is_empty() {
++            continue;
++        }
++        let mut fork = (!options.in_place).then(|| growing.fork());
++        let candidate = fork.as_mut().unwrap_or(&mut growing);
++        let before = work.attempted_expansions;
++        for key in keys {
++            match candidate.admit(&key, &mut work, cfg) {
++                Err(Failure::Limit(s)) => break 'growth s,
++                Err(Failure::Invalid(e)) => return Err(e),
++                Ok(()) => {}
++            }
++        }
++        let next = compile(candidate)?;
++        let (solution, next_q) = solve_scored::<SHARED>(
++            &next,
++            cfg.solver,
++            options,
++            needs_scores(candidate, &work, cfg),
++        )?;
++        q = next_q;
++        work.committed_expansions += work.attempted_expansions - before;
++        work.solves += 1;
++        work.cfr_iterations += solution.iterations;
++        committed = summary(candidate);
++        if let Some(candidate) = fork {
++            growing = candidate;
++        }
++        t = next;
++        solved = solution;
++    };
++    Ok(ResultTree {
++        built: Built {
++            tree: t,
++            stats: committed.0,
++        },
++        solution: solved,
++        stop,
++        frontier_histories: committed.1,
++        frontier_public_groups: committed.2,
++        horizon_complete: committed.2 == 0,
++        work,
++    })
++}
+diff --git a/engine/search/src/bayesian/tree/builder/growing/tests.rs b/engine/search/src/bayesian/tree/builder/growing/tests.rs
+index 9a35747..35987cd 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/tests.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/tests.rs
+@@ -538,6 +538,24 @@ fn allocation_candidates_match_all_admission_failure_boundaries() {
+                     assert_eq!(actual, shared, "shared final passes");
+                     assert_eq!(g.calls.get(), expected_calls);
+                 }
++                #[cfg(feature = "experiment-growth-cadence")]
++                {
++                    let g = Game {
++                        switch,
++                        ..Game::new()
++                    };
++                    let shared = exact_result(reuse::cadence::search(
++                        &g,
++                        &seeds(),
++                        *limits,
++                        *cfg,
++                        &Uniform,
++                        options,
++                        1,
++                    ));
++                    assert_eq!(actual, shared, "shared final passes");
++                    assert_eq!(g.calls.get(), expected_calls);
++                }
+                 assert_eq!(
+                     actual, expected,
+                     "{limits:?}, {cfg:?}, {options:?}, switch={switch}"
+@@ -706,3 +724,144 @@ fn batched_node_caps_and_bad_mass_remain_fail_closed() {
+     assert!(result.err().unwrap().to_string().contains("chance mass"));
+     assert_eq!(g.calls.get(), 4);
+ }
++
++#[cfg(feature = "experiment-growth-cadence")]
++#[test]
++fn cadence_complete_game_and_policies_match_with_fewer_solves() {
++    let options = reuse::Options {
++        in_place: true,
++        workspace: true,
++        compiler: true,
++        static_values: true,
++        direct_write: true,
++    };
++    for seed in [1, 7, 31, u64::MAX] {
++        let cfg = Config {
++            seed,
++            ..config(100)
++        };
++        let reference = reuse::cadence::search(
++            &Game::new(),
++            &seeds(),
++            Limits::default(),
++            cfg,
++            &Uniform,
++            options,
++            1,
++        )
++        .unwrap();
++        let policy = |r: &ResultTree| {
++            r.built
++                .tree
++                .information()
++                .iter()
++                .enumerate()
++                .map(|(i, n)| (n.key.clone(), r.solution.policy[i].clone()))
++                .collect::<BTreeMap<_, _>>()
++        };
++        for every in [2, 4] {
++            let game = Game::new();
++            let actual = reuse::cadence::search(
++                &game,
++                &seeds(),
++                Limits::default(),
++                cfg,
++                &Uniform,
++                options,
++                every,
++            )
++            .unwrap();
++            assert!(actual.horizon_complete);
++            assert_eq!(actual.work.attempted_transitions, game.calls.get());
++            assert_eq!(
++                actual.work.attempted_transitions,
++                reference.work.attempted_transitions
++            );
++            assert_eq!(policy(&reference), policy(&actual));
++            assert_eq!(
++                format!("{:?}", reference.solution.assessment),
++                format!("{:?}", actual.solution.assessment)
++            );
++            assert_eq!(actual.work.solves, 2);
++            assert_eq!(reference.work.solves, 3);
++        }
++    }
++}
++#[cfg(feature = "experiment-growth-cadence")]
++#[test]
++fn cadence_failure_after_a_whole_unsolved_group_returns_previous_solved_root() {
++    let options = reuse::Options {
++        in_place: true,
++        workspace: true,
++        compiler: true,
++        static_values: true,
++        direct_write: true,
++    };
++    let base = reuse::cadence::search(
++        &Game::new(),
++        &seeds(),
++        Limits::default(),
++        config(1),
++        &Uniform,
++        options,
++        4,
++    )
++    .unwrap();
++    let one = reuse::cadence::search(
++        &Game::new(),
++        &seeds(),
++        Limits::default(),
++        config(2),
++        &Uniform,
++        options,
++        1,
++    )
++    .unwrap();
++    let cap = one.work.attempted_transitions + 1;
++    let game = Game::new();
++    let actual = reuse::cadence::search(
++        &game,
++        &seeds(),
++        Limits {
++            max_transitions: cap,
++            ..Limits::default()
++        },
++        config(100),
++        &Uniform,
++        options,
++        4,
++    )
++    .unwrap();
++    assert_eq!(actual.stop, Stop::TransitionLimit);
++    assert_eq!(actual.work.attempted_transitions, cap);
++    assert_eq!(game.calls.get(), cap);
++    assert_eq!(actual.work.solves, 1);
++    assert_eq!(actual.work.committed_expansions, 1);
++    assert!(!actual.horizon_complete);
++    assert_eq!(
++        format!("{:?}", actual.built.tree),
++        format!("{:?}", base.built.tree)
++    );
++    assert_eq!(
++        format!("{:?}", actual.solution),
++        format!("{:?}", base.solution)
++    );
++}
++#[cfg(feature = "experiment-growth-cadence")]
++#[test]
++fn invalid_cadence_never_touches_domain() {
++    for n in [0, 3, usize::MAX] {
++        let game = Game::new();
++        assert!(reuse::cadence::search(
++            &game,
++            &seeds(),
++            Limits::default(),
++            config(100),
++            &Uniform,
++            Default::default(),
++            n
++        )
++        .is_err());
++        assert_eq!(game.calls.get(), 0);
++    }
++}
+diff --git a/engine/search/src/bayesian/tree/engine.rs b/engine/search/src/bayesian/tree/engine.rs
+index 42cb531..68d3475 100644
+--- a/engine/search/src/bayesian/tree/engine.rs
++++ b/engine/search/src/bayesian/tree/engine.rs
+@@ -1,538 +1,540 @@
+-//! Explicit boundary-snapshot information abstraction for the current engine.
+-//! The engine merges some histories before exposing outcomes and has no complete public
+-//! event log. This observer deliberately omits within-segment events/order. It is NOT a
+-//! Showdown battle-log information model or a safety certificate for unabstracted VGC.
+-//! ObservedDomain is replaceable when an event-preserving engine interface is available.
+-
+-use super::builder::{self, Built, Limits, Observation, ObservedDomain, Seed};
+-use crate::bayesian::{
+-    engine::{visible, EngineWorld, Knowledge},
+-    Error,
+-};
+-use crate::budgeted::{Domain, EngineDomain, Phase, Position};
+-use crate::{Choice, Pruning};
+-use lab_engine::{
+-    eval::Evaluator,
+-    rules::Ruleset,
+-    state::{SideId, State},
+-    turn::EnumerateOptions,
+-};
+-
+-pub struct SnapshotDomain<'a, const N: usize, E: Evaluator<N> + ?Sized> {
+-    pub inner: EngineDomain<'a, N, E>,
+-}
+-impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for SnapshotDomain<'_, N, E> {
+-    type Position = Position<N>;
+-    type Action = Choice<N>;
+-    fn phase(&self, p: &Self::Position) -> Result<Phase, String> {
+-        self.inner.phase(p)
+-    }
+-    fn actions(&self, p: &Self::Position, player: usize) -> Result<Vec<Self::Action>, String> {
+-        self.inner.actions(p, player)
+-    }
+-    fn value(&self, p: &Self::Position) -> f32 {
+-        self.inner.value(p)
+-    }
+-    fn transitions(
+-        &self,
+-        p: &Self::Position,
+-        a: [&Self::Action; 2],
+-    ) -> Result<Vec<(f64, Self::Position)>, String> {
+-        self.inner.transitions(p, a)
+-    }
+-}
+-
+-/// Champions public HP uses floor, minimum one for living Pokémon. Boundary-color
+-/// distinctions at 20/50 are intentionally coarsened, never replaced with exact HP.
+-fn hp_bucket(hp: i16, max: i16) -> Result<i32, String> {
+-    if max <= 0 || hp < 0 || hp > max {
+-        return Err("invalid active HP".into());
+-    }
+-    Ok(if hp == 0 {
+-        0
+-    } else {
+-        (100 * i32::from(hp) / i32::from(max)).max(1)
+-    })
+-}
+-
+-fn snapshot<const N: usize>(
+-    state: &State<N>,
+-    us: SideId,
+-    phase: &str,
+-) -> Result<Observation, String> {
+-    snapshot_impl::<N, false>(state, us, phase)
+-}
+-fn snapshot_impl<const N: usize, const DIRECT: bool>(
+-    state: &State<N>,
+-    us: SideId,
+-    phase: &str,
+-) -> Result<Observation, String> {
+-    // A single disclosure allowlist feeds both formatting paths. Adding a mechanic's
+-    // observation changes both paths together; DIRECT changes storage only.
+-    macro_rules! append {
+-        ($out:expr, $($args:tt)*) => {{
+-            if DIRECT {
+-                use std::fmt::Write;
+-                write!($out, $($args)*).expect("String formatting failed");
+-            } else {
+-                ($out).push_str(&format!($($args)*));
+-            }
+-        }};
+-    }
+-
+-    // Explicit allowlist. Never Debug/hash State, Side, Slot, Pokemon or Suspension here:
+-    // they include hidden counters, bench identity, queue order and committed actions.
+-    let mut public = format!("{phase}|{}|{:?}|", state.turn, state.result);
+-    for effect in &state.field {
+-        append!(&mut public, "{},{};", effect.is_active(), effect.value);
+-    }
+-    let mut private = [String::new(), String::new()];
+-    for (physical, side) in state.sides.iter().enumerate() {
+-        public.push('|');
+-        for effect in &side.effects {
+-            append!(&mut public, "{},{};", effect.is_active(), effect.value);
+-        }
+-        for slot in &side.slots {
+-            // A last-move field is not a public event log: aborted/called moves need
+-            // disclosure semantics that this engine API does not preserve.
+-            append!(&mut public, "{:?};{};", slot.boosts, slot.must_switch_out());
+-            if let Some(index) = slot.party_index.or(slot.fainted_occupant) {
+-                let p = &side.party[index as usize];
+-                if p.illusion {
+-                    return Err("Illusion needs an appearance-aware observer".into());
+-                }
+-                append!(
+-                    &mut public,
+-                    "{:?},{},{:?};",
+-                    p.species,
+-                    hp_bucket(p.hp, p.max_hp)?,
+-                    p.status
+-                );
+-            } else {
+-                public.push_str("empty;");
+-            }
+-        }
+-        let player = if physical == us.index() { 0 } else { 1 };
+-        // The owner's request supplies HP, item/ability and PP, not random status timers.
+-        for p in &side.party {
+-            append!(
+-                &mut private[player],
+-                "{:?},{},{},{:?},{:?},{:?};",
+-                p.species,
+-                p.hp,
+-                p.max_hp,
+-                p.status,
+-                p.item,
+-                p.ability
+-            );
+-            for m in &p.moves {
+-                append!(&mut private[player], "{:?},{};", m.id, m.pp);
+-            }
+-        }
+-    }
+-    Ok(Observation { public, private })
+-}
+-
+-impl<const N: usize, E: Evaluator<N> + ?Sized> ObservedDomain for SnapshotDomain<'_, N, E> {
+-    fn observation(&self, p: &Position<N>) -> Result<Observation, String> {
+-        let phase = crate::decision(&p.state, p.suspension.as_ref()).map_err(|e| e.to_string())?;
+-        snapshot(&p.state, self.inner.us, &format!("{phase:?}"))
+-    }
+-    fn action_id(&self, _: &Position<N>, _: usize, a: &Choice<N>) -> String {
+-        format!("{a:?}")
+-    }
+-}
+-
+-pub fn build<const N: usize, E: Evaluator<N> + ?Sized>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-) -> Result<Built, Error> {
+-    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+-    let reference = visible(&first.position.state, us, knowledge)?;
+-    for w in worlds {
+-        if w.position.suspension.is_some() {
+-            return Err(Error("root suspended state needs prior action memory; resume using this tree's continuation policy".into()));
+-        }
+-        if visible(&w.position.state, us, knowledge)? != reference {
+-            return Err(Error("worlds disagree on declared known root state".into()));
+-        }
+-    }
+-    let domain = SnapshotDomain {
+-        inner: EngineDomain {
+-            ruleset,
+-            options: EnumerateOptions::default(),
+-            pruning: Pruning::All,
+-            us,
+-            evaluator,
+-        },
+-    };
+-    let seeds: Vec<_> = worlds
+-        .iter()
+-        .map(|w| Seed {
+-            id: w.id.clone(),
+-            weight: w.weight,
+-            position: w.position.clone(),
+-        })
+-        .collect();
+-    builder::build(&domain, &seeds, limits)
+-}
+-
+-#[cfg(feature = "experiment-belief-workspace")]
+-struct WritingDomain<'a, const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> {
+-    inner: SnapshotDomain<'a, N, E>,
+-    direct: bool,
+-}
+-#[cfg(feature = "experiment-belief-workspace")]
+-impl<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> Domain
+-    for WritingDomain<'_, N, E, OWNED>
+-{
+-    type Position = Position<N>;
+-    type Action = Choice<N>;
+-    fn phase(&self, p: &Self::Position) -> Result<Phase, String> {
+-        self.inner.phase(p)
+-    }
+-    fn actions(&self, p: &Self::Position, player: usize) -> Result<Vec<Self::Action>, String> {
+-        self.inner.actions(p, player)
+-    }
+-    fn value(&self, p: &Self::Position) -> f32 {
+-        self.inner.value(p)
+-    }
+-    fn transitions(
+-        &self,
+-        p: &Self::Position,
+-        a: [&Self::Action; 2],
+-    ) -> Result<Vec<(f64, Self::Position)>, String> {
+-        #[cfg(feature = "experiment-owned-transitions")]
+-        if OWNED {
+-            return self.inner.inner.transitions_owned(p, a);
+-        }
+-        self.inner.transitions(p, a)
+-    }
+-}
+-#[cfg(feature = "experiment-belief-workspace")]
+-impl<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> ObservedDomain
+-    for WritingDomain<'_, N, E, OWNED>
+-{
+-    fn observation(&self, p: &Position<N>) -> Result<Observation, String> {
+-        if !self.direct {
+-            return self.inner.observation(p);
+-        }
+-        let phase = crate::decision(&p.state, p.suspension.as_ref()).map_err(|e| e.to_string())?;
+-        snapshot_impl::<N, true>(&p.state, self.inner.inner.us, &format!("{phase:?}"))
+-    }
+-    fn action_id(&self, p: &Position<N>, player: usize, a: &Choice<N>) -> String {
+-        self.inner.action_id(p, player, a)
+-    }
+-}
+-
+-/// Selective expansion uses exactly the same root knowledge and observation contract.
+-#[cfg(feature = "experiment-growing-belief")]
+-pub fn growing<const N: usize, E: Evaluator<N> + ?Sized>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-    config: builder::growing::Config,
+-) -> Result<builder::growing::ResultTree, Error> {
+-    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+-    let reference = visible(&first.position.state, us, knowledge)?;
+-    for w in worlds {
+-        if w.position.suspension.is_some() {
+-            return Err(Error(
+-                "root suspended state needs prior action memory".into(),
+-            ));
+-        }
+-        if visible(&w.position.state, us, knowledge)? != reference {
+-            return Err(Error("worlds disagree on declared known root state".into()));
+-        }
+-    }
+-    let domain = SnapshotDomain {
+-        inner: EngineDomain {
+-            ruleset,
+-            options: EnumerateOptions::default(),
+-            pruning: Pruning::All,
+-            us,
+-            evaluator,
+-        },
+-    };
+-    let seeds: Vec<_> = worlds
+-        .iter()
+-        .map(|w| Seed {
+-            id: w.id.clone(),
+-            weight: w.weight,
+-            position: w.position.clone(),
+-        })
+-        .collect();
+-    builder::growing::search(&domain, &seeds, limits, config, &builder::growing::Uniform)
+-}
+-
+-/// Allocation-only candidate; same root information checks as `growing`.
+-#[cfg(feature = "experiment-belief-workspace")]
+-pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-    settings: builder::growing::reuse::Settings,
+-) -> Result<builder::growing::ResultTree, Error> {
+-    growing_storage::<N, E, false, false, false>(
+-        worlds, us, ruleset, evaluator, knowledge, limits, settings,
+-    )
+-}
+-
+-#[cfg(feature = "experiment-owned-transitions")]
+-pub fn growing_owned<const N: usize, E: Evaluator<N> + ?Sized>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-    settings: builder::growing::reuse::Settings,
+-) -> Result<builder::growing::ResultTree, Error> {
+-    growing_storage::<N, E, true, false, false>(
+-        worlds, us, ruleset, evaluator, knowledge, limits, settings,
+-    )
+-}
+-
+-#[cfg(feature = "experiment-shared-final-passes")]
+-pub fn growing_shared<const N: usize, E: Evaluator<N> + ?Sized>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-    settings: builder::growing::reuse::Settings,
+-) -> Result<builder::growing::ResultTree, Error> {
+-    growing_storage::<N, E, true, true, false>(
+-        worlds, us, ruleset, evaluator, knowledge, limits, settings,
+-    )
+-}
+-
+-#[cfg(feature = "experiment-incremental-compilation")]
+-pub fn growing_incremental<const N: usize, E: Evaluator<N> + ?Sized>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-    settings: builder::growing::reuse::Settings,
+-) -> Result<builder::growing::ResultTree, Error> {
+-    growing_storage::<N, E, true, false, true>(
+-        worlds, us, ruleset, evaluator, knowledge, limits, settings,
+-    )
+-}
+-
+-#[cfg(feature = "experiment-belief-workspace")]
+-fn growing_storage<
+-    const N: usize,
+-    E: Evaluator<N> + ?Sized,
+-    const OWNED: bool,
+-    const SHARED: bool,
+-    const INCREMENTAL: bool,
+->(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-    settings: builder::growing::reuse::Settings,
+-) -> Result<builder::growing::ResultTree, Error> {
+-    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+-    let reference = visible(&first.position.state, us, knowledge)?;
+-    for w in worlds {
+-        if w.position.suspension.is_some() {
+-            return Err(Error(
+-                "root suspended state needs prior action memory".into(),
+-            ));
+-        }
+-        if visible(&w.position.state, us, knowledge)? != reference {
+-            return Err(Error("worlds disagree on declared known root state".into()));
+-        }
+-    }
+-    let domain = SnapshotDomain {
+-        inner: EngineDomain {
+-            ruleset,
+-            options: EnumerateOptions::default(),
+-            pruning: Pruning::All,
+-            us,
+-            evaluator,
+-        },
+-    };
+-    let seeds: Vec<_> = worlds
+-        .iter()
+-        .map(|w| Seed {
+-            id: w.id.clone(),
+-            weight: w.weight,
+-            position: w.position.clone(),
+-        })
+-        .collect();
+-    let domain = WritingDomain::<N, E, OWNED> {
+-        inner: domain,
+-        direct: settings.storage.direct_write,
+-    };
+-    #[cfg(feature = "experiment-incremental-compilation")]
+-    if INCREMENTAL {
+-        return builder::growing::reuse::search_incremental(
+-            &domain,
+-            &seeds,
+-            limits,
+-            settings.growth,
+-            &builder::growing::Uniform,
+-            settings.storage,
+-        );
+-    }
+-    #[cfg(feature = "experiment-shared-final-passes")]
+-    if SHARED {
+-        return builder::growing::reuse::search_shared(
+-            &domain,
+-            &seeds,
+-            limits,
+-            settings.growth,
+-            &builder::growing::Uniform,
+-            settings.storage,
+-        );
+-    }
+-    builder::growing::reuse::search(
+-        &domain,
+-        &seeds,
+-        limits,
+-        settings.growth,
+-        &builder::growing::Uniform,
+-        settings.storage,
+-    )
+-}
+-
+-#[cfg(test)]
+-mod tests {
+-    use super::*;
+-    #[test]
+-    fn observation_writers_share_disclosure_and_error_contracts() {
+-        let mut state = State::<2>::default();
+-        state.sides[0].slots[0].party_index = Some(0);
+-        for side in [SideId::One, SideId::Two] {
+-            for hp in [0, 1, 50, 100, 101] {
+-                state.sides[0].party[0].max_hp = 100;
+-                state.sides[0].party[0].hp = hp;
+-                assert_eq!(
+-                    snapshot_impl::<2, false>(&state, side, "Turn"),
+-                    snapshot_impl::<2, true>(&state, side, "Turn")
+-                );
+-            }
+-        }
+-        assert!(snapshot_impl::<2, true>(&state, SideId::One, "Turn").is_err());
+-        state.sides[0].party[0].hp = 50;
+-        state.sides[0].party[0].illusion = true;
+-        assert_eq!(
+-            snapshot_impl::<2, false>(&state, SideId::One, "Switch"),
+-            snapshot_impl::<2, true>(&state, SideId::One, "Switch")
+-        );
+-        assert!(snapshot_impl::<2, true>(&state, SideId::One, "Switch").is_err());
+-    }
+-    #[test]
+-    fn hp_is_not_exact_and_invalid_health_fails() {
+-        assert_eq!(hp_bucket(51, 101).unwrap(), 50);
+-        assert_eq!(hp_bucket(50, 100).unwrap(), 50);
+-        assert_eq!(hp_bucket(1, 1000).unwrap(), 1);
+-        assert!(hp_bucket(10, 0).is_err());
+-    }
+-    #[test]
+-    fn owner_requests_follow_the_selected_seat_and_counters_are_not_observations() {
+-        let mut state = State::<2>::default();
+-        state.sides[0].party[0].hp = 77;
+-        state.sides[0].party[0].max_hp = 100;
+-        state.sides[1].party[0].hp = 88;
+-        state.sides[1].party[0].max_hp = 100;
+-        let a = snapshot(&state, SideId::One, "Turn").unwrap();
+-        let b = snapshot(&state, SideId::Two, "Turn").unwrap();
+-        assert_eq!(a.public, b.public);
+-        assert_eq!(a.private[0], b.private[1]);
+-        assert_eq!(a.private[1], b.private[0]);
+-        state.sides[1].party[0].status_turns = 4;
+-        state.sides[1].party[0].stats[4] = 201;
+-        state.sides[1].slots[0].ability_order = 3;
+-        state.sides[1].slots[0].substitute_hp = 43;
+-        assert_eq!(a, snapshot(&state, SideId::One, "Turn").unwrap());
+-    }
+-}
+-
+-#[cfg(feature = "experiment-belief-workspace")]
+-pub fn build_writing<const N: usize, E: Evaluator<N> + ?Sized>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-) -> Result<Built, Error> {
+-    build_storage::<N, E, false>(worlds, us, ruleset, evaluator, knowledge, limits)
+-}
+-
+-#[cfg(feature = "experiment-owned-transitions")]
+-pub fn build_owned<const N: usize, E: Evaluator<N> + ?Sized>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-) -> Result<Built, Error> {
+-    build_storage::<N, E, true>(worlds, us, ruleset, evaluator, knowledge, limits)
+-}
+-
+-#[cfg(feature = "experiment-belief-workspace")]
+-fn build_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-) -> Result<Built, Error> {
+-    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+-    let reference = visible(&first.position.state, us, knowledge)?;
+-    for w in worlds {
+-        if w.position.suspension.is_some() {
+-            return Err(Error("root suspended state needs prior action memory; resume using this tree's continuation policy".into()));
+-        }
+-        if visible(&w.position.state, us, knowledge)? != reference {
+-            return Err(Error("worlds disagree on declared known root state".into()));
+-        }
+-    }
+-    let domain = SnapshotDomain {
+-        inner: EngineDomain {
+-            ruleset,
+-            options: EnumerateOptions::default(),
+-            pruning: Pruning::All,
+-            us,
+-            evaluator,
+-        },
+-    };
+-    let seeds: Vec<_> = worlds
+-        .iter()
+-        .map(|w| Seed {
+-            id: w.id.clone(),
+-            weight: w.weight,
+-            position: w.position.clone(),
+-        })
+-        .collect();
+-    let domain = WritingDomain::<N, E, OWNED> {
+-        inner: domain,
+-        direct: true,
+-    };
+-    builder::build(&domain, &seeds, limits)
+-}
+-
+-#[cfg(feature = "experiment-parallel-transitions")]
+-pub mod parallel;
++//! Explicit boundary-snapshot information abstraction for the current engine.
++//! The engine merges some histories before exposing outcomes and has no complete public
++//! event log. This observer deliberately omits within-segment events/order. It is NOT a
++//! Showdown battle-log information model or a safety certificate for unabstracted VGC.
++//! ObservedDomain is replaceable when an event-preserving engine interface is available.
++
++use super::builder::{self, Built, Limits, Observation, ObservedDomain, Seed};
++use crate::bayesian::{
++    engine::{visible, EngineWorld, Knowledge},
++    Error,
++};
++use crate::budgeted::{Domain, EngineDomain, Phase, Position};
++use crate::{Choice, Pruning};
++use lab_engine::{
++    eval::Evaluator,
++    rules::Ruleset,
++    state::{SideId, State},
++    turn::EnumerateOptions,
++};
++
++pub struct SnapshotDomain<'a, const N: usize, E: Evaluator<N> + ?Sized> {
++    pub inner: EngineDomain<'a, N, E>,
++}
++impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for SnapshotDomain<'_, N, E> {
++    type Position = Position<N>;
++    type Action = Choice<N>;
++    fn phase(&self, p: &Self::Position) -> Result<Phase, String> {
++        self.inner.phase(p)
++    }
++    fn actions(&self, p: &Self::Position, player: usize) -> Result<Vec<Self::Action>, String> {
++        self.inner.actions(p, player)
++    }
++    fn value(&self, p: &Self::Position) -> f32 {
++        self.inner.value(p)
++    }
++    fn transitions(
++        &self,
++        p: &Self::Position,
++        a: [&Self::Action; 2],
++    ) -> Result<Vec<(f64, Self::Position)>, String> {
++        self.inner.transitions(p, a)
++    }
++}
++
++/// Champions public HP uses floor, minimum one for living Pokémon. Boundary-color
++/// distinctions at 20/50 are intentionally coarsened, never replaced with exact HP.
++fn hp_bucket(hp: i16, max: i16) -> Result<i32, String> {
++    if max <= 0 || hp < 0 || hp > max {
++        return Err("invalid active HP".into());
++    }
++    Ok(if hp == 0 {
++        0
++    } else {
++        (100 * i32::from(hp) / i32::from(max)).max(1)
++    })
++}
++
++fn snapshot<const N: usize>(
++    state: &State<N>,
++    us: SideId,
++    phase: &str,
++) -> Result<Observation, String> {
++    snapshot_impl::<N, false>(state, us, phase)
++}
++fn snapshot_impl<const N: usize, const DIRECT: bool>(
++    state: &State<N>,
++    us: SideId,
++    phase: &str,
++) -> Result<Observation, String> {
++    // A single disclosure allowlist feeds both formatting paths. Adding a mechanic's
++    // observation changes both paths together; DIRECT changes storage only.
++    macro_rules! append {
++        ($out:expr, $($args:tt)*) => {{
++            if DIRECT {
++                use std::fmt::Write;
++                write!($out, $($args)*).expect("String formatting failed");
++            } else {
++                ($out).push_str(&format!($($args)*));
++            }
++        }};
++    }
++
++    // Explicit allowlist. Never Debug/hash State, Side, Slot, Pokemon or Suspension here:
++    // they include hidden counters, bench identity, queue order and committed actions.
++    let mut public = format!("{phase}|{}|{:?}|", state.turn, state.result);
++    for effect in &state.field {
++        append!(&mut public, "{},{};", effect.is_active(), effect.value);
++    }
++    let mut private = [String::new(), String::new()];
++    for (physical, side) in state.sides.iter().enumerate() {
++        public.push('|');
++        for effect in &side.effects {
++            append!(&mut public, "{},{};", effect.is_active(), effect.value);
++        }
++        for slot in &side.slots {
++            // A last-move field is not a public event log: aborted/called moves need
++            // disclosure semantics that this engine API does not preserve.
++            append!(&mut public, "{:?};{};", slot.boosts, slot.must_switch_out());
++            if let Some(index) = slot.party_index.or(slot.fainted_occupant) {
++                let p = &side.party[index as usize];
++                if p.illusion {
++                    return Err("Illusion needs an appearance-aware observer".into());
++                }
++                append!(
++                    &mut public,
++                    "{:?},{},{:?};",
++                    p.species,
++                    hp_bucket(p.hp, p.max_hp)?,
++                    p.status
++                );
++            } else {
++                public.push_str("empty;");
++            }
++        }
++        let player = if physical == us.index() { 0 } else { 1 };
++        // The owner's request supplies HP, item/ability and PP, not random status timers.
++        for p in &side.party {
++            append!(
++                &mut private[player],
++                "{:?},{},{},{:?},{:?},{:?};",
++                p.species,
++                p.hp,
++                p.max_hp,
++                p.status,
++                p.item,
++                p.ability
++            );
++            for m in &p.moves {
++                append!(&mut private[player], "{:?},{};", m.id, m.pp);
++            }
++        }
++    }
++    Ok(Observation { public, private })
++}
++
++impl<const N: usize, E: Evaluator<N> + ?Sized> ObservedDomain for SnapshotDomain<'_, N, E> {
++    fn observation(&self, p: &Position<N>) -> Result<Observation, String> {
++        let phase = crate::decision(&p.state, p.suspension.as_ref()).map_err(|e| e.to_string())?;
++        snapshot(&p.state, self.inner.us, &format!("{phase:?}"))
++    }
++    fn action_id(&self, _: &Position<N>, _: usize, a: &Choice<N>) -> String {
++        format!("{a:?}")
++    }
++}
++
++pub fn build<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++) -> Result<Built, Error> {
++    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
++    let reference = visible(&first.position.state, us, knowledge)?;
++    for w in worlds {
++        if w.position.suspension.is_some() {
++            return Err(Error("root suspended state needs prior action memory; resume using this tree's continuation policy".into()));
++        }
++        if visible(&w.position.state, us, knowledge)? != reference {
++            return Err(Error("worlds disagree on declared known root state".into()));
++        }
++    }
++    let domain = SnapshotDomain {
++        inner: EngineDomain {
++            ruleset,
++            options: EnumerateOptions::default(),
++            pruning: Pruning::All,
++            us,
++            evaluator,
++        },
++    };
++    let seeds: Vec<_> = worlds
++        .iter()
++        .map(|w| Seed {
++            id: w.id.clone(),
++            weight: w.weight,
++            position: w.position.clone(),
++        })
++        .collect();
++    builder::build(&domain, &seeds, limits)
++}
++
++#[cfg(feature = "experiment-belief-workspace")]
++struct WritingDomain<'a, const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> {
++    inner: SnapshotDomain<'a, N, E>,
++    direct: bool,
++}
++#[cfg(feature = "experiment-belief-workspace")]
++impl<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> Domain
++    for WritingDomain<'_, N, E, OWNED>
++{
++    type Position = Position<N>;
++    type Action = Choice<N>;
++    fn phase(&self, p: &Self::Position) -> Result<Phase, String> {
++        self.inner.phase(p)
++    }
++    fn actions(&self, p: &Self::Position, player: usize) -> Result<Vec<Self::Action>, String> {
++        self.inner.actions(p, player)
++    }
++    fn value(&self, p: &Self::Position) -> f32 {
++        self.inner.value(p)
++    }
++    fn transitions(
++        &self,
++        p: &Self::Position,
++        a: [&Self::Action; 2],
++    ) -> Result<Vec<(f64, Self::Position)>, String> {
++        #[cfg(feature = "experiment-owned-transitions")]
++        if OWNED {
++            return self.inner.inner.transitions_owned(p, a);
++        }
++        self.inner.transitions(p, a)
++    }
++}
++#[cfg(feature = "experiment-belief-workspace")]
++impl<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> ObservedDomain
++    for WritingDomain<'_, N, E, OWNED>
++{
++    fn observation(&self, p: &Position<N>) -> Result<Observation, String> {
++        if !self.direct {
++            return self.inner.observation(p);
++        }
++        let phase = crate::decision(&p.state, p.suspension.as_ref()).map_err(|e| e.to_string())?;
++        snapshot_impl::<N, true>(&p.state, self.inner.inner.us, &format!("{phase:?}"))
++    }
++    fn action_id(&self, p: &Position<N>, player: usize, a: &Choice<N>) -> String {
++        self.inner.action_id(p, player, a)
++    }
++}
++
++/// Selective expansion uses exactly the same root knowledge and observation contract.
++#[cfg(feature = "experiment-growing-belief")]
++pub fn growing<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    config: builder::growing::Config,
++) -> Result<builder::growing::ResultTree, Error> {
++    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
++    let reference = visible(&first.position.state, us, knowledge)?;
++    for w in worlds {
++        if w.position.suspension.is_some() {
++            return Err(Error(
++                "root suspended state needs prior action memory".into(),
++            ));
++        }
++        if visible(&w.position.state, us, knowledge)? != reference {
++            return Err(Error("worlds disagree on declared known root state".into()));
++        }
++    }
++    let domain = SnapshotDomain {
++        inner: EngineDomain {
++            ruleset,
++            options: EnumerateOptions::default(),
++            pruning: Pruning::All,
++            us,
++            evaluator,
++        },
++    };
++    let seeds: Vec<_> = worlds
++        .iter()
++        .map(|w| Seed {
++            id: w.id.clone(),
++            weight: w.weight,
++            position: w.position.clone(),
++        })
++        .collect();
++    builder::growing::search(&domain, &seeds, limits, config, &builder::growing::Uniform)
++}
++
++/// Allocation-only candidate; same root information checks as `growing`.
++#[cfg(feature = "experiment-belief-workspace")]
++pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: builder::growing::reuse::Settings,
++) -> Result<builder::growing::ResultTree, Error> {
++    growing_storage::<N, E, false, false, false>(
++        worlds, us, ruleset, evaluator, knowledge, limits, settings,
++    )
++}
++
++#[cfg(feature = "experiment-owned-transitions")]
++pub fn growing_owned<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: builder::growing::reuse::Settings,
++) -> Result<builder::growing::ResultTree, Error> {
++    growing_storage::<N, E, true, false, false>(
++        worlds, us, ruleset, evaluator, knowledge, limits, settings,
++    )
++}
++
++#[cfg(feature = "experiment-shared-final-passes")]
++pub fn growing_shared<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: builder::growing::reuse::Settings,
++) -> Result<builder::growing::ResultTree, Error> {
++    growing_storage::<N, E, true, true, false>(
++        worlds, us, ruleset, evaluator, knowledge, limits, settings,
++    )
++}
++
++#[cfg(feature = "experiment-incremental-compilation")]
++pub fn growing_incremental<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: builder::growing::reuse::Settings,
++) -> Result<builder::growing::ResultTree, Error> {
++    growing_storage::<N, E, true, false, true>(
++        worlds, us, ruleset, evaluator, knowledge, limits, settings,
++    )
++}
++
++#[cfg(feature = "experiment-belief-workspace")]
++fn growing_storage<
++    const N: usize,
++    E: Evaluator<N> + ?Sized,
++    const OWNED: bool,
++    const SHARED: bool,
++    const INCREMENTAL: bool,
++>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: builder::growing::reuse::Settings,
++) -> Result<builder::growing::ResultTree, Error> {
++    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
++    let reference = visible(&first.position.state, us, knowledge)?;
++    for w in worlds {
++        if w.position.suspension.is_some() {
++            return Err(Error(
++                "root suspended state needs prior action memory".into(),
++            ));
++        }
++        if visible(&w.position.state, us, knowledge)? != reference {
++            return Err(Error("worlds disagree on declared known root state".into()));
++        }
++    }
++    let domain = SnapshotDomain {
++        inner: EngineDomain {
++            ruleset,
++            options: EnumerateOptions::default(),
++            pruning: Pruning::All,
++            us,
++            evaluator,
++        },
++    };
++    let seeds: Vec<_> = worlds
++        .iter()
++        .map(|w| Seed {
++            id: w.id.clone(),
++            weight: w.weight,
++            position: w.position.clone(),
++        })
++        .collect();
++    let domain = WritingDomain::<N, E, OWNED> {
++        inner: domain,
++        direct: settings.storage.direct_write,
++    };
++    #[cfg(feature = "experiment-incremental-compilation")]
++    if INCREMENTAL {
++        return builder::growing::reuse::search_incremental(
++            &domain,
++            &seeds,
++            limits,
++            settings.growth,
++            &builder::growing::Uniform,
++            settings.storage,
++        );
++    }
++    #[cfg(feature = "experiment-shared-final-passes")]
++    if SHARED {
++        return builder::growing::reuse::search_shared(
++            &domain,
++            &seeds,
++            limits,
++            settings.growth,
++            &builder::growing::Uniform,
++            settings.storage,
++        );
++    }
++    builder::growing::reuse::search(
++        &domain,
++        &seeds,
++        limits,
++        settings.growth,
++        &builder::growing::Uniform,
++        settings.storage,
++    )
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn observation_writers_share_disclosure_and_error_contracts() {
++        let mut state = State::<2>::default();
++        state.sides[0].slots[0].party_index = Some(0);
++        for side in [SideId::One, SideId::Two] {
++            for hp in [0, 1, 50, 100, 101] {
++                state.sides[0].party[0].max_hp = 100;
++                state.sides[0].party[0].hp = hp;
++                assert_eq!(
++                    snapshot_impl::<2, false>(&state, side, "Turn"),
++                    snapshot_impl::<2, true>(&state, side, "Turn")
++                );
++            }
++        }
++        assert!(snapshot_impl::<2, true>(&state, SideId::One, "Turn").is_err());
++        state.sides[0].party[0].hp = 50;
++        state.sides[0].party[0].illusion = true;
++        assert_eq!(
++            snapshot_impl::<2, false>(&state, SideId::One, "Switch"),
++            snapshot_impl::<2, true>(&state, SideId::One, "Switch")
++        );
++        assert!(snapshot_impl::<2, true>(&state, SideId::One, "Switch").is_err());
++    }
++    #[test]
++    fn hp_is_not_exact_and_invalid_health_fails() {
++        assert_eq!(hp_bucket(51, 101).unwrap(), 50);
++        assert_eq!(hp_bucket(50, 100).unwrap(), 50);
++        assert_eq!(hp_bucket(1, 1000).unwrap(), 1);
++        assert!(hp_bucket(10, 0).is_err());
++    }
++    #[test]
++    fn owner_requests_follow_the_selected_seat_and_counters_are_not_observations() {
++        let mut state = State::<2>::default();
++        state.sides[0].party[0].hp = 77;
++        state.sides[0].party[0].max_hp = 100;
++        state.sides[1].party[0].hp = 88;
++        state.sides[1].party[0].max_hp = 100;
++        let a = snapshot(&state, SideId::One, "Turn").unwrap();
++        let b = snapshot(&state, SideId::Two, "Turn").unwrap();
++        assert_eq!(a.public, b.public);
++        assert_eq!(a.private[0], b.private[1]);
++        assert_eq!(a.private[1], b.private[0]);
++        state.sides[1].party[0].status_turns = 4;
++        state.sides[1].party[0].stats[4] = 201;
++        state.sides[1].slots[0].ability_order = 3;
++        state.sides[1].slots[0].substitute_hp = 43;
++        assert_eq!(a, snapshot(&state, SideId::One, "Turn").unwrap());
++    }
++}
++
++#[cfg(feature = "experiment-belief-workspace")]
++pub fn build_writing<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++) -> Result<Built, Error> {
++    build_storage::<N, E, false>(worlds, us, ruleset, evaluator, knowledge, limits)
++}
++
++#[cfg(feature = "experiment-owned-transitions")]
++pub fn build_owned<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++) -> Result<Built, Error> {
++    build_storage::<N, E, true>(worlds, us, ruleset, evaluator, knowledge, limits)
++}
++
++#[cfg(feature = "experiment-belief-workspace")]
++fn build_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++) -> Result<Built, Error> {
++    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
++    let reference = visible(&first.position.state, us, knowledge)?;
++    for w in worlds {
++        if w.position.suspension.is_some() {
++            return Err(Error("root suspended state needs prior action memory; resume using this tree's continuation policy".into()));
++        }
++        if visible(&w.position.state, us, knowledge)? != reference {
++            return Err(Error("worlds disagree on declared known root state".into()));
++        }
++    }
++    let domain = SnapshotDomain {
++        inner: EngineDomain {
++            ruleset,
++            options: EnumerateOptions::default(),
++            pruning: Pruning::All,
++            us,
++            evaluator,
++        },
++    };
++    let seeds: Vec<_> = worlds
++        .iter()
++        .map(|w| Seed {
++            id: w.id.clone(),
++            weight: w.weight,
++            position: w.position.clone(),
++        })
++        .collect();
++    let domain = WritingDomain::<N, E, OWNED> {
++        inner: domain,
++        direct: true,
++    };
++    builder::build(&domain, &seeds, limits)
++}
++
++#[cfg(feature = "experiment-growth-cadence")]
++pub mod cadence;
++#[cfg(feature = "experiment-parallel-transitions")]
++pub mod parallel;
+diff --git a/engine/search/src/bayesian/tree/engine/cadence.rs b/engine/search/src/bayesian/tree/engine/cadence.rs
+new file mode 100644
+index 0000000..0ae16e3
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/engine/cadence.rs
+@@ -0,0 +1,70 @@
++//! Explicit changed-algorithm API; cadence=1 preserves the original selection schedule.
++use super::*;
++pub struct Settings<'a> {
++    pub search: builder::growing::reuse::Settings,
++    pub cadence: usize,
++    pub pool: Option<&'a rayon::ThreadPool>,
++}
++pub fn growing<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: Settings<'_>,
++) -> Result<builder::growing::ResultTree, Error> {
++    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
++    let reference = visible(&first.position.state, us, knowledge)?;
++    for w in worlds {
++        if w.position.suspension.is_some() {
++            return Err(Error(
++                "root suspended state needs prior action memory".into(),
++            ));
++        }
++        if visible(&w.position.state, us, knowledge)? != reference {
++            return Err(Error("worlds disagree on declared known root state".into()));
++        }
++    }
++    let domain = WritingDomain::<N, E, true> {
++        inner: SnapshotDomain {
++            inner: EngineDomain {
++                ruleset,
++                options: EnumerateOptions::default(),
++                pruning: Pruning::All,
++                us,
++                evaluator,
++            },
++        },
++        direct: settings.search.storage.direct_write,
++    };
++    let seeds: Vec<_> = worlds
++        .iter()
++        .map(|w| Seed {
++            id: w.id.clone(),
++            weight: w.weight,
++            position: w.position.clone(),
++        })
++        .collect();
++    let batch = settings
++        .pool
++        .filter(|p| p.current_num_threads() > 1)
++        .map(|pool| parallel::OwnedBatch {
++            pool,
++            ruleset,
++            us,
++            factored: lab_engine::turn::factored_mode(),
++        });
++    builder::growing::reuse::cadence::with_batch(
++        &domain,
++        &seeds,
++        limits,
++        settings.search.growth,
++        &builder::growing::Uniform,
++        settings.search.storage,
++        settings.cadence,
++        batch
++            .as_ref()
++            .map(|b| b as &dyn builder::growing::Batch<WritingDomain<'_, N, E, true>>),
++    )
++}
+diff --git a/engine/search/src/bayesian/tree/engine/parallel.rs b/engine/search/src/bayesian/tree/engine/parallel.rs
+index e559984..49f1a77 100644
+--- a/engine/search/src/bayesian/tree/engine/parallel.rs
++++ b/engine/search/src/bayesian/tree/engine/parallel.rs
+@@ -1,105 +1,105 @@
+-//! Bounded immutable transition jobs. Evaluator calls, observations, tree mutation,
+-//! summations and CFR remain serial. No generic Domain is sent to Rayon workers.
+-use super::*;
+-use rayon::prelude::*;
+-pub struct Settings<'a> {
+-    pub search: builder::growing::reuse::Settings,
+-    /// Persistent caller-owned pool, reused across searches. One thread is serial.
+-    pub pool: &'a rayon::ThreadPool,
+-}
+-struct OwnedBatch<'a> {
+-    pool: &'a rayon::ThreadPool,
+-    ruleset: Ruleset,
+-    us: SideId,
+-    factored: bool,
+-}
+-impl<const N: usize, E: Evaluator<N> + ?Sized>
+-    builder::growing::Batch<WritingDomain<'_, N, E, true>> for OwnedBatch<'_>
+-{
+-    fn width(&self) -> usize {
+-        self.pool.current_num_threads().clamp(1, 4)
+-    }
+-    fn run(
+-        &self,
+-        _: &WritingDomain<'_, N, E, true>,
+-        p: &Position<N>,
+-        joints: &[[&Choice<N>; 2]],
+-    ) -> Vec<Result<Vec<(f64, Position<N>)>, String>> {
+-        // transitions_owned does not use the evaluator. Keep the caller's potentially
+-        // stateful evaluator on the serial thread by constructing a transition-only
+-        // adapter with an unused Material value inside each worker.
+-        self.pool.install(|| {
+-            joints
+-                .par_iter()
+-                .map(|a| {
+-                    let _mode = lab_engine::turn::FactoredScope::new(self.factored);
+-                    EngineDomain {
+-                        ruleset: self.ruleset,
+-                        options: EnumerateOptions::default(),
+-                        pruning: Pruning::All,
+-                        us: self.us,
+-                        evaluator: &lab_engine::eval::Material,
+-                    }
+-                    .transitions_owned(p, *a)
+-                })
+-                .collect()
+-        })
+-    }
+-}
+-pub fn growing<const N: usize, E: Evaluator<N> + ?Sized>(
+-    worlds: &[EngineWorld<N>],
+-    us: SideId,
+-    ruleset: Ruleset,
+-    evaluator: &E,
+-    knowledge: &Knowledge,
+-    limits: Limits,
+-    settings: Settings<'_>,
+-) -> Result<builder::growing::ResultTree, Error> {
+-    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+-    let reference = visible(&first.position.state, us, knowledge)?;
+-    for w in worlds {
+-        if w.position.suspension.is_some() {
+-            return Err(Error(
+-                "root suspended state needs prior action memory".into(),
+-            ));
+-        }
+-        if visible(&w.position.state, us, knowledge)? != reference {
+-            return Err(Error("worlds disagree on declared known root state".into()));
+-        }
+-    }
+-    let domain = WritingDomain::<N, E, true> {
+-        inner: SnapshotDomain {
+-            inner: EngineDomain {
+-                ruleset,
+-                options: EnumerateOptions::default(),
+-                pruning: Pruning::All,
+-                us,
+-                evaluator,
+-            },
+-        },
+-        direct: settings.search.storage.direct_write,
+-    };
+-    let seeds: Vec<_> = worlds
+-        .iter()
+-        .map(|w| Seed {
+-            id: w.id.clone(),
+-            weight: w.weight,
+-            position: w.position.clone(),
+-        })
+-        .collect();
+-    let batch = OwnedBatch {
+-        pool: settings.pool,
+-        ruleset,
+-        us,
+-        factored: lab_engine::turn::factored_mode(),
+-    };
+-    builder::growing::reuse::search_batched(
+-        &domain,
+-        &seeds,
+-        limits,
+-        settings.search.growth,
+-        &builder::growing::Uniform,
+-        settings.search.storage,
+-        &batch,
+-    )
+-}
++//! Bounded immutable transition jobs. Evaluator calls, observations, tree mutation,
++//! summations and CFR remain serial. No generic Domain is sent to Rayon workers.
++use super::*;
++use rayon::prelude::*;
++pub struct Settings<'a> {
++    pub search: builder::growing::reuse::Settings,
++    /// Persistent caller-owned pool, reused across searches. One thread is serial.
++    pub pool: &'a rayon::ThreadPool,
++}
++pub(super) struct OwnedBatch<'a> {
++    pub(super) pool: &'a rayon::ThreadPool,
++    pub(super) ruleset: Ruleset,
++    pub(super) us: SideId,
++    pub(super) factored: bool,
++}
++impl<const N: usize, E: Evaluator<N> + ?Sized>
++    builder::growing::Batch<WritingDomain<'_, N, E, true>> for OwnedBatch<'_>
++{
++    fn width(&self) -> usize {
++        self.pool.current_num_threads().clamp(1, 4)
++    }
++    fn run(
++        &self,
++        _: &WritingDomain<'_, N, E, true>,
++        p: &Position<N>,
++        joints: &[[&Choice<N>; 2]],
++    ) -> Vec<Result<Vec<(f64, Position<N>)>, String>> {
++        // transitions_owned does not use the evaluator. Keep the caller's potentially
++        // stateful evaluator on the serial thread by constructing a transition-only
++        // adapter with an unused Material value inside each worker.
++        self.pool.install(|| {
++            joints
++                .par_iter()
++                .map(|a| {
++                    let _mode = lab_engine::turn::FactoredScope::new(self.factored);
++                    EngineDomain {
++                        ruleset: self.ruleset,
++                        options: EnumerateOptions::default(),
++                        pruning: Pruning::All,
++                        us: self.us,
++                        evaluator: &lab_engine::eval::Material,
++                    }
++                    .transitions_owned(p, *a)
++                })
++                .collect()
++        })
++    }
++}
++pub fn growing<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: Settings<'_>,
++) -> Result<builder::growing::ResultTree, Error> {
++    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
++    let reference = visible(&first.position.state, us, knowledge)?;
++    for w in worlds {
++        if w.position.suspension.is_some() {
++            return Err(Error(
++                "root suspended state needs prior action memory".into(),
++            ));
++        }
++        if visible(&w.position.state, us, knowledge)? != reference {
++            return Err(Error("worlds disagree on declared known root state".into()));
++        }
++    }
++    let domain = WritingDomain::<N, E, true> {
++        inner: SnapshotDomain {
++            inner: EngineDomain {
++                ruleset,
++                options: EnumerateOptions::default(),
++                pruning: Pruning::All,
++                us,
++                evaluator,
++            },
++        },
++        direct: settings.search.storage.direct_write,
++    };
++    let seeds: Vec<_> = worlds
++        .iter()
++        .map(|w| Seed {
++            id: w.id.clone(),
++            weight: w.weight,
++            position: w.position.clone(),
++        })
++        .collect();
++    let batch = OwnedBatch {
++        pool: settings.pool,
++        ruleset,
++        us,
++        factored: lab_engine::turn::factored_mode(),
++    };
++    builder::growing::reuse::search_batched(
++        &domain,
++        &seeds,
++        limits,
++        settings.search.growth,
++        &builder::growing::Uniform,
++        settings.search.storage,
++        &batch,
++    )
++}
+diff --git a/engine/search/src/bin/lab-belief-workspace-speed.rs b/engine/search/src/bin/lab-belief-workspace-speed.rs
+index 1a7c6ae..7b7b98a 100644
+--- a/engine/search/src/bin/lab-belief-workspace-speed.rs
++++ b/engine/search/src/bin/lab-belief-workspace-speed.rs
+@@ -1,554 +1,599 @@
+-//! Same-work paired benchmark: exact reference/candidate parity precedes timing.
+-//! Loading, JSON serialization, diagnostics and returned-tree destruction are not timed.
+-use lab_engine::{eval::Evaluator, rules::Ruleset, state::SideId, turn::EnumerateOptions};
+-use lab_search::{
+-    bayesian::{
+-        self,
+-        engine::{EngineWorld, Knowledge},
+-        tree::{
+-            self,
+-            builder::{growing, Built, Limits},
+-        },
+-    },
+-    budgeted::Position,
+-};
+-use serde_json::{json, Value};
+-use std::{collections::BTreeMap, hint::black_box, io::Write, path::Path, time::Instant};
+-
+-struct Input {
+-    worlds: Vec<EngineWorld<2>>,
+-    knowledge: Knowledge,
+-    limits: Limits,
+-    solver: bayesian::Config,
+-}
+-struct Output {
+-    built: Built,
+-    solved: tree::Solution,
+-    growth: Option<(growing::Work, growing::Stop, usize)>,
+-    complete: bool,
+-}
+-enum Method {
+-    Exhaustive,
+-    Growing(growing::Config),
+-    Reusing(growing::Config, growing::reuse::Options),
+-    ExhaustiveWorkspace,
+-    ExhaustiveCached,
+-    ExhaustiveWriting,
+-    #[cfg(feature = "experiment-owned-transitions")]
+-    ExhaustiveOwned,
+-    #[cfg(feature = "experiment-owned-transitions")]
+-    Owned(growing::Config),
+-    #[cfg(feature = "experiment-shared-final-passes")]
+-    Shared(growing::Config),
+-    #[cfg(feature = "experiment-incremental-compilation")]
+-    Incremental(growing::Config),
+-    #[cfg(feature = "experiment-parallel-transitions")]
+-    Parallel(growing::Config, rayon::ThreadPool),
+-}
+-fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
+-    match v.get(k) {
+-        None => Ok(d),
+-        Some(x) => x
+-            .as_u64()
+-            .and_then(|v| usize::try_from(v).ok())
+-            .ok_or_else(|| format!("invalid {k}")),
+-    }
+-}
+-fn string<'a>(v: &'a Value, k: &str) -> Result<&'a str, String> {
+-    v[k].as_str().ok_or_else(|| format!("invalid {k}"))
+-}
+-fn load(v: &Value, base: &Path) -> Result<Input, String> {
+-    let mut worlds = Vec::new();
+-    for w in v["worlds"].as_array().ok_or("worlds array")? {
+-        let loaded = lab_scenario::load_scenario_file(base.join(string(w, "scenario")?))
+-            .map_err(|e| e.to_string())?;
+-        let mut positions =
+-            lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
+-                .map_err(|e| e.to_string())?;
+-        if positions.len() != 1 {
+-            return Err("ambiguous root".into());
+-        }
+-        worlds.push(EngineWorld {
+-            id: string(w, "id")?.into(),
+-            weight: w["weight"].as_f64().ok_or("weight")?,
+-            position: Position {
+-                state: positions.remove(0).state,
+-                suspension: None,
+-            },
+-        });
+-    }
+-    let l = &v["limits"];
+-    let s = &v["solver"];
+-    Ok(Input {
+-        worlds,
+-        knowledge: Knowledge {
+-            hidden_stats: v["hidden_stats"].as_bool().unwrap_or(false),
+-            ..Knowledge::default()
+-        },
+-        limits: Limits {
+-            turns: uint(l, "turns", 2)?
+-                .try_into()
+-                .map_err(|_| "turn overflow")?,
+-            max_nodes: uint(l, "max_nodes", 50000)?,
+-            max_transitions: uint(l, "max_transitions", 20000)?,
+-            max_decisions: uint(l, "max_decisions", 32)?,
+-        },
+-        solver: bayesian::Config {
+-            iterations: uint(s, "iterations", 1000)?,
+-            check_every: uint(s, "check_every", 32)?,
+-            tolerance: s["tolerance"].as_f64().unwrap_or(0.1),
+-        },
+-    })
+-}
+-fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, String> {
+-    let i = black_box(i);
+-    #[cfg(feature = "experiment-owned-transitions")]
+-    if matches!(variant, Method::ExhaustiveOwned) {
+-        let built = tree::engine::build_owned(
+-            &i.worlds,
+-            SideId::One,
+-            Ruleset::CHAMPIONS_MC,
+-            e,
+-            &i.knowledge,
+-            i.limits,
+-        )
+-        .map_err(|e| e.to_string())?;
+-        let solved =
+-            tree::workspace::cached::solve(&built.tree, i.solver).map_err(|e| e.to_string())?;
+-        return Ok(Output {
+-            built,
+-            solved,
+-            growth: None,
+-            complete: true,
+-        });
+-    }
+-    if matches!(
+-        variant,
+-        Method::Exhaustive
+-            | Method::ExhaustiveWorkspace
+-            | Method::ExhaustiveCached
+-            | Method::ExhaustiveWriting
+-    ) {
+-        let build = if matches!(variant, Method::ExhaustiveWriting) {
+-            tree::engine::build_writing
+-        } else {
+-            tree::engine::build
+-        };
+-        let built = build(
+-            &i.worlds,
+-            SideId::One,
+-            Ruleset::CHAMPIONS_MC,
+-            e,
+-            &i.knowledge,
+-            i.limits,
+-        )
+-        .map_err(|e| e.to_string())?;
+-        let solved = if matches!(
+-            variant,
+-            Method::ExhaustiveCached | Method::ExhaustiveWriting
+-        ) {
+-            tree::workspace::cached::solve(&built.tree, i.solver)
+-        } else if matches!(variant, Method::ExhaustiveWorkspace) {
+-            tree::workspace::solve(&built.tree, i.solver)
+-        } else {
+-            tree::solve(&built.tree, i.solver)
+-        }
+-        .map_err(|e| e.to_string())?;
+-        Ok(Output {
+-            built,
+-            solved,
+-            growth: None,
+-            complete: true,
+-        })
+-    } else {
+-        let r = match variant {
+-            Method::Growing(g) => tree::engine::growing(
+-                &i.worlds,
+-                SideId::One,
+-                Ruleset::CHAMPIONS_MC,
+-                e,
+-                &i.knowledge,
+-                i.limits,
+-                *g,
+-            ),
+-            Method::Reusing(g, options) => tree::engine::growing_reusing(
+-                &i.worlds,
+-                SideId::One,
+-                Ruleset::CHAMPIONS_MC,
+-                e,
+-                &i.knowledge,
+-                i.limits,
+-                growing::reuse::Settings {
+-                    growth: *g,
+-                    storage: *options,
+-                },
+-            ),
+-            #[cfg(feature = "experiment-owned-transitions")]
+-            Method::Owned(g) => tree::engine::growing_owned(
+-                &i.worlds,
+-                SideId::One,
+-                Ruleset::CHAMPIONS_MC,
+-                e,
+-                &i.knowledge,
+-                i.limits,
+-                growing::reuse::Settings {
+-                    growth: *g,
+-                    storage: growing::reuse::Options {
+-                        in_place: true,
+-                        workspace: true,
+-                        compiler: true,
+-                        static_values: true,
+-                        direct_write: true,
+-                    },
+-                },
+-            ),
+-            #[cfg(feature = "experiment-shared-final-passes")]
+-            Method::Shared(g) => tree::engine::growing_shared(
+-                &i.worlds,
+-                SideId::One,
+-                Ruleset::CHAMPIONS_MC,
+-                e,
+-                &i.knowledge,
+-                i.limits,
+-                growing::reuse::Settings {
+-                    growth: *g,
+-                    storage: growing::reuse::Options {
+-                        in_place: true,
+-                        workspace: true,
+-                        compiler: true,
+-                        static_values: true,
+-                        direct_write: true,
+-                    },
+-                },
+-            ),
+-            #[cfg(feature = "experiment-incremental-compilation")]
+-            Method::Incremental(g) => tree::engine::growing_incremental(
+-                &i.worlds,
+-                SideId::One,
+-                Ruleset::CHAMPIONS_MC,
+-                e,
+-                &i.knowledge,
+-                i.limits,
+-                growing::reuse::Settings {
+-                    growth: *g,
+-                    storage: growing::reuse::Options {
+-                        in_place: true,
+-                        workspace: true,
+-                        compiler: true,
+-                        static_values: true,
+-                        direct_write: true,
+-                    },
+-                },
+-            ),
+-            #[cfg(feature = "experiment-parallel-transitions")]
+-            Method::Parallel(g, pool) => tree::engine::parallel::growing(
+-                &i.worlds,
+-                SideId::One,
+-                Ruleset::CHAMPIONS_MC,
+-                e,
+-                &i.knowledge,
+-                i.limits,
+-                tree::engine::parallel::Settings {
+-                    pool,
+-                    search: growing::reuse::Settings {
+-                        growth: *g,
+-                        storage: growing::reuse::Options {
+-                            in_place: true,
+-                            workspace: true,
+-                            compiler: true,
+-                            static_values: true,
+-                            direct_write: true,
+-                        },
+-                    },
+-                },
+-            ),
+-            _ => unreachable!(),
+-        }
+-        .map_err(|e| e.to_string())?;
+-        Ok(Output {
+-            built: r.built,
+-            solved: r.solution,
+-            growth: Some((r.work, r.stop, r.frontier_public_groups)),
+-            complete: r.horizon_complete,
+-        })
+-    }
+-}
+-fn root_policy(o: &Output) -> BTreeMap<String, Vec<f64>> {
+-    o.built
+-        .tree
+-        .information()
+-        .iter()
+-        .enumerate()
+-        .filter(|(_, i)| i.player == 0 && i.own_sequence.is_empty())
+-        .map(|(id, i)| (i.key.clone(), o.solved.policy[id].clone()))
+-        .collect()
+-}
+-fn diagnostics(o: &Output) -> Value {
+-    let growth=o.growth.as_ref().map(|(w,stop,frontier)|json!({"attempted_transitions":w.attempted_transitions,
+-        "committed_expansions":w.committed_expansions,"walks":w.walks,"solves":w.solves,
+-        "total_cfr_iterations":w.cfr_iterations,"stop":format!("{stop:?}"),"frontier_groups":frontier}));
+-    json!({"nodes":o.built.tree.node_count(),"information_sets":o.built.tree.information().len(),
+-        "transitions":o.built.stats.transitions,"chance_outcomes":o.built.stats.chance_outcomes,
+-        "leaves":o.built.stats.leaves,"switch_decisions":o.built.stats.switch_decisions,
+-        "iterations":o.solved.iterations,"gap":o.solved.assessment.gap,"value":o.solved.assessment.value,
+-        "solver_converged":o.solved.converged,"horizon_complete":o.complete,"growth":growth,
+-        "root_policy":root_policy(o)})
+-}
+-// Full and growing builders assign different physical IDs. Canonical preorder removes
+-// only this numbering; information keys, menus, chance probabilities and leaf values stay.
+-fn canonical(t: &tree::Tree) -> String {
+-    fn visit(n: usize, raw: &[tree::Node], out: &mut Vec<tree::Node>) -> usize {
+-        let id = out.len();
+-        out.push(tree::Node::Terminal(0.));
+-        out[id] = match &raw[n] {
+-            tree::Node::Terminal(v) => tree::Node::Terminal(*v),
+-            tree::Node::Chance(edges) => tree::Node::Chance(
+-                edges
+-                    .iter()
+-                    .map(|(p, c)| (*p, visit(*c, raw, out)))
+-                    .collect(),
+-            ),
+-            tree::Node::Decision {
+-                player,
+-                information,
+-                actions,
+-                children,
+-            } => tree::Node::Decision {
+-                player: *player,
+-                information: information.clone(),
+-                actions: actions.clone(),
+-                children: children.iter().map(|c| visit(*c, raw, out)).collect(),
+-            },
+-        };
+-        id
+-    }
+-    let raw = t.export_nodes();
+-    let mut out = Vec::new();
+-    visit(t.root(), &raw, &mut out);
+-    format!("{:?}|{:?}", t.worlds(), out)
+-}
+-fn semantic_policy(o: &Output) -> BTreeMap<String, Vec<u64>> {
+-    o.built
+-        .tree
+-        .information()
+-        .iter()
+-        .enumerate()
+-        .map(|(id, i)| {
+-            (
+-                i.key.clone(),
+-                o.solved.policy[id].iter().map(|p| p.to_bits()).collect(),
+-            )
+-        })
+-        .collect()
+-}
+-fn validate(reference: &Output, o: &Output, variant: &Value) -> Result<(), String> {
+-    if !o.solved.converged {
+-        return Err("requested solver tolerance was not met".into());
+-    }
+-    if variant["comparison"] == "same-finite-game" {
+-        if !reference.complete || !o.complete {
+-            return Err("incomplete requested horizon".into());
+-        }
+-        if canonical(&reference.built.tree) != canonical(&o.built.tree)
+-            || semantic_policy(reference) != semantic_policy(o)
+-            || format!("{:?}", reference.solved.assessment) != format!("{:?}", o.solved.assessment)
+-            || reference.built.stats.transitions != o.built.stats.transitions
+-        {
+-            return Err("finite-game tree/policy/certificate parity failed".into());
+-        }
+-        return Ok(());
+-    }
+-    // Exact comparison of the entire policy, tree, observation metadata, best responses,
+-    // stopping state and charged/committed work. This also covers partial/limited trees.
+-    if format!("{:?}", reference.built.tree) != format!("{:?}", o.built.tree)
+-        || format!("{:?}", reference.solved) != format!("{:?}", o.solved)
+-        || format!("{:?}", reference.built.stats) != format!("{:?}", o.built.stats)
+-        || diagnostics(reference) != diagnostics(o)
+-    {
+-        return Err("exact same-work parity failed".into());
+-    }
+-    Ok(())
+-}
+-fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
+-    let config = growing::Config {
+-        max_expansions: uint(v, "max_expansions", 10000)?,
+-        max_walks: uint(v, "max_walks", 20000)?,
+-        exploration: 1.,
+-        seed: v["seed"].as_u64().unwrap_or(1),
+-        solver,
+-    };
+-    Ok(match string(v, "kind")? {
+-        "exhaustive" => Method::Exhaustive,
+-        "exhaustive-workspace" => Method::ExhaustiveWorkspace,
+-        "exhaustive-cached" => Method::ExhaustiveCached,
+-        "exhaustive-writing" => Method::ExhaustiveWriting,
+-        #[cfg(feature = "experiment-owned-transitions")]
+-        "exhaustive-owned" => Method::ExhaustiveOwned,
+-        #[cfg(feature = "experiment-owned-transitions")]
+-        "all-owned" => Method::Owned(config),
+-        #[cfg(feature = "experiment-shared-final-passes")]
+-        "all-shared" => Method::Shared(config),
+-        #[cfg(feature = "experiment-incremental-compilation")]
+-        "all-incremental" => Method::Incremental(config),
+-        #[cfg(feature = "experiment-parallel-transitions")]
+-        "parallel" => {
+-            let threads = uint(v, "threads", 1)?;
+-            if ![1, 2, 4].contains(&threads) {
+-                return Err("parallel threads must be 1,2,4".into());
+-            }
+-            Method::Parallel(
+-                config,
+-                rayon::ThreadPoolBuilder::new()
+-                    .num_threads(threads)
+-                    .stack_size(16 * 1024 * 1024)
+-                    .build()
+-                    .map_err(|e| e.to_string())?,
+-            )
+-        }
+-        "growing" => Method::Growing(config),
+-        "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all"
+-        | "cached" | "all-cached" | "writer" | "all-writer" => Method::Reusing(
+-            config,
+-            growing::reuse::Options {
+-                in_place: matches!(
+-                    v["kind"].as_str(),
+-                    Some(
+-                        "in-place"
+-                            | "combined"
+-                            | "in-place-compiler"
+-                            | "all"
+-                            | "all-cached"
+-                            | "all-writer"
+-                    )
+-                ),
+-                workspace: matches!(
+-                    v["kind"].as_str(),
+-                    Some("workspace" | "combined" | "all" | "cached" | "all-cached" | "all-writer")
+-                ),
+-                compiler: matches!(
+-                    v["kind"].as_str(),
+-                    Some("compiler" | "in-place-compiler" | "all" | "all-cached" | "all-writer")
+-                ),
+-                static_values: matches!(
+-                    v["kind"].as_str(),
+-                    Some("cached" | "all-cached" | "all-writer")
+-                ),
+-                direct_write: matches!(v["kind"].as_str(), Some("writer" | "all-writer")),
+-            },
+-        ),
+-        _ => return Err("invalid method".into()),
+-    })
+-}
+-fn emit(v: Value) -> Result<(), String> {
+-    println!("{}", serde_json::to_string(&v).map_err(|e| e.to_string())?);
+-    std::io::stdout().flush().map_err(|e| e.to_string())
+-}
+-// Each timing covers build + CFR until a decision result is available. Diagnostics and
+-// the returned graph's destructor run after the timer, identically for both paths.
+-fn timed(i: &Input, e: &dyn Evaluator<2>, v: &Method, n: usize) -> Result<(f64, Output), String> {
+-    let mut ns = 0.;
+-    let mut last = None;
+-    for _ in 0..n {
+-        drop(last.take());
+-        let start = Instant::now();
+-        let output = compute(i, e, v)?;
+-        black_box(&output);
+-        ns += start.elapsed().as_nanos() as f64;
+-        last = Some(output);
+-    }
+-    Ok((ns / n as f64, last.unwrap()))
+-}
+-fn main() -> std::process::ExitCode {
+-    let work = || -> Result<(), String> {
+-        let args: Vec<_> = std::env::args().skip(1).collect();
+-        if args.len() != 2 || !["--check", "--measure"].contains(&args[0].as_str()) {
+-            return Err("usage: lab-belief-workspace-speed --check|--measure case.json".into());
+-        }
+-        let path = Path::new(&args[1]);
+-        let v: Value = serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
+-            .map_err(|e| e.to_string())?;
+-        let i = load(&v, path.parent().unwrap_or(Path::new(".")))?;
+-        let evaluator = lab_search::model::load_evaluator("heuristic")?;
+-        let variants = v["variants"].as_array().ok_or("variants")?;
+-        let methods = variants
+-            .iter()
+-            .map(|v| method(v, i.solver))
+-            .collect::<Result<Vec<_>, _>>()?;
+-        let base = &v["baseline"];
+-        let baseline_method = method(base, i.solver)?;
+-        let reference = compute(&i, evaluator.as_ref(), &baseline_method)?;
+-        validate(&reference, &reference, base)?;
+-        emit(json!({"type":"baseline","diagnostics":diagnostics(&reference)}))?;
+-        let mut batches = Vec::new();
+-        let mut expected = Vec::new();
+-        let target = uint(&v, "sample_ms", 80)? as f64 * 1e6;
+-        for (variant, method) in variants.iter().zip(&methods) {
+-            let o = compute(&i, evaluator.as_ref(), method)?;
+-            validate(&reference, &o, variant)?;
+-            let d = diagnostics(&o);
+-            expected.push(d.clone());
+-            emit(json!({"type":"validation","variant":variant,"diagnostics":d}))?;
+-            if args[0] == "--measure" {
+-                let (baseline_ns, _) = timed(&i, evaluator.as_ref(), &baseline_method, 1)?;
+-                let (variant_ns, _) = timed(&i, evaluator.as_ref(), method, 1)?;
+-                let counts = [baseline_ns, variant_ns]
+-                    .map(|ns| (target / ns).ceil().clamp(1., 64.) as usize);
+-                batches.push(counts);
+-                emit(
+-                    json!({"type":"calibration","variant":variant["id"],"baseline_ns":baseline_ns,"variant_ns":variant_ns,"counts":counts}),
+-                )?;
+-            }
+-        }
+-        if args[0] == "--check" {
+-            return emit(json!({"type":"checked","timing":false}));
+-        }
+-        let rounds = uint(&v, "rounds", 7)?;
+-        if !(3..=31).contains(&rounds) {
+-            return Err("rounds range 3..31".into());
+-        }
+-        let base_d = diagnostics(&reference);
+-        drop(reference);
+-        for block in 0..rounds {
+-            for offset in 0..variants.len() {
+-                // Rotate treatments between blocks; ABBA/BAAB balances within-block drift.
+-                let index = (offset + block) % variants.len();
+-                let variant = &variants[index];
+-                let order = if block % 2 == 0 {
+-                    [0, 1, 1, 0]
+-                } else {
+-                    [1, 0, 0, 1]
+-                };
+-                let mut samples = Vec::new();
+-                for (slot, which) in order.into_iter().enumerate() {
+-                    let treatment = if which == 0 {
+-                        &baseline_method
+-                    } else {
+-                        &methods[index]
+-                    };
+-                    let (ns, o) = timed(&i, evaluator.as_ref(), treatment, batches[index][which])?;
+-                    if diagnostics(&o)
+-                        != if which == 0 {
+-                            base_d.clone()
+-                        } else {
+-                            expected[index].clone()
+-                        }
+-                    {
+-                        return Err("nondeterministic result during timing".into());
+-                    }
+-                    samples.push(json!({"slot":slot,"treatment":if which==0 {"baseline"} else {"candidate"},"ns_per_solve":ns,"batch":batches[index][which]}));
+-                }
+-                emit(
+-                    json!({"type":"paired","block":block,"variant":variant["id"],"samples":samples}),
+-                )?;
+-            }
+-        }
+-        emit(json!({"type":"completed","rounds":rounds,"timing":true}))
+-    };
+-    match work() {
+-        Ok(()) => std::process::ExitCode::SUCCESS,
+-        Err(e) => {
+-            eprintln!("lab-belief-workspace-speed: {e}");
+-            std::process::ExitCode::FAILURE
+-        }
+-    }
+-}
++//! Same-work paired benchmark: exact reference/candidate parity precedes timing.
++//! Loading, JSON serialization, diagnostics and returned-tree destruction are not timed.
++use lab_engine::{eval::Evaluator, rules::Ruleset, state::SideId, turn::EnumerateOptions};
++use lab_search::{
++    bayesian::{
++        self,
++        engine::{EngineWorld, Knowledge},
++        tree::{
++            self,
++            builder::{growing, Built, Limits},
++        },
++    },
++    budgeted::Position,
++};
++use serde_json::{json, Value};
++use std::{collections::BTreeMap, hint::black_box, io::Write, path::Path, time::Instant};
++
++struct Input {
++    worlds: Vec<EngineWorld<2>>,
++    knowledge: Knowledge,
++    limits: Limits,
++    solver: bayesian::Config,
++}
++struct Output {
++    built: Built,
++    solved: tree::Solution,
++    growth: Option<(growing::Work, growing::Stop, usize)>,
++    complete: bool,
++}
++enum Method {
++    Exhaustive,
++    Growing(growing::Config),
++    Reusing(growing::Config, growing::reuse::Options),
++    ExhaustiveWorkspace,
++    ExhaustiveCached,
++    ExhaustiveWriting,
++    #[cfg(feature = "experiment-owned-transitions")]
++    ExhaustiveOwned,
++    #[cfg(feature = "experiment-owned-transitions")]
++    Owned(growing::Config),
++    #[cfg(feature = "experiment-shared-final-passes")]
++    Shared(growing::Config),
++    #[cfg(feature = "experiment-incremental-compilation")]
++    Incremental(growing::Config),
++    #[cfg(feature = "experiment-parallel-transitions")]
++    Parallel(growing::Config, rayon::ThreadPool),
++    #[cfg(feature = "experiment-growth-cadence")]
++    Cadence(growing::Config, usize, Option<rayon::ThreadPool>),
++}
++fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
++    match v.get(k) {
++        None => Ok(d),
++        Some(x) => x
++            .as_u64()
++            .and_then(|v| usize::try_from(v).ok())
++            .ok_or_else(|| format!("invalid {k}")),
++    }
++}
++fn string<'a>(v: &'a Value, k: &str) -> Result<&'a str, String> {
++    v[k].as_str().ok_or_else(|| format!("invalid {k}"))
++}
++fn load(v: &Value, base: &Path) -> Result<Input, String> {
++    let mut worlds = Vec::new();
++    for w in v["worlds"].as_array().ok_or("worlds array")? {
++        let loaded = lab_scenario::load_scenario_file(base.join(string(w, "scenario")?))
++            .map_err(|e| e.to_string())?;
++        let mut positions =
++            lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
++                .map_err(|e| e.to_string())?;
++        if positions.len() != 1 {
++            return Err("ambiguous root".into());
++        }
++        worlds.push(EngineWorld {
++            id: string(w, "id")?.into(),
++            weight: w["weight"].as_f64().ok_or("weight")?,
++            position: Position {
++                state: positions.remove(0).state,
++                suspension: None,
++            },
++        });
++    }
++    let l = &v["limits"];
++    let s = &v["solver"];
++    Ok(Input {
++        worlds,
++        knowledge: Knowledge {
++            hidden_stats: v["hidden_stats"].as_bool().unwrap_or(false),
++            ..Knowledge::default()
++        },
++        limits: Limits {
++            turns: uint(l, "turns", 2)?
++                .try_into()
++                .map_err(|_| "turn overflow")?,
++            max_nodes: uint(l, "max_nodes", 50000)?,
++            max_transitions: uint(l, "max_transitions", 20000)?,
++            max_decisions: uint(l, "max_decisions", 32)?,
++        },
++        solver: bayesian::Config {
++            iterations: uint(s, "iterations", 1000)?,
++            check_every: uint(s, "check_every", 32)?,
++            tolerance: s["tolerance"].as_f64().unwrap_or(0.1),
++        },
++    })
++}
++fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, String> {
++    let i = black_box(i);
++    #[cfg(feature = "experiment-owned-transitions")]
++    if matches!(variant, Method::ExhaustiveOwned) {
++        let built = tree::engine::build_owned(
++            &i.worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            e,
++            &i.knowledge,
++            i.limits,
++        )
++        .map_err(|e| e.to_string())?;
++        let solved =
++            tree::workspace::cached::solve(&built.tree, i.solver).map_err(|e| e.to_string())?;
++        return Ok(Output {
++            built,
++            solved,
++            growth: None,
++            complete: true,
++        });
++    }
++    if matches!(
++        variant,
++        Method::Exhaustive
++            | Method::ExhaustiveWorkspace
++            | Method::ExhaustiveCached
++            | Method::ExhaustiveWriting
++    ) {
++        let build = if matches!(variant, Method::ExhaustiveWriting) {
++            tree::engine::build_writing
++        } else {
++            tree::engine::build
++        };
++        let built = build(
++            &i.worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            e,
++            &i.knowledge,
++            i.limits,
++        )
++        .map_err(|e| e.to_string())?;
++        let solved = if matches!(
++            variant,
++            Method::ExhaustiveCached | Method::ExhaustiveWriting
++        ) {
++            tree::workspace::cached::solve(&built.tree, i.solver)
++        } else if matches!(variant, Method::ExhaustiveWorkspace) {
++            tree::workspace::solve(&built.tree, i.solver)
++        } else {
++            tree::solve(&built.tree, i.solver)
++        }
++        .map_err(|e| e.to_string())?;
++        Ok(Output {
++            built,
++            solved,
++            growth: None,
++            complete: true,
++        })
++    } else {
++        let r = match variant {
++            Method::Growing(g) => tree::engine::growing(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                *g,
++            ),
++            Method::Reusing(g, options) => tree::engine::growing_reusing(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                growing::reuse::Settings {
++                    growth: *g,
++                    storage: *options,
++                },
++            ),
++            #[cfg(feature = "experiment-owned-transitions")]
++            Method::Owned(g) => tree::engine::growing_owned(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                growing::reuse::Settings {
++                    growth: *g,
++                    storage: growing::reuse::Options {
++                        in_place: true,
++                        workspace: true,
++                        compiler: true,
++                        static_values: true,
++                        direct_write: true,
++                    },
++                },
++            ),
++            #[cfg(feature = "experiment-shared-final-passes")]
++            Method::Shared(g) => tree::engine::growing_shared(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                growing::reuse::Settings {
++                    growth: *g,
++                    storage: growing::reuse::Options {
++                        in_place: true,
++                        workspace: true,
++                        compiler: true,
++                        static_values: true,
++                        direct_write: true,
++                    },
++                },
++            ),
++            #[cfg(feature = "experiment-incremental-compilation")]
++            Method::Incremental(g) => tree::engine::growing_incremental(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                growing::reuse::Settings {
++                    growth: *g,
++                    storage: growing::reuse::Options {
++                        in_place: true,
++                        workspace: true,
++                        compiler: true,
++                        static_values: true,
++                        direct_write: true,
++                    },
++                },
++            ),
++            #[cfg(feature = "experiment-parallel-transitions")]
++            Method::Parallel(g, pool) => tree::engine::parallel::growing(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                tree::engine::parallel::Settings {
++                    pool,
++                    search: growing::reuse::Settings {
++                        growth: *g,
++                        storage: growing::reuse::Options {
++                            in_place: true,
++                            workspace: true,
++                            compiler: true,
++                            static_values: true,
++                            direct_write: true,
++                        },
++                    },
++                },
++            ),
++            #[cfg(feature = "experiment-growth-cadence")]
++            Method::Cadence(g, every, pool) => tree::engine::cadence::growing(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                tree::engine::cadence::Settings {
++                    pool: pool.as_ref(),
++                    cadence: *every,
++                    search: growing::reuse::Settings {
++                        growth: *g,
++                        storage: growing::reuse::Options {
++                            in_place: true,
++                            workspace: true,
++                            compiler: true,
++                            static_values: true,
++                            direct_write: true,
++                        },
++                    },
++                },
++            ),
++            _ => unreachable!(),
++        }
++        .map_err(|e| e.to_string())?;
++        Ok(Output {
++            built: r.built,
++            solved: r.solution,
++            growth: Some((r.work, r.stop, r.frontier_public_groups)),
++            complete: r.horizon_complete,
++        })
++    }
++}
++fn root_policy(o: &Output) -> BTreeMap<String, Vec<f64>> {
++    o.built
++        .tree
++        .information()
++        .iter()
++        .enumerate()
++        .filter(|(_, i)| i.player == 0 && i.own_sequence.is_empty())
++        .map(|(id, i)| (i.key.clone(), o.solved.policy[id].clone()))
++        .collect()
++}
++fn diagnostics(o: &Output) -> Value {
++    let growth=o.growth.as_ref().map(|(w,stop,frontier)|json!({"attempted_transitions":w.attempted_transitions,
++        "attempted_expansions":w.attempted_expansions,"committed_expansions":w.committed_expansions,"walks":w.walks,"solves":w.solves,
++        "total_cfr_iterations":w.cfr_iterations,"stop":format!("{stop:?}"),"frontier_groups":frontier}));
++    json!({"nodes":o.built.tree.node_count(),"information_sets":o.built.tree.information().len(),
++        "transitions":o.built.stats.transitions,"chance_outcomes":o.built.stats.chance_outcomes,
++        "leaves":o.built.stats.leaves,"switch_decisions":o.built.stats.switch_decisions,
++        "iterations":o.solved.iterations,"gap":o.solved.assessment.gap,"value":o.solved.assessment.value,
++        "solver_converged":o.solved.converged,"horizon_complete":o.complete,"growth":growth,
++        "root_policy":root_policy(o)})
++}
++// Full and growing builders assign different physical IDs. Canonical preorder removes
++// only this numbering; information keys, menus, chance probabilities and leaf values stay.
++fn canonical(t: &tree::Tree) -> String {
++    fn visit(n: usize, raw: &[tree::Node], out: &mut Vec<tree::Node>) -> usize {
++        let id = out.len();
++        out.push(tree::Node::Terminal(0.));
++        out[id] = match &raw[n] {
++            tree::Node::Terminal(v) => tree::Node::Terminal(*v),
++            tree::Node::Chance(edges) => tree::Node::Chance(
++                edges
++                    .iter()
++                    .map(|(p, c)| (*p, visit(*c, raw, out)))
++                    .collect(),
++            ),
++            tree::Node::Decision {
++                player,
++                information,
++                actions,
++                children,
++            } => tree::Node::Decision {
++                player: *player,
++                information: information.clone(),
++                actions: actions.clone(),
++                children: children.iter().map(|c| visit(*c, raw, out)).collect(),
++            },
++        };
++        id
++    }
++    let raw = t.export_nodes();
++    let mut out = Vec::new();
++    visit(t.root(), &raw, &mut out);
++    format!("{:?}|{:?}", t.worlds(), out)
++}
++fn semantic_policy(o: &Output) -> BTreeMap<String, Vec<u64>> {
++    o.built
++        .tree
++        .information()
++        .iter()
++        .enumerate()
++        .map(|(id, i)| {
++            (
++                i.key.clone(),
++                o.solved.policy[id].iter().map(|p| p.to_bits()).collect(),
++            )
++        })
++        .collect()
++}
++fn validate(reference: &Output, o: &Output, variant: &Value) -> Result<(), String> {
++    if !o.solved.converged {
++        return Err("requested solver tolerance was not met".into());
++    }
++    if variant["comparison"] == "same-finite-game" {
++        if !reference.complete || !o.complete {
++            return Err("incomplete requested horizon".into());
++        }
++        if canonical(&reference.built.tree) != canonical(&o.built.tree)
++            || semantic_policy(reference) != semantic_policy(o)
++            || format!("{:?}", reference.solved.assessment) != format!("{:?}", o.solved.assessment)
++            || reference.built.stats.transitions != o.built.stats.transitions
++        {
++            return Err("finite-game tree/policy/certificate parity failed".into());
++        }
++        return Ok(());
++    }
++    // Exact comparison of the entire policy, tree, observation metadata, best responses,
++    // stopping state and charged/committed work. This also covers partial/limited trees.
++    if format!("{:?}", reference.built.tree) != format!("{:?}", o.built.tree)
++        || format!("{:?}", reference.solved) != format!("{:?}", o.solved)
++        || format!("{:?}", reference.built.stats) != format!("{:?}", o.built.stats)
++        || diagnostics(reference) != diagnostics(o)
++    {
++        return Err("exact same-work parity failed".into());
++    }
++    Ok(())
++}
++fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
++    let config = growing::Config {
++        max_expansions: uint(v, "max_expansions", 10000)?,
++        max_walks: uint(v, "max_walks", 20000)?,
++        exploration: 1.,
++        seed: v["seed"].as_u64().unwrap_or(1),
++        solver,
++    };
++    Ok(match string(v, "kind")? {
++        "exhaustive" => Method::Exhaustive,
++        "exhaustive-workspace" => Method::ExhaustiveWorkspace,
++        "exhaustive-cached" => Method::ExhaustiveCached,
++        "exhaustive-writing" => Method::ExhaustiveWriting,
++        #[cfg(feature = "experiment-owned-transitions")]
++        "exhaustive-owned" => Method::ExhaustiveOwned,
++        #[cfg(feature = "experiment-owned-transitions")]
++        "all-owned" => Method::Owned(config),
++        #[cfg(feature = "experiment-shared-final-passes")]
++        "all-shared" => Method::Shared(config),
++        #[cfg(feature = "experiment-incremental-compilation")]
++        "all-incremental" => Method::Incremental(config),
++        #[cfg(feature = "experiment-parallel-transitions")]
++        "parallel" => {
++            let threads = uint(v, "threads", 1)?;
++            if ![1, 2, 4].contains(&threads) {
++                return Err("parallel threads must be 1,2,4".into());
++            }
++            Method::Parallel(
++                config,
++                rayon::ThreadPoolBuilder::new()
++                    .num_threads(threads)
++                    .stack_size(16 * 1024 * 1024)
++                    .build()
++                    .map_err(|e| e.to_string())?,
++            )
++        }
++        #[cfg(feature = "experiment-growth-cadence")]
++        "cadence" => {
++            let every = uint(v, "cadence", 1)?;
++            let threads = uint(v, "threads", 0)?;
++            if ![0, 1, 2, 4].contains(&threads) {
++                return Err("invalid cadence threads".into());
++            }
++            let pool = if threads > 1 {
++                Some(
++                    rayon::ThreadPoolBuilder::new()
++                        .num_threads(threads)
++                        .stack_size(16 * 1024 * 1024)
++                        .build()
++                        .map_err(|e| e.to_string())?,
++                )
++            } else {
++                None
++            };
++            Method::Cadence(config, every, pool)
++        }
++        "growing" => Method::Growing(config),
++        "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all"
++        | "cached" | "all-cached" | "writer" | "all-writer" => Method::Reusing(
++            config,
++            growing::reuse::Options {
++                in_place: matches!(
++                    v["kind"].as_str(),
++                    Some(
++                        "in-place"
++                            | "combined"
++                            | "in-place-compiler"
++                            | "all"
++                            | "all-cached"
++                            | "all-writer"
++                    )
++                ),
++                workspace: matches!(
++                    v["kind"].as_str(),
++                    Some("workspace" | "combined" | "all" | "cached" | "all-cached" | "all-writer")
++                ),
++                compiler: matches!(
++                    v["kind"].as_str(),
++                    Some("compiler" | "in-place-compiler" | "all" | "all-cached" | "all-writer")
++                ),
++                static_values: matches!(
++                    v["kind"].as_str(),
++                    Some("cached" | "all-cached" | "all-writer")
++                ),
++                direct_write: matches!(v["kind"].as_str(), Some("writer" | "all-writer")),
++            },
++        ),
++        _ => return Err("invalid method".into()),
++    })
++}
++fn emit(v: Value) -> Result<(), String> {
++    println!("{}", serde_json::to_string(&v).map_err(|e| e.to_string())?);
++    std::io::stdout().flush().map_err(|e| e.to_string())
++}
++// Each timing covers build + CFR until a decision result is available. Diagnostics and
++// the returned graph's destructor run after the timer, identically for both paths.
++fn timed(i: &Input, e: &dyn Evaluator<2>, v: &Method, n: usize) -> Result<(f64, Output), String> {
++    let mut ns = 0.;
++    let mut last = None;
++    for _ in 0..n {
++        drop(last.take());
++        let start = Instant::now();
++        let output = compute(i, e, v)?;
++        black_box(&output);
++        ns += start.elapsed().as_nanos() as f64;
++        last = Some(output);
++    }
++    Ok((ns / n as f64, last.unwrap()))
++}
++fn main() -> std::process::ExitCode {
++    let work = || -> Result<(), String> {
++        let args: Vec<_> = std::env::args().skip(1).collect();
++        if args.len() != 2 || !["--check", "--measure"].contains(&args[0].as_str()) {
++            return Err("usage: lab-belief-workspace-speed --check|--measure case.json".into());
++        }
++        let path = Path::new(&args[1]);
++        let v: Value = serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
++            .map_err(|e| e.to_string())?;
++        let i = load(&v, path.parent().unwrap_or(Path::new(".")))?;
++        let evaluator = lab_search::model::load_evaluator("heuristic")?;
++        let variants = v["variants"].as_array().ok_or("variants")?;
++        let methods = variants
++            .iter()
++            .map(|v| method(v, i.solver))
++            .collect::<Result<Vec<_>, _>>()?;
++        let base = &v["baseline"];
++        let baseline_method = method(base, i.solver)?;
++        let reference = compute(&i, evaluator.as_ref(), &baseline_method)?;
++        validate(&reference, &reference, base)?;
++        emit(json!({"type":"baseline","diagnostics":diagnostics(&reference)}))?;
++        let mut batches = Vec::new();
++        let mut expected = Vec::new();
++        let target = uint(&v, "sample_ms", 80)? as f64 * 1e6;
++        for (variant, method) in variants.iter().zip(&methods) {
++            let o = compute(&i, evaluator.as_ref(), method)?;
++            validate(&reference, &o, variant)?;
++            let d = diagnostics(&o);
++            expected.push(d.clone());
++            emit(json!({"type":"validation","variant":variant,"diagnostics":d}))?;
++            if args[0] == "--measure" {
++                let (baseline_ns, _) = timed(&i, evaluator.as_ref(), &baseline_method, 1)?;
++                let (variant_ns, _) = timed(&i, evaluator.as_ref(), method, 1)?;
++                let counts = [baseline_ns, variant_ns]
++                    .map(|ns| (target / ns).ceil().clamp(1., 64.) as usize);
++                batches.push(counts);
++                emit(
++                    json!({"type":"calibration","variant":variant["id"],"baseline_ns":baseline_ns,"variant_ns":variant_ns,"counts":counts}),
++                )?;
++            }
++        }
++        if args[0] == "--check" {
++            return emit(json!({"type":"checked","timing":false}));
++        }
++        let rounds = uint(&v, "rounds", 7)?;
++        if !(3..=31).contains(&rounds) {
++            return Err("rounds range 3..31".into());
++        }
++        let base_d = diagnostics(&reference);
++        drop(reference);
++        for block in 0..rounds {
++            for offset in 0..variants.len() {
++                // Rotate treatments between blocks; ABBA/BAAB balances within-block drift.
++                let index = (offset + block) % variants.len();
++                let variant = &variants[index];
++                let order = if block % 2 == 0 {
++                    [0, 1, 1, 0]
++                } else {
++                    [1, 0, 0, 1]
++                };
++                let mut samples = Vec::new();
++                for (slot, which) in order.into_iter().enumerate() {
++                    let treatment = if which == 0 {
++                        &baseline_method
++                    } else {
++                        &methods[index]
++                    };
++                    let (ns, o) = timed(&i, evaluator.as_ref(), treatment, batches[index][which])?;
++                    if diagnostics(&o)
++                        != if which == 0 {
++                            base_d.clone()
++                        } else {
++                            expected[index].clone()
++                        }
++                    {
++                        return Err("nondeterministic result during timing".into());
++                    }
++                    samples.push(json!({"slot":slot,"treatment":if which==0 {"baseline"} else {"candidate"},"ns_per_solve":ns,"batch":batches[index][which]}));
++                }
++                emit(
++                    json!({"type":"paired","block":block,"variant":variant["id"],"samples":samples}),
++                )?;
++            }
++        }
++        emit(json!({"type":"completed","rounds":rounds,"timing":true}))
++    };
++    match work() {
++        Ok(()) => std::process::ExitCode::SUCCESS,
++        Err(e) => {
++            eprintln!("lab-belief-workspace-speed: {e}");
++            std::process::ExitCode::FAILURE
++        }
++    }
++}
+diff --git a/engine/search/src/bin/lab-belief-workspace.rs b/engine/search/src/bin/lab-belief-workspace.rs
+index 27e214f..18bc0ff 100644
+--- a/engine/search/src/bin/lab-belief-workspace.rs
++++ b/engine/search/src/bin/lab-belief-workspace.rs
+@@ -221,6 +221,22 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
+             let growing_config = observed::growth_config(v, config)?;
+             #[cfg(feature = "experiment-growing-belief")]
+             let grown = if let Some(c) = growing_config {
++                let settings = tree::builder::growing::reuse::Settings {
++                    growth: c,
++                    storage: tree::builder::growing::reuse::Options {
++                        in_place: true,
++                        workspace: true,
++                        compiler: true,
++                        static_values: true,
++                        direct_write: true,
++                    },
++                };
++                #[cfg(feature = "experiment-growth-cadence")]
++                let settings = tree::engine::cadence::Settings {
++                    search: settings,
++                    cadence: observed::cadence(v)?,
++                    pool: None,
++                };
+                 Some(
+                     growing_backend(
+                         &worlds,
+@@ -229,16 +245,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
+                         evaluator.as_ref(),
+                         &knowledge,
+                         limits,
+-                        tree::builder::growing::reuse::Settings {
+-                            growth: c,
+-                            storage: tree::builder::growing::reuse::Options {
+-                                in_place: true,
+-                                workspace: true,
+-                                compiler: true,
+-                                static_values: true,
+-                                direct_write: true,
+-                            },
+-                        },
++                        settings,
+                     )
+                     .map_err(|e| e.to_string())?,
+                 )
+@@ -264,7 +271,10 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
+                 Some(g) => {
+                     #[cfg(feature = "experiment-growing-belief")]
+                     {
+-                        let meta = observed::metadata(&g);
++                        #[allow(unused_mut)]
++                        let mut meta = observed::metadata(&g);
++                        #[cfg(feature = "experiment-growth-cadence")]
++                        observed::cadence_metadata(&mut meta, observed::cadence(v)?);
+                         (g.built, meta, Some(g.solution))
+                     }
+                     #[cfg(not(feature = "experiment-growing-belief"))]
+@@ -385,15 +395,21 @@ mod tests {
+ }
+ 
+ #[cfg(feature = "experiment-incremental-compilation")]
++#[cfg(not(feature = "experiment-growth-cadence"))]
+ use lab_search::bayesian::tree::engine::growing_incremental as growing_backend;
+ #[cfg(all(
+     feature = "experiment-owned-transitions",
+     not(feature = "experiment-shared-final-passes"),
+     not(feature = "experiment-incremental-compilation")
+ ))]
++#[cfg(not(feature = "experiment-growth-cadence"))]
+ use lab_search::bayesian::tree::engine::growing_owned as growing_backend;
+ #[cfg(all(
+     feature = "experiment-shared-final-passes",
+     not(feature = "experiment-incremental-compilation")
+ ))]
++#[cfg(not(feature = "experiment-growth-cadence"))]
+ use lab_search::bayesian::tree::engine::growing_shared as growing_backend;
++
++#[cfg(feature = "experiment-growth-cadence")]
++use lab_search::bayesian::tree::engine::cadence::growing as growing_backend;
+diff --git a/engine/search/src/bin/lab-belief-workspace/observed.rs b/engine/search/src/bin/lab-belief-workspace/observed.rs
+index 481b324..20d0d45 100644
+--- a/engine/search/src/bin/lab-belief-workspace/observed.rs
++++ b/engine/search/src/bin/lab-belief-workspace/observed.rs
+@@ -41,7 +41,19 @@ pub fn growth_config(v: &Value, solver: Config) -> Result<Option<growing::Config
+     let Some(c) = v.get("growth") else {
+         return Ok(None);
+     };
++    #[cfg(not(feature = "experiment-growth-cadence"))]
+     keys(c, &["max_expansions", "max_walks", "exploration", "seed"])?;
++    #[cfg(feature = "experiment-growth-cadence")]
++    keys(
++        c,
++        &[
++            "max_expansions",
++            "max_walks",
++            "exploration",
++            "seed",
++            "cadence",
++        ],
++    )?;
+     let mut g = growing::Config {
+         solver,
+         ..growing::Config::default()
+@@ -179,6 +191,24 @@ pub fn request(
+     }
+     let domain = Table(states);
+     let (built, solution, growth) = if let Some(c) = growth_config(v, config)? {
++        #[cfg(feature = "experiment-growth-cadence")]
++        let r = growing::reuse::cadence::search(
++            &domain,
++            &seeds,
++            limits,
++            c,
++            &growing::Uniform,
++            growing::reuse::Options {
++                in_place: true,
++                workspace: true,
++                compiler: true,
++                static_values: true,
++                direct_write: false,
++            },
++            cadence(v)?,
++        )
++        .map_err(|e| e.to_string())?;
++        #[cfg(not(feature = "experiment-growth-cadence"))]
+         let r = search_backend(
+             &domain,
+             &seeds,
+@@ -194,7 +224,10 @@ pub fn request(
+             },
+         )
+         .map_err(|e| e.to_string())?;
+-        let m = metadata(&r);
++        #[allow(unused_mut)]
++        let mut m = metadata(&r);
++        #[cfg(feature = "experiment-growth-cadence")]
++        cadence_metadata(&mut m, cadence(v)?);
+         (r.built, Some(r.solution), m)
+     } else {
+         (
+@@ -221,11 +254,31 @@ pub fn export(t: &Tree) -> Value {
+     not(feature = "experiment-shared-final-passes"),
+     not(feature = "experiment-incremental-compilation")
+ ))]
++#[cfg(not(feature = "experiment-growth-cadence"))]
+ use growing::reuse::search as search_backend;
+ #[cfg(feature = "experiment-incremental-compilation")]
++#[cfg(not(feature = "experiment-growth-cadence"))]
+ use growing::reuse::search_incremental as search_backend;
+ #[cfg(all(
+     feature = "experiment-shared-final-passes",
+     not(feature = "experiment-incremental-compilation")
+ ))]
++#[cfg(not(feature = "experiment-growth-cadence"))]
+ use growing::reuse::search_shared as search_backend;
++
++#[cfg(feature = "experiment-growth-cadence")]
++pub fn cadence(v: &Value) -> Result<usize, String> {
++    let n = integer(&v["growth"], "cadence", 1)?;
++    if ![1, 2, 4].contains(&n) {
++        return Err("cadence must be 1, 2 or 4".into());
++    }
++    Ok(n)
++}
++
++#[cfg(feature = "experiment-growth-cadence")]
++pub fn cadence_metadata(m: &mut Value, n: usize) {
++    m["solve_cadence"] = json!(n);
++    m["admission_commit"] = json!("selected-batch-atomic");
++    m["selection_snapshot"] = json!("one-solved-snapshot-per-batch");
++    m["regrets"] = json!("reset-after-admission-batch");
++}

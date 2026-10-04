@@ -1,0 +1,4103 @@
+{
+ "description": "FF parity position (FF-parity-harness): dbl-kickoff-aveornot-vs-kickoff-balmung.b, lab-parity game 1 (seed 2ea1717e6d0f4653, policy random, extremes chance), decision 18 = turn 15 Turn. Base scenario D:/pokemon-ai-lab/runs/parity-20260927b/matchups/dbl-kickoff-aveornot-vs-kickoff-balmung.b.json. The 18 earlier decisions are setupTurns pinned by setupStates. Not a recommendation.",
+ "format": "gen9championsvgc2026regmc",
+ "p1": {
+  "order": "5634",
+  "team": [
+   {
+    "name": "",
+    "species": "Charizard",
+    "item": "Charizardite Y",
+    "ability": "Blaze",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Weather Ball",
+     "Heat Wave",
+     "Helping Hand",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Venusaur",
+    "item": "Life Orb",
+    "ability": "Chlorophyll",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Leaf Storm",
+     "Sleep Powder",
+     "Sludge Bomb",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Pelipper",
+    "item": "Focus Sash",
+    "ability": "Drizzle",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Weather Ball",
+     "Hurricane",
+     "Wide Guard",
+     "Tailwind"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Archaludon",
+    "item": "Leftovers",
+    "ability": "Stamina",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Electro Shot",
+     "Draco Meteor",
+     "Snarl",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Sneasler",
+    "item": "Psychic Seed",
+    "ability": "Unburden",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Close Combat",
+     "Rock Slide",
+     "Swords Dance",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Indeedee-F",
+    "item": "Rocky Helmet",
+    "ability": "Psychic Surge",
+    "gender": "",
+    "nature": "Relaxed",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Follow Me",
+     "Trick Room",
+     "Helping Hand",
+     "Terrain Pulse"
+    ]
+   }
+  ]
+ },
+ "p2": {
+  "order": "5634",
+  "team": [
+   {
+    "name": "",
+    "species": "Floette-Eternal",
+    "item": "Floettite",
+    "ability": "Flower Veil",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Protect",
+     "Light of Ruin",
+     "Moonblast",
+     "Dazzling Gleam"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Charizard",
+    "item": "Charizardite Y",
+    "ability": "Blaze",
+    "gender": "",
+    "nature": "Modest",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Solar Beam",
+     "Heat Wave",
+     "Weather Ball",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Kingambit",
+    "item": "Black Glasses",
+    "ability": "Defiant",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Iron Head",
+     "Protect",
+     "Kowtow Cleave",
+     "Sucker Punch"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Whimsicott",
+    "item": "Focus Sash",
+    "ability": "Prankster",
+    "gender": "",
+    "nature": "Timid",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Moonblast",
+     "Tailwind",
+     "Encore",
+     "Protect"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Basculegion",
+    "item": "Mystic Water",
+    "ability": "Adaptability",
+    "gender": "",
+    "nature": "Adamant",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Wave Crash",
+     "Protect",
+     "Last Respects",
+     "Aqua Jet"
+    ]
+   },
+   {
+    "name": "",
+    "species": "Garchomp",
+    "item": "Life Orb",
+    "ability": "Rough Skin",
+    "gender": "",
+    "nature": "Jolly",
+    "evs": {
+     "hp": 0,
+     "atk": 0,
+     "def": 0,
+     "spa": 0,
+     "spd": 0,
+     "spe": 0
+    },
+    "ivs": {
+     "hp": 31,
+     "atk": 31,
+     "def": 31,
+     "spa": 31,
+     "spd": 31,
+     "spe": 31
+    },
+    "level": 100,
+    "moves": [
+     "Earthquake",
+     "Rock Slide",
+     "Protect",
+     "Dragon Claw"
+    ]
+   }
+  ]
+ },
+ "setupRolls": "extremes",
+ "setupStates": [
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "hp": 165,
+       "item": "leftovers",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": null,
+       "species": "Archaludon",
+       "status": ""
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": "fnt"
+      },
+      {
+       "ability": "drizzle",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": -1
+       },
+       "hp": 130,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 195,
+       "item": "mysticwater",
+       "lastMove": "protect",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 12,
+        "protect": 7,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 183,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 12,
+        "protect": 7,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "defiant",
+       "hp": 175,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 1,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 4,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {},
+       "hp": 165,
+       "item": "leftovers",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 8,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "boosts": {
+        "def": -1
+       },
+       "hp": 130,
+       "item": "",
+       "lastItem": "psychicseed",
+       "lastMove": "closecombat",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 7,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": 0,
+       "species": "Sneasler",
+       "status": "",
+       "volatiles": {
+        "unburden": {}
+       }
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 195,
+       "item": "mysticwater",
+       "lastMove": "protect",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 12,
+        "protect": 7,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 183,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 16,
+        "earthquake": 12,
+        "protect": 7,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "defiant",
+       "hp": 175,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1,
+        "spa": -2
+       },
+       "hp": 129,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 7,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": ""
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": "fnt"
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 90,
+       "item": "mysticwater",
+       "lastMove": "lastrespects",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 11,
+        "protect": 7,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 50,
+       "item": "lifeorb",
+       "lastMove": "dragonclaw",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 12,
+        "protect": 7,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 175,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 2,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 3,
+    "weather": "raindance",
+    "weatherDuration": 5
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 1,
+        "spa": -2
+       },
+       "hp": 129,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 7,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 16,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 90,
+       "item": "mysticwater",
+       "lastMove": "lastrespects",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 11,
+        "protect": 7,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 50,
+       "item": "lifeorb",
+       "lastMove": "dragonclaw",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 12,
+        "protect": 7,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "hp": 175,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 8,
+        "suckerpunch": 8
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 3,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 2,
+    "weather": "raindance",
+    "weatherDuration": 4
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 2,
+        "spa": -4
+       },
+       "hp": 51,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 6,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 69,
+       "item": "focussash",
+       "lastMove": "tailwind",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 12
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 90,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 11,
+        "protect": 7,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 32,
+       "item": "lifeorb",
+       "lastMove": "earthquake",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 7,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 55,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 8,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 4,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "psychicterrain",
+    "terrainDuration": 1,
+    "weather": "raindance",
+    "weatherDuration": 3
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 2,
+        "spa": -4
+       },
+       "hp": 61,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 5,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "boosts": {},
+       "hp": 69,
+       "item": "focussash",
+       "lastMove": "wideguard",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": 0,
+       "species": "Pelipper",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 90,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 11,
+        "protect": 7,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 32,
+       "item": "lifeorb",
+       "lastMove": "protect",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 12
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 55,
+       "item": "blackglasses",
+       "lastMove": "protect",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 7,
+        "suckerpunch": 8
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 5,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 2
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3,
+        "spa": -4
+       },
+       "hp": 59,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 4,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 90,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 11,
+        "protect": 7,
+        "wavecrash": 12
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "boosts": {},
+       "hp": 14,
+       "item": "lifeorb",
+       "lastMove": "rockslide",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": 1,
+       "species": "Garchomp",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 55,
+       "item": "blackglasses",
+       "lastMove": "suckerpunch",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 7,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3,
+        "spa": -6
+       },
+       "hp": 69,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 3,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 90,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 11,
+        "protect": 7,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": "fnt"
+      },
+      {
+       "ability": "defiant",
+       "hp": 55,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 7,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 6,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "raindance",
+    "weatherDuration": 1
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3,
+        "spa": -6
+       },
+       "hp": 69,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 3,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 90,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 11,
+        "protect": 7,
+        "wavecrash": 12
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 55,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 7,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 135,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 8,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 7,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 3,
+        "spa": -6
+       },
+       "hp": 79,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 2,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 2,
+         "move": "dracometeor"
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 53,
+       "item": "mysticwater",
+       "lastMove": "wavecrash",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 20,
+        "lastrespects": 11,
+        "protect": 7,
+        "wavecrash": 11
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 55,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 7,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 22,
+       "item": "focussash",
+       "lastMove": "encore",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 7,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 8,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 4,
+        "spa": -6
+       },
+       "hp": 81,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 1,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 1,
+         "move": "dracometeor"
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 53,
+       "item": "mysticwater",
+       "lastMove": "aquajet",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 19,
+        "lastrespects": 11,
+        "protect": 7,
+        "wavecrash": 11
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 55,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 7,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 22,
+       "item": "focussash",
+       "lastMove": "encore",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 6,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 16
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 9,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 5,
+        "spa": -6
+       },
+       "hp": 65,
+       "item": "leftovers",
+       "lastMove": "dracometeor",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 0,
+        "electroshot": 12,
+        "protect": 8,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 3
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 53,
+       "item": "mysticwater",
+       "lastMove": "lastrespects",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 19,
+        "lastrespects": 10,
+        "protect": 7,
+        "wavecrash": 11
+       },
+       "slot": 0,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "hp": 55,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 7,
+        "suckerpunch": 7
+       },
+       "slot": null,
+       "species": "Kingambit",
+       "status": ""
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 22,
+       "item": "focussash",
+       "lastMove": "tailwind",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 6,
+        "moonblast": 16,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 10,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 5,
+        "spa": -6
+       },
+       "hp": 75,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 0,
+        "electroshot": 12,
+        "protect": 7,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 2
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 53,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 19,
+        "lastrespects": 10,
+        "protect": 7,
+        "wavecrash": 11
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 4,
+       "item": "blackglasses",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 16,
+        "kowtowcleave": 12,
+        "protect": 7,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 22,
+       "item": "focussash",
+       "lastMove": "moonblast",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 6,
+        "moonblast": 15,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 11,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 6,
+        "spa": -6
+       },
+       "hp": 77,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 0,
+        "electroshot": 12,
+        "protect": 6,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {
+      "tailwind": {
+       "duration": 1
+      }
+     },
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 53,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 19,
+        "lastrespects": 10,
+        "protect": 7,
+        "wavecrash": 11
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 4,
+       "item": "blackglasses",
+       "lastMove": "ironhead",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 15,
+        "kowtowcleave": 12,
+        "protect": 7,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 22,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 6,
+        "moonblast": 15,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 12,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 6,
+        "spa": -6
+       },
+       "hp": 87,
+       "item": "leftovers",
+       "lastMove": "protect",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 0,
+        "electroshot": 12,
+        "protect": 5,
+        "snarl": 16
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "boosts": {},
+       "hp": 53,
+       "item": "mysticwater",
+       "lastMove": "aquajet",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 18,
+        "lastrespects": 10,
+        "protect": 7,
+        "wavecrash": 11
+       },
+       "slot": 1,
+       "species": "Basculegion",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {},
+       "hp": 4,
+       "item": "blackglasses",
+       "lastMove": "protect",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 15,
+        "kowtowcleave": 12,
+        "protect": 6,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {
+        "stall": {
+         "counter": 3,
+         "duration": 1
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "hp": 22,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 6,
+        "moonblast": 15,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 13,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 6,
+        "spa": -6
+       },
+       "hp": 83,
+       "item": "leftovers",
+       "lastMove": "snarl",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 0,
+        "electroshot": 12,
+        "protect": 5,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 18,
+        "lastrespects": 10,
+        "protect": 7,
+        "wavecrash": 10
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": "fnt"
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 2,
+        "spa": -1
+       },
+       "hp": 1,
+       "item": "blackglasses",
+       "lastMove": "kowtowcleave",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 15,
+        "kowtowcleave": 11,
+        "protect": 6,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "hp": 22,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 6,
+        "moonblast": 15,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": null,
+       "species": "Whimsicott",
+       "status": ""
+      }
+     ],
+     "request": "switch",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 13,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 6,
+        "spa": -6
+       },
+       "hp": 83,
+       "item": "leftovers",
+       "lastMove": "snarl",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 0,
+        "electroshot": 12,
+        "protect": 5,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 18,
+        "lastrespects": 10,
+        "protect": 7,
+        "wavecrash": 10
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 2,
+        "spa": -1
+       },
+       "hp": 1,
+       "item": "blackglasses",
+       "lastMove": "kowtowcleave",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 15,
+        "kowtowcleave": 11,
+        "protect": 6,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {}
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 22,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 6,
+        "moonblast": 15,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 14,
+   "winner": ""
+  },
+  {
+   "ended": false,
+   "field": {
+    "pseudoWeather": {},
+    "terrain": "",
+    "terrainDuration": null,
+    "weather": "",
+    "weatherDuration": null
+   },
+   "schema": 1,
+   "sides": [
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "stamina",
+       "boosts": {
+        "def": 6,
+        "spa": -5
+       },
+       "hp": 53,
+       "item": "leftovers",
+       "lastMove": "electroshot",
+       "maxhp": 165,
+       "name": "Archaludon",
+       "pp": {
+        "dracometeor": 0,
+        "electroshot": 11,
+        "protect": 5,
+        "snarl": 15
+       },
+       "slot": 1,
+       "species": "Archaludon",
+       "status": "",
+       "volatiles": {
+        "electroshot": {},
+        "twoturnmove": {
+         "duration": 1,
+         "move": "electroshot"
+        }
+       }
+      },
+      {
+       "ability": "psychicsurge",
+       "hp": 0,
+       "item": "rockyhelmet",
+       "maxhp": 145,
+       "name": "Indeedee",
+       "pp": {
+        "followme": 20,
+        "helpinghand": 19,
+        "terrainpulse": 12,
+        "trickroom": 8
+       },
+       "slot": null,
+       "species": "Indeedee-F",
+       "status": ""
+      },
+      {
+       "ability": "drizzle",
+       "hp": 0,
+       "item": "focussash",
+       "maxhp": 135,
+       "name": "Pelipper",
+       "pp": {
+        "hurricane": 12,
+        "tailwind": 15,
+        "weatherball": 12,
+        "wideguard": 11
+       },
+       "slot": null,
+       "species": "Pelipper",
+       "status": "fnt"
+      },
+      {
+       "ability": "unburden",
+       "hp": 0,
+       "item": "",
+       "lastItem": "psychicseed",
+       "maxhp": 155,
+       "name": "Sneasler",
+       "pp": {
+        "closecombat": 6,
+        "protect": 8,
+        "rockslide": 12,
+        "swordsdance": 20
+       },
+       "slot": null,
+       "species": "Sneasler",
+       "status": ""
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    },
+    {
+     "conditions": {},
+     "pokemon": [
+      {
+       "ability": "adaptability",
+       "hp": 0,
+       "item": "mysticwater",
+       "maxhp": 195,
+       "name": "Basculegion",
+       "pp": {
+        "aquajet": 18,
+        "lastrespects": 10,
+        "protect": 7,
+        "wavecrash": 10
+       },
+       "slot": null,
+       "species": "Basculegion",
+       "status": ""
+      },
+      {
+       "ability": "roughskin",
+       "hp": 0,
+       "item": "lifeorb",
+       "maxhp": 183,
+       "name": "Garchomp",
+       "pp": {
+        "dragonclaw": 15,
+        "earthquake": 11,
+        "protect": 6,
+        "rockslide": 11
+       },
+       "slot": null,
+       "species": "Garchomp",
+       "status": ""
+      },
+      {
+       "ability": "defiant",
+       "boosts": {
+        "atk": 2,
+        "spa": -1
+       },
+       "hp": 1,
+       "item": "blackglasses",
+       "lastMove": "kowtowcleave",
+       "maxhp": 175,
+       "name": "Kingambit",
+       "pp": {
+        "ironhead": 15,
+        "kowtowcleave": 10,
+        "protect": 6,
+        "suckerpunch": 7
+       },
+       "slot": 0,
+       "species": "Kingambit",
+       "status": "",
+       "volatiles": {
+        "encore": {
+         "duration": 2,
+         "move": "kowtowcleave"
+        }
+       }
+      },
+      {
+       "ability": "prankster",
+       "boosts": {},
+       "hp": 22,
+       "item": "focussash",
+       "lastMove": "encore",
+       "maxhp": 135,
+       "name": "Whimsicott",
+       "pp": {
+        "encore": 5,
+        "moonblast": 15,
+        "protect": 8,
+        "tailwind": 15
+       },
+       "slot": 1,
+       "species": "Whimsicott",
+       "status": "",
+       "volatiles": {}
+      }
+     ],
+     "request": "move",
+     "slotConditions": [
+      {},
+      {}
+     ]
+    }
+   ],
+   "turn": 15,
+   "winner": ""
+  }
+ ],
+ "setupTurns": [
+  [
+   "move closecombat -2, move helpinghand -1",
+   "move protect, move protect"
+  ],
+  [
+   "switch 4",
+   ""
+  ],
+  [
+   "move closecombat 2, move dracometeor -1",
+   "move lastrespects 1, move dragonclaw -1"
+  ],
+  [
+   "switch 3",
+   ""
+  ],
+  [
+   "move tailwind, move dracometeor -1",
+   "switch 3, move earthquake"
+  ],
+  [
+   "move wideguard, move dracometeor 1",
+   "move protect, move protect"
+  ],
+  [
+   "move hurricane 2, move dracometeor -1",
+   "move suckerpunch 1, move rockslide"
+  ],
+  [
+   "pass, move dracometeor 2",
+   "switch 3, move dragonclaw 2"
+  ],
+  [
+   "",
+   "switch 4"
+  ],
+  [
+   "pass, move dracometeor -1",
+   "move wavecrash -2, move encore 1"
+  ],
+  [
+   "pass, move dracometeor -1",
+   "move aquajet 2, move encore 2"
+  ],
+  [
+   "pass, move dracometeor 2",
+   "move lastrespects 1, move tailwind"
+  ],
+  [
+   "pass, move protect",
+   "switch 3, move moonblast -1"
+  ],
+  [
+   "pass, move protect",
+   "move ironhead 1, switch 3"
+  ],
+  [
+   "pass, move protect",
+   "move protect, move aquajet 1"
+  ],
+  [
+   "pass, move snarl",
+   "move kowtowcleave -2, move wavecrash 1"
+  ],
+  [
+   "",
+   "switch 3"
+  ],
+  [
+   "pass, move electroshot -1",
+   "move suckerpunch 1, move encore -1"
+  ]
+ ],
+ "startState": {
+  "ended": false,
+  "field": {
+   "pseudoWeather": {},
+   "terrain": "psychicterrain",
+   "terrainDuration": 5,
+   "weather": "",
+   "weatherDuration": null
+  },
+  "schema": 1,
+  "sides": [
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "stamina",
+      "hp": 165,
+      "item": "leftovers",
+      "maxhp": 165,
+      "name": "Archaludon",
+      "pp": {
+       "dracometeor": 8,
+       "electroshot": 12,
+       "protect": 8,
+       "snarl": 16
+      },
+      "slot": null,
+      "species": "Archaludon",
+      "status": ""
+     },
+     {
+      "ability": "psychicsurge",
+      "boosts": {},
+      "hp": 145,
+      "item": "rockyhelmet",
+      "maxhp": 145,
+      "name": "Indeedee",
+      "pp": {
+       "followme": 20,
+       "helpinghand": 20,
+       "terrainpulse": 12,
+       "trickroom": 8
+      },
+      "slot": 1,
+      "species": "Indeedee-F",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "drizzle",
+      "hp": 135,
+      "item": "focussash",
+      "maxhp": 135,
+      "name": "Pelipper",
+      "pp": {
+       "hurricane": 12,
+       "tailwind": 16,
+       "weatherball": 12,
+       "wideguard": 12
+      },
+      "slot": null,
+      "species": "Pelipper",
+      "status": ""
+     },
+     {
+      "ability": "unburden",
+      "boosts": {
+       "spd": 1
+      },
+      "hp": 155,
+      "item": "",
+      "lastItem": "psychicseed",
+      "maxhp": 155,
+      "name": "Sneasler",
+      "pp": {
+       "closecombat": 8,
+       "protect": 8,
+       "rockslide": 12,
+       "swordsdance": 20
+      },
+      "slot": 0,
+      "species": "Sneasler",
+      "status": "",
+      "volatiles": {
+       "unburden": {}
+      }
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   },
+   {
+    "conditions": {},
+    "pokemon": [
+     {
+      "ability": "adaptability",
+      "boosts": {},
+      "hp": 195,
+      "item": "mysticwater",
+      "maxhp": 195,
+      "name": "Basculegion",
+      "pp": {
+       "aquajet": 20,
+       "lastrespects": 12,
+       "protect": 8,
+       "wavecrash": 12
+      },
+      "slot": 0,
+      "species": "Basculegion",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "roughskin",
+      "boosts": {},
+      "hp": 183,
+      "item": "lifeorb",
+      "maxhp": 183,
+      "name": "Garchomp",
+      "pp": {
+       "dragonclaw": 16,
+       "earthquake": 12,
+       "protect": 8,
+       "rockslide": 12
+      },
+      "slot": 1,
+      "species": "Garchomp",
+      "status": "",
+      "volatiles": {}
+     },
+     {
+      "ability": "defiant",
+      "hp": 175,
+      "item": "blackglasses",
+      "maxhp": 175,
+      "name": "Kingambit",
+      "pp": {
+       "ironhead": 16,
+       "kowtowcleave": 12,
+       "protect": 8,
+       "suckerpunch": 8
+      },
+      "slot": null,
+      "species": "Kingambit",
+      "status": ""
+     },
+     {
+      "ability": "prankster",
+      "hp": 135,
+      "item": "focussash",
+      "maxhp": 135,
+      "name": "Whimsicott",
+      "pp": {
+       "encore": 8,
+       "moonblast": 16,
+       "protect": 8,
+       "tailwind": 16
+      },
+      "slot": null,
+      "species": "Whimsicott",
+      "status": ""
+     }
+    ],
+    "request": "move",
+    "slotConditions": [
+     {},
+     {}
+    ]
+   }
+  ],
+  "turn": 1,
+  "winner": ""
+ },
+ "turn": {
+  "p1": "pass, move electroshot -1",
+  "p2": "move kowtowcleave -2, move moonblast -1"
+ },
+ "startTrace": {
+  "mode": "extremes",
+  "collapse": true,
+  "nominal": true,
+  "prefix": []
+ },
+ "setupTraces": [
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    15
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    11
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    13
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    13,
+    1,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    1,
+    8,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "extremes",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    0,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": []
+  },
+  {
+   "mode": "full",
+   "collapse": true,
+   "nominal": true,
+   "prefix": [
+    1,
+    0
+   ]
+  }
+ ]
+}

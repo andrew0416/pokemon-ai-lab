@@ -1,0 +1,9 @@
+{
+  "state": "audit-complete",
+  "default_off": true,
+  "production_adopted": false,
+  "many_snapshot_signal": "confirmed for narrow workload across S23 and S24; stats signal in this session; not universal",
+  "next_optimization": "S25 encoded_history implemented in separate frozen experiment",
+  "memory": "transient peak improved with all-four, returned result sometimes larger",
+  "portability": "non-AVX2 emulated execution passed; physical hardware not tested"
+}

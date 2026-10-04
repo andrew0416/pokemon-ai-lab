@@ -1,0 +1,49 @@
+{
+  "completed": true,
+  "source_sha": "fc5bf999b9415bc18eacc9d6fff303c920209e13",
+  "branch": "codex/s26h-phases-20261003",
+  "run_id": 37126805142,
+  "run_url": "https://github.com/andrew0416/pokemon-ai-lab/actions/runs/37126805142",
+  "scope_completed": [
+    "calling-thread exclusive phase cost",
+    "true identical-API AA controls",
+    "new-path OFF/ON and dependency-matched delta controls",
+    "more-snapshot stress conditions",
+    "instrumentation/result/work parity"
+  ],
+  "instrumented_tests": 117,
+  "uninstrumented_tests": 115,
+  "default_tests": 17,
+  "independent_lp_certificates": 652,
+  "equal_gap_speed_comparisons": 64,
+  "phase_configuration_captures": 56,
+  "phase_repetitions": 280,
+  "production_adopted": false,
+  "default_off": true,
+  "portable_cpu": "x86-64",
+  "shared_git_unchanged": true,
+  "vault_new_notes": 5,
+  "vault_changed_existing_notes": 2,
+  "vault_new_errors": 0,
+  "vault_new_stale": 0,
+  "inherited_vault_errors": 14,
+  "inherited_vault_stale": 1069,
+  "strict_vault_pass": false,
+  "remaining_followups": [
+    "S26h-dominant-cost-detail",
+    "S26h-many-snapshot-confirm",
+    "S26h-memory-growth-study",
+    "S26h-intermediate-contract-corpus",
+    "S26h-nonavx2-execution"
+  ],
+  "artifact_sha256": {
+    "RESULTS.json": "0e2d119e19d46b121878c7b86b03464b6670a4fc072bf4b9ddd544e85fcfbc55",
+    "RESULTS.md": "70fad9461b4fabc77ba9dc7c19cbf7fbb315bc1477b47de5a44a4a2e57c52bbc",
+    "DECISION.json": "e14d518f9c57b5ea0470ef013a934e11216ab4e3f1a96f548b8910316560668f",
+    "publication/receipt.json": "648c3627405c77f78e07528a1e8d8e5aaf4a7484c1bfd919b10cea20b2735f2c",
+    "publication/push.json": "f239f84ab8dedfc50de88f525a839fcb97c27c046c54a8613eaa4a3981a0d96b",
+    "vault-final/install-receipt.json": "aa9245490b698e8dd5b48c66bbaa62910cf22a00b3f41fa256cb31c6c61041df",
+    "board-receipt.json": "2421202b742c9e71f6cfc3f2c9b105cfd14417135ed0616626e708ddb9f7a027",
+    "followup-board-receipt.json": "b1686672fc975d1fe8ed338991d161079b927ee2b4f94fdf0fba526793d4dcf9"
+  }
+}

@@ -1,0 +1,403 @@
+{
+  "schema": 1,
+  "date_local": "2026-10-03",
+  "status": "analysis-only",
+  "source_sha": "081124aaae5e0fe5aa1d8c5b9117803abd866875",
+  "run_id": 37034440983,
+  "source_mutated": false,
+  "engine_executed": false,
+  "new_timing": false,
+  "new_ci_dispatched": false,
+  "evidence": "Frozen source and existing successful GitHub artifact diagnostics; counts are not CPU time shares.",
+  "census": [
+    {
+      "nodes": 1462,
+      "information_sets": 98,
+      "transitions": 584,
+      "chance_outcomes": 584,
+      "leaves": 512,
+      "iterations": 32,
+      "gap": 0.011363636363626028,
+      "case": "narrow-w1-d3",
+      "growth": {
+        "attempted_transitions": 584,
+        "committed_expansions": 25,
+        "frontier_groups": 0,
+        "solves": 25,
+        "stop": "HorizonComplete",
+        "total_cfr_iterations": 800,
+        "walks": 97
+      },
+      "intermediate_cfr_iterations": 768,
+      "artifact": "publication\\run-37034440983\\s26c-writer-37034440983-1\\paired\\narrow-w1-d3-same-work-seed1-raw.jsonl",
+      "artifact_sha256": "f9c95daa1c60a3aee35cd807fc5152bf91716d617d1705aec39e967ac7e4d857",
+      "reference_candidate_diagnostics_equal": true
+    },
+    {
+      "nodes": 885,
+      "information_sets": 326,
+      "transitions": 234,
+      "chance_outcomes": 429,
+      "leaves": 216,
+      "iterations": 64,
+      "gap": 0.09359019408756986,
+      "case": "pivot-w1-d1",
+      "growth": {
+        "attempted_transitions": 234,
+        "committed_expansions": 112,
+        "frontier_groups": 0,
+        "solves": 1,
+        "stop": "HorizonComplete",
+        "total_cfr_iterations": 64,
+        "walks": 0
+      },
+      "intermediate_cfr_iterations": 0,
+      "artifact": "publication\\run-37034440983\\s26c-writer-37034440983-1\\paired\\pivot-w1-d1-same-work-seed1-raw.jsonl",
+      "artifact_sha256": "15fc911b187b3a5485b381029faabd2348b72db3347adc8df01574de32456de0",
+      "reference_candidate_diagnostics_equal": true
+    },
+    {
+      "nodes": 8087,
+      "information_sets": 2,
+      "transitions": 64,
+      "chance_outcomes": 8013,
+      "leaves": 8013,
+      "iterations": 256,
+      "gap": 0.0846751630950795,
+      "case": "sand-damage-w1-d1",
+      "growth": {
+        "attempted_transitions": 64,
+        "committed_expansions": 1,
+        "frontier_groups": 0,
+        "solves": 1,
+        "stop": "HorizonComplete",
+        "total_cfr_iterations": 256,
+        "walks": 0
+      },
+      "intermediate_cfr_iterations": 0,
+      "artifact": "publication\\run-37034440983\\s26c-writer-37034440983-1\\paired\\sand-damage-w1-d1-same-work-seed1-raw.jsonl",
+      "artifact_sha256": "6e53a9b09203cce3b00d76bf0cf2563b33db8c59e48dcc5c4349d016dec8829e",
+      "reference_candidate_diagnostics_equal": true
+    },
+    {
+      "nodes": 2642,
+      "information_sets": 48,
+      "transitions": 1056,
+      "chance_outcomes": 1056,
+      "leaves": 1024,
+      "iterations": 32,
+      "gap": 0.07285339362319121,
+      "case": "stats-w1-d2",
+      "growth": {
+        "attempted_transitions": 1056,
+        "committed_expansions": 15,
+        "frontier_groups": 0,
+        "solves": 15,
+        "stop": "HorizonComplete",
+        "total_cfr_iterations": 640,
+        "walks": 584
+      },
+      "intermediate_cfr_iterations": 608,
+      "artifact": "publication\\run-37034440983\\s26c-writer-37034440983-1\\paired\\stats-w1-d2-same-work-seed1-raw.jsonl",
+      "artifact_sha256": "6cfc5cd17adb7143b70f043d739c69878870e03f9753db076a0c3ce7210e1a84",
+      "reference_candidate_diagnostics_equal": true
+    },
+    {
+      "nodes": 5283,
+      "information_sets": 63,
+      "transitions": 2112,
+      "chance_outcomes": 2112,
+      "leaves": 2048,
+      "iterations": 32,
+      "gap": 0.07285339362319121,
+      "case": "stats-w2-d2",
+      "growth": {
+        "attempted_transitions": 2112,
+        "committed_expansions": 15,
+        "frontier_groups": 0,
+        "solves": 15,
+        "stop": "HorizonComplete",
+        "total_cfr_iterations": 640,
+        "walks": 405
+      },
+      "intermediate_cfr_iterations": 608,
+      "artifact": "publication\\run-37034440983\\s26c-writer-37034440983-1\\paired\\stats-w2-d2-same-work-seed1-raw.jsonl",
+      "artifact_sha256": "e4b5ecf5f580e41430c2788c40cd255cf3689ec7ff12e32240965a243624a96d",
+      "reference_candidate_diagnostics_equal": true
+    },
+    {
+      "nodes": 10565,
+      "information_sets": 93,
+      "transitions": 4224,
+      "chance_outcomes": 4224,
+      "leaves": 4096,
+      "iterations": 32,
+      "gap": 0.072853393623177,
+      "case": "stats-w4-d2",
+      "growth": {
+        "attempted_transitions": 4224,
+        "committed_expansions": 15,
+        "frontier_groups": 0,
+        "solves": 15,
+        "stop": "HorizonComplete",
+        "total_cfr_iterations": 736,
+        "walks": 406
+      },
+      "intermediate_cfr_iterations": 704,
+      "artifact": "publication\\run-37034440983\\s26c-writer-37034440983-1\\paired\\stats-w4-d2-same-work-seed1-raw.jsonl",
+      "artifact_sha256": "87ba0290f57d4d4795c5f910287fb6db1609ec3b34a0b767c4d2b8eeff4997e3",
+      "reference_candidate_diagnostics_equal": true
+    }
+  ],
+  "code_sites": {
+    "instruction_materialization": {
+      "path": "engine/core/src/turn/mod.rs",
+      "sha256": "f0d554b19f383cabe37c47abaf84562320c454590436aee2312318e3592da535",
+      "lines": [
+        909
+      ],
+      "text": "let instructions = diff::instructions(start, end);"
+    },
+    "child_reconstruction": {
+      "path": "engine/search/src/budgeted/engine.rs",
+      "sha256": "f98ed927c956cce196523777306dd86ee506ceb9599cc9ea03ab5b9aa4bbc742",
+      "lines": [
+        108
+      ],
+      "text": "child.apply(&outcome.instructions);"
+    },
+    "child_clone": {
+      "path": "engine/search/src/budgeted/engine.rs",
+      "sha256": "f98ed927c956cce196523777306dd86ee506ceb9599cc9ea03ab5b9aa4bbc742",
+      "lines": [
+        107
+      ],
+      "text": "let mut child = state.clone();"
+    },
+    "existing_p9": {
+      "path": "engine/core/src/turn/final_states.rs",
+      "sha256": "a6e4132967fde9119678ad759f33783025196d1fa10a444decf6677925a9842c",
+      "lines": [
+        37
+      ],
+      "text": "pub fn try_enumerate_turn_final_states"
+    },
+    "p9_scope": {
+      "path": "engine/search/src/solve/leaf_endings.rs",
+      "sha256": "c005bb36adb88391617f1c031db5258b7e19f641ebe65561d57c8e6420af3972",
+      "lines": [
+        22
+      ],
+      "text": "!matches!(next, Next::Depth(0))"
+    },
+    "history_clone": {
+      "path": "engine/search/src/bayesian/tree/builder/growing.rs",
+      "sha256": "57297e8f746e18399968e5d9c20b11371734ed8027b53dca69f83f44ac52cef7",
+      "lines": [
+        265
+      ],
+      "text": "let mut memory = h.memory.clone();"
+    },
+    "history_string": {
+      "path": "engine/search/src/bayesian/tree/builder/growing.rs",
+      "sha256": "57297e8f746e18399968e5d9c20b11371734ed8027b53dca69f83f44ac52cef7",
+      "lines": [
+        171,
+        216
+      ],
+      "text": "format!(\"0:{:?}\", h.memory[0])"
+    },
+    "frontier_scan": {
+      "path": "engine/search/src/bayesian/tree/builder/growing/reuse.rs",
+      "sha256": "e86dbe8ac1a90e3546b54b11cb114d85ffd13c7288b312059603b307ecab654c",
+      "lines": [
+        175
+      ],
+      "text": ".find(|(_, g)| g.iter().any(|h| h.node == selected))"
+    },
+    "full_compile": {
+      "path": "engine/search/src/bayesian/tree/builder/growing/reuse.rs",
+      "sha256": "e86dbe8ac1a90e3546b54b11cb114d85ffd13c7288b312059603b307ecab654c",
+      "lines": [
+        186
+      ],
+      "text": "let next = compile(candidate, options.compiler)?;"
+    },
+    "fresh_cfr": {
+      "path": "engine/search/src/bayesian/tree/workspace/cached.rs",
+      "sha256": "d9872fd12aa31608f6cf4aa2572398ad94f4fba26735113d48cc172dc85d647c",
+      "lines": [
+        55
+      ],
+      "text": "let mut policy = tree.uniform();"
+    },
+    "assess_value": {
+      "path": "engine/search/src/bayesian/tree.rs",
+      "sha256": "dba4b93667ed86c6105a0826a6d5517d97db69f8d49e7a48b1203c17efc78442",
+      "lines": [
+        285
+      ],
+      "text": "let value = self.values(policy)[self.root] * self.scale;"
+    },
+    "assess_reach": {
+      "path": "engine/search/src/bayesian/tree.rs",
+      "sha256": "dba4b93667ed86c6105a0826a6d5517d97db69f8d49e7a48b1203c17efc78442",
+      "lines": [
+        306
+      ],
+      "text": "let cf = self.reach(policy, Some(player))?;"
+    },
+    "scores_value": {
+      "path": "engine/search/src/bayesian/tree/builder/growing.rs",
+      "sha256": "57297e8f746e18399968e5d9c20b11371734ed8027b53dca69f83f44ac52cef7",
+      "lines": [
+        353
+      ],
+      "text": "let values = t.values(policy);"
+    },
+    "scores_reach": {
+      "path": "engine/search/src/bayesian/tree/builder/growing.rs",
+      "sha256": "57297e8f746e18399968e5d9c20b11371734ed8027b53dca69f83f44ac52cef7",
+      "lines": [
+        354
+      ],
+      "text": "let cf = [t.reach(policy, Some(0))?, t.reach(policy, Some(1))?];"
+    },
+    "post_solve_scores": {
+      "path": "engine/search/src/bayesian/tree/builder/growing/reuse.rs",
+      "sha256": "e86dbe8ac1a90e3546b54b11cb114d85ffd13c7288b312059603b307ecab654c",
+      "lines": [
+        188
+      ],
+      "text": "q = scores(&next, &solution.policy)?;"
+    },
+    "serial_transitions": {
+      "path": "engine/search/src/bayesian/tree/builder/growing.rs",
+      "sha256": "57297e8f746e18399968e5d9c20b11371734ed8027b53dca69f83f44ac52cef7",
+      "lines": [
+        241
+      ],
+      "text": "let children = self.b.domain.transitions(p, [row, col])?;"
+    },
+    "own_reach_product": {
+      "path": "engine/search/src/bayesian/tree/workspace/cached.rs",
+      "sha256": "d9872fd12aa31608f6cf4aa2572398ad94f4fba26735113d48cc172dc85d647c",
+      "lines": [
+        89
+      ],
+      "text": "for &(j, a) in &info.own_sequence"
+    },
+    "cursor_key_repeated": {
+      "path": "engine/search/src/bayesian/tree/builder.rs",
+      "sha256": "56b4d59c7c34d1d808840106585b47a6a8430e6aced5957c266fcccb32ddee59",
+      "lines": [
+        99
+      ],
+      "text": ".position(|i| i.key == self.key())"
+    }
+  },
+  "candidates": [
+    {
+      "id": "S26e-owned-transitions",
+      "priority": 1,
+      "status": "proposal-unimplemented",
+      "title": "Move engine ending states directly into the CFR adapter",
+      "scope": "same-result-storage",
+      "basis": [
+        "instruction_materialization",
+        "child_reconstruction",
+        "child_clone",
+        "existing_p9",
+        "p9_scope"
+      ],
+      "change": "Extend the P9 mechanism with an owning ending-state batch. Initially dispatch only eligible flat Turn transitions; keep replacement, resume and factored fallback. Retain the immutable caller/input-restoration check.",
+      "target_counts": "One diff/instruction allocation and one parent-clone/apply reconstruction per chance outcome in the old adapter.",
+      "caveat": "P9 currently exposes a borrowed visitor and is wired to the legacy solver's depth-zero path. An owning API and the new adapter integration are not implemented. Do not claim all outcomes are eligible or that elapsed time is proportional to their count.",
+      "verification": "Exact states, probabilities and order, pending continuation, all error paths, caller restoration, and full tree/policy/work parity. Factored/unsupported phase fallback must be exercised."
+    },
+    {
+      "id": "S26e-interned-observation-history",
+      "priority": 2,
+      "status": "proposal-unimplemented",
+      "title": "Intern observation/action history in the builder, before tree compilation",
+      "scope": "same-result-storage",
+      "basis": [
+        "history_clone",
+        "history_string"
+      ],
+      "change": "Intern allowed observation tokens and persistent (previous_history, token) links. Store history IDs on frontiers; materialize canonical public/private keys only when needed by the existing API.",
+      "caveat": "This is different from the existing compiler's own-action recall interning. Preserve complete ordered observation and own-action history, including zero-prior worlds. Never key information sets by hidden State or only the latest observation; use equality after hashing and deterministic ordered public-group admission.",
+      "verification": "Full semantic keys, Cursor lookup, beliefs, indistinguishability, action menu checks, tree/policy bits, RNG trajectory and budget/error parity; measure allocation count/bytes and RSS separately."
+    },
+    {
+      "id": "S26e-shared-final-passes",
+      "priority": 3,
+      "status": "proposal-unimplemented",
+      "title": "Reuse final average-policy value and counterfactual reach passes for growth scores",
+      "scope": "same-result-computation",
+      "basis": [
+        "assess_value",
+        "assess_reach",
+        "scores_value",
+        "scores_reach",
+        "post_solve_scores"
+      ],
+      "change": "Have final assessment retain average-policy values and both players' counterfactual reach; consume them in scores. Delay score construction until a next selection is needed.",
+      "caveat": "The CFR working policy differs from its returned average policy. Reusing the last iteration's cache without recomputing under the average is wrong. Preserve floating-point order, information-constrained BR and underflow/error checks.",
+      "verification": "Bitwise assessments, full policy, scores/selected frontier, terminal/limit/failed-admission results and errors. No changes to iteration limit, tolerance or check cadence."
+    },
+    {
+      "id": "S26e-incremental-compilation",
+      "priority": 4,
+      "status": "proposal-unimplemented",
+      "title": "Compile only changed/new tree structure on growth",
+      "scope": "same-result-storage-and-validation",
+      "basis": [
+        "full_compile",
+        "fresh_cfr"
+      ],
+      "change": "Separate internal stable IDs from public canonical IDs, keep validated structure/recall summaries, compile newly appended nodes and changed frontier leaves.",
+      "caveat": "Large implementation. Earlier leaf IDs can become decisions, shifting current information numbering. Must preserve DFS/member reduction order, changed utility scale, perfect recall validation and atomic last-committed result. This does not itself reuse CFR regrets.",
+      "verification": "Compare every intermediate compiled snapshot, all policies, public keys, error order and committed counters with the reference, including failed admission."
+    },
+    {
+      "id": "S26e-parallel-transition-batches",
+      "priority": 5,
+      "status": "proposal-unimplemented",
+      "title": "Bounded CPU parallelism for independent engine transitions",
+      "scope": "same-result-parallel",
+      "basis": [
+        "serial_transitions"
+      ],
+      "change": "Specialize the immutable engine adapter for bounded Rayon batches over legal joint actions/worlds. Commit results serially in reference order; retain scalar fallback.",
+      "caveat": "The current generic Domain allows stateful implementations; do not parallelize arbitrary Domain calls. Speculative calls can change attempted-work/error-budget semantics. Strict limit mode may need serial fallback or pre-reserved proven work. Bound simultaneous outcome memory.",
+      "verification": "1/2/4-thread full output and error/budget parity, identical RNG selections, actual attempted-work accounting and RSS; report speedup against current one-thread optimized path."
+    },
+    {
+      "id": "S26e-growth-solve-cadence",
+      "priority": 6,
+      "status": "research-unimplemented",
+      "title": "Batch expansions or carry solver state between tree growth steps",
+      "scope": "algorithm-change",
+      "basis": [
+        "fresh_cfr",
+        "full_compile"
+      ],
+      "change": "Study fewer intermediate CFR solves, adaptive checkpoint budgets, or justified warm starts as separate algorithms.",
+      "caveat": "Changing a frontier changes its game/payoffs/scale. Carrying old regrets or average weights naively is not equivalent and can alter selection. Needs certificate versus the fixed final game and independent LP validation; partial-horizon gaps remain surrogate-only. Do not assert identical policy or win rate.",
+      "verification": "Same time/work budget and reported fixed-game gap, independent LP cases, full versus partial horizon, deadlines/last solved snapshot. Existing exhaustive optimized backend is already preferable when full horizon is explicitly required in the measured fixtures."
+    }
+  ],
+  "interpretation": [
+    "Cumulative CFR iterations include smaller intermediate trees; never divide by final iterations to claim an elapsed-time speedup.",
+    "Counts are identical in the old growing and optimized all-writer runs. No new workload was generated.",
+    "No optimization candidate is adopted or implemented by this analysis. Existing OFF/default/R1/P15/P11 decisions remain unchanged.",
+    "The sand tree has many terminal outcomes and few information sets; cached value backups already remove their value recomputation, but counterfactual reach still visits them. Any pruning would need to preserve underflow checks, so it is not the first proposed change.",
+    "The Cursor repeated key formatting issue affects continuation lookup; that lookup is outside the current timed build+CFR benchmark, so fixing it cannot explain a faster benchmark kernel."
+  ],
+  "next_measurement": [
+    "Count instruction materializations, reconstructed child states and bytes copied/formatted for observation histories in an observer-only build.",
+    "Collect build/compile/CFR-assessment/selection stage times and RSS on GitHub; keep observers off for the final paired comparison.",
+    "Use independent candidate switches, the existing 145 LP problems and new boundary counterexamples; do not count repeated runs as new test cases."
+  ]
+}

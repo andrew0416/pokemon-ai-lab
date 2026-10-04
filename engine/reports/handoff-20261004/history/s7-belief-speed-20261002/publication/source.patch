@@ -1,0 +1,1052 @@
+diff --git a/.github/workflows/engine-s26c-speed.yml b/.github/workflows/engine-s26c-speed.yml
+new file mode 100644
+index 0000000..f95c0d8
+--- /dev/null
++++ b/.github/workflows/engine-s26c-speed.yml
+@@ -0,0 +1,62 @@
++name: S26c speed only
++on:
++  push:
++    branches: [codex/s26c-speed-20261002]
++permissions:
++  contents: read
++concurrency:
++  group: s26c-speed
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_RELEASE_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RAYON_NUM_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++jobs:
++  speed:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 20
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Build one portable release binary
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26c-speed-results
++          cd engine
++          cargo clippy --locked -p lab-search --bin lab-belief-speed --features experiment-growing-belief -- -D warnings 2>&1 | tee ../s26c-speed-results/clippy.log
++          cargo build --locked --release -p lab-search --bin lab-belief-speed --features experiment-growing-belief 2>&1 | tee ../s26c-speed-results/build.log
++          git rev-parse HEAD > ../s26c-speed-results/source-sha.txt
++          rustc --version > ../s26c-speed-results/rustc.txt
++      - name: Same-runner paired timing
++        run: python -B engine/benchmarks/s26_speed/run.py --binary target-s25/release/lab-belief-speed --out s26c-speed-results/paired
++      - name: Preserve raw timing and eligibility checks
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26c-speed-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26c-speed-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_speed/CONTRACT.md b/engine/benchmarks/s26_speed/CONTRACT.md
+new file mode 100644
+index 0000000..93dfec8
+--- /dev/null
++++ b/engine/benchmarks/s26_speed/CONTRACT.md
+@@ -0,0 +1,46 @@
++# S26c speed-only comparison
++
++This harness measures the already verified S26c source `26999d068dd541ac0f2cfcdafc8a091ce4427e12`.
++Only benchmark files and a benchmark binary declaration are added. Core simulation,
++exhaustive builder, growing builder and CFR/BR kernels are byte-identical to that source.
++
++One optimized generic x86-64 binary contains both paths; there is no per-variant rebuild.
++One GitHub runner executes serially, pinned to one available logical CPU, with one thread.
++The measure is build + CFR time until a decision result is available. Scenario loading,
++setup turns, JSON construction/printing, diagnostics and destruction of the final returned
++tree are excluded. Internal construction/copying/destruction inside the search remains
++part of its measured work. Every repetition starts a fresh search: reuse across successive
++game turns is not claimed.
++
++Four bounded cases are predefined: two-turn stat-observation fixture with one and two
++hidden worlds; one-turn U-turn/Eject Button; and one-turn sand with damaging attacks and
++support abilities. The first two are small, status-heavy correctness fixtures rather than
++a representative tournament workload. Do not generalize their latency to full VGC menus.
++All use Full chance rolls, all legal actions, the same Heuristic, generic x86-64, maximum
++4,096 CFR iterations, check interval 32 and tolerance 0.1. The full selected horizon must
++finish and meet tolerance before its timing is accepted. Partial trees must meet the
++same tolerance for their own fixed-leaf surrogate; this does not equal full-depth work.
++
++The exhaustive path is the paired baseline. Growth budgets 1/2/4/8 are reported separately
++from growth continued to the complete requested horizon. Three selection seeds (1/7/31)
++are used where selection occurs. Forced switch closure is deterministic, so pivot and
++sand use one seed. Every complete-growing result must match baseline node count,
++information-set count, transition count, root value and root policy (within 1e-7).
++The input games, evaluator, horizon and solver tolerance do not change between paths.
++
++After untimed validation/warmup and calibration, each treatment has seven paired blocks.
++Order alternates ABBA and BAAB; treatments rotate between blocks. A calibration targets
++80 ms per sample, capped at 64 independent solves, minimum one. The metric is mean ns
++per solve within a sample; medians and ratios are then computed over paired blocks.
++This excludes process startup and does not mislabel batch means as individual tail
++latencies. A 95% paired bootstrap interval describes within-runner block variability;
++it is not a cross-machine confidence interval. No case is silently dropped for errors
++or timeouts. Raw samples, work counts, solver status and CPU details are retained.
++
++Lower time for a partial tree can arise from less continuation work. Full-horizon growth
++can instead be slower because it clones candidate trees and restarts CFR after admissions.
++These are distinct comparisons. This task measures neither wins nor playing strength.
++
++Local `run.py --check` checks correctness/benchmark eligibility without timing. `--measure`
++is invoked by the GitHub workflow via `run.py` only. The feature remains default OFF and
++no production planner is changed.
+diff --git a/engine/benchmarks/s26_speed/fixtures/normal.json b/engine/benchmarks/s26_speed/fixtures/normal.json
+new file mode 100644
+index 0000000..16c8ee5
+--- /dev/null
++++ b/engine/benchmarks/s26_speed/fixtures/normal.json
+@@ -0,0 +1,94 @@
++{
++  "description": "Speed Swap then Psych Up: in the setup turn Weavile swaps its stored Speed (177) with Snorlax's (54). Now Snorlax moves first: Swords Dance (+2 Atk), then its Lansat Berry (HP 50 of 235) gives it focusenergy at the Update; Hitmontop's Psych Up copies +2 Atk and focusenergy; the slowed Weavile moves last.",
++  "format": "gen9championsdoublescustomgame",
++  "p1": {
++    "team": [
++      {
++        "species": "Weavile",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "spe": 2
++        },
++        "moves": [
++          "Speed Swap",
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Hitmontop",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "def": 2
++        },
++        "moves": [
++          "Psych Up",
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "p2": {
++    "team": [
++      {
++        "species": "Snorlax",
++        "item": "Lansat Berry",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "atk": 32,
++          "def": 30,
++          "spe": 4
++        },
++        "moves": [
++          "Swords Dance",
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Clefable",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Bold",
++        "evs": {
++          "hp": 32,
++          "def": 32,
++          "spd": 2
++        },
++        "moves": [
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "setupTurns": [
++    [
++      "move speedswap 1, move calmmind",
++      "move calmmind, move calmmind"
++    ]
++  ],
++  "patch": {
++    "p2": {
++      "Snorlax": {
++        "hp": 50
++      }
++    }
++  },
++  "turn": {
++    "p1": "move calmmind, move psychup 1",
++    "p2": "move swordsdance, move calmmind"
++  }
++}
+\ No newline at end of file
+diff --git a/engine/benchmarks/s26_speed/fixtures/speed.json b/engine/benchmarks/s26_speed/fixtures/speed.json
+new file mode 100644
+index 0000000..f73757b
+--- /dev/null
++++ b/engine/benchmarks/s26_speed/fixtures/speed.json
+@@ -0,0 +1,94 @@
++{
++  "description": "Speed Swap then Psych Up: in the setup turn Weavile swaps its stored Speed (177) with Snorlax's (54). Now Snorlax moves first: Swords Dance (+2 Atk), then its Lansat Berry (HP 50 of 235) gives it focusenergy at the Update; Hitmontop's Psych Up copies +2 Atk and focusenergy; the slowed Weavile moves last.",
++  "format": "gen9championsdoublescustomgame",
++  "p1": {
++    "team": [
++      {
++        "species": "Weavile",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "spe": 2
++        },
++        "moves": [
++          "Speed Swap",
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Hitmontop",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "def": 2
++        },
++        "moves": [
++          "Psych Up",
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "p2": {
++    "team": [
++      {
++        "species": "Snorlax",
++        "item": "Lansat Berry",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "atk": 32,
++          "def": 30,
++          "spe": 4
++        },
++        "moves": [
++          "Swords Dance",
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Clefable",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Bold",
++        "evs": {
++          "hp": 32,
++          "def": 32,
++          "spe": 2
++        },
++        "moves": [
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "setupTurns": [
++    [
++      "move speedswap 1, move calmmind",
++      "move calmmind, move calmmind"
++    ]
++  ],
++  "patch": {
++    "p2": {
++      "Snorlax": {
++        "hp": 50
++      }
++    }
++  },
++  "turn": {
++    "p1": "move calmmind, move psychup 1",
++    "p2": "move swordsdance, move calmmind"
++  }
++}
+\ No newline at end of file
+diff --git a/engine/benchmarks/s26_speed/plan.json b/engine/benchmarks/s26_speed/plan.json
+new file mode 100644
+index 0000000..9c9a98d
+--- /dev/null
++++ b/engine/benchmarks/s26_speed/plan.json
+@@ -0,0 +1,315 @@
++{
++  "rounds": 7,
++  "sample_ms": 80,
++  "cases": [
++    {
++      "id": "stats-w1-d2",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "variants": [
++        {
++          "id": "b2-seed1",
++          "kind": "growing",
++          "max_expansions": 2,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": false
++        },
++        {
++          "id": "b2-seed7",
++          "kind": "growing",
++          "max_expansions": 2,
++          "max_walks": 20000,
++          "seed": 7,
++          "require_complete": false
++        },
++        {
++          "id": "b2-seed31",
++          "kind": "growing",
++          "max_expansions": 2,
++          "max_walks": 20000,
++          "seed": 31,
++          "require_complete": false
++        },
++        {
++          "id": "b8-seed1",
++          "kind": "growing",
++          "max_expansions": 8,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": false
++        },
++        {
++          "id": "b8-seed7",
++          "kind": "growing",
++          "max_expansions": 8,
++          "max_walks": 20000,
++          "seed": 7,
++          "require_complete": false
++        },
++        {
++          "id": "b8-seed31",
++          "kind": "growing",
++          "max_expansions": 8,
++          "max_walks": 20000,
++          "seed": 31,
++          "require_complete": false
++        },
++        {
++          "id": "full-seed1",
++          "kind": "growing",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": true
++        },
++        {
++          "id": "full-seed7",
++          "kind": "growing",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "require_complete": true
++        },
++        {
++          "id": "full-seed31",
++          "kind": "growing",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "require_complete": true
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "variants": [
++        {
++          "id": "b1-seed1",
++          "kind": "growing",
++          "max_expansions": 1,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": false
++        },
++        {
++          "id": "b1-seed7",
++          "kind": "growing",
++          "max_expansions": 1,
++          "max_walks": 20000,
++          "seed": 7,
++          "require_complete": false
++        },
++        {
++          "id": "b1-seed31",
++          "kind": "growing",
++          "max_expansions": 1,
++          "max_walks": 20000,
++          "seed": 31,
++          "require_complete": false
++        },
++        {
++          "id": "b2-seed1",
++          "kind": "growing",
++          "max_expansions": 2,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": false
++        },
++        {
++          "id": "b2-seed7",
++          "kind": "growing",
++          "max_expansions": 2,
++          "max_walks": 20000,
++          "seed": 7,
++          "require_complete": false
++        },
++        {
++          "id": "b2-seed31",
++          "kind": "growing",
++          "max_expansions": 2,
++          "max_walks": 20000,
++          "seed": 31,
++          "require_complete": false
++        },
++        {
++          "id": "b4-seed1",
++          "kind": "growing",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": false
++        },
++        {
++          "id": "b4-seed7",
++          "kind": "growing",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 7,
++          "require_complete": false
++        },
++        {
++          "id": "b4-seed31",
++          "kind": "growing",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 31,
++          "require_complete": false
++        },
++        {
++          "id": "b8-seed1",
++          "kind": "growing",
++          "max_expansions": 8,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": false
++        },
++        {
++          "id": "b8-seed7",
++          "kind": "growing",
++          "max_expansions": 8,
++          "max_walks": 20000,
++          "seed": 7,
++          "require_complete": false
++        },
++        {
++          "id": "b8-seed31",
++          "kind": "growing",
++          "max_expansions": 8,
++          "max_walks": 20000,
++          "seed": 31,
++          "require_complete": false
++        },
++        {
++          "id": "full-seed1",
++          "kind": "growing",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": true
++        },
++        {
++          "id": "full-seed7",
++          "kind": "growing",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "require_complete": true
++        },
++        {
++          "id": "full-seed31",
++          "kind": "growing",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "require_complete": true
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "variants": [
++        {
++          "id": "full-seed1",
++          "kind": "growing",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": true
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "variants": [
++        {
++          "id": "full-seed1",
++          "kind": "growing",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "require_complete": true
++        }
++      ]
++    }
++  ]
++}
+diff --git a/engine/benchmarks/s26_speed/run.py b/engine/benchmarks/s26_speed/run.py
+new file mode 100644
+index 0000000..865c653
+--- /dev/null
++++ b/engine/benchmarks/s26_speed/run.py
+@@ -0,0 +1,76 @@
++"""Bounded single-runner speed-only comparison; paired blocks, one release binary."""
++from pathlib import Path
++import argparse,copy,hashlib,json,math,os,platform,random,statistics,subprocess,sys,time
++
++def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8')
++def summarize(rows):
++    base=next(r['diagnostics'] for r in rows if r['type']=='baseline');results=[]
++    for validation in [r for r in rows if r['type']=='validation']:
++        variant=validation['variant'];pairs=[]
++        for r in rows:
++            if r['type']!='paired' or r['variant']!=variant['id']:continue
++            b=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='baseline')
++            c=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='candidate')
++            assert min(b,c)>0 and math.isfinite(b+c)
++            pairs.append(dict(block=r['block'],baseline_ms=b/1e6,candidate_ms=c/1e6,ratio=c/b))
++        rng=random.Random(261003);ratios=[p['ratio'] for p in pairs]
++        bootstrap=sorted(statistics.median(rng.choices(ratios,k=len(ratios))) for _ in range(4000))
++        ratio=statistics.median(ratios)
++        results.append(dict(variant=variant,diagnostics=validation['diagnostics'],pairs=pairs,
++            baseline_ms=statistics.median(p['baseline_ms'] for p in pairs),candidate_ms=statistics.median(p['candidate_ms'] for p in pairs),
++            ratio_median=ratio,time_reduction_percent=100*(1-ratio),speedup=1/ratio,
++            ratio_bootstrap95=[bootstrap[100],bootstrap[3899]],baseline_diagnostics=base,
++            comparison='same-finite-horizon' if validation['diagnostics']['horizon_complete'] else 'reduced-continuation-work'))
++    return results
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
++    if not a.check and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Timing is restricted to the authorized GitHub runner; use --check locally.')
++    here=Path(__file__).resolve().parent;repo=here.parents[2];plan=json.loads((here/'plan.json').read_bytes());binary=a.binary.resolve()
++    a.out.mkdir(parents=True,exist_ok=False)
++    env=dict(os.environ,RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
++    metadata=dict(platform=platform.platform(),python=sys.version,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
++        source_sha=os.environ.get('GITHUB_SHA'),runner_os=os.environ.get('RUNNER_OS'),timing=not a.check,
++        mode='generic x86-64 release; one binary runtime selection',plan_sha256=hashlib.sha256((here/'plan.json').read_bytes()).hexdigest())
++    if not a.check:
++        allowed=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,{allowed[0]})
++        metadata.update(available_cpus=allowed,pinned_cpu=allowed[0],load_before=os.getloadavg(),
++            cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0],sample_scope='build + CFR to result; excludes loading/JSON/final result destruction')
++    write(a.out/'environment.json',metadata);all_results=[];statuses=[]
++    for case in plan['cases']:
++        request=copy.deepcopy(case)
++        for world in request['worlds']:world['scenario']=(repo/world['scenario']).as_posix()
++        request['rounds']=plan['rounds'];request['sample_ms']=plan['sample_ms']
++        path=a.out/(case['id']+'-request.json');write(path,request)
++        log=a.out/(case['id']+'-raw.jsonl');error=a.out/(case['id']+'-stderr.txt')
++        with log.open('wb') as stdout,error.open('wb') as stderr:
++            try:
++                run=subprocess.run([str(binary),'--check' if a.check else '--measure',str(path.resolve())],stdout=stdout,stderr=stderr,env=env,timeout=300)
++                code=run.returncode
++            except subprocess.TimeoutExpired:code=-999
++        status=dict(case=case['id'],exit_code=code)
++        if code==0:
++            rows=[json.loads(s) for s in log.read_text().splitlines()]
++            assert rows[-1]['type']==('checked' if a.check else 'completed')
++            if not a.check:
++                results=summarize(rows)
++                assert all(len(r['pairs'])==plan['rounds'] for r in results)
++                all_results.extend(dict(case=case['id'],**r) for r in results)
++        else:status['error']=error.read_text(errors='replace')[-3000:]
++        statuses.append(status);print(json.dumps(status),flush=True)
++    passed=all(s['exit_code']==0 for s in statuses)
++    summary=dict(passed=passed,timing=not a.check,paired_rounds=plan['rounds'],cases=statuses,results=all_results,
++        wins_evaluated=False,engine_unchanged=True,source_sha=os.environ.get('GITHUB_SHA'))
++    if not a.check:summary['load_after']=os.getloadavg()
++    write(a.out/'summary.json',summary)
++    if not a.check:
++        lines=['# S26c speed-only benchmark','',
++            'One generic x86-64 release binary; serial execution pinned to one runner CPU. Seven ABBA/BAAB blocks; three selection seeds where applicable.',
++            'Intervals describe paired block variability on this runner, not variability between machines. Partial trees perform less work and are not equivalent full-depth computations.','',
++            '| Case | Variant | Baseline ms | Candidate ms | Time reduction | Complete horizon |',
++            '|---|---|---:|---:|---:|---|']
++        for r in all_results:
++            lines.append(f"| {r['case']} | {r['variant']['id']} | {r['baseline_ms']:.3f} | {r['candidate_ms']:.3f} | {r['time_reduction_percent']:+.2f}% | {r['diagnostics']['horizon_complete']} |")
++        (a.out/'RESULTS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
++    raise SystemExit(0 if passed else 1)
++if __name__=='__main__':main()
+diff --git a/engine/search/Cargo.toml b/engine/search/Cargo.toml
+index 7e8a69d..ecd6015 100644
+--- a/engine/search/Cargo.toml
++++ b/engine/search/Cargo.toml
+@@ -80,6 +80,11 @@ name = "lab-belief"
+ path = "src/bin/lab-belief.rs"
+ required-features = ["cli", "experiment-public-belief"]
+ 
++[[bin]]
++name = "lab-belief-speed"
++path = "src/bin/lab-belief-speed.rs"
++required-features = ["cli", "experiment-growing-belief"]
++
+ [[bin]]
+ name = "lab-search-quality"
+ path = "src/bin/lab-search-quality.rs"
+diff --git a/engine/search/src/bin/lab-belief-speed.rs b/engine/search/src/bin/lab-belief-speed.rs
+new file mode 100644
+index 0000000..43b7a69
+--- /dev/null
++++ b/engine/search/src/bin/lab-belief-speed.rs
+@@ -0,0 +1,305 @@
++//! In-process paired speed harness. Simulation/search code is inherited byte-for-byte.
++//! Loading, JSON serialization, diagnostics and returned-tree destruction are not timed.
++use lab_engine::{eval::Evaluator, rules::Ruleset, state::SideId, turn::EnumerateOptions};
++use lab_search::{
++    bayesian::{
++        self,
++        engine::{EngineWorld, Knowledge},
++        tree::{
++            self,
++            builder::{growing, Built, Limits},
++        },
++    },
++    budgeted::Position,
++};
++use serde_json::{json, Value};
++use std::{collections::BTreeMap, hint::black_box, io::Write, path::Path, time::Instant};
++
++struct Input {
++    worlds: Vec<EngineWorld<2>>,
++    knowledge: Knowledge,
++    limits: Limits,
++    solver: bayesian::Config,
++}
++struct Output {
++    built: Built,
++    solved: tree::Solution,
++    growth: Option<(growing::Work, growing::Stop, usize)>,
++    complete: bool,
++}
++enum Method {
++    Exhaustive,
++    Growing(growing::Config),
++}
++fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
++    match v.get(k) {
++        None => Ok(d),
++        Some(x) => x
++            .as_u64()
++            .and_then(|v| usize::try_from(v).ok())
++            .ok_or_else(|| format!("invalid {k}")),
++    }
++}
++fn string<'a>(v: &'a Value, k: &str) -> Result<&'a str, String> {
++    v[k].as_str().ok_or_else(|| format!("invalid {k}"))
++}
++fn load(v: &Value, base: &Path) -> Result<Input, String> {
++    let mut worlds = Vec::new();
++    for w in v["worlds"].as_array().ok_or("worlds array")? {
++        let loaded = lab_scenario::load_scenario_file(base.join(string(w, "scenario")?))
++            .map_err(|e| e.to_string())?;
++        let mut positions =
++            lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
++                .map_err(|e| e.to_string())?;
++        if positions.len() != 1 {
++            return Err("ambiguous root".into());
++        }
++        worlds.push(EngineWorld {
++            id: string(w, "id")?.into(),
++            weight: w["weight"].as_f64().ok_or("weight")?,
++            position: Position {
++                state: positions.remove(0).state,
++                suspension: None,
++            },
++        });
++    }
++    let l = &v["limits"];
++    let s = &v["solver"];
++    Ok(Input {
++        worlds,
++        knowledge: Knowledge {
++            hidden_stats: v["hidden_stats"].as_bool().unwrap_or(false),
++            ..Knowledge::default()
++        },
++        limits: Limits {
++            turns: uint(l, "turns", 2)?
++                .try_into()
++                .map_err(|_| "turn overflow")?,
++            max_nodes: uint(l, "max_nodes", 50000)?,
++            max_transitions: uint(l, "max_transitions", 20000)?,
++            max_decisions: uint(l, "max_decisions", 32)?,
++        },
++        solver: bayesian::Config {
++            iterations: uint(s, "iterations", 1000)?,
++            check_every: uint(s, "check_every", 32)?,
++            tolerance: s["tolerance"].as_f64().unwrap_or(0.1),
++        },
++    })
++}
++fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, String> {
++    let i = black_box(i);
++    if matches!(variant, Method::Exhaustive) {
++        let built = tree::engine::build(
++            &i.worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            e,
++            &i.knowledge,
++            i.limits,
++        )
++        .map_err(|e| e.to_string())?;
++        let solved = tree::solve(&built.tree, i.solver).map_err(|e| e.to_string())?;
++        Ok(Output {
++            built,
++            solved,
++            growth: None,
++            complete: true,
++        })
++    } else {
++        let Method::Growing(g) = variant else {
++            unreachable!()
++        };
++        let r = tree::engine::growing(
++            &i.worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            e,
++            &i.knowledge,
++            i.limits,
++            *g,
++        )
++        .map_err(|e| e.to_string())?;
++        Ok(Output {
++            built: r.built,
++            solved: r.solution,
++            growth: Some((r.work, r.stop, r.frontier_public_groups)),
++            complete: r.horizon_complete,
++        })
++    }
++}
++fn root_policy(o: &Output) -> BTreeMap<String, Vec<f64>> {
++    o.built
++        .tree
++        .information()
++        .iter()
++        .enumerate()
++        .filter(|(_, i)| i.player == 0 && i.own_sequence.is_empty())
++        .map(|(id, i)| (i.key.clone(), o.solved.policy[id].clone()))
++        .collect()
++}
++fn diagnostics(o: &Output) -> Value {
++    let growth=o.growth.as_ref().map(|(w,stop,frontier)|json!({"attempted_transitions":w.attempted_transitions,
++        "committed_expansions":w.committed_expansions,"walks":w.walks,"solves":w.solves,
++        "total_cfr_iterations":w.cfr_iterations,"stop":format!("{stop:?}"),"frontier_groups":frontier}));
++    json!({"nodes":o.built.tree.node_count(),"information_sets":o.built.tree.information().len(),
++        "transitions":o.built.stats.transitions,"chance_outcomes":o.built.stats.chance_outcomes,
++        "leaves":o.built.stats.leaves,"switch_decisions":o.built.stats.switch_decisions,
++        "iterations":o.solved.iterations,"gap":o.solved.assessment.gap,"value":o.solved.assessment.value,
++        "solver_converged":o.solved.converged,"horizon_complete":o.complete,"growth":growth,
++        "root_policy":root_policy(o)})
++}
++fn validate(reference: &Output, o: &Output, variant: &Value) -> Result<(), String> {
++    if !o.solved.converged {
++        return Err("requested solver tolerance was not met".into());
++    }
++    if variant["require_complete"].as_bool().unwrap_or(false) && !o.complete {
++        return Err("full-growth walk did not complete horizon".into());
++    }
++    if o.complete {
++        if reference.built.tree.node_count() != o.built.tree.node_count()
++            || reference.built.stats.transitions != o.built.stats.transitions
++            || reference.built.tree.information().len() != o.built.tree.information().len()
++            || (reference.solved.assessment.value - o.solved.assessment.value).abs() > 1e-7
++        {
++            return Err("complete-horizon parity failed".into());
++        }
++        let left = root_policy(reference);
++        let right = root_policy(o);
++        if left.keys().collect::<Vec<_>>() != right.keys().collect::<Vec<_>>() {
++            return Err("root info parity".into());
++        }
++        for (k, p) in &left {
++            if p.len() != right[k].len()
++                || p.iter().zip(&right[k]).any(|(a, b)| (a - b).abs() > 1e-7)
++            {
++                return Err("root policy parity".into());
++            }
++        }
++    }
++    Ok(())
++}
++fn emit(v: Value) -> Result<(), String> {
++    println!("{}", serde_json::to_string(&v).map_err(|e| e.to_string())?);
++    std::io::stdout().flush().map_err(|e| e.to_string())
++}
++// Each timing covers build + CFR until a decision result is available. Diagnostics and
++// the returned graph's destructor run after the timer, identically for both paths.
++fn timed(i: &Input, e: &dyn Evaluator<2>, v: &Method, n: usize) -> Result<(f64, Output), String> {
++    let mut ns = 0.;
++    let mut last = None;
++    for _ in 0..n {
++        drop(last.take());
++        let start = Instant::now();
++        let output = compute(i, e, v)?;
++        black_box(&output);
++        ns += start.elapsed().as_nanos() as f64;
++        last = Some(output);
++    }
++    Ok((ns / n as f64, last.unwrap()))
++}
++fn main() -> std::process::ExitCode {
++    let work = || -> Result<(), String> {
++        let args: Vec<_> = std::env::args().skip(1).collect();
++        if args.len() != 2 || !["--check", "--measure"].contains(&args[0].as_str()) {
++            return Err("usage: lab-belief-speed --check|--measure case.json".into());
++        }
++        let path = Path::new(&args[1]);
++        let v: Value = serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
++            .map_err(|e| e.to_string())?;
++        let i = load(&v, path.parent().unwrap_or(Path::new(".")))?;
++        let evaluator = lab_search::model::load_evaluator("heuristic")?;
++        let variants = v["variants"].as_array().ok_or("variants")?;
++        let methods = variants
++            .iter()
++            .map(|v| {
++                if v["kind"] == "growing" {
++                    Ok(Method::Growing(growing::Config {
++                        max_expansions: uint(v, "max_expansions", 1)?,
++                        max_walks: uint(v, "max_walks", 20000)?,
++                        exploration: 1.,
++                        seed: v["seed"].as_u64().unwrap_or(1),
++                        solver: i.solver,
++                    }))
++                } else {
++                    Err("invalid candidate kind".to_owned())
++                }
++            })
++            .collect::<Result<Vec<_>, _>>()?;
++        let base = json!({"id":"exhaustive","kind":"exhaustive","require_complete":true});
++        let baseline_method = Method::Exhaustive;
++        let reference = compute(&i, evaluator.as_ref(), &baseline_method)?;
++        validate(&reference, &reference, &base)?;
++        emit(json!({"type":"baseline","diagnostics":diagnostics(&reference)}))?;
++        let mut batches = Vec::new();
++        let mut expected = Vec::new();
++        let target = uint(&v, "sample_ms", 80)? as f64 * 1e6;
++        for (variant, method) in variants.iter().zip(&methods) {
++            let o = compute(&i, evaluator.as_ref(), method)?;
++            validate(&reference, &o, variant)?;
++            let d = diagnostics(&o);
++            expected.push(d.clone());
++            emit(json!({"type":"validation","variant":variant,"diagnostics":d}))?;
++            if args[0] == "--measure" {
++                let (baseline_ns, _) = timed(&i, evaluator.as_ref(), &baseline_method, 1)?;
++                let (variant_ns, _) = timed(&i, evaluator.as_ref(), method, 1)?;
++                let counts = [baseline_ns, variant_ns]
++                    .map(|ns| (target / ns).ceil().clamp(1., 64.) as usize);
++                batches.push(counts);
++                emit(
++                    json!({"type":"calibration","variant":variant["id"],"baseline_ns":baseline_ns,"variant_ns":variant_ns,"counts":counts}),
++                )?;
++            }
++        }
++        if args[0] == "--check" {
++            return emit(json!({"type":"checked","timing":false}));
++        }
++        let rounds = uint(&v, "rounds", 7)?;
++        if !(3..=31).contains(&rounds) {
++            return Err("rounds range 3..31".into());
++        }
++        let base_d = diagnostics(&reference);
++        drop(reference);
++        for block in 0..rounds {
++            for offset in 0..variants.len() {
++                // Rotate treatments between blocks; ABBA/BAAB balances within-block drift.
++                let index = (offset + block) % variants.len();
++                let variant = &variants[index];
++                let order = if block % 2 == 0 {
++                    [0, 1, 1, 0]
++                } else {
++                    [1, 0, 0, 1]
++                };
++                let mut samples = Vec::new();
++                for (slot, which) in order.into_iter().enumerate() {
++                    let treatment = if which == 0 {
++                        &baseline_method
++                    } else {
++                        &methods[index]
++                    };
++                    let (ns, o) = timed(&i, evaluator.as_ref(), treatment, batches[index][which])?;
++                    if diagnostics(&o)
++                        != if which == 0 {
++                            base_d.clone()
++                        } else {
++                            expected[index].clone()
++                        }
++                    {
++                        return Err("nondeterministic result during timing".into());
++                    }
++                    samples.push(json!({"slot":slot,"treatment":if which==0 {"baseline"} else {"candidate"},"ns_per_solve":ns,"batch":batches[index][which]}));
++                }
++                emit(
++                    json!({"type":"paired","block":block,"variant":variant["id"],"samples":samples}),
++                )?;
++            }
++        }
++        emit(json!({"type":"completed","rounds":rounds,"timing":true}))
++    };
++    match work() {
++        Ok(()) => std::process::ExitCode::SUCCESS,
++        Err(e) => {
++            eprintln!("lab-belief-speed: {e}");
++            std::process::ExitCode::FAILURE
++        }
++    }
++}

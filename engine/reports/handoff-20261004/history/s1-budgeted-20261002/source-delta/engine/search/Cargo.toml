@@ -1,0 +1,84 @@
+[package]
+autotests = false
+name = "lab-search"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Offline planning against a known team on lab-engine: legal choices, exact chance, maximin (DESIGN.md 탐색의 용도와 정보 모델)."
+
+[lib]
+name = "lab_search"
+path = "src/lib.rs"
+
+# The library depends on lab-engine only. The `lab-plan` binary needs the scenario loader
+# (serde); it sits behind the default `cli` feature so hot-path users can turn it off with
+# `default-features = false`.
+[features]
+default = ["cli"]
+experiment-budgeted-search = []
+experiment-prepared-turn = ["lab-engine/experiment-prepared-turn"]
+experiment-prepared-turn-observe = ["experiment-prepared-turn", "lab-engine/experiment-prepared-turn-observe"]
+# `node`: positions stepped by choice strings over the scenario loader (the Python API's core,
+# `engine/py`).
+scenario = ["lab-scenario", "serde_json"]
+cli = ["scenario"]
+# P9 only: read completed flat turn endings at Next::Depth(0).
+experiment-leaf-ending-states = ["lab-engine/experiment-leaf-ending-states"]
+experiment-leaf-ending-observer = ["experiment-leaf-ending-states", "lab-engine/experiment-leaf-ending-observer"]
+# P13 runtime and observer are independently opt-in so OFF/ON captures can be audited.
+experiment-borrowed-child-keys = ["lab-engine/experiment-borrowed-child-keys"]
+experiment-borrowed-child-keys-observer = []
+
+[dependencies]
+lab-engine = { path = "../core" }
+lab-scenario = { path = "../scenario", optional = true }
+# The worker pool of the payoff matrices and child batches (board S24p).
+rayon = "1.10"
+serde_json = { version = "1", optional = true }
+
+[dev-dependencies]
+lab-scenario = { path = "../scenario" }
+serde_json = "1"
+
+[[bin]]
+name = "lab-plan"
+path = "src/bin/lab-plan.rs"
+required-features = ["cli"]
+
+[[bin]]
+name = "lab-rollout"
+path = "src/bin/lab-rollout.rs"
+required-features = ["cli"]
+
+[[bin]]
+name = "lab-parity"
+path = "src/bin/lab-parity.rs"
+required-features = ["cli"]
+
+[[bin]]
+name = "lab-replay"
+path = "src/bin/lab-replay.rs"
+required-features = ["cli"]
+
+[[bin]]
+name = "lab-budget"
+path = "src/bin/lab-budget.rs"
+required-features = ["cli", "experiment-budgeted-search"]
+
+# Experiment: preserve tests while reducing integration-test executable count.
+
+[[test]]
+name = "bundle_search_01"
+path = "tests/bundle_search_01.rs"
+
+[[test]]
+name = "bundle_search_02"
+path = "tests/bundle_search_02.rs"
+
+[[test]]
+name = "prepared_turn"
+path = "tests/prepared_turn.rs"
+
+[[test]]
+name = "borrowed_child_keys"
+path = "tests/borrowed_child_keys.rs"

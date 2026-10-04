@@ -1,0 +1,77 @@
+{
+  "parent": "26999d068dd541ac0f2cfcdafc8a091ce4427e12",
+  "branch": "codex/s26c-speed-20261002",
+  "workflow": ".github/workflows/engine-s26c-speed.yml",
+  "inherited_unchanged": 4122,
+  "changed_sha256": {
+    ".github/workflows/engine-s26c-speed.yml": "95a025ad7b18eb590cbf2b2aa28f83f4ffaf0a8a215af18cd597683a89f6318e",
+    "engine/benchmarks/s26_speed/CONTRACT.md": "abcf73290ef8f9f2beb103138bc0738d72f5fef0e004de7207a87c8d713bf323",
+    "engine/benchmarks/s26_speed/fixtures/normal.json": "0994797cff0705f6a8b96ed00759a479737f4f3bedaeedf2563ed5bfd914ab15",
+    "engine/benchmarks/s26_speed/fixtures/speed.json": "1e06e1da175668fd26bfbf6e368876c0939a19cc135d9897da21f63d0fcb2a8d",
+    "engine/benchmarks/s26_speed/plan.json": "cfcbfaf8ce580cdc675468067965dac2e78c0d05cea49d04e84c6257fe8e5abb",
+    "engine/benchmarks/s26_speed/run.py": "2f7d42870017b36c59783a801855ff3e2e158d406dcda9c2c424f343b5828387",
+    "engine/search/Cargo.toml": "9521c84eff84443469b09221f8dab3e7c05d41e08f06a94cb4d58f1afb423fd5",
+    "engine/search/src/bin/lab-belief-speed.rs": "454f5a85a1e53ea77cb178dc76a682b033cfa4e08d9d3fdae8b3793bfbf46854"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-growing-belief.yml": {
+      "branches": [
+        "codex/s26c-growing-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": true,
+  "correctness_scope": "inherited verified algorithms; harness eligibility and paired timings only",
+  "limitations": "single-runner bounded fixtures; partial trees do less work; no wins/strength evaluation",
+  "source_sha": "5b79d6e30b1fc0c39da227700ca3b169b60691b2",
+  "tree": "89ebf2897afd38218f265bb4909ec55bd685197a",
+  "patch_sha256": "c2ed57c4c1305e0ef4529eeaa103a14f0ec3c67709a0a06d7c2786d10d1cc798",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

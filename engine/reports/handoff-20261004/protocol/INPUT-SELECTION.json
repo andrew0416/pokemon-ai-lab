@@ -1,0 +1,8 @@
+{
+  "excluded_before_timing": "w-metronome-protect.json",
+  "reason": "Random damage in setup yields multiple root states; the benchmark requires one explicit root.",
+  "preserved_error": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/validation/check/heldout-metronome-protect-baseline-stderr.txt",
+  "replacement": "s-unseen-fist-protect.json",
+  "criterion": "No random setup; existing unmodified protection/contact fixture",
+  "performance_seen": false
+}

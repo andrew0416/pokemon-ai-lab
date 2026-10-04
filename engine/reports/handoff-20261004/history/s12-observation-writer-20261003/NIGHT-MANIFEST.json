@@ -1,0 +1,45 @@
+{
+  "deadline_utc": "2026-10-02T17:00:00Z",
+  "wins_evaluated": false,
+  "production_changed": false,
+  "default_off": true,
+  "runs": [
+    {
+      "folder": "s8-belief-workspace-20261003",
+      "run": 37029881806,
+      "source_sha": "bc7ae14351430b2f1cc485ed937bc690aaa5cfa3",
+      "paired_blocks": 238,
+      "timing_samples": 952
+    },
+    {
+      "folder": "s9-belief-compiler-20261003",
+      "run": 37030978967,
+      "source_sha": "ab57e82bd923666891ad31b3c563b6414080f27e",
+      "paired_blocks": 280,
+      "timing_samples": 1120
+    },
+    {
+      "folder": "s10-static-backup-20261003",
+      "run": 37032057405,
+      "source_sha": "673e9720882aaad4173743282202ea1217eee598",
+      "paired_blocks": 336,
+      "timing_samples": 1344
+    },
+    {
+      "folder": "s11-night-confirm-20261003",
+      "run": 37033041022,
+      "source_sha": "c830e52dd104743a2f0cc55f07e6b4018bc9591a",
+      "paired_blocks": 198,
+      "timing_samples": 792
+    },
+    {
+      "folder": "s12-observation-writer-20261003",
+      "run": 37034440983,
+      "source_sha": "081124aaae5e0fe5aa1d8c5b9117803abd866875",
+      "paired_blocks": 210,
+      "timing_samples": 840
+    }
+  ],
+  "combined_source": "081124aaae5e0fe5aa1d8c5b9117803abd866875",
+  "report_sha256": "3a83ed3884ccc97c490afe738c18ff7144f268430bc229811cd12207e9100539"
+}

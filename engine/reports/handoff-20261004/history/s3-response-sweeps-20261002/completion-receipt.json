@@ -1,0 +1,15 @@
+{
+  "source_sha": "0501eeb7220bcc3f5e2f00145c970fa350666031",
+  "run": 36999721226,
+  "complete_policy_exact_match": true,
+  "transitions_equal": true,
+  "full_completion_single_pair_speedup": 23.743513641374076,
+  "severe_3s_counterexample_repaired": true,
+  "production_adopted": false,
+  "remaining": [
+    "large-case node cap",
+    "large-case deep quality",
+    "numerical solver tolerance",
+    "component ablation"
+  ]
+}

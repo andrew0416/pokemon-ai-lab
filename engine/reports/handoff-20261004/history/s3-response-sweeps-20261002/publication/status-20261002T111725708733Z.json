@@ -1,0 +1,93 @@
+{
+  "id": 36999721226,
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/andrew0416/pokemon-ai-lab/actions/runs/36999721226",
+  "created_at": "2026-10-02T11:12:24Z",
+  "run_started_at": "2026-10-02T11:12:24Z",
+  "updated_at": "2026-10-02T11:16:29Z",
+  "head_sha": "0501eeb7220bcc3f5e2f00145c970fa350666031",
+  "jobs": [
+    {
+      "id": 110814398507,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T11:12:28Z",
+      "completed_at": "2026-10-02T11:14:25Z",
+      "active_steps": []
+    },
+    {
+      "id": 110814985721,
+      "name": "compare (half-hp-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T11:14:28Z",
+      "completed_at": "2026-10-02T11:16:09Z",
+      "active_steps": []
+    },
+    {
+      "id": 110814985728,
+      "name": "compare (helping-hand-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T11:14:30Z",
+      "completed_at": "2026-10-02T11:14:50Z",
+      "active_steps": []
+    },
+    {
+      "id": 110814985734,
+      "name": "compare (pivot-full)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T11:14:41Z",
+      "completed_at": "2026-10-02T11:15:00Z",
+      "active_steps": []
+    },
+    {
+      "id": 110814985741,
+      "name": "compare (pivot-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T11:14:28Z",
+      "completed_at": "2026-10-02T11:14:39Z",
+      "active_steps": []
+    },
+    {
+      "id": 110814985743,
+      "name": "compare (speed-swap-full)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T11:14:28Z",
+      "completed_at": "2026-10-02T11:14:42Z",
+      "active_steps": []
+    },
+    {
+      "id": 110814985813,
+      "name": "compare (sand-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T11:14:53Z",
+      "completed_at": "2026-10-02T11:16:09Z",
+      "active_steps": []
+    },
+    {
+      "id": 110814985845,
+      "name": "compare (coaching-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T11:14:44Z",
+      "completed_at": "2026-10-02T11:16:18Z",
+      "active_steps": []
+    },
+    {
+      "id": 110815543166,
+      "name": "summary",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T11:16:21Z",
+      "completed_at": "2026-10-02T11:16:28Z",
+      "active_steps": []
+    }
+  ]
+}

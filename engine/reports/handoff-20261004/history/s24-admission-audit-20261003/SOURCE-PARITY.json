@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "parent": "fc5bf999b9415bc18eacc9d6fff303c920209e13",
+  "production_engine_unchanged": true,
+  "default_off": true,
+  "changed_sha256": {
+    ".github/workflows/engine-s26i-audit.yml": "050fd097b4437f5a3119c3cee40fc8461317bd6bed038f322913885065d0ca32",
+    "engine/benchmarks/s26_audit/README.md": "93410f69322f135b104e865f106376c1cecd1f8e6e0e44f0fbb65ce4b55c13fa",
+    "engine/benchmarks/s26_audit/contract_check.py": "157bdf1976bcde3ae821337a60d759681848d3c4eac9028d711e6763beaedc22",
+    "engine/benchmarks/s26_audit/cpu_probe.rs": "1921501d5abc388651684ac8fb4d002ae2908d6a3469582daeec76350799b614",
+    "engine/benchmarks/s26_audit/memory_run.py": "2004dcff34876d4724d588e7b9d89b1b184f0babddf56d122e24f30b8e6375f5",
+    "engine/benchmarks/s26_audit/plan.json": "4e28276722ca3f8757f033c54a48c9b43030ddb504447670a9f0b08b6ffd28ad",
+    "engine/benchmarks/s26_audit/portability.py": "993e57dae4d38e3f6a2fa6bab3d75e53d0690f9d9e6184dc7abe3f0e599a0688",
+    "engine/benchmarks/s26_audit/run.py": "f06b6927a31be1274ec6ad13a0ac0497589d30eb90d203ca836d1b54a6508105",
+    "engine/search/Cargo.toml": "0346e2bc4457327706310e65f78f61a1a47035b8b60c6ab71038cb8b4adba58c",
+    "engine/search/src/bayesian/tree.rs": "8d0d6d1310bb36a481d78a8a9961840df1983678193234c759c5e2a17fd0eaa4",
+    "engine/search/src/bayesian/tree/allocation_audit.rs": "23ece815681c25781cc9f2e340562a03994409fc62987f519d62e95a59332d7d",
+    "engine/search/src/bayesian/tree/builder.rs": "c03074439740317cb2bd41d2463af842b6999f4bcc7ace548ddfe9b3217365a6",
+    "engine/search/src/bayesian/tree/builder/growing.rs": "9d705a4df02b1d1bfce4db382f96ab0f5c3902b3865a288dd996103075c8173a",
+    "engine/search/src/bayesian/tree/compiler/incremental.rs": "8a48a8bef56078711ecc857400b7b41350101b7b38a7e0c80c93534b1b347612",
+    "engine/search/src/bayesian/tree/compiler/owned.rs": "d7d3b5a96fdb03f5fca0609aeabc8b58fa7ea56f4ea6f327d3c8223fbcbab426",
+    "engine/search/src/bayesian/tree/phase_cost.rs": "463fdde1ce9390ebd3ad68a645c130fdd8ccce88c146cbc6dc4c8006604f3702",
+    "engine/search/src/bayesian/tree/snapshot_audit.rs": "154e81dbb32436de1ffc8b21b3fc4183267c1d31f4f2be1bfd50fa51a03d9ea2",
+    "engine/search/src/bayesian/tree/workspace/cached/paper/sequence/incremental.rs": "5c2c73c877457a751811004c6969d40601b10670d11fe0420f3641fbb24d4d24",
+    "engine/search/src/bin/lab-phase-speed.rs": "8cce269c0ceeed232a32fdba37e1b5a3ed7dbaabd97e1a589d5316b0616d19ea",
+    "engine/search/src/bin/lab-phase-speed/heap.rs": "f52ba5b685133d26b0be8b22d668916d981f479b0c68d818fd127520712103d1"
+  },
+  "inherited_unchanged": 4205
+}

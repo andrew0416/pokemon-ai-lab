@@ -1,0 +1,2254 @@
+diff --git a/.github/workflows/engine-s26l-stack.yml b/.github/workflows/engine-s26l-stack.yml
+new file mode 100644
+index 0000000..a3a24b3
+--- /dev/null
++++ b/.github/workflows/engine-s26l-stack.yml
+@@ -0,0 +1,84 @@
++name: S26l retained stack direct comparison
++on:
++  push:
++    branches: [codex/s26l-stack-20261004]
++permissions:
++  contents: read
++concurrency:
++  group: s26l-stack
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s26l-selected
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  CARGO_PROFILE_RELEASE_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  RAYON_NUM_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++  PYTHONHASHSEED: "0"
++jobs:
++  compare:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 25
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          fetch-depth: 2
++          persist-credentials: false
++      - uses: actions/checkout@v4
++        with:
++          ref: d90c80b4001e43807d404454280f1511329ef952
++          path: reference-s24
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s26l-selected
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Pin both unchanged libraries
++        run: python -B engine/benchmarks/s26_stack/provenance.py reference-s24 s26l-stack-results
++      - name: Isolated portable builds and focused CLI lint
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p "$RUNNER_TEMP/s26l-bins"
++          cargo build --locked --release --target-dir "$RUNNER_TEMP/s26l-baseline-target" --manifest-path reference-s24/engine/Cargo.toml -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee s26l-stack-results/baseline-build.log
++          cp "$RUNNER_TEMP/s26l-baseline-target/release/lab-phase-speed" "$RUNNER_TEMP/s26l-bins/baseline"
++          cd engine
++          cargo clippy --locked -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline -- -D warnings 2>&1 | tee ../s26l-stack-results/cli-clippy.log
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee ../s26l-stack-results/selected-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26l-bins/selected"
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-phase-cost 2>&1 | tee ../s26l-stack-results/profile-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26l-bins/profile"
++          git rev-parse HEAD > ../s26l-stack-results/source-sha.txt
++          rustc --version > ../s26l-stack-results/rustc.txt
++          sha256sum "$RUNNER_TEMP/s26l-bins/"* > ../s26l-stack-results/binaries.sha256
++          test "$(sha256sum "$RUNNER_TEMP/s26l-bins/baseline" | cut -d' ' -f1)" != "$(sha256sum "$RUNNER_TEMP/s26l-bins/selected" | cut -d' ' -f1)"
++      - name: Cross-version complete outcomes and search work
++        run: python -B engine/benchmarks/s26_stack/run.py --reference "$RUNNER_TEMP/s26l-bins/baseline" --selected "$RUNNER_TEMP/s26l-bins/selected" --out s26l-stack-results/check --mode check
++      - name: Direct retained-stack speed and A-A controls
++        run: python -B engine/benchmarks/s26_stack/run.py --reference "$RUNNER_TEMP/s26l-bins/baseline" --selected "$RUNNER_TEMP/s26l-bins/selected" --out s26l-stack-results/speed --mode speed --parity s26l-stack-results/check/summary.json
++      - name: Separate retained-stack phase and call diagnostics
++        run: python -B engine/benchmarks/s26_stack/run.py --selected "$RUNNER_TEMP/s26l-bins/profile" --out s26l-stack-results/profile --mode profile --parity s26l-stack-results/check/summary.json
++      - name: Preserve evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26l-stack-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26l-stack-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_stack/README.md b/engine/benchmarks/s26_stack/README.md
+new file mode 100644
+index 0000000..95d94a5
+--- /dev/null
++++ b/engine/benchmarks/s26_stack/README.md
+@@ -0,0 +1,60 @@
++# Direct comparison of the retained five-option stack
++
++Compare S24 `d90c80b4001e43807d404454280f1511329ef952`, all five pipeline
++options OFF, directly with the unchanged S25 library
++`2bb9cf595f675d269406bbe783e88154ed517cb4`, five ON:
++`frontier_index`, `owned_compiler`, `incremental_sequence`, `compressed_checks`,
++`encoded_history`. The rejected borrowed-boundary option is absent from this library.
++All defaults remain OFF. This does not measure every historical engine optimization
++against the original project; it measures these five cumulative pipeline options.
++
++## Inputs and preregistered comparisons
++
++Eight inherited settings plus two unmodified heldout oracle fixtures: Unseen Fist
++and protection, and Mega Sol/Synthesis. Same worlds, evaluator, limits, LCFR/periodic
++sequence solver, flat enumeration and public/private observation abstraction.
++The Metronome/Protect fixture was excluded during local input validation because
++random setup damage gives multiple roots. No timings informed that selection.
++
++Each eligible setting has 9 rotated ABBA/BAAB blocks for parent A/A, selected A/A and
++the direct parent→selected comparison. The previously flagged narrow depth3/cadence1
++setting also has parent→S25 OFF and S25 OFF A/A: 32 comparisons when all 10 settings
++finish the finite game and converge. Incomplete or capped settings are explicitly
++censored rather than silently removed or called gains. The 95% bootstrap intervals
++are exploratory and not corrected for multiple comparisons. A/A is a descriptive
++noise screen. Report the direct ratio, never products of earlier ratios.
++
++## Correctness and measurement boundary
++
++The libraries are unchanged. Existing S24/S25 independent BR/LP, rollback, callback,
++snapshot and scalar/non-AVX2 evidence is retained; those suites are not claimed as
++newly rerun by this benchmark. The only Rust edit is the common benchmark CLI.
++Two separate Cargo target directories prevent historical executable reuse; source
++pins, sole reference-file diff and executable SHA256 are saved and checked.
++
++Worker requests run serially. Input and pool loading, stdout/JSON, full-result
++witnesses and result destruction are outside compute. A worker destroys the result
++before acknowledging its response, avoiding overlap with another worker's next solve.
++
++Every sample preserves its route's full Tree/Solution/diagnostic witness. Across
++OFF and selected routes, an additional streaming FNV-1a-128 witness and byte count
++cover the entire Tree, complete Solution and search diagnostics, excluding only the
++`paper` and `pipeline` optimization counters. Those counters remain in the full
++witness and raw output; different counts are expected for these optimizations.
++Search walks, expansions, transition calls, solves and CFR iterations are retained
++in the cross-route check, as are values, policies and original-tree certificates.
++The witness is a regression check, not a cryptographic proof or an independent oracle.
++Evidence-file hashes are SHA256.
++
++Local `--mode check` uses only the current binary and no timer; it checks transport
++and exact OFF/selected outcomes. Historical cross-version equality is checked again
++on the runner before timing. Generic x86-64 is mandatory; no AVX2 requirement.
++
++## Bottleneck selection, not another micro-optimization
++
++Separate phase builds record five samples each for OFF and the retained stack.
++Their overhead makes them diagnostics, never the source of headline speed ratios.
++Select a large, source-mapped cost with a plausible >=5% whole-compute reduction.
++Show the required reduction in that component and the semantic preservation contract.
++Small clone/allocator candidates stay deferred. No new optimization implementation,
++production adoption, win-rate or strength evaluation is part of this experiment.
+diff --git a/engine/benchmarks/s26_stack/plan.json b/engine/benchmarks/s26_stack/plan.json
+new file mode 100644
+index 0000000..6780dc0
+--- /dev/null
++++ b/engine/benchmarks/s26_stack/plan.json
+@@ -0,0 +1,596 @@
++{
++  "rounds": 9,
++  "profile_rounds": 5,
++  "sample_count": 1,
++  "baseline_source": "d90c80b4001e43807d404454280f1511329ef952",
++  "selected_library_source": "2bb9cf595f675d269406bbe783e88154ed517cb4",
++  "off": {
++    "id": "off",
++    "paper": {
++      "rule": "lcfr",
++      "checks": "periodic",
++      "sequence": true
++    },
++    "pipeline": {}
++  },
++  "selected": {
++    "id": "selected-five",
++    "paper": {
++      "rule": "lcfr",
++      "checks": "periodic",
++      "sequence": true
++    },
++    "pipeline": {
++      "frontier_index": true,
++      "owned_compiler": true,
++      "incremental_sequence": true,
++      "compressed_checks": true,
++      "encoded_history": true
++    }
++  },
++  "cases": [
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w1-d2",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "inherited"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w2-d2",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "inherited"
++    },
++    {
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 1,
++      "id": "pivot-w1-d1",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "inherited"
++    },
++    {
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "sand-damage-w1-d1",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "inherited"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "inherited"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "inherited"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-cadence1",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "inherited"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-cadence1",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "inherited"
++    },
++    {
++      "worlds": [
++        {
++          "id": "heldout-unseen-fist-protect",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/s-unseen-fist-protect.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "heldout-unseen-fist-protect",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "heldout"
++    },
++    {
++      "worlds": [
++        {
++          "id": "heldout-mega-synthesis",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/aa-mega-sol-synthesis.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "heldout-mega-synthesis",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {}
++      },
++      "variants": [
++        {
++          "id": "selected-five",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          }
++        }
++      ],
++      "coverage": "heldout"
++    }
++  ],
++  "preregistered": {
++    "promotion_threshold_percent": 5,
++    "headline": "direct parent-off versus selected-five, no multiplied ratios",
++    "incomplete_or_nonconverged": "report censored, never silently drop after timing",
++    "noise": "baseline and selected A/A, descriptive envelope, unadjusted bootstrap interval",
++    "followup_off_case": "narrow-w1-d3-cadence1",
++    "boundary_flag": false
++  }
++}
+diff --git a/engine/benchmarks/s26_stack/provenance.py b/engine/benchmarks/s26_stack/provenance.py
+new file mode 100644
+index 0000000..34848df
+--- /dev/null
++++ b/engine/benchmarks/s26_stack/provenance.py
+@@ -0,0 +1,24 @@
++"""Pin libraries; install only one identical benchmark CLI in the reference."""
++from pathlib import Path
++import hashlib,json,subprocess,sys
++HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[2]
++reference=Path(sys.argv[1]);out=Path(sys.argv[2]);out.mkdir(parents=True,exist_ok=True)
++BASE='d90c80b4001e43807d404454280f1511329ef952';SELECTED='2bb9cf595f675d269406bbe783e88154ed517cb4'
++CLI='engine/search/src/bin/lab-phase-speed.rs'
++def git(root,*args):return subprocess.check_output(['git','-C',str(root),*args])
++assert git(reference,'rev-parse','HEAD').decode().strip()==BASE
++assert git(reference,'status','--porcelain').strip()==b''
++assert git(ROOT,'rev-parse','HEAD^').decode().strip()==SELECTED
++changed=git(ROOT,'diff','--name-only',SELECTED,'HEAD').decode().splitlines()
++assert CLI in changed and all(n==CLI or n.startswith(('engine/benchmarks/s26_stack/','.github/workflows/engine-s26l-stack.yml')) for n in changed)
++original=git(reference,'show','HEAD:'+CLI)
++assert hashlib.sha256(original).hexdigest()=='8cce269c0ceeed232a32fdba37e1b5a3ed7dbaabd97e1a589d5316b0616d19ea'
++payload=(ROOT/CLI).read_bytes();(reference/CLI).write_bytes(payload)
++assert git(reference,'diff','--name-only').decode().strip()==CLI
++(out/'reference-harness.patch').write_bytes(git(reference,'diff','--',CLI))
++value=dict(baseline_library=BASE,selected_library=SELECTED,source_sha=git(ROOT,'rev-parse','HEAD').decode().strip(),
++    selected_library_unchanged=True,reference_library_unchanged=True,only_reference_change=CLI,
++    cli_sha256=hashlib.sha256(payload).hexdigest(),original_cli_sha256=hashlib.sha256(original).hexdigest(),
++    source_changes=changed,scope='common transport adds semantic witnesses and finishes result drop before response; library algorithms unchanged')
++(out/'provenance.json').write_text(json.dumps(value,indent=2)+'\n')
++print(json.dumps(value,indent=2))
+diff --git a/engine/benchmarks/s26_stack/run.py b/engine/benchmarks/s26_stack/run.py
+new file mode 100644
+index 0000000..bc336c5
+--- /dev/null
++++ b/engine/benchmarks/s26_stack/run.py
+@@ -0,0 +1,149 @@
++"""Direct cumulative comparison of frozen libraries, with separately measured phases."""
++from pathlib import Path
++import argparse,copy,hashlib,json,os,platform,queue,random,statistics,subprocess,threading
++HERE=Path(__file__).resolve().parent
++
++def write(path,value):
++    path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
++
++def normalized(row):
++    value=copy.deepcopy(row['diagnostics'])
++    value.pop('pipeline',None);value.pop('paper',None)
++    return dict(semantic_witness=row['semantic_witness'],diagnostics=value)
++
++def identity(row):
++    return {key:row[key] for key in ('witness','semantic_witness','diagnostics')}
++
++def summarize(pairs):
++    ratios=[v['ratio'] for v in pairs];rng=random.Random(26100427)
++    samples=sorted(statistics.median(rng.choices(ratios,k=len(ratios))) for _ in range(4000))
++    ratio=statistics.median(ratios)
++    return dict(ratio_median=ratio,time_reduction_percent=100*(1-ratio),ratio_bootstrap95=[samples[100],samples[3899]],
++        baseline_ms=statistics.median(v['baseline_ms'] for v in pairs),candidate_ms=statistics.median(v['candidate_ms'] for v in pairs),pairs=pairs)
++
++class Worker:
++    def __init__(self,binary,request,prefix,timing):
++        self.log=Path(str(prefix)+'-stdout.jsonl').open('w',encoding='utf-8')
++        self.err=Path(str(prefix)+'-stderr.txt').open('w',encoding='utf-8')
++        self.queue=queue.Queue()
++        self.process=subprocess.Popen([str(binary.resolve()),'--worker' if timing else '--worker-check',str(request.resolve())],
++            stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.err,text=True,encoding='utf-8',bufsize=1)
++        def reader():
++            for line in self.process.stdout:
++                self.log.write(line);self.log.flush();self.queue.put(line)
++            self.queue.put(None)
++        self.thread=threading.Thread(target=reader,daemon=True);self.thread.start()
++        assert self.receive()==dict(type='ready',timing=timing)
++    def receive(self):
++        line=self.queue.get(timeout=180)
++        assert line is not None,'worker terminated; inspect stderr'
++        return json.loads(line)
++    def ask(self,variant):
++        self.process.stdin.write(json.dumps(dict(variant=variant,count=1))+'\n');self.process.stdin.flush()
++        return self.receive()
++    def close(self):
++        self.process.stdin.close()
++        try:self.process.wait(timeout=15)
++        except subprocess.TimeoutExpired:self.process.kill();self.process.wait();raise
++        self.thread.join(timeout=5);self.log.close();self.err.close()
++        assert self.process.returncode==0
++
++def request(case):
++    value=copy.deepcopy(case)
++    for world in value['worlds']:world['scenario']=(HERE.parents[2]/world['scenario']).as_posix()
++    return value
++
++def compare(args,plan,reference):
++    timing=args.mode=='speed'
++    binaries=dict(baseline=args.reference or args.selected,selected=args.selected)
++    env=dict(source_sha=os.environ.get('GITHUB_SHA'),timing=timing,platform=platform.platform(),
++        same_binary_local_check=args.reference is None,rounds=plan['rounds'] if timing else 0,
++        binary_sha256={key:hashlib.sha256(value.read_bytes()).hexdigest() for key,value in binaries.items()},
++        library_pins={key:plan[key] for key in ('baseline_source','selected_library_source')},
++        scope='compute only; input/pool load, witness, JSON and result destruction excluded; destruction finishes before next request')
++    if timing:
++        assert args.reference is not None and reference['passed'] and not reference['timing']
++        cpus=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,set(cpus[:4]))
++        env.update(cpus=cpus[:4],load_before=os.getloadavg(),cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0])
++    write(args.out/'environment.json',env)
++    bindings={'b':('baseline',plan['off']),'s':('selected',plan['selected']),'o':('selected',plan['off'])}
++    witnesses={};cases=[];results=[]
++    for case in plan['cases']:
++        path=args.out/(case['id']+'-request.json');write(path,request(case));workers={}
++        pairs=[('baseline-aa','b','b'),('selected-aa','s','s'),('direct-stack','b','s')]
++        if case['id']==plan['preregistered']['followup_off_case']:
++            pairs += [('off-aa','o','o'),('history-off-regression','b','o')]
++        captures={name:[] for name,_,_ in pairs};expected={}
++        try:
++            for name,binary in binaries.items():workers[name]=Worker(binary,path,args.out/(case['id']+'-'+name),timing)
++            for key,(name,variant) in bindings.items():
++                row=workers[name].ask(variant);expected[key]=identity(row)
++                assert row['type']=='sample' and row['timing']==timing
++                if reference:assert expected[key]==reference['witnesses'][case['id']][key],(case['id'],key,'cross-build result mismatch')
++            assert normalized(expected['b'])==normalized(expected['s'])==normalized(expected['o']),(case['id'],'tree/solution/work mismatch')
++            eligible=all(v['diagnostics']['complete'] and v['diagnostics']['converged'] for v in expected.values())
++            witnesses[case['id']]=expected
++            cases.append(dict(case=case['id'],coverage=case['coverage'],eligible=eligible,comparisons=[name for name,_,_ in pairs]))
++            if timing and eligible:
++                for block in range(plan['rounds']):
++                    for offset in range(len(pairs)):
++                        name,ak,bk=pairs[(offset+block)%len(pairs)];values=[]
++                        keys=[ak,bk,bk,ak] if block%2==0 else [bk,ak,ak,bk]
++                        for key in keys:
++                            version,variant=bindings[key];row=workers[version].ask(variant)
++                            assert identity(row)==expected[key] and row['count']==1 and row['ns_per_solve']>0
++                            values.append(row['ns_per_solve'])
++                        a=statistics.mean([values[0],values[3]] if block%2==0 else values[1:3])
++                        b=statistics.mean(values[1:3] if block%2==0 else [values[0],values[3]])
++                        captures[name].append(dict(block=block,baseline_ms=a/1e6,candidate_ms=b/1e6,ratio=b/a))
++                results.extend(dict(case=case['id'],coverage=case['coverage'],comparison=name,censored=False,**summarize(captures[name])) for name,_,_ in pairs)
++            elif timing:
++                results.extend(dict(case=case['id'],coverage=case['coverage'],comparison=name,censored=True,reason='incomplete or solver cap') for name,_,_ in pairs)
++        finally:
++            for worker in workers.values():worker.close()
++        print(json.dumps(cases[-1]),flush=True)
++    write(args.out/'summary.json',dict(passed=True,timing=timing,source_sha=os.environ.get('GITHUB_SHA'),
++        same_binary_local_check=args.reference is None,cases=cases,witnesses=witnesses,results=results,default_off=True,
++        library_unchanged=True,wins_evaluated=False,scope=env['scope']))
++
++def profile(args,plan,reference):
++    assert reference and reference['passed'];profiles=[]
++    for case in plan['cases']:
++        q=request(case);q['profile_rounds']=plan['profile_rounds']
++        path=args.out/(case['id']+'-request.json');write(path,q)
++        child=subprocess.run([str(args.selected.resolve()),'--profile',str(path.resolve())],capture_output=True,timeout=180)
++        (args.out/(case['id']+'-stdout.jsonl')).write_bytes(child.stdout)
++        (args.out/(case['id']+'-stderr.txt')).write_bytes(child.stderr)
++        assert child.returncode==0,(case['id'],child.stderr.decode(errors='replace'))
++        rows=[json.loads(line) for line in child.stdout.splitlines()]
++        assert rows[-1]['type']=='profiled'
++        for variant,binding in [('off','o'),('selected-five','s')]:
++            samples=[v for v in rows if v['type']=='profile' and v['variant']==variant]
++            assert len(samples)==plan['profile_rounds']
++            for value in samples:
++                expected=reference['witnesses'][case['id']][binding]
++                assert value['witness']==expected['witness'] and value['diagnostics']==expected['diagnostics']
++                assert value['balanced'] and sum(v['exclusive_ns'] for v in value['phases'])==value['compute_ns']
++            phases=[dict(phase=v['phase'],calls=v['calls'],exclusive_ms=statistics.median(s['phases'][i]['exclusive_ns']/1e6 for s in samples),
++                aggregate_exclusive_percent=100*sum(s['phases'][i]['exclusive_ns'] for s in samples)/sum(s['compute_ns'] for s in samples)) for i,v in enumerate(samples[0]['phases'])]
++            profiles.append(dict(case=case['id'],coverage=case['coverage'],variant=variant,samples=len(samples),
++                compute_ms=statistics.median(v['compute_ns']/1e6 for v in samples),phases=phases,diagnostics=samples[0]['diagnostics']))
++        print(json.dumps(dict(case=case['id'],profiles_passed=True)),flush=True)
++    write(args.out/'summary.json',dict(passed=True,timing=True,instrumented=True,source_sha=os.environ.get('GITHUB_SHA'),profiles=profiles,
++        scope='separate phase diagnostics, never used as clean speed ratios',binary_sha256=hashlib.sha256(args.selected.read_bytes()).hexdigest()))
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--selected',type=Path,required=True);p.add_argument('--reference',type=Path)
++    p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['check','speed','profile'],required=True)
++    p.add_argument('--parity',type=Path);args=p.parse_args()
++    if args.mode!='check':assert os.environ.get('GITHUB_ACTIONS')=='true','No local performance runs'
++    args.out.mkdir(parents=True,exist_ok=False)
++    os.environ.update(LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1')
++    plan=json.loads((HERE/'plan.json').read_bytes());assert len(plan['cases'])==10 and plan['rounds']==9
++    assert set(plan['selected']['pipeline'])=={'frontier_index','owned_compiler','incremental_sequence','compressed_checks','encoded_history'}
++    assert all(plan['selected']['pipeline'].values()) and plan['off']['pipeline']=={}
++    ref=json.loads(args.parity.read_bytes()) if args.parity else None
++    if args.mode=='profile':profile(args,plan,ref)
++    else:compare(args,plan,ref)
++
++if __name__=='__main__':main()
+diff --git a/engine/search/src/bin/lab-phase-speed.rs b/engine/search/src/bin/lab-phase-speed.rs
+index 9fee528..185f318 100644
+--- a/engine/search/src/bin/lab-phase-speed.rs
++++ b/engine/search/src/bin/lab-phase-speed.rs
+@@ -1,630 +1,676 @@
+-#[cfg(feature = "experiment-allocation-audit")]
+-#[path = "lab-phase-speed/heap.rs"]
+-mod heap;
+-// Equal-gap benchmark with independent diagnostic builds.
+-use lab_engine::{eval::Evaluator, rules::Ruleset, state::SideId, turn::EnumerateOptions};
+-use lab_search::{
+-    bayesian::{
+-        self,
+-        engine::{EngineWorld, Knowledge},
+-        tree::{
+-            self,
+-            builder::{growing, Built, Limits},
+-            paper,
+-        },
+-    },
+-    budgeted::Position,
+-};
+-use serde_json::{json, Value};
+-use std::{hint::black_box, io::Write, path::Path, time::Instant};
+-#[path = "lab-belief-workspace/paper_options.rs"]
+-mod paper_options;
+-#[allow(dead_code)]
+-#[path = "lab-belief-workspace/pipeline_options.rs"]
+-mod pipeline_options;
+-struct Input {
+-    worlds: Vec<EngineWorld<2>>,
+-    knowledge: Knowledge,
+-    limits: Limits,
+-    solver: bayesian::Config,
+-    cadence: usize,
+-}
+-fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
+-    match v.get(k) {
+-        None => Ok(d),
+-        Some(x) => x
+-            .as_u64()
+-            .and_then(|v| usize::try_from(v).ok())
+-            .ok_or_else(|| format!("invalid {k}")),
+-    }
+-}
+-fn string<'a>(v: &'a Value, k: &str) -> Result<&'a str, String> {
+-    v[k].as_str().ok_or_else(|| format!("invalid {k}"))
+-}
+-fn load(v: &Value, base: &Path) -> Result<Input, String> {
+-    let mut worlds = Vec::new();
+-    for w in v["worlds"].as_array().ok_or("worlds array")? {
+-        let loaded = lab_scenario::load_scenario_file(base.join(string(w, "scenario")?))
+-            .map_err(|e| e.to_string())?;
+-        let mut positions =
+-            lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
+-                .map_err(|e| e.to_string())?;
+-        if positions.len() != 1 {
+-            return Err("ambiguous root".into());
+-        }
+-        worlds.push(EngineWorld {
+-            id: string(w, "id")?.into(),
+-            weight: w["weight"].as_f64().ok_or("weight")?,
+-            position: Position {
+-                state: positions.remove(0).state,
+-                suspension: None,
+-            },
+-        });
+-    }
+-    let l = &v["limits"];
+-    let s = &v["solver"];
+-    Ok(Input {
+-        cadence: uint(v, "cadence", 4)?,
+-        worlds,
+-        knowledge: Knowledge {
+-            hidden_stats: v["hidden_stats"].as_bool().unwrap_or(false),
+-            ..Knowledge::default()
+-        },
+-        limits: Limits {
+-            turns: uint(l, "turns", 2)?
+-                .try_into()
+-                .map_err(|_| "turn overflow")?,
+-            max_nodes: uint(l, "max_nodes", 50000)?,
+-            max_transitions: uint(l, "max_transitions", 20000)?,
+-            max_decisions: uint(l, "max_decisions", 32)?,
+-        },
+-        solver: bayesian::Config {
+-            iterations: uint(s, "iterations", 1000)?,
+-            check_every: uint(s, "check_every", 32)?,
+-            tolerance: s["tolerance"].as_f64().unwrap_or(0.1),
+-        },
+-    })
+-}
+-fn canonical(t: &tree::Tree) -> String {
+-    fn visit(n: usize, raw: &[tree::Node], out: &mut Vec<tree::Node>) -> usize {
+-        let id = out.len();
+-        out.push(tree::Node::Terminal(0.));
+-        out[id] = match &raw[n] {
+-            tree::Node::Terminal(v) => tree::Node::Terminal(*v),
+-            tree::Node::Chance(edges) => tree::Node::Chance(
+-                edges
+-                    .iter()
+-                    .map(|(p, c)| (*p, visit(*c, raw, out)))
+-                    .collect(),
+-            ),
+-            tree::Node::Decision {
+-                player,
+-                information,
+-                actions,
+-                children,
+-            } => tree::Node::Decision {
+-                player: *player,
+-                information: information.clone(),
+-                actions: actions.clone(),
+-                children: children.iter().map(|c| visit(*c, raw, out)).collect(),
+-            },
+-        };
+-        id
+-    }
+-    let raw = t.export_nodes();
+-    let mut out = Vec::new();
+-    visit(t.root(), &raw, &mut out);
+-    format!("{:?}|{:?}", t.worlds(), out)
+-}
+-
+-// Keep the common timing wrapper on the stack rather than adding a timed heap allocation.
+-#[allow(clippy::large_enum_variant)]
+-enum ResultRun {
+-    Fixed(paper::Run),
+-    Grown(growing::reuse::paper::PaperResult),
+-    PipelineFixed(tree::pipeline::Run),
+-    PipelineGrown(growing::reuse::pipeline::PaperResult),
+-}
+-impl ResultRun {
+-    fn solution(&self) -> &tree::Solution {
+-        match self {
+-            Self::Fixed(r) => &r.solution,
+-            Self::PipelineFixed(r) => &r.run.solution,
+-            Self::PipelineGrown(r) => &r.search.solution,
+-            Self::Grown(r) => &r.search.solution,
+-        }
+-    }
+-    fn tree<'a>(&'a self, fixed: &'a Option<Built>) -> &'a tree::Tree {
+-        match self {
+-            Self::Fixed(_) | Self::PipelineFixed(_) => &fixed.as_ref().unwrap().tree,
+-            Self::PipelineGrown(r) => &r.search.built.tree,
+-            Self::Grown(r) => &r.search.built.tree,
+-        }
+-    }
+-    fn complete(&self) -> bool {
+-        match self {
+-            Self::Fixed(_) | Self::PipelineFixed(_) => true,
+-            Self::PipelineGrown(r) => r.search.horizon_complete,
+-            Self::Grown(r) => r.search.horizon_complete,
+-        }
+-    }
+-    fn diagnostics(&self, fixed: &Option<Built>) -> Value {
+-        let s = self.solution();
+-        let t = self.tree(fixed);
+-        let mut v = json!({"nodes":t.node_count(),"information":t.information().len(),"iterations":s.iterations,"gap":s.assessment.gap,"value":s.assessment.value,"lower":s.assessment.lower,"upper":s.assessment.upper,"converged":s.converged,"complete":self.complete()});
+-        match self {
+-            Self::Fixed(r) => v["paper"] = paper_options::stats(&r.stats),
+-            Self::Grown(r) => {
+-                let w = &r.search.work;
+-                v["paper"] = paper_options::growth(&r.stats);
+-                v["growth"] = json!({"solves":w.solves,"cfr_iterations":w.cfr_iterations,"attempted_transitions":w.attempted_transitions,"committed_expansions":w.committed_expansions,"walks":w.walks});
+-            }
+-            Self::PipelineGrown(r) => {
+-                v["pipeline"] = pipeline_options::metrics(&r.metrics);
+-                let w = &r.search.work;
+-                v["paper"] = paper_options::growth(&r.stats);
+-                v["growth"] = json!({"solves":w.solves,"cfr_iterations":w.cfr_iterations,"attempted_transitions":w.attempted_transitions,"committed_expansions":w.committed_expansions,"walks":w.walks});
+-            }
+-            Self::PipelineFixed(r) => {
+-                v["paper"] = paper_options::stats(&r.run.stats);
+-                v["pipeline"] = pipeline_options::metrics(&r.metrics);
+-            }
+-        }
+-        v
+-    }
+-}
+-fn compute(
+-    i: &Input,
+-    e: &dyn Evaluator<2>,
+-    fixed: &Option<Built>,
+-    pool: Option<&rayon::ThreadPool>,
+-    variant: &Value,
+-) -> Result<ResultRun, String> {
+-    let settings = paper_options::parse(&variant["paper"])?;
+-    let pipeline = variant
+-        .get("pipeline")
+-        .map(pipeline_options::parse)
+-        .transpose()?;
+-    if let Some(built) = fixed {
+-        if let Some(pipeline) = pipeline {
+-            return tree::pipeline::solve(&built.tree, i.solver, settings, pipeline)
+-                .map(ResultRun::PipelineFixed)
+-                .map_err(|e| e.to_string());
+-        }
+-        return paper::solve(&built.tree, i.solver, settings)
+-            .map(ResultRun::Fixed)
+-            .map_err(|e| e.to_string());
+-    }
+-    let search = growing::reuse::Settings {
+-        growth: growing::Config {
+-            solver: i.solver,
+-            max_expansions: 10000,
+-            max_walks: 100000,
+-            exploration: 1.,
+-            seed: 1,
+-        },
+-        storage: growing::reuse::Options {
+-            in_place: true,
+-            workspace: true,
+-            compiler: true,
+-            static_values: true,
+-            direct_write: true,
+-        },
+-    };
+-    if let Some(pipeline) = pipeline {
+-        return tree::engine::pipeline::growing(
+-            &i.worlds,
+-            SideId::One,
+-            Ruleset::CHAMPIONS_MC,
+-            e,
+-            &i.knowledge,
+-            i.limits,
+-            tree::engine::pipeline::Settings {
+-                search,
+-                cadence: i.cadence,
+-                pool,
+-                solver: settings,
+-                pipeline,
+-            },
+-        )
+-        .map(ResultRun::PipelineGrown)
+-        .map_err(|e| e.to_string());
+-    }
+-    if variant["reference"].as_bool().unwrap_or(false) {
+-        let search = tree::engine::cadence::growing(
+-            &i.worlds,
+-            SideId::One,
+-            Ruleset::CHAMPIONS_MC,
+-            e,
+-            &i.knowledge,
+-            i.limits,
+-            tree::engine::cadence::Settings {
+-                search,
+-                cadence: i.cadence,
+-                pool,
+-            },
+-        )
+-        .map_err(|e| e.to_string())?;
+-        Ok(ResultRun::Grown(growing::reuse::paper::PaperResult {
+-            search,
+-            stats: Default::default(),
+-        }))
+-    } else {
+-        tree::engine::paper::growing(
+-            &i.worlds,
+-            SideId::One,
+-            Ruleset::CHAMPIONS_MC,
+-            e,
+-            &i.knowledge,
+-            i.limits,
+-            tree::engine::paper::Settings {
+-                search,
+-                cadence: i.cadence,
+-                pool,
+-                solver: settings,
+-            },
+-        )
+-        .map(ResultRun::Grown)
+-        .map_err(|e| e.to_string())
+-    }
+-}
+-fn witness(r: &ResultRun, fixed: &Option<Built>) -> String {
+-    use std::fmt::Write;
+-    struct Digest(u128, u64);
+-    impl Write for Digest {
+-        fn write_str(&mut self, s: &str) -> std::fmt::Result {
+-            for b in s.bytes() {
+-                self.0 = (self.0 ^ u128::from(b)).wrapping_mul(0x1000000000000000000013b);
+-            }
+-            self.1 += s.len() as u64;
+-            Ok(())
+-        }
+-    }
+-    let mut h = Digest(0x6c62272e07bb014262b821756295c58d, 0);
+-    write!(
+-        &mut h,
+-        "{:?}|{:?}|{}",
+-        r.tree(fixed),
+-        r.solution(),
+-        r.diagnostics(fixed)
+-    )
+-    .unwrap();
+-    format!("fnv1a128:{:032x}:{}", h.0, h.1)
+-}
+-fn emit(v: Value) -> Result<(), String> {
+-    println!("{}", serde_json::to_string(&v).map_err(|e| e.to_string())?);
+-    std::io::stdout().flush().map_err(|e| e.to_string())
+-}
+-#[allow(clippy::too_many_arguments)]
+-fn timed(
+-    i: &Input,
+-    e: &dyn Evaluator<2>,
+-    fixed: &Option<Built>,
+-    pool: Option<&rayon::ThreadPool>,
+-    variant: &Value,
+-    count: usize,
+-) -> Result<(f64, ResultRun), String> {
+-    let mut ns = 0.;
+-    let mut last = None;
+-    for _ in 0..count {
+-        drop(last.take());
+-        let started = Instant::now();
+-        let r = compute(black_box(i), e, fixed, pool, variant)?;
+-        black_box(&r);
+-        ns += started.elapsed().as_nanos() as f64;
+-        last = Some(r);
+-    }
+-    Ok((ns / count as f64, last.unwrap()))
+-}
+-fn main() -> std::process::ExitCode {
+-    let work = || -> Result<(), String> {
+-        let args: Vec<_> = std::env::args().skip(1).collect();
+-        if args.len() != 2
+-            || ![
+-                "--check",
+-                "--measure",
+-                "--profile",
+-                "--profile-check",
+-                "--memory",
+-            ]
+-            .contains(&args[0].as_str())
+-        {
+-            return Err(
+-                "usage: lab-phase-speed --check|--measure|--profile|--profile-check case.json"
+-                    .into(),
+-            );
+-        }
+-        let measure = args[0] == "--measure";
+-        let profile = args[0] == "--profile" || args[0] == "--profile-check";
+-        let profile_check = args[0] == "--profile-check";
+-        if (measure || (profile && !profile_check))
+-            && std::env::var("GITHUB_ACTIONS").as_deref() != Ok("true")
+-        {
+-            return Err("performance measurements require GitHub Actions".into());
+-        }
+-        if measure
+-            && (cfg!(feature = "experiment-phase-cost")
+-                || cfg!(feature = "experiment-allocation-audit")
+-                || cfg!(feature = "experiment-snapshot-audit"))
+-        {
+-            return Err("instrumented builds cannot supply headline speed measurements".into());
+-        }
+-        if profile && !cfg!(feature = "experiment-phase-cost") {
+-            return Err("phase recording requires experiment-phase-cost".into());
+-        }
+-        let path = Path::new(&args[1]);
+-        let v: Value = serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
+-            .map_err(|e| e.to_string())?;
+-        let i = load(&v, path.parent().unwrap_or(Path::new(".")))?;
+-        let e = lab_search::model::load_evaluator("heuristic")?;
+-        let fixed = match string(&v, "phase")? {
+-            "fixed" => Some(
+-                tree::engine::build_owned(
+-                    &i.worlds,
+-                    SideId::One,
+-                    Ruleset::CHAMPIONS_MC,
+-                    e.as_ref(),
+-                    &i.knowledge,
+-                    i.limits,
+-                )
+-                .map_err(|e| e.to_string())?,
+-            ),
+-            "growing" => None,
+-            _ => return Err("phase must be fixed or growing".into()),
+-        };
+-        let threads = uint(&v, "threads", 1)?;
+-        if ![1, 2, 4].contains(&threads) {
+-            return Err("invalid threads".into());
+-        }
+-        let pool = if threads > 1 {
+-            Some(
+-                rayon::ThreadPoolBuilder::new()
+-                    .num_threads(threads)
+-                    .stack_size(16 * 1024 * 1024)
+-                    .build()
+-                    .map_err(|e| e.to_string())?,
+-            )
+-        } else {
+-            None
+-        };
+-        let baseline = &v["baseline"];
+-        #[cfg(feature = "experiment-snapshot-audit")]
+-        tree::snapshot_audit::reset();
+-        if args[0] == "--memory" {
+-            #[cfg(feature = "experiment-allocation-audit")]
+-            {
+-                tree::allocation_audit::reset();
+-                let before = heap::begin();
+-                let r = compute(&i, e.as_ref(), &fixed, pool.as_ref(), baseline)?;
+-                let after = heap::sample();
+-                let cache = tree::allocation_audit::get();
+-                let signature = witness(&r, &fixed);
+-                let diag = r.diagnostics(&fixed);
+-                let before_drop = heap::sample();
+-                drop(r);
+-                let dropped = heap::sample();
+-                let retained = (dropped.live as i128)
+-                    - (before_drop.live as i128 - after.live as i128)
+-                    - before.live as i128;
+-                return emit(
+-                    json!({"type":"memory","variant":baseline["id"],"witness":signature,"diagnostics":diag,
+-                    "baseline_requested_bytes":before.live,"peak_requested_bytes":after.peak,"peak_above_baseline_bytes":after.peak.saturating_sub(before.live),
+-                    "returned_live_above_baseline_bytes":after.live as i128-before.live as i128,
+-                    "retained_after_result_drop_bytes":retained,"result_drop_freed_bytes":before_drop.live.saturating_sub(dropped.live),
+-                    "allocations":after.allocations-before.allocations,"reallocations":after.reallocations-before.reallocations,
+-                    "frees":after.frees-before.frees,"requested_growth_bytes":after.allocated_bytes-before.allocated_bytes,
+-                    "cache":{"finishes":cache.finishes,"rank_slots_processed":cache.rank_slots_processed,"max_buckets":cache.max_buckets,
+-                    "max_empty_buckets":cache.max_empty_buckets,"max_leaf_slots":cache.max_leaf_slots,"max_entries":cache.max_entries,
+-                    "bucket_capacity":cache.bucket_capacity,"leaf_capacity":cache.leaf_capacity},"timing":false}),
+-                );
+-            }
+-            #[cfg(not(feature = "experiment-allocation-audit"))]
+-            return Err("memory audit requires experiment-allocation-audit".into());
+-        }
+-        let variants = v["variants"].as_array().ok_or("variants")?;
+-        let reference = compute(&i, e.as_ref(), &fixed, pool.as_ref(), baseline)?;
+-        let canonical_reference = canonical(reference.tree(&fixed));
+-        let baseline_diag = reference.diagnostics(&fixed);
+-        let baseline_witness = witness(&reference, &fixed);
+-        let check = reference
+-            .tree(&fixed)
+-            .assess(&reference.solution().policy)
+-            .map_err(|e| e.to_string())?;
+-        if format!("{check:?}") != format!("{:?}", reference.solution().assessment) {
+-            return Err("baseline original-tree certificate mismatch".into());
+-        }
+-        emit(json!({"type":"baseline","diagnostics":baseline_diag,"witness":baseline_witness}))?;
+-        let mut expected = Vec::new();
+-        let mut witnesses = Vec::new();
+-        let mut eligible = Vec::new();
+-        for variant in variants {
+-            let r = compute(&i, e.as_ref(), &fixed, pool.as_ref(), variant)?;
+-            if canonical(r.tree(&fixed)) != canonical_reference
+-                || !r.complete()
+-                || !reference.complete()
+-            {
+-                return Err("not the same completed finite game".into());
+-            }
+-            let a = r
+-                .tree(&fixed)
+-                .assess(&r.solution().policy)
+-                .map_err(|e| e.to_string())?;
+-            if format!("{a:?}") != format!("{:?}", r.solution().assessment) {
+-                return Err("original-tree certificate mismatch".into());
+-            }
+-            let s = r.solution();
+-            let rs = reference.solution();
+-            if a.lower > rs.assessment.upper + 1e-8 || a.upper < rs.assessment.lower - 1e-8 {
+-                return Err("disjoint certified value intervals".into());
+-            }
+-            if variant["exact_control"].as_bool().unwrap_or(false)
+-                && (s.policy != rs.policy
+-                    || format!("{s:?}") != format!("{rs:?}")
+-                    || r.diagnostics(&fixed)["growth"] != baseline_diag["growth"]
+-                    || format!("{:?}", r.tree(&fixed)) != format!("{:?}", reference.tree(&fixed)))
+-            {
+-                return Err("LCFR original control mismatch".into());
+-            }
+-            let ok = s.converged && rs.converged;
+-            let diag = r.diagnostics(&fixed);
+-            let signature = witness(&r, &fixed);
+-            witnesses.push(signature.clone());
+-            expected.push(diag.clone());
+-            eligible.push(ok);
+-            emit(
+-                json!({"type":"validation","variant":variant,"diagnostics":diag,"witness":signature,"equal_gap_eligible":ok}),
+-            )?;
+-        }
+-        if profile {
+-            #[cfg(feature = "experiment-phase-cost")]
+-            {
+-                use tree::phase_cost;
+-                let rounds = if profile_check {
+-                    1
+-                } else {
+-                    uint(&v, "profile_rounds", 5)?
+-                };
+-                if !(1..=15).contains(&rounds) {
+-                    return Err("invalid profile rounds".into());
+-                }
+-                drop(reference);
+-                let choices: Vec<_> = std::iter::once(baseline).chain(variants).collect();
+-                for block in 0..rounds {
+-                    for offset in 0..choices.len() {
+-                        let index = (offset + block) % choices.len();
+-                        let variant = choices[index];
+-                        let (r, costs) = phase_cost::record(|| {
+-                            compute(&i, e.as_ref(), &fixed, pool.as_ref(), variant)
+-                        });
+-                        let r = r?;
+-                        let expected_witness = if index == 0 {
+-                            &baseline_witness
+-                        } else {
+-                            &witnesses[index - 1]
+-                        };
+-                        if &witness(&r, &fixed) != expected_witness {
+-                            return Err("instrumentation changed result/work".into());
+-                        }
+-                        let diag = r.diagnostics(&fixed);
+-                        let entry = |p: phase_cost::Phase| costs.entries[p as usize];
+-                        let solves = diag["growth"]["solves"]
+-                            .as_u64()
+-                            .ok_or("growing diagnostics")?;
+-                        if entry(phase_cost::Phase::Compile).calls != solves
+-                            || entry(phase_cost::Phase::Solver).calls != solves
+-                            || entry(phase_cost::Phase::Kernel).calls != solves
+-                            || entry(phase_cost::Phase::Scores).calls != solves
+-                            || entry(phase_cost::Phase::Cfr).calls
+-                                != diag["growth"]["cfr_iterations"].as_u64().unwrap()
+-                            || entry(phase_cost::Phase::Certificate).calls
+-                                != diag["paper"]["assessments"].as_u64().unwrap()
+-                            || !costs.balanced()
+-                        {
+-                            return Err(
+-                                "phase counters or exclusive wall ledger do not reconcile".into()
+-                            );
+-                        }
+-                        let started = Instant::now();
+-                        drop(r);
+-                        let teardown = started.elapsed().as_nanos();
+-                        let rows: Vec<_> = costs.entries.iter().zip(phase_cost::NAMES).map(|(e,name)| {
+-                            if profile_check { json!({"phase":name,"calls":e.calls}) }
+-                            else { json!({"phase":name,"calls":e.calls,"inclusive_ns":e.inclusive_ns,"exclusive_ns":e.exclusive_ns}) }
+-                        }).collect();
+-                        let mut row = json!({"type":"profile","block":block,"variant":variant["id"],"witness":expected_witness,"diagnostics":diag,"balanced":true,"phases":rows});
+-                        if !profile_check {
+-                            row["compute_ns"] = json!(costs.total_ns());
+-                            row["returned_result_drop_ns"] = json!(teardown);
+-                        }
+-                        emit(row)?;
+-                    }
+-                }
+-                return emit(
+-                    json!({"type":if profile_check {"checked"} else {"profiled"},"timing":!profile_check,"rounds":rounds,"instrumented":true}),
+-                );
+-            }
+-            #[cfg(not(feature = "experiment-phase-cost"))]
+-            unreachable!();
+-        }
+-        if !measure {
+-            #[cfg(feature = "experiment-snapshot-audit")]
+-            {
+-                let c = tree::snapshot_audit::counters();
+-                emit(
+-                    json!({"type":"audit","compiled_snapshots":c.compiled_snapshots,"sequence_snapshots":c.sequence_snapshots,"contractions":c.contractions,"gap_checks":c.gap_checks}),
+-                )?;
+-            }
+-            return emit(json!({"type":"checked","timing":false}));
+-        }
+-        drop(reference);
+-        let rounds = uint(&v, "rounds", 9)?;
+-        if !(3..=31).contains(&rounds) {
+-            return Err("invalid rounds".into());
+-        }
+-        let target = uint(&v, "sample_ms", 80)? as f64 * 1e6;
+-        let mut counts = Vec::new();
+-        for (index, variant) in variants.iter().enumerate() {
+-            if !eligible[index] {
+-                counts.push([0, 0]);
+-                continue;
+-            }
+-            let (a, _) = timed(&i, e.as_ref(), &fixed, pool.as_ref(), baseline, 1)?;
+-            let (b, _) = timed(&i, e.as_ref(), &fixed, pool.as_ref(), variant, 1)?;
+-            let n = [a, b].map(|ns| (target / ns).ceil().clamp(1., 64.) as usize);
+-            counts.push(n);
+-            emit(
+-                json!({"type":"calibration","variant":variant["id"],"baseline_ns":a,"variant_ns":b,"counts":n}),
+-            )?;
+-        }
+-        for block in 0..rounds {
+-            for offset in 0..variants.len() {
+-                let index = (block + offset) % variants.len();
+-                if !eligible[index] {
+-                    continue;
+-                }
+-                let order = if block % 2 == 0 {
+-                    [0, 1, 1, 0]
+-                } else {
+-                    [1, 0, 0, 1]
+-                };
+-                let mut samples = Vec::new();
+-                for (slot, which) in order.into_iter().enumerate() {
+-                    let variant = if which == 0 {
+-                        baseline
+-                    } else {
+-                        &variants[index]
+-                    };
+-                    let (ns, r) = timed(
+-                        &i,
+-                        e.as_ref(),
+-                        &fixed,
+-                        pool.as_ref(),
+-                        variant,
+-                        counts[index][which],
+-                    )?;
+-                    if r.diagnostics(&fixed)
+-                        != if which == 0 {
+-                            baseline_diag.clone()
+-                        } else {
+-                            expected[index].clone()
+-                        }
+-                    {
+-                        return Err("nondeterministic timing result".into());
+-                    }
+-                    samples.push(json!({"slot":slot,"treatment":if which==0 {"baseline"} else {"candidate"},"ns_per_solve":ns,"batch":counts[index][which]}));
+-                }
+-                emit(
+-                    json!({"type":"paired","block":block,"variant":variants[index]["id"],"samples":samples}),
+-                )?;
+-            }
+-        }
+-        emit(json!({"type":"completed","timing":true,"rounds":rounds,"eligible":eligible}))
+-    };
+-    match work() {
+-        Ok(()) => std::process::ExitCode::SUCCESS,
+-        Err(e) => {
+-            eprintln!("lab-phase-speed: {e}");
+-            std::process::ExitCode::FAILURE
+-        }
+-    }
+-}
++#[cfg(feature = "experiment-allocation-audit")]
++#[path = "lab-phase-speed/heap.rs"]
++mod heap;
++// Equal-gap benchmark with independent diagnostic builds.
++use lab_engine::{eval::Evaluator, rules::Ruleset, state::SideId, turn::EnumerateOptions};
++use lab_search::{
++    bayesian::{
++        self,
++        engine::{EngineWorld, Knowledge},
++        tree::{
++            self,
++            builder::{growing, Built, Limits},
++            paper,
++        },
++    },
++    budgeted::Position,
++};
++use serde_json::{json, Value};
++use std::{hint::black_box, io::Write, path::Path, time::Instant};
++#[path = "lab-belief-workspace/paper_options.rs"]
++mod paper_options;
++#[allow(dead_code)]
++#[path = "lab-belief-workspace/pipeline_options.rs"]
++mod pipeline_options;
++struct Input {
++    worlds: Vec<EngineWorld<2>>,
++    knowledge: Knowledge,
++    limits: Limits,
++    solver: bayesian::Config,
++    cadence: usize,
++}
++fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
++    match v.get(k) {
++        None => Ok(d),
++        Some(x) => x
++            .as_u64()
++            .and_then(|v| usize::try_from(v).ok())
++            .ok_or_else(|| format!("invalid {k}")),
++    }
++}
++fn string<'a>(v: &'a Value, k: &str) -> Result<&'a str, String> {
++    v[k].as_str().ok_or_else(|| format!("invalid {k}"))
++}
++fn load(v: &Value, base: &Path) -> Result<Input, String> {
++    let mut worlds = Vec::new();
++    for w in v["worlds"].as_array().ok_or("worlds array")? {
++        let loaded = lab_scenario::load_scenario_file(base.join(string(w, "scenario")?))
++            .map_err(|e| e.to_string())?;
++        let mut positions =
++            lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
++                .map_err(|e| e.to_string())?;
++        if positions.len() != 1 {
++            return Err("ambiguous root".into());
++        }
++        worlds.push(EngineWorld {
++            id: string(w, "id")?.into(),
++            weight: w["weight"].as_f64().ok_or("weight")?,
++            position: Position {
++                state: positions.remove(0).state,
++                suspension: None,
++            },
++        });
++    }
++    let l = &v["limits"];
++    let s = &v["solver"];
++    Ok(Input {
++        cadence: uint(v, "cadence", 4)?,
++        worlds,
++        knowledge: Knowledge {
++            hidden_stats: v["hidden_stats"].as_bool().unwrap_or(false),
++            ..Knowledge::default()
++        },
++        limits: Limits {
++            turns: uint(l, "turns", 2)?
++                .try_into()
++                .map_err(|_| "turn overflow")?,
++            max_nodes: uint(l, "max_nodes", 50000)?,
++            max_transitions: uint(l, "max_transitions", 20000)?,
++            max_decisions: uint(l, "max_decisions", 32)?,
++        },
++        solver: bayesian::Config {
++            iterations: uint(s, "iterations", 1000)?,
++            check_every: uint(s, "check_every", 32)?,
++            tolerance: s["tolerance"].as_f64().unwrap_or(0.1),
++        },
++    })
++}
++fn canonical(t: &tree::Tree) -> String {
++    fn visit(n: usize, raw: &[tree::Node], out: &mut Vec<tree::Node>) -> usize {
++        let id = out.len();
++        out.push(tree::Node::Terminal(0.));
++        out[id] = match &raw[n] {
++            tree::Node::Terminal(v) => tree::Node::Terminal(*v),
++            tree::Node::Chance(edges) => tree::Node::Chance(
++                edges
++                    .iter()
++                    .map(|(p, c)| (*p, visit(*c, raw, out)))
++                    .collect(),
++            ),
++            tree::Node::Decision {
++                player,
++                information,
++                actions,
++                children,
++            } => tree::Node::Decision {
++                player: *player,
++                information: information.clone(),
++                actions: actions.clone(),
++                children: children.iter().map(|c| visit(*c, raw, out)).collect(),
++            },
++        };
++        id
++    }
++    let raw = t.export_nodes();
++    let mut out = Vec::new();
++    visit(t.root(), &raw, &mut out);
++    format!("{:?}|{:?}", t.worlds(), out)
++}
++
++// Keep the common timing wrapper on the stack rather than adding a timed heap allocation.
++#[allow(clippy::large_enum_variant)]
++enum ResultRun {
++    Fixed(paper::Run),
++    Grown(growing::reuse::paper::PaperResult),
++    PipelineFixed(tree::pipeline::Run),
++    PipelineGrown(growing::reuse::pipeline::PaperResult),
++}
++impl ResultRun {
++    fn solution(&self) -> &tree::Solution {
++        match self {
++            Self::Fixed(r) => &r.solution,
++            Self::PipelineFixed(r) => &r.run.solution,
++            Self::PipelineGrown(r) => &r.search.solution,
++            Self::Grown(r) => &r.search.solution,
++        }
++    }
++    fn tree<'a>(&'a self, fixed: &'a Option<Built>) -> &'a tree::Tree {
++        match self {
++            Self::Fixed(_) | Self::PipelineFixed(_) => &fixed.as_ref().unwrap().tree,
++            Self::PipelineGrown(r) => &r.search.built.tree,
++            Self::Grown(r) => &r.search.built.tree,
++        }
++    }
++    fn complete(&self) -> bool {
++        match self {
++            Self::Fixed(_) | Self::PipelineFixed(_) => true,
++            Self::PipelineGrown(r) => r.search.horizon_complete,
++            Self::Grown(r) => r.search.horizon_complete,
++        }
++    }
++    fn diagnostics(&self, fixed: &Option<Built>) -> Value {
++        let s = self.solution();
++        let t = self.tree(fixed);
++        let mut v = json!({"nodes":t.node_count(),"information":t.information().len(),"iterations":s.iterations,"gap":s.assessment.gap,"value":s.assessment.value,"lower":s.assessment.lower,"upper":s.assessment.upper,"converged":s.converged,"complete":self.complete()});
++        match self {
++            Self::Fixed(r) => v["paper"] = paper_options::stats(&r.stats),
++            Self::Grown(r) => {
++                let w = &r.search.work;
++                v["paper"] = paper_options::growth(&r.stats);
++                v["growth"] = json!({"solves":w.solves,"cfr_iterations":w.cfr_iterations,"attempted_transitions":w.attempted_transitions,"committed_expansions":w.committed_expansions,"walks":w.walks});
++            }
++            Self::PipelineGrown(r) => {
++                v["pipeline"] = pipeline_options::metrics(&r.metrics);
++                let w = &r.search.work;
++                v["paper"] = paper_options::growth(&r.stats);
++                v["growth"] = json!({"solves":w.solves,"cfr_iterations":w.cfr_iterations,"attempted_transitions":w.attempted_transitions,"committed_expansions":w.committed_expansions,"walks":w.walks});
++            }
++            Self::PipelineFixed(r) => {
++                v["paper"] = paper_options::stats(&r.run.stats);
++                v["pipeline"] = pipeline_options::metrics(&r.metrics);
++            }
++        }
++        v
++    }
++}
++fn compute(
++    i: &Input,
++    e: &dyn Evaluator<2>,
++    fixed: &Option<Built>,
++    pool: Option<&rayon::ThreadPool>,
++    variant: &Value,
++) -> Result<ResultRun, String> {
++    let settings = paper_options::parse(&variant["paper"])?;
++    let pipeline = variant
++        .get("pipeline")
++        .map(pipeline_options::parse)
++        .transpose()?;
++    if let Some(built) = fixed {
++        if let Some(pipeline) = pipeline {
++            return tree::pipeline::solve(&built.tree, i.solver, settings, pipeline)
++                .map(ResultRun::PipelineFixed)
++                .map_err(|e| e.to_string());
++        }
++        return paper::solve(&built.tree, i.solver, settings)
++            .map(ResultRun::Fixed)
++            .map_err(|e| e.to_string());
++    }
++    let search = growing::reuse::Settings {
++        growth: growing::Config {
++            solver: i.solver,
++            max_expansions: 10000,
++            max_walks: 100000,
++            exploration: 1.,
++            seed: 1,
++        },
++        storage: growing::reuse::Options {
++            in_place: true,
++            workspace: true,
++            compiler: true,
++            static_values: true,
++            direct_write: true,
++        },
++    };
++    if let Some(pipeline) = pipeline {
++        return tree::engine::pipeline::growing(
++            &i.worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            e,
++            &i.knowledge,
++            i.limits,
++            tree::engine::pipeline::Settings {
++                search,
++                cadence: i.cadence,
++                pool,
++                solver: settings,
++                pipeline,
++            },
++        )
++        .map(ResultRun::PipelineGrown)
++        .map_err(|e| e.to_string());
++    }
++    if variant["reference"].as_bool().unwrap_or(false) {
++        let search = tree::engine::cadence::growing(
++            &i.worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            e,
++            &i.knowledge,
++            i.limits,
++            tree::engine::cadence::Settings {
++                search,
++                cadence: i.cadence,
++                pool,
++            },
++        )
++        .map_err(|e| e.to_string())?;
++        Ok(ResultRun::Grown(growing::reuse::paper::PaperResult {
++            search,
++            stats: Default::default(),
++        }))
++    } else {
++        tree::engine::paper::growing(
++            &i.worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            e,
++            &i.knowledge,
++            i.limits,
++            tree::engine::paper::Settings {
++                search,
++                cadence: i.cadence,
++                pool,
++                solver: settings,
++            },
++        )
++        .map(ResultRun::Grown)
++        .map_err(|e| e.to_string())
++    }
++}
++fn witnesses(r: &ResultRun, fixed: &Option<Built>) -> (String, String) {
++    use std::fmt::Write;
++    #[derive(Clone)]
++    struct Digest(u128, u64);
++    impl Write for Digest {
++        fn write_str(&mut self, s: &str) -> std::fmt::Result {
++            for b in s.bytes() {
++                self.0 = (self.0 ^ u128::from(b)).wrapping_mul(0x1000000000000000000013b);
++            }
++            self.1 += s.len() as u64;
++            Ok(())
++        }
++    }
++    let mut h = Digest(0x6c62272e07bb014262b821756295c58d, 0);
++    write!(&mut h, "{:?}|{:?}|", r.tree(fixed), r.solution()).unwrap();
++    let mut semantic = h.clone();
++    let mut diag = r.diagnostics(fixed);
++    write!(&mut h, "{diag}").unwrap();
++    let object = diag.as_object_mut().expect("diagnostics object");
++    object.remove("pipeline");
++    object.remove("paper");
++    write!(&mut semantic, "{diag}").unwrap();
++    (
++        format!("fnv1a128:{:032x}:{}", h.0, h.1),
++        format!("fnv1a128:{:032x}:{}", semantic.0, semantic.1),
++    )
++}
++fn witness(r: &ResultRun, fixed: &Option<Built>) -> String {
++    witnesses(r, fixed).0
++}
++
++fn emit(v: Value) -> Result<(), String> {
++    println!("{}", serde_json::to_string(&v).map_err(|e| e.to_string())?);
++    std::io::stdout().flush().map_err(|e| e.to_string())
++}
++#[allow(clippy::too_many_arguments)]
++fn timed(
++    i: &Input,
++    e: &dyn Evaluator<2>,
++    fixed: &Option<Built>,
++    pool: Option<&rayon::ThreadPool>,
++    variant: &Value,
++    count: usize,
++) -> Result<(f64, ResultRun), String> {
++    let mut ns = 0.;
++    let mut last = None;
++    for _ in 0..count {
++        drop(last.take());
++        let started = Instant::now();
++        let r = compute(black_box(i), e, fixed, pool, variant)?;
++        black_box(&r);
++        ns += started.elapsed().as_nanos() as f64;
++        last = Some(r);
++    }
++    Ok((ns / count as f64, last.unwrap()))
++}
++fn main() -> std::process::ExitCode {
++    let work = || -> Result<(), String> {
++        let args: Vec<_> = std::env::args().skip(1).collect();
++        if args.len() != 2
++            || ![
++                "--check",
++                "--measure",
++                "--profile",
++                "--profile-check",
++                "--memory",
++                "--worker",
++                "--worker-check",
++            ]
++            .contains(&args[0].as_str())
++        {
++            return Err(
++                "usage: lab-phase-speed --check|--measure|--profile|--profile-check case.json"
++                    .into(),
++            );
++        }
++        let measure = args[0] == "--measure";
++        let worker = args[0] == "--worker" || args[0] == "--worker-check";
++        let worker_timing = args[0] == "--worker";
++        let profile = args[0] == "--profile" || args[0] == "--profile-check";
++        let profile_check = args[0] == "--profile-check";
++        if (measure || worker_timing || (profile && !profile_check))
++            && std::env::var("GITHUB_ACTIONS").as_deref() != Ok("true")
++        {
++            return Err("performance measurements require GitHub Actions".into());
++        }
++        if (measure || worker_timing)
++            && (cfg!(feature = "experiment-phase-cost")
++                || cfg!(feature = "experiment-allocation-audit")
++                || cfg!(feature = "experiment-snapshot-audit"))
++        {
++            return Err("instrumented builds cannot supply headline speed measurements".into());
++        }
++        if profile && !cfg!(feature = "experiment-phase-cost") {
++            return Err("phase recording requires experiment-phase-cost".into());
++        }
++        let path = Path::new(&args[1]);
++        let v: Value = serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
++            .map_err(|e| e.to_string())?;
++        let i = load(&v, path.parent().unwrap_or(Path::new(".")))?;
++        let e = lab_search::model::load_evaluator("heuristic")?;
++        let fixed = match string(&v, "phase")? {
++            "fixed" => Some(
++                tree::engine::build_owned(
++                    &i.worlds,
++                    SideId::One,
++                    Ruleset::CHAMPIONS_MC,
++                    e.as_ref(),
++                    &i.knowledge,
++                    i.limits,
++                )
++                .map_err(|e| e.to_string())?,
++            ),
++            "growing" => None,
++            _ => return Err("phase must be fixed or growing".into()),
++        };
++        let threads = uint(&v, "threads", 1)?;
++        if ![1, 2, 4].contains(&threads) {
++            return Err("invalid threads".into());
++        }
++        let pool = if threads > 1 {
++            Some(
++                rayon::ThreadPoolBuilder::new()
++                    .num_threads(threads)
++                    .stack_size(16 * 1024 * 1024)
++                    .build()
++                    .map_err(|e| e.to_string())?,
++            )
++        } else {
++            None
++        };
++        if worker {
++            emit(json!({"type":"ready","timing":worker_timing}))?;
++            let stdin = std::io::stdin();
++            let mut line = String::new();
++            loop {
++                line.clear();
++                if stdin.read_line(&mut line).map_err(|e| e.to_string())? == 0 {
++                    break;
++                }
++                let request: Value = serde_json::from_str(&line).map_err(|e| e.to_string())?;
++                let count = uint(&request, "count", 1)?;
++                if !(1..=64).contains(&count) {
++                    return Err("invalid worker sample count".into());
++                }
++                let variant = &request["variant"];
++                let (ns, result) = if worker_timing {
++                    timed(&i, e.as_ref(), &fixed, pool.as_ref(), variant, count)?
++                } else {
++                    (0., compute(&i, e.as_ref(), &fixed, pool.as_ref(), variant)?)
++                };
++                let (full, semantic) = witnesses(&result, &fixed);
++                let mut row = json!({"type":"sample","timing":worker_timing,
++                    "witness":full,"semantic_witness":semantic,"diagnostics":result.diagnostics(&fixed)});
++                if worker_timing {
++                    row["ns_per_solve"] = json!(ns);
++                    row["count"] = json!(count);
++                }
++                // Finish result destruction before acknowledging the sample, so a
++                // different worker cannot overlap it with the next timed compute.
++                drop(result);
++                emit(row)?;
++            }
++            return Ok(());
++        }
++        let baseline = &v["baseline"];
++        #[cfg(feature = "experiment-snapshot-audit")]
++        tree::snapshot_audit::reset();
++        if args[0] == "--memory" {
++            #[cfg(feature = "experiment-allocation-audit")]
++            {
++                tree::allocation_audit::reset();
++                let before = heap::begin();
++                let r = compute(&i, e.as_ref(), &fixed, pool.as_ref(), baseline)?;
++                let after = heap::sample();
++                let cache = tree::allocation_audit::get();
++                let signature = witness(&r, &fixed);
++                let diag = r.diagnostics(&fixed);
++                let before_drop = heap::sample();
++                drop(r);
++                let dropped = heap::sample();
++                let retained = (dropped.live as i128)
++                    - (before_drop.live as i128 - after.live as i128)
++                    - before.live as i128;
++                return emit(
++                    json!({"type":"memory","variant":baseline["id"],"witness":signature,"diagnostics":diag,
++                    "baseline_requested_bytes":before.live,"peak_requested_bytes":after.peak,"peak_above_baseline_bytes":after.peak.saturating_sub(before.live),
++                    "returned_live_above_baseline_bytes":after.live as i128-before.live as i128,
++                    "retained_after_result_drop_bytes":retained,"result_drop_freed_bytes":before_drop.live.saturating_sub(dropped.live),
++                    "allocations":after.allocations-before.allocations,"reallocations":after.reallocations-before.reallocations,
++                    "frees":after.frees-before.frees,"requested_growth_bytes":after.allocated_bytes-before.allocated_bytes,
++                    "cache":{"finishes":cache.finishes,"rank_slots_processed":cache.rank_slots_processed,"max_buckets":cache.max_buckets,
++                    "max_empty_buckets":cache.max_empty_buckets,"max_leaf_slots":cache.max_leaf_slots,"max_entries":cache.max_entries,
++                    "bucket_capacity":cache.bucket_capacity,"leaf_capacity":cache.leaf_capacity},"timing":false}),
++                );
++            }
++            #[cfg(not(feature = "experiment-allocation-audit"))]
++            return Err("memory audit requires experiment-allocation-audit".into());
++        }
++        let variants = v["variants"].as_array().ok_or("variants")?;
++        let reference = compute(&i, e.as_ref(), &fixed, pool.as_ref(), baseline)?;
++        let canonical_reference = canonical(reference.tree(&fixed));
++        let baseline_diag = reference.diagnostics(&fixed);
++        let baseline_witness = witness(&reference, &fixed);
++        let check = reference
++            .tree(&fixed)
++            .assess(&reference.solution().policy)
++            .map_err(|e| e.to_string())?;
++        if format!("{check:?}") != format!("{:?}", reference.solution().assessment) {
++            return Err("baseline original-tree certificate mismatch".into());
++        }
++        emit(json!({"type":"baseline","diagnostics":baseline_diag,"witness":baseline_witness}))?;
++        let mut expected = Vec::new();
++        let mut witnesses = Vec::new();
++        let mut eligible = Vec::new();
++        for variant in variants {
++            let r = compute(&i, e.as_ref(), &fixed, pool.as_ref(), variant)?;
++            if canonical(r.tree(&fixed)) != canonical_reference
++                || !r.complete()
++                || !reference.complete()
++            {
++                return Err("not the same completed finite game".into());
++            }
++            let a = r
++                .tree(&fixed)
++                .assess(&r.solution().policy)
++                .map_err(|e| e.to_string())?;
++            if format!("{a:?}") != format!("{:?}", r.solution().assessment) {
++                return Err("original-tree certificate mismatch".into());
++            }
++            let s = r.solution();
++            let rs = reference.solution();
++            if a.lower > rs.assessment.upper + 1e-8 || a.upper < rs.assessment.lower - 1e-8 {
++                return Err("disjoint certified value intervals".into());
++            }
++            if variant["exact_control"].as_bool().unwrap_or(false)
++                && (s.policy != rs.policy
++                    || format!("{s:?}") != format!("{rs:?}")
++                    || r.diagnostics(&fixed)["growth"] != baseline_diag["growth"]
++                    || format!("{:?}", r.tree(&fixed)) != format!("{:?}", reference.tree(&fixed)))
++            {
++                return Err("LCFR original control mismatch".into());
++            }
++            let ok = s.converged && rs.converged;
++            let diag = r.diagnostics(&fixed);
++            let signature = witness(&r, &fixed);
++            witnesses.push(signature.clone());
++            expected.push(diag.clone());
++            eligible.push(ok);
++            emit(
++                json!({"type":"validation","variant":variant,"diagnostics":diag,"witness":signature,"equal_gap_eligible":ok}),
++            )?;
++        }
++        if profile {
++            #[cfg(feature = "experiment-phase-cost")]
++            {
++                use tree::phase_cost;
++                let rounds = if profile_check {
++                    1
++                } else {
++                    uint(&v, "profile_rounds", 5)?
++                };
++                if !(1..=15).contains(&rounds) {
++                    return Err("invalid profile rounds".into());
++                }
++                drop(reference);
++                let choices: Vec<_> = std::iter::once(baseline).chain(variants).collect();
++                for block in 0..rounds {
++                    for offset in 0..choices.len() {
++                        let index = (offset + block) % choices.len();
++                        let variant = choices[index];
++                        let (r, costs) = phase_cost::record(|| {
++                            compute(&i, e.as_ref(), &fixed, pool.as_ref(), variant)
++                        });
++                        let r = r?;
++                        let expected_witness = if index == 0 {
++                            &baseline_witness
++                        } else {
++                            &witnesses[index - 1]
++                        };
++                        if &witness(&r, &fixed) != expected_witness {
++                            return Err("instrumentation changed result/work".into());
++                        }
++                        let diag = r.diagnostics(&fixed);
++                        let entry = |p: phase_cost::Phase| costs.entries[p as usize];
++                        let solves = diag["growth"]["solves"]
++                            .as_u64()
++                            .ok_or("growing diagnostics")?;
++                        if entry(phase_cost::Phase::Compile).calls != solves
++                            || entry(phase_cost::Phase::Solver).calls != solves
++                            || entry(phase_cost::Phase::Kernel).calls != solves
++                            || entry(phase_cost::Phase::Scores).calls != solves
++                            || entry(phase_cost::Phase::Cfr).calls
++                                != diag["growth"]["cfr_iterations"].as_u64().unwrap()
++                            || entry(phase_cost::Phase::Certificate).calls
++                                != diag["paper"]["assessments"].as_u64().unwrap()
++                            || !costs.balanced()
++                        {
++                            return Err(
++                                "phase counters or exclusive wall ledger do not reconcile".into()
++                            );
++                        }
++                        let started = Instant::now();
++                        drop(r);
++                        let teardown = started.elapsed().as_nanos();
++                        let rows: Vec<_> = costs.entries.iter().zip(phase_cost::NAMES).map(|(e,name)| {
++                            if profile_check { json!({"phase":name,"calls":e.calls}) }
++                            else { json!({"phase":name,"calls":e.calls,"inclusive_ns":e.inclusive_ns,"exclusive_ns":e.exclusive_ns}) }
++                        }).collect();
++                        let mut row = json!({"type":"profile","block":block,"variant":variant["id"],"witness":expected_witness,"diagnostics":diag,"balanced":true,"phases":rows});
++                        if !profile_check {
++                            row["compute_ns"] = json!(costs.total_ns());
++                            row["returned_result_drop_ns"] = json!(teardown);
++                        }
++                        emit(row)?;
++                    }
++                }
++                return emit(
++                    json!({"type":if profile_check {"checked"} else {"profiled"},"timing":!profile_check,"rounds":rounds,"instrumented":true}),
++                );
++            }
++            #[cfg(not(feature = "experiment-phase-cost"))]
++            unreachable!();
++        }
++        if !measure {
++            #[cfg(feature = "experiment-snapshot-audit")]
++            {
++                let c = tree::snapshot_audit::counters();
++                emit(
++                    json!({"type":"audit","compiled_snapshots":c.compiled_snapshots,"sequence_snapshots":c.sequence_snapshots,"contractions":c.contractions,"gap_checks":c.gap_checks}),
++                )?;
++            }
++            return emit(json!({"type":"checked","timing":false}));
++        }
++        drop(reference);
++        let rounds = uint(&v, "rounds", 9)?;
++        if !(3..=31).contains(&rounds) {
++            return Err("invalid rounds".into());
++        }
++        let target = uint(&v, "sample_ms", 80)? as f64 * 1e6;
++        let mut counts = Vec::new();
++        for (index, variant) in variants.iter().enumerate() {
++            if !eligible[index] {
++                counts.push([0, 0]);
++                continue;
++            }
++            let (a, _) = timed(&i, e.as_ref(), &fixed, pool.as_ref(), baseline, 1)?;
++            let (b, _) = timed(&i, e.as_ref(), &fixed, pool.as_ref(), variant, 1)?;
++            let n = [a, b].map(|ns| (target / ns).ceil().clamp(1., 64.) as usize);
++            counts.push(n);
++            emit(
++                json!({"type":"calibration","variant":variant["id"],"baseline_ns":a,"variant_ns":b,"counts":n}),
++            )?;
++        }
++        for block in 0..rounds {
++            for offset in 0..variants.len() {
++                let index = (block + offset) % variants.len();
++                if !eligible[index] {
++                    continue;
++                }
++                let order = if block % 2 == 0 {
++                    [0, 1, 1, 0]
++                } else {
++                    [1, 0, 0, 1]
++                };
++                let mut samples = Vec::new();
++                for (slot, which) in order.into_iter().enumerate() {
++                    let variant = if which == 0 {
++                        baseline
++                    } else {
++                        &variants[index]
++                    };
++                    let (ns, r) = timed(
++                        &i,
++                        e.as_ref(),
++                        &fixed,
++                        pool.as_ref(),
++                        variant,
++                        counts[index][which],
++                    )?;
++                    if r.diagnostics(&fixed)
++                        != if which == 0 {
++                            baseline_diag.clone()
++                        } else {
++                            expected[index].clone()
++                        }
++                    {
++                        return Err("nondeterministic timing result".into());
++                    }
++                    samples.push(json!({"slot":slot,"treatment":if which==0 {"baseline"} else {"candidate"},"ns_per_solve":ns,"batch":counts[index][which]}));
++                }
++                emit(
++                    json!({"type":"paired","block":block,"variant":variants[index]["id"],"samples":samples}),
++                )?;
++            }
++        }
++        emit(json!({"type":"completed","timing":true,"rounds":rounds,"eligible":eligible}))
++    };
++    match work() {
++        Ok(()) => std::process::ExitCode::SUCCESS,
++        Err(e) => {
++            eprintln!("lab-phase-speed: {e}");
++            std::process::ExitCode::FAILURE
++        }
++    }
++}

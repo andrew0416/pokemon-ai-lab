@@ -1,0 +1,60 @@
+{
+  "parent": "a0f7b556e30095e85ce56013c0e7d1f08206f03d",
+  "branch": "codex/s25d-response-sweeps-20261002",
+  "workflow": ".github/workflows/engine-s25d-response-sweeps.yml",
+  "inherited_unchanged": 4090,
+  "changed_sha256": {
+    ".github/workflows/engine-s25d-response-sweeps.yml": "1b743edf1f53556c1526d0868b8a867e496f0854c495f9866c00203840a00674",
+    "engine/benchmarks/s25_repair/CONTRACT.md": "6503c3c0faef77a27bd5013114b7cbe013e9de9ecf9d03ded485ec02ab79bf78",
+    "engine/benchmarks/s25_repair/plan.json": "81f9057927854d1c44ad654bc87ec870d2ac142b3a9890b439f475c0815963dc",
+    "engine/benchmarks/s25_repair/protocol.py": "0a0635a75aa718116d5df07ba5ef700495a8b04944b5bc568b1d8378b9068bf1",
+    "engine/benchmarks/s25_repair/run.py": "44cd40694e41d5bacab6e94a43646725e88fad4fedb5bae13cf34a33e4533d07",
+    "engine/benchmarks/s25_repair/test_protocol.py": "3866db4aa5761f4e6f26d591d4e3f395d445f769d4cf27b15841493d8b9e87a1",
+    "engine/search/Cargo.toml": "793fcc885f6ac7df4f082312ecbe46ace4c4f3e8fe81b36d6f9c3e1d74519549",
+    "engine/search/src/bin/lab-search-quality.rs": "a019584905061db692f3a4d25e66952d63a305f9a5e57a92fcdc48ff8bb11107",
+    "engine/search/src/budgeted.rs": "d0f63decf53d3307c86441cdae132ec5132ad52624c419d006531e5f96d13a27",
+    "engine/search/src/budgeted/matrix.rs": "6b7e8483f76d0865c765024c21639ad8b69dec08434d0a9d79cb85c541da7067",
+    "engine/search/src/budgeted/tests.rs": "778113fc319725a351bdde6d6204cfbad5300715b9cdccca96a7ff1c22b775b2"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "retained_registry_modified": false,
+  "production_modified": false,
+  "correctness_scope": "38 revised + 36 legacy + 1 independent reference + 17 OFF; clippy; unchanged 5 protocol tests",
+  "limitations": "Pilot only; old baseline unchanged; revised selection is deterministic; production defaults OFF",
+  "source_sha": "0501eeb7220bcc3f5e2f00145c970fa350666031",
+  "tree": "24ee2f38dcf7c8de189923aa88047af8ab958669",
+  "patch_sha256": "52acd5a396617e4b5f834158a093823426ee1909cc0c10e7fbadb1d4e8cdd775",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

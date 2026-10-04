@@ -1,0 +1,111 @@
+{
+  "parent": "081124aaae5e0fe5aa1d8c5b9117803abd866875",
+  "branch": "codex/s26e-owned-20261003",
+  "workflow": ".github/workflows/engine-s26e-owned.yml",
+  "inherited_unchanged": 4148,
+  "changed_sha256": {
+    ".github/workflows/engine-s26e-owned.yml": "9c8191e353e48f24ca08702b4897d97df61acd90516950f6f92f069e84481434",
+    "engine/benchmarks/s26_owned/plan.json": "403a0b43d3c3e9177b51a540c5f8342d46193307037ba7497f12b774c7d3ca03",
+    "engine/benchmarks/s26_owned/run.py": "fde7036e5dbd144e0862b5149107544257e3c2d4781411ad79e46f68f1f92040",
+    "engine/core/Cargo.toml": "bbbf69f051040676d26c888c96b36a603b4b7cb63abbfabe2e7b1bacce9bf8a4",
+    "engine/core/src/turn/final_states.rs": "6f581d4c6d38994c88655f6204a70e1468ec72455e868d4188da23ed142a5761",
+    "engine/search/Cargo.toml": "d5ab50d380d7da0d2abff37244327bf1e493f93107ff25a8e2558fac92484c9d",
+    "engine/search/src/bayesian/tree/engine.rs": "08c60902cc57d76963a9a51429030b34f7f1b01af6c2230d4a0f3ba3021bfd68",
+    "engine/search/src/bin/lab-belief-workspace-speed.rs": "0c15a9045da709bbb43479a359072e6699550ecacea7bae5195bde8594afff13",
+    "engine/search/src/bin/lab-belief-workspace.rs": "3c16a0f891db9dfa4a845940ffe341d7b8b84af65c1d585c0528fe8146192727",
+    "engine/search/src/budgeted/engine.rs": "b741802faa9e17982d3decdbf333eb340fc335ccc50a678d774d17ca104cc719",
+    "engine/search/src/budgeted/engine/owned.rs": "ba52196b93c26c38f387cb8b1c6b298d5239869d08a286c0f0641b68930427f6",
+    "engine/search/tests/owned_transitions.rs": "de0f639f604358c86438a9c8b3a0c5f295dc9152260a0b6db46da8d1e9dd2663"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-compiler.yml": {
+      "branches": [
+        "codex/s26c-compiler-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-confirm.yml": {
+      "branches": [
+        "codex/s26c-confirm-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-growing-belief.yml": {
+      "branches": [
+        "codex/s26c-growing-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-speed.yml": {
+      "branches": [
+        "codex/s26c-speed-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-static.yml": {
+      "branches": [
+        "codex/s26c-static-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-workspace.yml": {
+      "branches": [
+        "codex/s26c-workspace-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-writer.yml": {
+      "branches": [
+        "codex/s26c-writer-20261003"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": true,
+  "correctness_scope": "owned flat transition representation; exact complete states, probabilities, continuation, full policies, work and independent LP",
+  "limitations": "single-runner bounded fixtures; exact same work per pair; no wins/strength evaluation",
+  "source_sha": "ec9b72e149b9d72e762e4023a84365e3f72a2ff5",
+  "tree": "52c4bc85999e49995e41f33d7105edef01499ae5",
+  "patch_sha256": "1461dd03e68e8b2b51e8dc682cfb2d796803b5fc61420f5eda276bbe2e6fea50",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

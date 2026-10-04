@@ -1,0 +1,163 @@
+{
+  "parent": "d90c80b4001e43807d404454280f1511329ef952",
+  "branch": "codex/s26j-history-20261003",
+  "workflow": ".github/workflows/engine-s26j-history.yml",
+  "inherited_unchanged": 4216,
+  "changed_sha256": {
+    ".github/workflows/engine-s26j-history.yml": "653dd92a4832e8aa4f217abc1e75b3a5bf654c8cad56a5879f905c82dd496ae1",
+    "engine/benchmarks/s26_history/README.md": "b24ad0d32bfe15378ab366d5e3f43ee89cf08d8cc02088f78a63f5a8756c3029",
+    "engine/benchmarks/s26_history/contract_check.py": "21279ad96db7478e8b1af37b414db6a558bc0e0ced17dc2cf1d1aef45c8d920d",
+    "engine/benchmarks/s26_history/cpu_probe.rs": "ceb69d57cb057cea1442f18bfc00d97d2b49db7aa2cb21708bf1a57e2acda26f",
+    "engine/benchmarks/s26_history/memory_run.py": "966eb7b216d8a0a44bb9ff76cdaa84e274909da08a5fb97e544f69f26429d3f6",
+    "engine/benchmarks/s26_history/plan.json": "cc6f291058427e826b893f64f63ed6554d4db67383a4b16467c4142b98ed6f43",
+    "engine/benchmarks/s26_history/portability.py": "3adebac6d4bc107b0a673e9c4df07bdeab0e55e2684ceed510b769b804d6b615",
+    "engine/benchmarks/s26_history/run.py": "b07e36d541ef64c40b069dca828db849fea5128d044f5e80df7cb34696e92907",
+    "engine/search/src/bayesian/tree/builder.rs": "e0b1cc559dce47e5b7ca69b761e489f119abae7874bdfabc48bf657e488203c6",
+    "engine/search/src/bayesian/tree/builder/growing.rs": "4b0d73ce1a9765e46ffd7d49116705d58c91b6905a801ad744e2ca12ad13b221",
+    "engine/search/src/bayesian/tree/builder/growing/history.rs": "ae4e3a9208c12bbf8ecd792121d86c079b665920985b6a639160f405ec09dcef",
+    "engine/search/src/bayesian/tree/builder/growing/reuse.rs": "fdfc190bdbb479d5d1586e94e6206079b0b6b0c424b4f0f70029a7126fd1c50d",
+    "engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs": "1aad1a610bc4229320793477f62d261aa109df7e6df483a251851d6a19415664",
+    "engine/search/src/bayesian/tree/builder/growing/reuse/paper.rs": "880ab0ab28f86e563736d3accdaf0630c61b011e4fd1775d164a4c5d31b77349",
+    "engine/search/src/bayesian/tree/builder/growing/reuse/pipeline.rs": "5f234b1ac63c305cd04b4f0ee78e8de239262646877868956372906e5778a0a0",
+    "engine/search/src/bayesian/tree/builder/growing/tests.rs": "6a049c5f8cae4d1e7b9e2e93e140116198c2c15c0f43dddbb649b740918117a5",
+    "engine/search/src/bayesian/tree/builder/growing/tests/history_tests.rs": "bdb1eb277a3671117ccc98c48ebdf5e262ed87689e1455feed2093fc17b80360",
+    "engine/search/src/bayesian/tree/pipeline.rs": "a19b48ee15e397c3cf7782b913c99b49397b1c5e895252c6c4ee38b8ff912f87",
+    "engine/search/src/bin/lab-belief-workspace/pipeline_options.rs": "8de984124f88a5f37f42693f1c16d99e4e89eca429bdf89b9cf560a2fe0bd1e9"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-compiler.yml": {
+      "branches": [
+        "codex/s26c-compiler-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-confirm.yml": {
+      "branches": [
+        "codex/s26c-confirm-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-growing-belief.yml": {
+      "branches": [
+        "codex/s26c-growing-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-speed.yml": {
+      "branches": [
+        "codex/s26c-speed-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-static.yml": {
+      "branches": [
+        "codex/s26c-static-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-workspace.yml": {
+      "branches": [
+        "codex/s26c-workspace-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-writer.yml": {
+      "branches": [
+        "codex/s26c-writer-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-cadence.yml": {
+      "branches": [
+        "codex/s26e-cadence-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-incremental.yml": {
+      "branches": [
+        "codex/s26e-incremental-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-owned.yml": {
+      "branches": [
+        "codex/s26e-owned-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-parallel.yml": {
+      "branches": [
+        "codex/s26e-parallel-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-shared.yml": {
+      "branches": [
+        "codex/s26e-shared-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26f-papers.yml": {
+      "branches": [
+        "codex/s26f-papers-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26g-pipeline.yml": {
+      "branches": [
+        "codex/s26g-pipeline-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26h-phases.yml": {
+      "branches": [
+        "codex/s26h-phases-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26i-audit.yml": {
+      "branches": [
+        "codex/s26i-audit-20261003"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": true,
+  "correctness_scope": "storage-only encoded histories; exact Cursor prefix and callback-order parity; full OFF/ON JSON comparison and independent BR/LP; intermediate rebuild and cross-build witnesses; separate allocation and non-AVX2 emulated execution",
+  "limitations": "single-runner bounded fixtures; equal-gap comparisons with censored caps; no wins/strength evaluation",
+  "source_sha": "2bb9cf595f675d269406bbe783e88154ed517cb4",
+  "tree": "c9eb606494334b6580071e8b29f5eecef364c5f3",
+  "patch_sha256": "26a19071238ed42de6620aa67d394024abc3f20b55fc47d1408cde27ab2e7813",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

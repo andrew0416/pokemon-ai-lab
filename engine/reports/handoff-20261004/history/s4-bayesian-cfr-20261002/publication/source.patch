@@ -1,0 +1,1668 @@
+diff --git a/.github/workflows/engine-s26-bayesian-cfr.yml b/.github/workflows/engine-s26-bayesian-cfr.yml
+new file mode 100644
+index 0000000..231ea6b
+--- /dev/null
++++ b/.github/workflows/engine-s26-bayesian-cfr.yml
+@@ -0,0 +1,68 @@
++name: S26 Bayesian CFR correctness
++on:
++  push:
++    branches: [codex/s26a-bayesian-cfr-20261002]
++permissions:
++  contents: read
++concurrency:
++  group: s26a-bayesian-cfr
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++jobs:
++  correctness:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 20
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Independent LP dependency
++        run: python -m pip install numpy==2.2.6 scipy==1.15.3
++      - name: Fresh logic checks and CLI executable
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26-results
++          cd engine
++          cargo test --locked -p lab-search --lib --features experiment-bayesian-cfr,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26-results/on.log
++          cargo test --locked -p lab-search --bin lab-bayes --features experiment-bayesian-cfr 2>&1 | tee ../s26-results/cli.log
++          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26-results/off.log
++          cargo check --locked -p lab-search --lib --no-default-features --features experiment-bayesian-cfr 2>&1 | tee ../s26-results/library.log
++          cargo clippy --locked -p lab-search --lib --bin lab-bayes --features experiment-bayesian-cfr,experiment-response-sweeps,experiment-search-quality -- -D warnings 2>&1 | tee ../s26-results/clippy.log
++          cargo build --locked -p lab-search --bin lab-bayes --features experiment-bayesian-cfr 2>&1 | tee ../s26-results/build.log
++          git rev-parse HEAD > ../s26-results/source-sha.txt
++          rustc --version > ../s26-results/rustc.txt
++      - name: Seventy-two independent Bayesian LP certificates
++        run: python -B engine/benchmarks/s26_bayesian/check.py --binary target-s25/debug/lab-bayes --out s26-results/lp
++      - name: Preserve correctness evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26-correctness-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_bayesian/CONTRACT.md b/engine/benchmarks/s26_bayesian/CONTRACT.md
+new file mode 100644
+index 0000000..38088c2
+--- /dev/null
++++ b/engine/benchmarks/s26_bayesian/CONTRACT.md
+@@ -0,0 +1,121 @@
++# S26a: one-sided Bayesian matrix game + linear CFR
++
++Status: isolated experiment, `experiment-bayesian-cfr` is **default OFF**. This is an
++additive library and `lab-bayes` CLI. Production planners and the S25 selective search
++do not automatically call it. Generic x86-64; no AVX2 or CUDA requirement.
++
++## Information and algorithm
++
++- The row player knows its own configuration but not the opponent's world. The opponent
++  is assumed to know both configurations, including its private world. This is one-sided
++  private information, not a model of both sides' actual private knowledge.
++- There is ONE row policy `p`, a probability distribution `b` over worlds, and ONE column
++  policy `q[w]` per world. Column menus can differ. Row action identity must agree.
++- The objective is `max_p min_{q[w]} sum_w b[w] p^T A[w] q[w]`.
++- Signed cumulative regrets receive linearly weighted increments. Our regret update
++  precedes each informed opponent update; the latter uses the new row policy. Each
++  player's post-update policy enters the running average with weight `t`. This is
++  alternating linear CFR, not merely RM+ with a new label.
++- Payoffs share a positive numeric scale; regret weights use `t / max_iterations` to
++  bound arithmetic. Dividing each positive-prior opponent regret table by its constant
++  chance reach leaves regret matching unchanged. Zero-prior worlds remain indexed with
++  uniform column policies. They are never silently removed from the input.
++- Fixed priors and payoffs are immutable during a solve. Conditioning returns a new
++  game and starts fresh regrets. Caller-provided likelihoods must account for observed
++  action behavior where needed, not just whether an action is legal.
++
++`Game::assess` independently evaluates average policies:
++
++```
++lower = sum_w b[w] min_j sum_i p[i] A[w][i,j]
++upper = max_i sum_w b[w] sum_j q[w][j] A[w][i,j]
++gap   = upper - lower
++```
++
++The lower/upper bounds enclose the equilibrium value of the **supplied fixed matrices**,
++up to floating-point error. The gap is the sum of both deviation gains. Exhaustion may
++return `converged: false`; `iterations` is not a convergence guarantee. No claim about
++full battle exploitability, win rate, or speed follows from this certificate.
++
++## Library boundaries
++
++`bayesian::{Game, World, Config, solve}` has no JSON/scenario requirement. The feature
++also enables the existing engine-domain adapter feature but invokes no selective search.
++`Game::new` rejects invalid IDs, shapes, nonfinite data and impossible beliefs. Positive
++belief underflow is an error. `conditioned` matches likelihoods by world ID and rejects
++missing/duplicate/unknown IDs and observations contradicting every positive-prior world.
++
++`bayesian::engine::one_turn` accepts borrowed `EngineWorld`s and a replaceable `Evaluator`.
++It enumerates every legal joint action with `Pruning::All` and `RollMode::Full`, then
++evaluates the next turn or terminal state. It checks chance mass and uses the existing
++immutable-input transition adapter. Errors reject the complete game; no partial or
++renormalized matrix is published. `max_cells` caps enumeration CALLS, not memory or the
++duration of one engine call.
++
++The conservative `Knowledge` boundary keeps our entire side and all undeclared fields
++identical. Optional hidden stats permit only opponent non-HP stats and stat-point
++allocations to differ; exact current/max HP must still match. Optional unrevealed
++reserves permit different opponent party members at explicitly listed inactive slots,
++only at turn 1. The caller must validate those hypotheses against the known team sheet
++and observation history; this interface does not infer either. Conservative equality
++can reject indistinguishable positions that a later public-state abstraction could merge.
++
++Root replacements and suspended moves are unsupported. If ANY enumerated outcome needs
++a KO replacement or mid-turn switch, the adapter errors rather than solve that decision
++separately with knowledge of the hidden world. This prevents strategy fusion at the
++current boundary. The raw matrix API remains useful for other correctly constructed games.
++
++## CLI
++
++From `engine/`:
++
++```
++cargo run --locked -p lab-search --features experiment-bayesian-cfr --bin lab-bayes -- benchmarks/s26_bayesian/matrix-example.json
++```
++
++The input is a strict JSON object. Optional `solver` fields: `iterations`, `tolerance`,
++`check_every`. Output contains one `ours` policy, per-world `theirs` policies, posterior
++weights, conditional world values, lower/upper bounds and convergence status.
++
++Matrix input (flat row-major payoffs):
++
++```json
++{"mode":"matrix","rows":["attack","protect"],"worlds":[
++  {"id":"fast","weight":3,"columns":["attack","switch"],"payoffs":[3,0,0,1]},
++  {"id":"slow","weight":1,"columns":["attack"],"payoffs":[-1,2]}
++]}
++```
++
++Engine input:
++
++```json
++{"mode":"engine-one-turn","side":"p1","evaluator":"heuristic","max_cells":100000,
++ "knowledge":{"hidden_stats":true,"unrevealed_reserves":[]},
++ "worlds":[{"id":"candidate-a","weight":1,"scenario":"candidate-a.json"},
++           {"id":"candidate-b","weight":1,"scenario":"candidate-b.json"}]}
++```
++
++Scenario paths resolve against the request's folder. Each must produce exactly one
++initial position; ambiguous setup branches cannot be silently selected. Hidden-reserve
++mode additionally rejects setup turns. `likelihoods`, if supplied, is an array of
++`{"world":"candidate-a","probability":0.8}` covering every world exactly once.
++Evaluator names follow the existing `load_evaluator` API; evaluation is independent of CFR.
++
++## Validation and future integration
++
++Rust tests include strategy-fusion and average-matrix counterexamples, analytic games,
++24 generated games checked against expanded normal form with the independent existing
++RM+ solver, posterior/invalid-input tests, Full engine enumeration in both orientations,
++different opponent menus and rejection/input-restoration checks. CI separately compares
++72 generated games against a SciPy/HiGHS linear program and recomputes every certificate.
++OFF tests, no-default-feature library checks and clippy protect the additive boundary.
++
++Not implemented here: a public observation-history representation, posterior updates
++induced by policies INSIDE a search tree, counterfactual leaf values conditional on those
++beliefs, belief-aware replacement/pivot decisions, GT-CFR expansion, learned policy/value
++models or automatic 4-of-6 hypothesis generation. Calling S25's perfect-information
++continuation search per world would not supply these missing contracts. A follow-up must
++group observationally indistinguishable histories before offering a multi-turn API.
++
++Primary reference: [PokaiTrainer, v2, sections 4.1–4.2](https://arxiv.org/html/2608.29197v2#S4).
++This implementation covers its fixed Bayesian decision game, not the complete PBS search.
+diff --git a/engine/benchmarks/s26_bayesian/check.py b/engine/benchmarks/s26_bayesian/check.py
+new file mode 100644
+index 0000000..c2b35af
+--- /dev/null
++++ b/engine/benchmarks/s26_bayesian/check.py
+@@ -0,0 +1,58 @@
++"""Independent LP/certificate checks through the real CLI; remote correctness, not speed."""
++from pathlib import Path
++import argparse, hashlib, json, math, random, subprocess
++import numpy as np
++from scipy.optimize import linprog
++
++p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
++a.out.mkdir(parents=True,exist_ok=False);binary=a.binary.resolve()
++rng=random.Random(2601002);records=[]
++for case in range(72):
++ n=2+case%4;k=1+case%6
++ worlds=[]
++ for w in range(k):
++  m=1+(case+2*w)%5
++  weights=0 if k>1 and w==0 and case%7==0 else 1+rng.randrange(10)
++  worlds.append(dict(id=f'w{w}',weight=weights,columns=[f'c{c}' for c in range(m)],payoffs=[rng.randrange(-5,6) for _ in range(n*m)]))
++ request=dict(mode='matrix',rows=[f'r{r}' for r in range(n)],worlds=worlds,solver=dict(iterations=100000,tolerance=0.02,check_every=64))
++ if case%3==0:
++  request['likelihoods']=[dict(world=w['id'],probability=(i+1)/(k+1)) for i,w in reversed(list(enumerate(worlds)))]
++ path=a.out/f'{case:02d}-request.json';path.write_text(json.dumps(request),encoding='utf-8')
++ child=subprocess.run([str(binary),str(path)],capture_output=True,text=True,timeout=30)
++ (a.out/f'{case:02d}-stderr.txt').write_text(child.stderr,encoding='utf-8')
++ assert child.returncode==0,child.stderr
++ (a.out/f'{case:02d}-result.json').write_text(child.stdout,encoding='utf-8')
++ result=json.loads(child.stdout)
++ policy=np.array([v['probability'] for v in result['ours']]);assert abs(sum(policy)-1)<1e-10 and min(policy)>=0
++ prior=np.array([w['weight'] for w in worlds],dtype=float)
++ if 'likelihoods' in request:
++  lookup={v['world']:v['probability'] for v in request['likelihoods']};prior*=np.array([lookup[w['id']] for w in worlds])
++ prior/=sum(prior)
++ assert np.max(np.abs(prior-np.array([w['posterior'] for w in result['worlds']])))<1e-12
++ matrices=[np.array(w['payoffs'],dtype=float).reshape(n,len(w['columns'])) for w in worlds]
++ # LP maximizes sum_w b_w*v_w subject to v_w <= p dot A_w[:,c].
++ objective=np.concatenate([np.zeros(n),-prior]);constraints=[]
++ for i,A in enumerate(matrices):
++  for c in range(A.shape[1]):
++   row=np.zeros(n+k);row[:n]=-A[:,c];row[n+i]=1;constraints.append(row)
++ equality=np.concatenate([np.ones(n),np.zeros(k)])[None,:]
++ lp=linprog(objective,A_ub=np.array(constraints),b_ub=np.zeros(len(constraints)),A_eq=equality,b_eq=[1.],bounds=[(0,None)]*n+[(None,None)]*k,method='highs')
++ assert lp.success,lp.message
++ reference=-lp.fun
++ lower=0.;row_values=np.zeros(n);profile=0.
++ for i,(w,A) in enumerate(zip(result['worlds'],matrices)):
++  assert w['id']==worlds[i]['id'] and [v['action'] for v in w['theirs']]==worlds[i]['columns']
++  q=np.array([v['probability'] for v in w['theirs']]);assert abs(sum(q)-1)<1e-10 and min(q)>=0
++  lower+=prior[i]*min(policy@A);row_values+=prior[i]*(A@q)
++  world_value=float(policy@A@q);profile+=prior[i]*world_value
++  assert abs(world_value-w['value'])<1e-10
++ upper=max(row_values);gap=upper-lower
++ for key,expected in [('value',profile),('lower',lower),('upper',upper),('fixed_matrix_gap',gap)]:assert abs(result[key]-expected)<1e-9,(case,key)
++ assert lower-1e-7<=reference<=upper+1e-7,(case,reference,lower,upper)
++ assert lower-1e-9<=profile<=upper+1e-9
++ assert result['converged']==(result['fixed_matrix_gap']<=request['solver']['tolerance'])
++ assert gap<=0.05,(case,gap)
++ records.append(dict(case=case,rows=n,worlds=k,columns=[len(w['columns']) for w in worlds],lp_value=reference,gap=gap,converged=result['converged'],iterations=result['iterations']))
++summary=dict(schema=1,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),cases=records,passed=len(records),max_gap=max(v['gap'] for v in records),converged=sum(v['converged'] for v in records),performance=False)
++(a.out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8')
++print(json.dumps({k:v for k,v in summary.items() if k!='cases'}))
+diff --git a/engine/benchmarks/s26_bayesian/matrix-example.json b/engine/benchmarks/s26_bayesian/matrix-example.json
+new file mode 100644
+index 0000000..2cd14a0
+--- /dev/null
++++ b/engine/benchmarks/s26_bayesian/matrix-example.json
+@@ -0,0 +1,9 @@
++{
++  "mode": "matrix",
++  "rows": ["attack", "protect"],
++  "solver": {"iterations": 100000, "tolerance": 0.01, "check_every": 64},
++  "worlds": [
++    {"id": "fast", "weight": 3, "columns": ["attack", "switch"], "payoffs": [3, 0, 0, 1]},
++    {"id": "slow", "weight": 1, "columns": ["attack"], "payoffs": [-1, 2]}
++  ]
++}
+diff --git a/engine/search/Cargo.toml b/engine/search/Cargo.toml
+index a73433e..337eeed 100644
+--- a/engine/search/Cargo.toml
++++ b/engine/search/Cargo.toml
+@@ -15,6 +15,7 @@ path = "src/lib.rs"
+ # `default-features = false`.
+ [features]
+ default = ["cli"]
++experiment-bayesian-cfr = ["experiment-budgeted-search"]
+ experiment-budgeted-search = []
+ experiment-response-sweeps = ["experiment-budgeted-search"]
+ experiment-search-quality = ["experiment-budgeted-search", "cli"]
+@@ -67,6 +68,11 @@ name = "lab-budget"
+ path = "src/bin/lab-budget.rs"
+ required-features = ["cli", "experiment-budgeted-search"]
+ 
++[[bin]]
++name = "lab-bayes"
++path = "src/bin/lab-bayes.rs"
++required-features = ["cli", "experiment-bayesian-cfr"]
++
+ [[bin]]
+ name = "lab-search-quality"
+ path = "src/bin/lab-search-quality.rs"
+diff --git a/engine/search/src/bayesian.rs b/engine/search/src/bayesian.rs
+new file mode 100644
+index 0000000..ed118ea
+--- /dev/null
++++ b/engine/search/src/bayesian.rs
+@@ -0,0 +1,353 @@
++//! One-sided private-information, zero-sum Bayesian matrix games.
++//!
++//! Our policy is SHARED across hidden worlds. The informed opponent has one policy per
++//! world and may have different legal menus. Alternating linear CFR is applied to this
++//! two-stage extensive form (chance chooses the type, then simultaneous actions).
++//! This is not a multi-turn public-belief-state search. In particular, worldwise
++//! perfect-information continuation policies must not be advertised as safe leaf values.
++
++pub mod engine;
++
++use std::collections::HashSet;
++
++#[derive(Clone, Debug, PartialEq, Eq)]
++pub struct Error(pub String);
++impl std::fmt::Display for Error {
++    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
++        self.0.fmt(f)
++    }
++}
++impl std::error::Error for Error {}
++impl From<String> for Error {
++    fn from(s: String) -> Self {
++        Self(s)
++    }
++}
++
++/// Payoffs are from our perspective, row-major over the game's shared row menu.
++#[derive(Clone, Debug)]
++pub struct World {
++    pub id: String,
++    pub weight: f64,
++    pub columns: Vec<String>,
++    pub payoffs: Vec<f64>,
++}
++
++/// Validated immutable game. Zero-prior worlds retain their IDs and menu positions.
++#[derive(Clone, Debug)]
++pub struct Game {
++    rows: Vec<String>,
++    worlds: Vec<World>,
++}
++
++fn labels<'a>(items: impl Iterator<Item = &'a str>, what: &str) -> Result<(), Error> {
++    let mut seen = HashSet::new();
++    for id in items {
++        if id.is_empty() || !seen.insert(id) {
++            return Err(Error(format!("empty or duplicate {what}: {id}")));
++        }
++    }
++    if seen.is_empty() {
++        return Err(Error(format!("empty {what}")));
++    }
++    Ok(())
++}
++
++fn normalize(weights: &mut [f64]) -> Result<(), Error> {
++    if weights.iter().any(|v| !v.is_finite() || *v < 0.0) {
++        return Err(Error("weights must be finite and nonnegative".into()));
++    }
++    let largest = weights.iter().copied().fold(0.0, f64::max);
++    if largest == 0.0 {
++        return Err(Error("belief has zero total weight".into()));
++    }
++    let sum: f64 = weights.iter().map(|v| v / largest).sum();
++    for v in weights {
++        let next = (*v / largest) / sum;
++        if *v > 0.0 && next == 0.0 {
++            return Err(Error(
++                "positive belief underflow; world was not dropped".into(),
++            ));
++        }
++        *v = next;
++    }
++    Ok(())
++}
++
++impl Game {
++    pub fn new(rows: Vec<String>, mut worlds: Vec<World>) -> Result<Self, Error> {
++        labels(rows.iter().map(String::as_str), "row ID")?;
++        labels(worlds.iter().map(|w| w.id.as_str()), "world ID")?;
++        for w in &worlds {
++            labels(w.columns.iter().map(String::as_str), "column ID")?;
++            if rows.len().checked_mul(w.columns.len()) != Some(w.payoffs.len()) {
++                return Err(Error(format!(
++                    "world {}: payoff dimensions do not match menus",
++                    w.id
++                )));
++            }
++            if w.payoffs
++                .iter()
++                .any(|v| !v.is_finite() || v.abs() > f64::MAX / 8.0)
++            {
++                return Err(Error(format!(
++                    "world {}: nonfinite or unrepresentably large payoff",
++                    w.id
++                )));
++            }
++        }
++        let mut weights: Vec<_> = worlds.iter().map(|w| w.weight).collect();
++        normalize(&mut weights)?;
++        for (w, p) in worlds.iter_mut().zip(weights) {
++            w.weight = p;
++        }
++        Ok(Self { rows, worlds })
++    }
++    pub fn rows(&self) -> &[String] {
++        &self.rows
++    }
++    pub fn worlds(&self) -> &[World] {
++        &self.worlds
++    }
++
++    /// Bayes update using P(observation | world). Every world ID is required exactly once.
++    /// These likelihoods must include the informed player's behavior where applicable;
++    /// they are not automatically derived from battle state or an action's mere legality.
++    /// A new game starts a fresh CFR solve; regrets are never carried across changed beliefs.
++    pub fn conditioned(&self, likelihoods: &[(String, f64)]) -> Result<Self, Error> {
++        labels(
++            likelihoods.iter().map(|v| v.0.as_str()),
++            "likelihood world ID",
++        )?;
++        if likelihoods.len() != self.worlds.len()
++            || likelihoods.iter().any(|(id, p)| {
++                !p.is_finite()
++                    || !(0.0..=1.0).contains(p)
++                    || !self.worlds.iter().any(|w| &w.id == id)
++            })
++        {
++            return Err(Error(
++                "likelihoods must cover each world with a probability in [0,1]".into(),
++            ));
++        }
++        let logs: Vec<_> = self
++            .worlds
++            .iter()
++            .map(|w| {
++                let p = likelihoods.iter().find(|v| v.0 == w.id).unwrap().1;
++                if w.weight == 0.0 || p == 0.0 {
++                    f64::NEG_INFINITY
++                } else {
++                    w.weight.ln() + p.ln()
++                }
++            })
++            .collect();
++        let max = logs.iter().copied().fold(f64::NEG_INFINITY, f64::max);
++        if !max.is_finite() {
++            return Err(Error(
++                "observation contradicts every positive-prior world".into(),
++            ));
++        }
++        let mut worlds = self.worlds.clone();
++        for (w, log) in worlds.iter_mut().zip(logs) {
++            w.weight = (log - max).exp();
++            if log.is_finite() && w.weight == 0.0 {
++                return Err(Error(
++                    "positive posterior underflow; world was not dropped".into(),
++                ));
++            }
++        }
++        Self::new(self.rows.clone(), worlds)
++    }
++
++    /// Exact best responses to the supplied policies on THESE FIXED MATRICES.
++    /// `lower <= equilibrium value <= upper`; gap is the sum of deviation gains.
++    pub fn assess(&self, ours: &[f64], theirs: &[Vec<f64>]) -> Result<Assessment, Error> {
++        probability(ours, self.rows.len())?;
++        if theirs.len() != self.worlds.len() {
++            return Err(Error("opponent policy world count mismatch".into()));
++        }
++        let mut row_values = vec![0.0; self.rows.len()];
++        let mut lower = 0.0;
++        let mut value = 0.0;
++        let mut world_values = Vec::with_capacity(theirs.len());
++        for (w, q) in self.worlds.iter().zip(theirs) {
++            probability(q, w.columns.len())?;
++            let mut col_values = vec![0.0; q.len()];
++            let mut world_value = 0.0;
++            for (r, row) in w.payoffs.chunks_exact(q.len()).enumerate() {
++                let mut v = 0.0;
++                for (c, &a) in row.iter().enumerate() {
++                    v += q[c] * a;
++                    col_values[c] += ours[r] * a;
++                }
++                row_values[r] += w.weight * v;
++                world_value += ours[r] * v;
++            }
++            lower += w.weight * col_values.into_iter().fold(f64::INFINITY, f64::min);
++            value += w.weight * world_value;
++            world_values.push(world_value);
++        }
++        let upper = row_values.into_iter().fold(f64::NEG_INFINITY, f64::max);
++        Ok(Assessment {
++            value,
++            lower,
++            upper,
++            gap: (upper - lower).max(0.0),
++            world_values,
++        })
++    }
++}
++
++fn probability(policy: &[f64], len: usize) -> Result<(), Error> {
++    if policy.len() != len
++        || policy
++            .iter()
++            .any(|p| !p.is_finite() || *p < 0.0 || *p > 1.0)
++        || (policy.iter().sum::<f64>() - 1.0).abs() > 1e-10
++    {
++        return Err(Error("policy must match its menu and sum to one".into()));
++    }
++    Ok(())
++}
++
++#[derive(Clone, Copy, Debug)]
++pub struct Config {
++    pub iterations: usize,
++    pub tolerance: f64,
++    pub check_every: usize,
++}
++impl Default for Config {
++    fn default() -> Self {
++        Self {
++            iterations: 20_000,
++            tolerance: 0.01,
++            check_every: 32,
++        }
++    }
++}
++
++#[derive(Clone, Debug)]
++pub struct Assessment {
++    pub value: f64,
++    pub lower: f64,
++    pub upper: f64,
++    pub gap: f64,
++    pub world_values: Vec<f64>,
++}
++#[derive(Clone, Debug)]
++pub struct Solution {
++    pub ours: Vec<f64>,
++    pub theirs: Vec<Vec<f64>>,
++    pub assessment: Assessment,
++    pub iterations: usize,
++    pub converged: bool,
++}
++
++fn strategy(regret: &[f64], out: &mut [f64]) {
++    let sum: f64 = regret.iter().map(|v| v.max(0.0)).sum();
++    let uniform = 1.0 / out.len() as f64;
++    for (p, &r) in out.iter_mut().zip(regret) {
++        *p = if sum > 0.0 { r.max(0.0) / sum } else { uniform };
++    }
++}
++
++/// Alternating linear CFR: update our regrets, then each informed opponent's regrets
++/// against the updated row policy. Average each policy after its own update with weight t.
++/// Regret increments also have weight t (ordinary signed CFR regrets, NOT RM+ clipping).
++/// Positive per-type chance reach is divided out of opponent regrets: a fixed positive
++/// scalar cannot change regret matching. Zero-prior types retain a uniform policy.
++pub fn solve(game: &Game, config: Config) -> Result<Solution, Error> {
++    if config.iterations == 0
++        || config.iterations > 10_000_000
++        || config.check_every == 0
++        || !config.tolerance.is_finite()
++        || config.tolerance < 0.0
++    {
++        return Err(Error("need 1..=10000000 iterations, positive check interval and finite nonnegative tolerance".into()));
++    }
++    // Common positive scale preserves the game, bounds arithmetic, and retains signs.
++    let scale = game
++        .worlds
++        .iter()
++        .flat_map(|w| &w.payoffs)
++        .map(|v| v.abs())
++        .fold(0.0, f64::max)
++        .max(f64::MIN_POSITIVE);
++    let payoffs: Vec<Vec<f64>> = game
++        .worlds
++        .iter()
++        .map(|w| w.payoffs.iter().map(|v| v / scale).collect())
++        .collect();
++    let n = game.rows.len();
++    let mut p = vec![1.0 / n as f64; n];
++    let mut q: Vec<Vec<f64>> = game
++        .worlds
++        .iter()
++        .map(|w| vec![1.0 / w.columns.len() as f64; w.columns.len()])
++        .collect();
++    let mut row_regret = vec![0.0; n];
++    let mut col_regret: Vec<Vec<f64>> = q.iter().map(|q| vec![0.0; q.len()]).collect();
++    let mut p_avg = vec![0.0; n];
++    let mut q_avg = col_regret.clone();
++    let mut row_util = vec![0.0; n];
++    let mut col_util = col_regret.clone();
++    for t in 1..=config.iterations {
++        // t/max_iterations is the same linear weighting up to a common constant.
++        let weight = t as f64 / config.iterations as f64;
++        row_util.fill(0.0);
++        for ((w, a), q) in game.worlds.iter().zip(&payoffs).zip(&q) {
++            for (u, row) in row_util.iter_mut().zip(a.chunks_exact(q.len())) {
++                *u += w.weight * row.iter().zip(q).map(|(a, q)| a * q).sum::<f64>();
++            }
++        }
++        let v: f64 = p.iter().zip(&row_util).map(|(p, u)| p * u).sum();
++        for (r, u) in row_regret.iter_mut().zip(&row_util) {
++            *r += weight * (u - v);
++        }
++        strategy(&row_regret, &mut p);
++        for i in 0..q.len() {
++            if game.worlds[i].weight == 0.0 {
++                continue;
++            }
++            let util = &mut col_util[i];
++            util.fill(0.0);
++            for (&p, row) in p.iter().zip(payoffs[i].chunks_exact(q[i].len())) {
++                for (u, &a) in util.iter_mut().zip(row) {
++                    *u += p * a;
++                }
++            }
++            let v: f64 = q[i].iter().zip(util.iter()).map(|(q, u)| q * u).sum();
++            for (r, &u) in col_regret[i].iter_mut().zip(util.iter()) {
++                *r += weight * (v - u);
++            }
++            strategy(&col_regret[i], &mut q[i]);
++        }
++        let alpha = 2.0 / (t as f64 + 1.0);
++        for (avg, &p) in p_avg.iter_mut().zip(&p) {
++            *avg += alpha * (p - *avg);
++        }
++        for (avg, q) in q_avg.iter_mut().zip(&q) {
++            for (avg, &q) in avg.iter_mut().zip(q) {
++                *avg += alpha * (q - *avg);
++            }
++        }
++        if t % config.check_every == 0 || t == config.iterations {
++            let assessment = game.assess(&p_avg, &q_avg)?;
++            let converged = assessment.gap <= config.tolerance;
++            if converged || t == config.iterations {
++                return Ok(Solution {
++                    ours: p_avg,
++                    theirs: q_avg,
++                    assessment,
++                    iterations: t,
++                    converged,
++                });
++            }
++        }
++    }
++    unreachable!("positive iteration budget returns at its final iteration")
++}
++
++#[cfg(test)]
++mod tests;
+diff --git a/engine/search/src/bayesian/engine.rs b/engine/search/src/bayesian/engine.rs
+new file mode 100644
+index 0000000..e03d593
+--- /dev/null
++++ b/engine/search/src/bayesian/engine.rs
+@@ -0,0 +1,198 @@
++//! Conservative one-turn bridge. No per-world continuation search is performed.
++//! The caller supplies compatible hypotheses and their prior, not the true world ID.
++//! Unsupported intermediate decisions reject the whole game instead of dropping worlds.
++
++use super::{Error, Game, World};
++use crate::budgeted::{Domain, EngineDomain, Phase, Position};
++use crate::{Choice, Pruning};
++use lab_engine::eval::Evaluator;
++use lab_engine::rules::Ruleset;
++use lab_engine::state::{Pokemon, SideId, State, PARTY_SIZE};
++use lab_engine::turn::EnumerateOptions;
++
++#[derive(Clone, Debug)]
++pub struct EngineWorld<const N: usize> {
++    pub id: String,
++    pub weight: f64,
++    pub position: Position<N>,
++}
++
++/// Explicit information boundary; this is NOT an observation-history inference system.
++#[derive(Clone, Debug, Default)]
++pub struct Knowledge {
++    /// May differ in attack/defense/sp.atk/sp.def/speed and stat-point allocations.
++    /// Exact current/max HP and every other field still have to agree (conservative).
++    pub hidden_stats: bool,
++    /// Zero-based opponent party slots asserted by the caller to be unrevealed reserves.
++    /// Only accepted at the opening decision (turn 1), never for active occupants.
++    /// The caller must validate these hypotheses against the open team sheet.
++    pub unrevealed_reserves: Vec<usize>,
++}
++
++pub struct BuiltGame<const N: usize> {
++    pub game: Game,
++    pub ours: Vec<Choice<N>>,
++    pub theirs: Vec<Vec<Choice<N>>>,
++    pub transitions: usize,
++    pub outcomes: usize,
++}
++
++fn visible<const N: usize>(
++    state: &State<N>,
++    us: SideId,
++    knowledge: &Knowledge,
++) -> Result<State<N>, Error> {
++    let mut result = state.clone();
++    let other = result.side_mut(us.other());
++    let mut used = [false; PARTY_SIZE];
++    for &index in &knowledge.unrevealed_reserves {
++        if index >= PARTY_SIZE
++            || used[index]
++            || state.turn != 1
++            || other.slots.iter().any(|s| {
++                s.party_index == Some(index as u8) || s.fainted_occupant == Some(index as u8)
++            })
++        {
++            return Err(Error(
++                "unrevealed reserves must be unique inactive party slots at turn 1".into(),
++            ));
++        }
++        used[index] = true;
++        other.party[index] = Pokemon::default();
++    }
++    if knowledge.hidden_stats {
++        for p in &mut other.party {
++            p.stats = [0; 5];
++            p.stat_points = Default::default();
++        }
++    }
++    Ok(result)
++}
++
++/// Enumerates all legal joint actions and full chance, then evaluates terminal/next-turn
++/// states with the supplied Evaluator. The returned certificate concerns this horizon-one
++/// heuristic game only. KO replacements / U-turn / other mid-turn choices require a later
++/// public-information tree implementation and currently return an error.
++/// `max_cells` bounds enumerator calls, NOT the allocations/time inside one enumeration.
++pub fn one_turn<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    max_cells: usize,
++) -> Result<BuiltGame<N>, Error> {
++    // Validate every prior and ID even if a world has zero probability.
++    Game::new(
++        vec!["validate".into()],
++        worlds
++            .iter()
++            .map(|w| World {
++                id: w.id.clone(),
++                weight: w.weight,
++                columns: vec!["validate".into()],
++                payoffs: vec![0.0],
++            })
++            .collect(),
++    )?;
++    let domain = EngineDomain {
++        ruleset,
++        options: EnumerateOptions::default(),
++        pruning: Pruning::All,
++        us,
++        evaluator,
++    };
++    let reference = visible(&worlds[0].position.state, us, knowledge)?;
++    let mut ours = Vec::new();
++    let mut theirs = Vec::new();
++    let mut total = 0usize;
++    for (i, w) in worlds.iter().enumerate() {
++        if domain.phase(&w.position)? != Phase::Turn || w.position.suspension.is_some() {
++            return Err(Error(format!(
++                "world {}: root must be a normal simultaneous turn",
++                w.id
++            )));
++        }
++        if visible(&w.position.state, us, knowledge)? != reference {
++            return Err(Error(format!(
++                "world {}: known state differs across the information set",
++                w.id
++            )));
++        }
++        let rows = domain.actions(&w.position, 0)?;
++        if i == 0 {
++            ours = rows;
++        } else if rows != ours {
++            return Err(Error(format!(
++                "world {}: our shared action identities differ",
++                w.id
++            )));
++        }
++        let columns = domain.actions(&w.position, 1)?;
++        let count = ours
++            .len()
++            .checked_mul(columns.len())
++            .ok_or_else(|| Error("cell count overflow".into()))?;
++        total = total
++            .checked_add(count)
++            .filter(|n| *n <= max_cells)
++            .ok_or_else(|| {
++                Error(format!(
++                    "one-turn game exceeds max_cells={max_cells}; no partial matrix returned"
++                ))
++            })?;
++        theirs.push(columns);
++    }
++    let mut matrices = Vec::new();
++    let mut outcomes = 0usize;
++    for (w, columns) in worlds.iter().zip(&theirs) {
++        let mut payoffs = Vec::with_capacity(ours.len() * columns.len());
++        for row in &ours {
++            for column in columns {
++                let children = domain
++                    .transitions(&w.position, [row, column])
++                    .map_err(|e| Error(format!("world {}: {e}", w.id)))?;
++                let mut mass = 0.0;
++                let mut value = 0.0;
++                for (p, child) in &children {
++                    if !p.is_finite() || *p < 0.0 {
++                        return Err(Error("invalid chance probability".into()));
++                    }
++                    if domain.phase(child)? == Phase::Switch {
++                        return Err(Error(format!("world {}: intermediate switch requires a belief-aware continuation; no world was dropped", w.id)));
++                    }
++                    let v = f64::from(domain.value(child));
++                    if !v.is_finite() {
++                        return Err(Error("nonfinite leaf evaluation".into()));
++                    }
++                    mass += p;
++                    value += p * v;
++                }
++                if (mass - 1.0).abs() > 1e-8 {
++                    return Err(Error(format!(
++                        "world {}: chance mass {mass} is not one",
++                        w.id
++                    )));
++                }
++                outcomes = outcomes
++                    .checked_add(children.len())
++                    .ok_or_else(|| Error("outcome count overflow".into()))?;
++                payoffs.push(value);
++            }
++        }
++        matrices.push(World {
++            id: w.id.clone(),
++            weight: w.weight,
++            columns: columns.iter().map(|a| format!("{a:?}")).collect(),
++            payoffs,
++        });
++    }
++    let game = Game::new(ours.iter().map(|a| format!("{a:?}")).collect(), matrices)?;
++    Ok(BuiltGame {
++        game,
++        ours,
++        theirs,
++        transitions: total,
++        outcomes,
++    })
++}
+diff --git a/engine/search/src/bayesian/tests.rs b/engine/search/src/bayesian/tests.rs
+new file mode 100644
+index 0000000..5afb5e9
+--- /dev/null
++++ b/engine/search/src/bayesian/tests.rs
+@@ -0,0 +1,507 @@
++use super::engine::{EngineWorld, Knowledge};
++use super::*;
++use crate::budgeted::{Domain, EngineDomain, Position};
++use crate::{nash, Pruning};
++use lab_engine::{eval::Heuristic, rules::Ruleset, state::SideId, turn::EnumerateOptions};
++use std::path::Path;
++
++fn world(id: &str, weight: f64, cols: usize, payoffs: &[f64]) -> World {
++    World {
++        id: id.into(),
++        weight,
++        columns: (0..cols).map(|i| format!("c{i}")).collect(),
++        payoffs: payoffs.to_vec(),
++    }
++}
++fn game(rows: usize, worlds: Vec<World>) -> Game {
++    Game::new((0..rows).map(|i| format!("r{i}")).collect(), worlds).unwrap()
++}
++fn config() -> Config {
++    Config {
++        iterations: 60_000,
++        tolerance: 0.003,
++        check_every: 64,
++    }
++}
++fn near(a: f64, b: f64, eps: f64) {
++    assert!((a - b).abs() <= eps, "{a} != {b} within {eps}");
++}
++
++#[test]
++fn shared_policy_cannot_use_the_hidden_world() {
++    let g = game(
++        2,
++        vec![world("a", 1., 1, &[1., -1.]), world("b", 1., 1, &[-1., 1.])],
++    );
++    let s = solve(&g, config()).unwrap();
++    assert_eq!(s.ours, vec![0.5, 0.5]);
++    assert_eq!(s.assessment.value, 0.0);
++    assert_eq!(s.assessment.gap, 0.0);
++    // Solving each world with a different row policy would incorrectly claim value +1.
++    let omniscient: f64 = g
++        .worlds()
++        .iter()
++        .map(|w| w.weight * w.payoffs.iter().copied().fold(f64::NEG_INFINITY, f64::max))
++        .sum();
++    assert_eq!(omniscient, 1.0);
++}
++
++#[test]
++fn informed_opponent_cannot_be_replaced_by_an_average_matrix() {
++    let g = game(
++        1,
++        vec![world("a", 1., 2, &[1., -1.]), world("b", 1., 2, &[-1., 1.])],
++    );
++    let s = solve(&g, config()).unwrap();
++    near(s.assessment.value, -1., 1e-12);
++    assert_eq!(s.theirs, vec![vec![0., 1.], vec![1., 0.]]);
++    // The average matrix [0,0] loses the opponent's private type and falsely returns 0.
++    assert_eq!((g.worlds[0].payoffs[0] + g.worlds[1].payoffs[0]) / 2., 0.);
++}
++
++#[test]
++fn posterior_changes_the_shared_decision_and_preserves_world_ids() {
++    let g = game(
++        2,
++        vec![world("a", 1., 1, &[1., -1.]), world("b", 1., 1, &[-1., 1.])],
++    );
++    let post = g
++        .conditioned(&[("b".into(), 0.1), ("a".into(), 0.9)])
++        .unwrap();
++    assert_eq!(post.worlds[0].id, "a");
++    near(post.worlds[0].weight, 0.9, 1e-14);
++    let s = solve(&post, config()).unwrap();
++    assert_eq!(s.ours, vec![1., 0.]);
++    near(s.assessment.value, 0.8, 1e-12);
++    assert_eq!(g.worlds[0].weight, 0.5); // immutable original belief
++}
++
++#[test]
++fn one_world_matching_pennies_and_nonuniform_equilibrium() {
++    for (a, p, value) in [
++        ([1., -1., -1., 1.], 0.5, 0.),
++        ([3., 0., 0., 1.], 0.25, 0.75),
++    ] {
++        let s = solve(&game(2, vec![world("one", 1., 2, &a)]), config()).unwrap();
++        assert!(s.converged, "gap {}", s.assessment.gap);
++        near(s.ours[0], p, 0.004);
++        near(s.theirs[0][0], p, 0.004);
++        near(s.assessment.value, value, 0.004);
++    }
++}
++
++// Independent normal-form construction: a pure column specifies an action IN EVERY
++// hidden world. Used only for tiny tests; production CFR never builds this product.
++fn expanded(g: &Game) -> nash::Matrix {
++    let count: usize = g.worlds.iter().map(|w| w.columns.len()).product();
++    let mut values = Vec::new();
++    for r in 0..g.rows.len() {
++        for index in 0..count {
++            let mut code = index;
++            let mut value = 0.;
++            for w in &g.worlds {
++                let c = code % w.columns.len();
++                code /= w.columns.len();
++                value += w.weight * w.payoffs[r * w.columns.len() + c];
++            }
++            values.push(value as f32);
++        }
++    }
++    nash::Matrix::new(g.rows.len(), count, values)
++}
++
++#[test]
++fn generated_games_match_independent_expanded_normal_form() {
++    let mut seed = 731u64;
++    for case in 0..24 {
++        let n = 2 + case % 2;
++        let mut worlds = Vec::new();
++        for w in 0..2 {
++            let m = 2 + w;
++            let values: Vec<_> = (0..n * m)
++                .map(|_| {
++                    seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1);
++                    ((seed >> 32) % 9) as f64 - 4.
++                })
++                .collect();
++            worlds.push(world(
++                &format!("w{w}"),
++                (w + case % 3 + 1) as f64,
++                m,
++                &values,
++            ));
++        }
++        let g = game(n, worlds);
++        let s = solve(&g, config()).unwrap();
++        assert!(s.assessment.gap < 0.02, "case {case}: {}", s.assessment.gap);
++        let flat = expanded(&g);
++        let reference = nash::solve(&flat, 100_000, 0.0001);
++        assert!(reference.exploitability < 0.01);
++        assert!(f64::from(reference.value) >= s.assessment.lower - 0.011);
++        assert!(f64::from(reference.value) <= s.assessment.upper + 0.011);
++        // Recompute the lower bound directly over ALL contingent pure responses.
++        let lower = (0..flat.cols)
++            .map(|c| {
++                (0..n)
++                    .map(|r| s.ours[r] * f64::from(flat.at(r, c)))
++                    .sum::<f64>()
++            })
++            .fold(f64::INFINITY, f64::min);
++        near(lower, s.assessment.lower, 1e-6);
++    }
++}
++
++#[test]
++fn assess_uses_shared_row_response_and_world_specific_column_response() {
++    let g = game(
++        2,
++        vec![
++            world("a", 1., 2, &[2., -1., 0., 3.]),
++            world("b", 3., 3, &[1., 4., -2., -1., 2., 5.]),
++        ],
++    );
++    let p = [0.3, 0.7];
++    let q = vec![vec![0.8, 0.2], vec![0.2, 0.3, 0.5]];
++    let s = g.assess(&p, &q).unwrap();
++    let flat = expanded(&g);
++    let products: Vec<_> = (0..flat.cols).map(|c| q[0][c % 2] * q[1][c / 2]).collect();
++    let upper = (0..2)
++        .map(|r| {
++            (0..flat.cols)
++                .map(|c| products[c] * f64::from(flat.at(r, c)))
++                .sum::<f64>()
++        })
++        .fold(f64::NEG_INFINITY, f64::max);
++    let lower = (0..flat.cols)
++        .map(|c| (0..2).map(|r| p[r] * f64::from(flat.at(r, c))).sum::<f64>())
++        .fold(f64::INFINITY, f64::min);
++    near(s.upper, upper, 1e-12);
++    near(s.lower, lower, 1e-12);
++    near(s.gap, upper - lower, 1e-12);
++}
++
++#[test]
++fn permutations_preserve_equilibrium_and_zero_worlds_keep_their_indices() {
++    let g = game(
++        2,
++        vec![
++            world("a", 1., 2, &[3., 0., 0., 1.]),
++            world("zero", 0., 1, &[1e4, -1e4]),
++            world("b", 3., 1, &[0., 0.]),
++        ],
++    );
++    let s = solve(&g, config()).unwrap();
++    assert_eq!(s.theirs[1], vec![1.]);
++    near(s.ours[0], 0.25, 0.006);
++    let reversed = game(
++        2,
++        vec![
++            world("b", 3., 1, &[0., 0.]),
++            world("zero", 0., 1, &[-1e4, 1e4]),
++            world("a", 1., 2, &[1., 0., 0., 3.]),
++        ],
++    );
++    let t = solve(&reversed, config()).unwrap();
++    near(s.ours[0], t.ours[1], 0.006);
++    near(s.assessment.value, t.assessment.value, 0.003);
++}
++
++#[test]
++fn scale_and_weight_normalization_are_finite_and_do_not_drop_positive_worlds() {
++    let g = game(
++        1,
++        vec![
++            world("a", f64::MAX, 1, &[1e300]),
++            world("b", f64::MAX, 1, &[-1e300]),
++        ],
++    );
++    assert_eq!(g.worlds[0].weight, 0.5);
++    let s = solve(&g, config()).unwrap();
++    assert_eq!(s.assessment.value, 0.);
++    assert!(s.assessment.gap.is_finite());
++    assert!(Game::new(
++        vec!["r".into()],
++        vec![
++            world("a", f64::MAX, 1, &[0.]),
++            world("b", f64::MIN_POSITIVE, 1, &[0.])
++        ]
++    )
++    .is_err());
++    let tiny = game(
++        1,
++        vec![world("a", 1e-300, 1, &[1.]), world("b", 1., 1, &[2.])],
++    );
++    let post = tiny
++        .conditioned(&[("a".into(), 1.), ("b".into(), 1e-300)])
++        .unwrap();
++    near(post.worlds[0].weight, 0.5, 1e-12);
++}
++
++#[test]
++fn invalid_games_policies_beliefs_and_solver_configs_fail() {
++    assert!(Game::new(vec![], vec![]).is_err());
++    for weight in [0., -1., f64::NAN, f64::INFINITY] {
++        assert!(Game::new(vec!["r".into()], vec![world("a", weight, 1, &[1.])]).is_err());
++    }
++    for a in [f64::NAN, f64::INFINITY, f64::MAX] {
++        assert!(Game::new(vec!["r".into()], vec![world("a", 1., 1, &[a])]).is_err());
++    }
++    assert!(Game::new(vec!["r".into()], vec![world("a", 1., 2, &[1.])]).is_err());
++    assert!(Game::new(
++        vec!["r".into(), "r".into()],
++        vec![world("a", 1., 1, &[1., 2.])]
++    )
++    .is_err());
++    assert!(Game::new(
++        vec!["r".into()],
++        vec![world("a", 1., 1, &[1.]), world("a", 1., 1, &[2.])]
++    )
++    .is_err());
++    let g = game(1, vec![world("a", 1., 1, &[0.]), world("b", 0., 1, &[1.])]);
++    for ls in [
++        vec![("a".into(), 0.), ("b".into(), 1.)],
++        vec![("a".into(), 1.)],
++        vec![("a".into(), 1.), ("a".into(), 1.)],
++        vec![("a".into(), 1.), ("other".into(), 1.)],
++        vec![("a".into(), f64::NAN), ("b".into(), 1.)],
++    ] {
++        assert!(g.conditioned(&ls).is_err());
++    }
++    for cfg in [
++        Config {
++            iterations: 0,
++            ..config()
++        },
++        Config {
++            check_every: 0,
++            ..config()
++        },
++        Config {
++            tolerance: -1.,
++            ..config()
++        },
++        Config {
++            tolerance: f64::NAN,
++            ..config()
++        },
++    ] {
++        assert!(solve(&g, cfg).is_err());
++    }
++    assert!(g.assess(&[0.9], &[vec![1.], vec![1.]]).is_err());
++    assert!(g.assess(&[1.], &[vec![1.]]).is_err());
++    assert!(g.assess(&[1.], &[vec![-1.], vec![1.]]).is_err());
++}
++
++#[test]
++fn exhaustion_is_not_reported_as_convergence() {
++    let g = game(2, vec![world("a", 1., 2, &[3., 0., 0., 1.])]);
++    let s = solve(
++        &g,
++        Config {
++            iterations: 1,
++            tolerance: 0.,
++            check_every: 32,
++        },
++    )
++    .unwrap();
++    assert!(!s.converged);
++    assert_eq!(s.iterations, 1);
++    assert!(s.assessment.gap > 0.);
++}
++
++fn fixture(name: &str) -> Position<2> {
++    let path = Path::new(env!("CARGO_MANIFEST_DIR"))
++        .join("../oracle/scenarios")
++        .join(name);
++    let loaded = lab_scenario::load_scenario_file(path).unwrap();
++    let mut ps =
++        lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default()).unwrap();
++    assert_eq!(ps.len(), 1);
++    Position {
++        state: ps.remove(0).state,
++        suspension: None,
++    }
++}
++fn ew(id: &str, p: Position<2>) -> EngineWorld<2> {
++    EngineWorld {
++        id: id.into(),
++        weight: 1.,
++        position: p,
++    }
++}
++
++#[test]
++fn engine_full_chance_matches_direct_enumeration_for_both_sides() {
++    let p = fixture("super-fang.json");
++    let before = p.state.clone();
++    for us in [SideId::One, SideId::Two] {
++        let worlds = vec![ew("true", p.clone()), ew("same", p.clone())];
++        let b = engine::one_turn(
++            &worlds,
++            us,
++            Ruleset::CHAMPIONS_MC,
++            &Heuristic,
++            &Knowledge::default(),
++            100_000,
++        )
++        .unwrap();
++        let domain = EngineDomain {
++            ruleset: Ruleset::CHAMPIONS_MC,
++            options: EnumerateOptions::default(),
++            pruning: Pruning::All,
++            us,
++            evaluator: &Heuristic,
++        };
++        for (r, row) in b.ours.iter().enumerate() {
++            for (c, col) in b.theirs[0].iter().enumerate() {
++                let children = domain.transitions(&p, [row, col]).unwrap();
++                let direct: f64 = children
++                    .iter()
++                    .map(|(p, s)| p * f64::from(domain.value(s)))
++                    .sum();
++                assert_eq!(b.game.worlds[0].payoffs[r * b.theirs[0].len() + c], direct);
++            }
++        }
++        assert_eq!(worlds[0].position.state, before);
++        assert_eq!(worlds[1].position.state, before);
++        assert!(b.outcomes >= b.transitions);
++    }
++}
++
++#[test]
++fn engine_rejects_known_state_changes_and_hiding_active_occupants() {
++    let p = fixture("super-fang.json");
++    let mut altered = p.clone();
++    altered.state.sides[0].party[0].hp -= 1;
++    let worlds = vec![ew("a", p.clone()), ew("b", altered)];
++    assert!(engine::one_turn(
++        &worlds,
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Knowledge::default(),
++        100_000
++    )
++    .err()
++    .unwrap()
++    .0
++    .contains("known state"));
++    assert!(engine::one_turn(
++        &[ew("a", p)],
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Knowledge {
++            hidden_stats: false,
++            unrevealed_reserves: vec![0]
++        },
++        100_000
++    )
++    .is_err());
++}
++
++#[test]
++fn engine_accepts_declared_stat_variants_but_not_undeclared_ones() {
++    let p = fixture("super-fang.json");
++    let mut variant = p.clone();
++    variant.state.sides[1].party[0].stats[4] += 1;
++    variant.state.sides[1].party[0].stat_points[5] += 1;
++    let worlds = vec![ew("a", p), ew("b", variant)];
++    assert!(engine::one_turn(
++        &worlds,
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Knowledge::default(),
++        100_000
++    )
++    .is_err());
++    assert!(engine::one_turn(
++        &worlds,
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Knowledge {
++            hidden_stats: true,
++            ..Knowledge::default()
++        },
++        100_000
++    )
++    .is_ok());
++}
++
++#[test]
++fn engine_cell_cap_and_intermediate_switch_fail_without_mutation() {
++    let p = fixture("super-fang.json");
++    let worlds = vec![ew("a", p)];
++    let before = worlds[0].position.state.clone();
++    assert!(engine::one_turn(
++        &worlds,
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Knowledge::default(),
++        1
++    )
++    .err()
++    .unwrap()
++    .0
++    .contains("max_cells"));
++    assert_eq!(worlds[0].position.state, before);
++    let p = fixture("eject-button-uturn.json");
++    let before = p.state.clone();
++    let worlds = vec![ew("pivot", p)];
++    let e = engine::one_turn(
++        &worlds,
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Knowledge::default(),
++        100_000,
++    )
++    .err()
++    .unwrap();
++    assert!(e.0.contains("intermediate switch"), "{e}");
++    assert_eq!(worlds[0].position.state, before);
++}
++
++#[test]
++fn opening_hidden_reserves_can_have_different_opponent_menus() {
++    let mon = |species: &str| serde_json::json!({"species":species,"moves":["Harden"],"ability":"Honey Gather","nature":"Serious","level":50});
++    let mut v = serde_json::json!({"format":"gen9championsdoublescustomgame","p1":{"team":[mon("Raticate"),mon("Blissey")],"order":"12"},
++        "p2":{"team":[mon("Snorlax"),mon("Machamp"),mon("Pikachu")],"order":"123"},"turn":{"p1":"move harden, move harden","p2":"move harden, move harden"}});
++    let load = |v: &serde_json::Value| {
++        let l = lab_scenario::load_scenario_str(&v.to_string(), Path::new(".")).unwrap();
++        let ps = lab_scenario::scenario_positions_with(&l, EnumerateOptions::default()).unwrap();
++        assert_eq!(ps.len(), 1);
++        Position {
++            state: ps[0].state.clone(),
++            suspension: None,
++        }
++    };
++    let a = load(&v);
++    v["p2"]["team"]
++        .as_array_mut()
++        .unwrap()
++        .push(mon("Clefable"));
++    v["p2"]["order"] = serde_json::json!("1234");
++    let b = load(&v);
++    let worlds = [ew("three", a), ew("four", b)];
++    let result = engine::one_turn(
++        &worlds,
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Knowledge {
++            hidden_stats: false,
++            unrevealed_reserves: vec![2, 3],
++        },
++        100_000,
++    )
++    .unwrap();
++    assert_ne!(result.theirs[0].len(), result.theirs[1].len());
++    assert_eq!(
++        solve(&result.game, config()).unwrap().ours.len(),
++        result.ours.len()
++    );
++}
+diff --git a/engine/search/src/bin/lab-bayes.rs b/engine/search/src/bin/lab-bayes.rs
+new file mode 100644
+index 0000000..8c82c9e
+--- /dev/null
++++ b/engine/search/src/bin/lab-bayes.rs
+@@ -0,0 +1,269 @@
++//! Experimental additive CLI: explicit matrices, or conservative one-turn engine worlds.
++use lab_engine::{rules::Ruleset, state::SideId, turn::EnumerateOptions};
++use lab_search::bayesian::{
++    self,
++    engine::{self, EngineWorld, Knowledge},
++    Config, Game, World,
++};
++use lab_search::budgeted::Position;
++use lab_search::model::load_evaluator;
++use lab_search::{format_choice, Choice};
++use serde_json::{json, Value};
++use std::path::Path;
++
++fn main() -> std::process::ExitCode {
++    let args: Vec<_> = std::env::args().skip(1).collect();
++    if args == ["--help"] {
++        println!("lab-bayes <request.json>\nmode: matrix | engine-one-turn; see benchmarks/s26_bayesian/CONTRACT.md");
++        return std::process::ExitCode::SUCCESS;
++    }
++    let result = if args.len() == 1 {
++        run(Path::new(&args[0]))
++    } else {
++        Err("usage: lab-bayes <request.json>".into())
++    };
++    match result {
++        Ok(v) => {
++            println!("{}", serde_json::to_string_pretty(&v).unwrap());
++            std::process::ExitCode::SUCCESS
++        }
++        Err(e) => {
++            eprintln!("lab-bayes: {e}");
++            std::process::ExitCode::FAILURE
++        }
++    }
++}
++fn string(v: &Value, key: &str) -> Result<String, String> {
++    v[key]
++        .as_str()
++        .map(str::to_owned)
++        .ok_or_else(|| format!("{key} must be a string"))
++}
++fn number(v: &Value, key: &str) -> Result<f64, String> {
++    v[key]
++        .as_f64()
++        .ok_or_else(|| format!("{key} must be a number"))
++}
++fn strings(v: &Value) -> Result<Vec<String>, String> {
++    v.as_array()
++        .ok_or("expected string array")?
++        .iter()
++        .map(|x| {
++            x.as_str()
++                .map(str::to_owned)
++                .ok_or("expected string".into())
++        })
++        .collect()
++}
++fn integer(v: &Value, key: &str, default: usize) -> Result<usize, String> {
++    if v.get(key).is_none() {
++        return Ok(default);
++    }
++    v[key]
++        .as_u64()
++        .and_then(|n| usize::try_from(n).ok())
++        .ok_or_else(|| format!("{key} must be a nonnegative integer"))
++}
++fn boolean(v: &Value, key: &str, default: bool) -> Result<bool, String> {
++    match v.get(key) {
++        None => Ok(default),
++        Some(v) => v
++            .as_bool()
++            .ok_or_else(|| format!("{key} must be a boolean")),
++    }
++}
++fn keys(v: &Value, allowed: &[&str]) -> Result<(), String> {
++    let object = v.as_object().ok_or("expected object")?;
++    for key in object.keys() {
++        if !allowed.contains(&key.as_str()) {
++            return Err(format!("unknown field: {key}"));
++        }
++    }
++    Ok(())
++}
++
++fn run(path: &Path) -> Result<Value, String> {
++    let v: Value = serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
++        .map_err(|e| e.to_string())?;
++    request(&v, path.parent().unwrap_or(Path::new(".")))
++}
++
++fn request(v: &Value, base: &Path) -> Result<Value, String> {
++    let mode = string(v, "mode")?;
++    let mut config = Config::default();
++    if let Some(c) = v.get("solver") {
++        keys(c, &["iterations", "tolerance", "check_every"])?;
++        config.iterations = integer(c, "iterations", config.iterations)?;
++        config.check_every = integer(c, "check_every", config.check_every)?;
++        if c.get("tolerance").is_some() {
++            config.tolerance = number(c, "tolerance")?;
++        }
++    }
++    let worlds = v["worlds"].as_array().ok_or("worlds must be an array")?;
++    let (mut game, metadata) = match mode.as_str() {
++        "matrix" => {
++            keys(v, &["mode", "rows", "worlds", "solver", "likelihoods"])?;
++            let mut matrices = Vec::new();
++            for w in worlds {
++                keys(w, &["id", "weight", "columns", "payoffs"])?;
++                matrices.push(World {
++                    id: string(w, "id")?,
++                    weight: number(w, "weight")?,
++                    columns: strings(&w["columns"])?,
++                    payoffs: w["payoffs"]
++                        .as_array()
++                        .ok_or("payoffs must be a flat row-major array")?
++                        .iter()
++                        .map(|x| x.as_f64().ok_or("payoff must be a number"))
++                        .collect::<Result<_, _>>()?,
++                });
++            }
++            (
++                Game::new(strings(&v["rows"])?, matrices).map_err(|e| e.to_string())?,
++                json!({"scope":"supplied-fixed-matrices"}),
++            )
++        }
++        "engine-one-turn" => {
++            keys(
++                v,
++                &[
++                    "mode",
++                    "worlds",
++                    "solver",
++                    "likelihoods",
++                    "side",
++                    "evaluator",
++                    "knowledge",
++                    "max_cells",
++                ],
++            )?;
++            let us = match v.get("side").and_then(Value::as_str).unwrap_or("p1") {
++                "p1" => SideId::One,
++                "p2" => SideId::Two,
++                _ => return Err("side must be p1 or p2".into()),
++            };
++            if v.get("side").is_some() {
++                string(v, "side")?;
++            }
++            let mut knowledge = Knowledge::default();
++            if let Some(k) = v.get("knowledge") {
++                keys(k, &["hidden_stats", "unrevealed_reserves"])?;
++                knowledge.hidden_stats = boolean(k, "hidden_stats", false)?;
++                if let Some(indices) = k.get("unrevealed_reserves") {
++                    knowledge.unrevealed_reserves = indices
++                        .as_array()
++                        .ok_or("unrevealed_reserves must be an array")?
++                        .iter()
++                        .map(|x| {
++                            x.as_u64()
++                                .and_then(|n| usize::try_from(n).ok())
++                                .ok_or("invalid reserve index")
++                        })
++                        .collect::<Result<_, _>>()?;
++                }
++            }
++            let mut states = Vec::new();
++            let mut orders = Vec::new();
++            for w in worlds {
++                keys(w, &["id", "weight", "scenario"])?;
++                let loaded = lab_scenario::load_scenario_file(base.join(string(w, "scenario")?))
++                    .map_err(|e| e.to_string())?;
++                if !knowledge.unrevealed_reserves.is_empty() && !loaded.setup_turns.is_empty() {
++                    return Err(
++                        "hidden-reserve mode requires opening scenarios without setup turns".into(),
++                    );
++                }
++                let mut positions =
++                    lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
++                        .map_err(|e| e.to_string())?;
++                if positions.len() != 1 {
++                    return Err("each scenario must produce exactly one initial position; do not silently pick a hidden outcome".into());
++                }
++                let p = positions.remove(0);
++                orders.push(p.order);
++                states.push(EngineWorld {
++                    id: string(w, "id")?,
++                    weight: number(w, "weight")?,
++                    position: Position {
++                        state: p.state,
++                        suspension: None,
++                    },
++                });
++            }
++            let evaluation = match v.get("evaluator") {
++                Some(_) => string(v, "evaluator")?,
++                None => "heuristic".into(),
++            };
++            let evaluator = load_evaluator(&evaluation)?;
++            let built = engine::one_turn(
++                &states,
++                us,
++                Ruleset::CHAMPIONS_MC,
++                evaluator.as_ref(),
++                &knowledge,
++                integer(v, "max_cells", 100_000)?,
++            )
++            .map_err(|e| e.to_string())?;
++            let names = |index: usize, side: SideId, actions: &[Choice<2>]| {
++                actions
++                    .iter()
++                    .map(|a| match a {
++                        Choice::Turn(a) => format_choice(
++                            &states[index].position.state,
++                            side,
++                            &orders[index][side.index()],
++                            a,
++                        ),
++                        Choice::Switches(_) => unreachable!("only normal turn roots are accepted"),
++                    })
++                    .collect::<Vec<_>>()
++            };
++            let metadata = json!({"scope":"one-turn-leaf-evaluator", "rolls":"full", "pruning":"all", "evaluator":evaluation,
++                "side":if us == SideId::One {"p1"} else {"p2"}, "transitions":built.transitions, "outcomes":built.outcomes,
++                "row_choices":names(0, us, &built.ours), "world_column_choices":built.theirs.iter().enumerate().map(|(i,a)| names(i, us.other(), a)).collect::<Vec<_>>() });
++            (built.game, metadata)
++        }
++        _ => return Err("mode must be matrix or engine-one-turn".into()),
++    };
++    if let Some(likelihoods) = v.get("likelihoods") {
++        let likelihoods = likelihoods
++            .as_array()
++            .ok_or("likelihoods must be an array")?
++            .iter()
++            .map(|v| {
++                keys(v, &["world", "probability"])?;
++                Ok((string(v, "world")?, number(v, "probability")?))
++            })
++            .collect::<Result<Vec<_>, String>>()?;
++        game = game.conditioned(&likelihoods).map_err(|e| e.to_string())?;
++    }
++    let result = bayesian::solve(&game, config).map_err(|e| e.to_string())?;
++    Ok(
++        json!({"schema":1,"mode":mode,"algorithm":"alternating-linear-cfr", "metadata":metadata,
++        "iterations":result.iterations,"converged":result.converged,"requested_tolerance":config.tolerance,
++        "value":result.assessment.value,"lower":result.assessment.lower,"upper":result.assessment.upper,
++        "fixed_matrix_gap":result.assessment.gap,
++        "ours":game.rows().iter().zip(result.ours).map(|(id,p)| json!({"action":id,"probability":p})).collect::<Vec<_>>(),
++        "worlds":game.worlds().iter().zip(result.theirs).zip(result.assessment.world_values).map(|((w,q),value)|
++            json!({"id":w.id,"posterior":w.weight,"value":value,"theirs":w.columns.iter().zip(q).map(|(id,p)|
++                json!({"action":id,"probability":p})).collect::<Vec<_>>() })).collect::<Vec<_>>() }),
++    )
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn cli_validates_and_reports_shared_strategy() {
++        let mut v = json!({"mode":"matrix","rows":["a","b"],"worlds":[
++            {"id":"x","weight":1,"columns":["x"],"payoffs":[1,-1]},
++            {"id":"y","weight":1,"columns":["y"],"payoffs":[-1,1]}]});
++        let r = request(&v, Path::new(".")).unwrap();
++        assert_eq!(r["value"], 0.0);
++        assert_eq!(r["ours"].as_array().unwrap().len(), 2);
++        v["solver"] = json!({"iterations":0});
++        assert!(request(&v, Path::new(".")).is_err());
++        v["solver"] = json!({"iterations":1,"tolerence":0.1});
++        assert!(request(&v, Path::new(".")).is_err());
++    }
++}
+diff --git a/engine/search/src/lib.rs b/engine/search/src/lib.rs
+index 3ba89ac..6ef6ca5 100644
+--- a/engine/search/src/lib.rs
++++ b/engine/search/src/lib.rs
+@@ -38,6 +38,8 @@
+ 
+ #[cfg(feature = "scenario")]
+ pub mod api;
++#[cfg(feature = "experiment-bayesian-cfr")]
++pub mod bayesian;
+ pub mod choice;
+ #[cfg(feature = "experiment-budgeted-search")]
+ pub mod budgeted;

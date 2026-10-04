@@ -1,0 +1,15 @@
+{
+  "completed_scope": "S26c selective public-history-closed CFR with atomic switch closure/rollback",
+  "source_sha": "26999d068dd541ac0f2cfcdafc8a091ce4427e12",
+  "ci_run": 37020601917,
+  "ci_success": true,
+  "vault_installed": true,
+  "shared_checkout_unchanged": true,
+  "production_changed": false,
+  "default_off": true,
+  "selective_growth_implemented": true,
+  "full_battle_log_information": false,
+  "full_event_emitter_implemented": false,
+  "performance_measured": false,
+  "remaining_observation_task": "S26d-public-event-observation"
+}

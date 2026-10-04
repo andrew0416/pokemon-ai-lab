@@ -1,0 +1,434 @@
+{
+  "state": "do-not-promote",
+  "name": "borrowed public-boundary lookup",
+  "flag": "pipeline.borrowed_boundary",
+  "source_sha": "3f0b28e7f317c84acffa21a1354351cfb8dcbe3d",
+  "summary_ko": "경계 조회 복사 생략의 기존 5개 옵션 대비 시간 단축률은 -1.14~+1.08%였다. 8조건 중 비율 구간이 1 아래인 경우는 0개이고 A/A 범위까지 벗어난 개선은 0개다.",
+  "reason": "24개 후보 비교에서 개선을 확정할 조건이 없었습니다. 할당 감소는 확인됐지만 실제 시간 이득으로 이어졌다는 근거가 부족하므로 누적 유지 조합에 추가하지 않습니다. 기본 OFF 실험 코드와 아이디어만 보존합니다.",
+  "version_summary_ko": "S24→S25 OFF 단축률 -4.49~+0.74%, A/A 밖 개선 0/8·회귀 1/8; S25→S26 OFF 단축률 -1.83~+1.57%, A/A 밖 개선 0/8·회귀 0/8; S25→S26 전체5개(경계 OFF) 단축률 -1.61~+2.26%, A/A 밖 개선 0/8·회귀 0/8. 구체적 회귀 관측: s24-to-s25-off narrow-w1-d3-cadence1 시간 4.49% 증가. 원인과 다른 세션의 반복성은 미확정이다.",
+  "rss_summary_ko": "plain의 S25 이력 추가 RSS 변화 -0.13% (후보/기준 비율 구간 0.9638–1.0161, A/A 밖 False); instrumented의 S25 이력 추가 RSS 변화 -1.96% (후보/기준 비율 구간 0.9614–1.0336, A/A 밖 False). 이전 +5.58% 증가가 이번 세션에서는 재현되지 않았다. 증가가 없음을 증명한 것은 아니다.",
+  "default_off": true,
+  "production_adopted": false,
+  "speed_groups": {
+    "boundary": {
+      "reduction_range": [
+        -0.6192992739227909,
+        1.1489697913330432
+      ],
+      "lower": 0,
+      "higher": 0,
+      "unresolved": 8,
+      "confirmed_lower": 0,
+      "confirmed_higher": 0
+    },
+    "history-boundary": {
+      "reduction_range": [
+        -2.426781689670854,
+        0.7560832325300471
+      ],
+      "lower": 0,
+      "higher": 1,
+      "unresolved": 7,
+      "confirmed_lower": 0,
+      "confirmed_higher": 0
+    },
+    "all-six": {
+      "reduction_range": [
+        -1.1436946579283847,
+        1.0801242454982485
+      ],
+      "lower": 0,
+      "higher": 0,
+      "unresolved": 8,
+      "confirmed_lower": 0,
+      "confirmed_higher": 0
+    }
+  },
+  "version_controls": {
+    "s24-to-s25-off": {
+      "reduction_range": [
+        -4.493026907554465,
+        0.7422508899290525
+      ],
+      "lower": 0,
+      "higher": 2,
+      "unresolved": 6,
+      "confirmed_lower": 0,
+      "confirmed_higher": 1
+    },
+    "s25-to-current-off": {
+      "reduction_range": [
+        -1.8257101224790961,
+        1.5706373388185368
+      ],
+      "lower": 0,
+      "higher": 1,
+      "unresolved": 7,
+      "confirmed_lower": 0,
+      "confirmed_higher": 0
+    },
+    "s25-to-current-history": {
+      "reduction_range": [
+        -1.6059438978452745,
+        2.2586749970503583
+      ],
+      "lower": 1,
+      "higher": 0,
+      "unresolved": 7,
+      "confirmed_lower": 0,
+      "confirmed_higher": 0
+    }
+  },
+  "sand_rss_repeat": [
+    {
+      "mode": "plain",
+      "comparison": "aa",
+      "rss_reduction_percent": -0.04746187177728789,
+      "ratio_bootstrap95": [
+        0.9676813454193628,
+        1.0258553469812592
+      ],
+      "within_run_direction": "unresolved",
+      "outside_aa_envelope": false
+    },
+    {
+      "mode": "plain",
+      "comparison": "history",
+      "rss_reduction_percent": 0.12715740377100548,
+      "ratio_bootstrap95": [
+        0.9637560626944204,
+        1.0161169924186542
+      ],
+      "within_run_direction": "unresolved",
+      "outside_aa_envelope": false
+    },
+    {
+      "mode": "plain",
+      "comparison": "wrapper",
+      "rss_reduction_percent": 2.435497726381519,
+      "ratio_bootstrap95": [
+        0.9387091350824327,
+        1.0136320664434488
+      ],
+      "within_run_direction": "unresolved",
+      "outside_aa_envelope": false
+    },
+    {
+      "mode": "plain",
+      "comparison": "boundary",
+      "rss_reduction_percent": -3.801683272625178,
+      "ratio_bootstrap95": [
+        1.0038047958290275,
+        1.0671721618628185
+      ],
+      "within_run_direction": "higher",
+      "outside_aa_envelope": false
+    },
+    {
+      "mode": "instrumented",
+      "comparison": "aa",
+      "rss_reduction_percent": -0.6824049501348295,
+      "ratio_bootstrap95": [
+        0.9822275956345773,
+        1.047860411616198
+      ],
+      "within_run_direction": "unresolved",
+      "outside_aa_envelope": false
+    },
+    {
+      "mode": "instrumented",
+      "comparison": "history",
+      "rss_reduction_percent": 1.9565854093698043,
+      "ratio_bootstrap95": [
+        0.9613803901849232,
+        1.0336260912078976
+      ],
+      "within_run_direction": "unresolved",
+      "outside_aa_envelope": false
+    },
+    {
+      "mode": "instrumented",
+      "comparison": "wrapper",
+      "rss_reduction_percent": 0.18534118435404867,
+      "ratio_bootstrap95": [
+        0.9811439015171596,
+        1.0437103613810916
+      ],
+      "within_run_direction": "unresolved",
+      "outside_aa_envelope": false
+    },
+    {
+      "mode": "instrumented",
+      "comparison": "boundary",
+      "rss_reduction_percent": 1.3320188260421029,
+      "ratio_bootstrap95": [
+        0.9588201046500819,
+        1.0319606174170493
+      ],
+      "within_run_direction": "unresolved",
+      "outside_aa_envelope": false
+    }
+  ],
+  "memory_reduction_percent": {
+    "narrow-w1-d3": {
+      "boundary": {
+        "allocations": 1.3973832933343644,
+        "requested_growth_bytes": 0.47280334224664156,
+        "peak_above_baseline_bytes": -0.018626120673626012,
+        "process_peak_rss_kib": 0.6402439024390194
+      },
+      "history-boundary": {
+        "allocations": 1.52618018500007,
+        "requested_growth_bytes": 0.4845385200565433,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 0.4120250267053205
+      },
+      "all-six": {
+        "allocations": 1.5849111777176739,
+        "requested_growth_bytes": 0.487636639814526,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.3834915997078081
+      }
+    },
+    "narrow-w1-d3-cadence1": {
+      "boundary": {
+        "allocations": 1.1565072201684568,
+        "requested_growth_bytes": 0.38827667130229004,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.1924215512137284
+      },
+      "history-boundary": {
+        "allocations": 1.2423285638154646,
+        "requested_growth_bytes": 0.39485253878073223,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 0.6048089688744707
+      },
+      "all-six": {
+        "allocations": 1.4210802307288883,
+        "requested_growth_bytes": 0.404439188994532,
+        "peak_above_baseline_bytes": 0.25313558985182727,
+        "process_peak_rss_kib": 0.036212203512586694
+      }
+    },
+    "pivot-w1-d1": {
+      "boundary": {
+        "allocations": 1.138138808301714,
+        "requested_growth_bytes": 0.4208078722038655,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 0.21057557323350684
+      },
+      "history-boundary": {
+        "allocations": 1.2583936974567722,
+        "requested_growth_bytes": 0.43278580968320046,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 0.1179245283018826
+      },
+      "all-six": {
+        "allocations": 1.2658676689596526,
+        "requested_growth_bytes": 0.4331971172366833,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.09433962264151496
+      }
+    },
+    "sand-damage-w1-d1": {
+      "boundary": {
+        "allocations": 2.9139142111682004,
+        "requested_growth_bytes": 1.4441620458151672,
+        "peak_above_baseline_bytes": 0.004099853839134582,
+        "process_peak_rss_kib": 4.357824871914295
+      },
+      "history-boundary": {
+        "allocations": 3.487909355940688,
+        "requested_growth_bytes": 1.5633560379753941,
+        "peak_above_baseline_bytes": 0.001640008773617918,
+        "process_peak_rss_kib": 3.9220311993158563
+      },
+      "all-six": {
+        "allocations": 3.488286289916842,
+        "requested_growth_bytes": 1.5762387479443918,
+        "peak_above_baseline_bytes": -2.5894882083044024e-05,
+        "process_peak_rss_kib": -1.5075228053548217
+      }
+    },
+    "stats-w1-d2": {
+      "boundary": {
+        "allocations": 1.2302177010402482,
+        "requested_growth_bytes": 0.39878357773613926,
+        "peak_above_baseline_bytes": -0.014687588801942653,
+        "process_peak_rss_kib": -0.4742981669016766
+      },
+      "history-boundary": {
+        "allocations": 1.3199963835715534,
+        "requested_growth_bytes": 0.40058575057165813,
+        "peak_above_baseline_bytes": -0.014594825083191765,
+        "process_peak_rss_kib": -0.1278118609406853
+      },
+      "all-six": {
+        "allocations": 1.3582801875237527,
+        "requested_growth_bytes": 0.40349365824093875,
+        "peak_above_baseline_bytes": 0.018083217921949224,
+        "process_peak_rss_kib": -0.18245400638587927
+      }
+    },
+    "stats-w2-d2": {
+      "boundary": {
+        "allocations": 1.4524302613825313,
+        "requested_growth_bytes": 0.4779133986854589,
+        "peak_above_baseline_bytes": -0.01160382938585336,
+        "process_peak_rss_kib": -0.30465385019435853
+      },
+      "history-boundary": {
+        "allocations": 1.5615843504289684,
+        "requested_growth_bytes": 0.48073780135121646,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 0.2931630195791013
+      },
+      "all-six": {
+        "allocations": 1.597601871920118,
+        "requested_growth_bytes": 0.4811815640041073,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.42367601246104947
+      }
+    },
+    "stats-w4-d2": {
+      "boundary": {
+        "allocations": 1.5641182539541054,
+        "requested_growth_bytes": 0.519304880092597,
+        "peak_above_baseline_bytes": 0.0032545723261834247,
+        "process_peak_rss_kib": 0.11571395510298066
+      },
+      "history-boundary": {
+        "allocations": 1.6823441201029299,
+        "requested_growth_bytes": 0.5216474407109151,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 0.10794140323824308
+      },
+      "all-six": {
+        "allocations": 1.7176655842672917,
+        "requested_growth_bytes": 0.5217315220702679,
+        "peak_above_baseline_bytes": -0.005753092558502537,
+        "process_peak_rss_kib": 0.04557885141294182
+      }
+    },
+    "stats-w4-d2-cadence1": {
+      "boundary": {
+        "allocations": 1.4872513910612395,
+        "requested_growth_bytes": 0.498250194344374,
+        "peak_above_baseline_bytes": -0.00791917671572051,
+        "process_peak_rss_kib": 0.20267227143071498
+      },
+      "history-boundary": {
+        "allocations": 1.594261546488196,
+        "requested_growth_bytes": 0.5010905804164967,
+        "peak_above_baseline_bytes": 0.00796856152419645,
+        "process_peak_rss_kib": -0.17310152780913857
+      },
+      "all-six": {
+        "allocations": 1.6897262164295768,
+        "requested_growth_bytes": 0.5028816666146407,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.2744739249771255
+      }
+    }
+  },
+  "observed_off_regressions": [
+    {
+      "case": "narrow-w1-d3-cadence1",
+      "comparison": "s24-to-s25-off",
+      "ratio_median": 1.0449302690755446,
+      "time_reduction_percent": -4.493026907554465,
+      "ratio_bootstrap95": [
+        1.0167048640482952,
+        1.053886792430389
+      ],
+      "pairs": [
+        {
+          "block": 0,
+          "baseline_ms": 56.386109,
+          "candidate_ms": 58.540562,
+          "ratio": 1.0382089319197394
+        },
+        {
+          "block": 1,
+          "baseline_ms": 57.7101075,
+          "candidate_ms": 58.674147,
+          "ratio": 1.0167048640482952
+        },
+        {
+          "block": 2,
+          "baseline_ms": 57.090861,
+          "candidate_ms": 58.597515,
+          "ratio": 1.0263904585359118
+        },
+        {
+          "block": 3,
+          "baseline_ms": 55.306085,
+          "candidate_ms": 58.2740455,
+          "ratio": 1.0536642667800478
+        },
+        {
+          "block": 4,
+          "baseline_ms": 56.226889,
+          "candidate_ms": 56.553795,
+          "ratio": 1.0058140509961346
+        },
+        {
+          "block": 5,
+          "baseline_ms": 54.7666395,
+          "candidate_ms": 57.5194295,
+          "ratio": 1.0502639932837217
+        },
+        {
+          "block": 6,
+          "baseline_ms": 53.2385255,
+          "candidate_ms": 57.1457995,
+          "ratio": 1.073391852296886
+        },
+        {
+          "block": 7,
+          "baseline_ms": 53.8091315,
+          "candidate_ms": 56.708733,
+          "ratio": 1.053886792430389
+        },
+        {
+          "block": 8,
+          "baseline_ms": 57.1107085,
+          "candidate_ms": 59.676708,
+          "ratio": 1.0449302690755446
+        }
+      ],
+      "within_run_direction": "higher",
+      "same_path_aa_band_percent": 0.9198245096455615,
+      "outside_aa_envelope": true
+    }
+  ],
+  "correctness": {
+    "full_json_pairs": 1537,
+    "independent_certificates": 3405,
+    "capped": 12,
+    "engine_witnesses": 56,
+    "tests": [
+      122,
+      118,
+      17
+    ]
+  },
+  "first_run_failed_closed_before_timing": true,
+  "isolated_version_targets": true,
+  "limitations": [
+    "One runner session; eight settings from six fixtures; no multiplicity correction",
+    "Historical libraries are pinned; benchmark CLI receives the identical worker-only transport patch",
+    "Cross-version ratios include compiler/layout effects, not an isolated causal measurement of each source edit",
+    "Cross-version worker blocks are separate from same-binary paired blocks; do not multiply ratios across them",
+    "Plain and instrumented RSS are analyzed separately; neither implies allocator cause or absence of a leak",
+    "The descriptive A/A envelope is a noise screen, not a significance test",
+    "Full export equality and finite oracles do not prove every future mechanic",
+    "QEMU Nehalem is emulation, not physical old hardware; no win-rate evaluation"
+  ],
+  "remaining": [
+    "Direct pinned-parent vs chosen full candidate stack comparison before promotion",
+    "Broader fixtures/independent runner replication before general speed claims",
+    "Replicate the narrow cadence1 S24-to-S25 OFF regression and isolate layout/codegen before promotion",
+    "Encoded History::keys still clones two strings; borrowed views are only a future proposal"
+  ]
+}

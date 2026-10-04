@@ -1,0 +1,17 @@
+{
+  "completed": true,
+  "source_sha": "cab569eec64dc3213bedf934f69e7c4a78ef38c4",
+  "run": 37085660921,
+  "decision": "conditional retention; default OFF; do not cumulatively adopt",
+  "next_candidate_baseline": "ec9b72e149b9d72e762e4023a84365e3f72a2ff5",
+  "same_work_cases": 12,
+  "vault_notes_added": 4,
+  "new_vault_errors": 0,
+  "inherited_vault_errors": 14,
+  "inherited_stale": 1069,
+  "evidence_sha256": {
+    "RESULTS.md": "4cead834c6ab6b2991e773169674ffa3f7b9cab3d86128cd75356f0a4dd17301",
+    "AUDIT-37085660921.json": "2c6d8e02b74c896f95bad67b8b356eee8e5307f5dd2e295b4058859bde076ba1",
+    "install-receipt.json": "9781802f535cbc8887e7a1b4e3591ef33c88500f09ae9e9d04b55de9b147f47c"
+  }
+}

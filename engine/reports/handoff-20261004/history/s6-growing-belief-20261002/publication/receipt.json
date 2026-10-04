@@ -1,0 +1,75 @@
+{
+  "parent": "12a28a527d6b67856f77b2de4f077b9cf4b41d90",
+  "branch": "codex/s26c-growing-belief-20261002",
+  "workflow": ".github/workflows/engine-s26c-growing-belief.yml",
+  "inherited_unchanged": 4112,
+  "changed_sha256": {
+    ".github/workflows/engine-s26c-growing-belief.yml": "fb58047182114d9f5ecfd935a2a726073ca52a87751450f12057571710777e1d",
+    "engine/benchmarks/s26_tree/GROWING.md": "38b80cb6874166c0a2111d19722f0fcf27c8d1236d2435d28f49688e67df04c9",
+    "engine/benchmarks/s26_tree/growing_check.py": "3d73bd36d18d6efa3d664e1c3ec208a992651fa69586e9a19c00ae770dbd39e6",
+    "engine/search/Cargo.toml": "374420f4ae95f429017ba3642a150a9a1809b97c3cda2a288f90601bec29302f",
+    "engine/search/src/bayesian/tree.rs": "ad358a93c448c70e9d2073fd29e0fbc00a3cd977e0201f9033d0ff060babccb2",
+    "engine/search/src/bayesian/tree/builder.rs": "56b4d59c7c34d1d808840106585b47a6a8430e6aced5957c266fcccb32ddee59",
+    "engine/search/src/bayesian/tree/builder/growing.rs": "b4cc2c26916ea0a3d85c6eda47aa24c0e24baadf08efa5b0537d30a0609f24fa",
+    "engine/search/src/bayesian/tree/builder/growing/tests.rs": "a17c3a00a8e78e449cc80d68a9ef0145f53b6a97233561772c8221318dfd3af8",
+    "engine/search/src/bayesian/tree/engine.rs": "d180d84f2b9b94ce6f764a252f6fc2ccbed8fd3354b683f9eb1269920d8538f9",
+    "engine/search/src/bin/lab-belief.rs": "b5f1b7b6b052c4ff1410b321b3570ae6578a09629d238efe6b94861758008051",
+    "engine/search/src/bin/lab-belief/observed.rs": "fa40e957a96244458c5f3fbbc505df54f13e5179eae573a69fcf1deb53712e25"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": false,
+  "correctness_scope": "public-history-closed growing CFR; atomic switch closure/rollback; independent surrogate LP and exhaustive differential",
+  "limitations": "Explicit boundary snapshot information abstraction, not complete battle-log information; fixed heuristic leaves; growing CFR reference with regret reset; no learned CFV, full event log, safe re-solving or performance/strength claim",
+  "source_sha": "26999d068dd541ac0f2cfcdafc8a091ce4427e12",
+  "tree": "282c35ef2df7b28831fb4090d99b18c7ae9476b7",
+  "patch_sha256": "e2a730b3418b2983fe206a2bf37d4a098b3cbe2844cfc10f0fb6d7b03d85eb19",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

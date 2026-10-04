@@ -1,0 +1,20 @@
+{
+  "completed": true,
+  "candidate": 6,
+  "task": "S26e-growth-solve-cadence",
+  "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+  "run": 37089670577,
+  "decision": "cadence4를 다중턴 성능 유지 후보로 보관한다. 다중턴4국면에서 추가9.10~19.05% 감소했으며 최종 게임·정책·오차 인증이 일치했다. 1턴두국면은 실제 중간 풀이 수 감소가 없으므로 약0.59~0.60%를 알고리즘 이득으로 보지 않는다. 부분 예산에서 선택궤적과 반환 부분트리는 달라질 수 있어 생산 기본값은 OFF다. 기존49+96 LP 외에 기존24생성문제의168개 cadence 인증, 첫 그룹 완성 후 둘째 그룹 실패의 rollback을 검증했다. 승률·미확장 전체게임의 gap 향상은 주장하지 않는다.",
+  "default_off": true,
+  "production_adopted": false,
+  "vault_notes_added": 4,
+  "vault_install_receipt": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/vault/install-receipt.json",
+  "new_vault_errors": 0,
+  "new_stale_references": 0,
+  "evidence_sha256": {
+    "RESULTS.md": "a4e36b0b324394440234f1a142b4953912f50db25945d941590d764a2f566491",
+    "AUDIT-37089670577.json": "4f5a890aa07e8770a66d3ed6b0077c81b7111235b89b7917002d88b11314904c",
+    "SOURCE-PARITY.json": "7cc365d09cbe381e5d59c469bbca6ca7710e908de24fcaa09a4bee3d3ed48d43",
+    "decision.json": "e42db26c61e0697af9be982d7d726f2921c1a1a53f619fce0a5bd99ad9b11abc"
+  }
+}

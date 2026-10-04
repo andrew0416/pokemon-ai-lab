@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "phase": "logic",
+  "revision": "r4",
+  "passed": true,
+  "profile": "opt0 generic x86-64",
+  "performance_measurement": false,
+  "checks": [
+    {
+      "name": "unit-on",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "engine/Cargo.toml",
+        "-p",
+        "lab-search",
+        "--features",
+        "experiment-budgeted-search",
+        "--lib",
+        "--",
+        "--test-threads=1"
+      ],
+      "returncode": 0,
+      "expected": 0,
+      "timed_out": false,
+      "passed": true,
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r4-unit-on.log",
+      "sha256": "03713f7528d3f8e751a1978143594ce283ce2c0094f6918ba982c081eb3cf8d2"
+    }
+  ]
+}

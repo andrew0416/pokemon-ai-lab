@@ -1,0 +1,200 @@
+{
+  "schema": 1,
+  "status": "PASS_SCOPED_LOGIC_ONLY",
+  "parent_source_sha": "c54becc9fb7bb9101cac363f389d4a84792016ab",
+  "changed_files": {
+    "engine/search/Cargo.toml": "5c38e9b6b1e23e3221672d152fe19a1619aae196567884233dfe8152702d4946",
+    "engine/search/src/lib.rs": "a652ae71f5ce24c42aca71e297117ecbbfcb7eb34e61f603a52f551b2384ab5e"
+  },
+  "added_files": {
+    "engine/search/src/budgeted.rs": "01dfd7a463b134e944a9ebd19022d7e96783c2f6f2b72bb08fa7c11e0dbb43c5",
+    "engine/search/src/bin/lab-budget.rs": "c09daab63d94c5910ea0512283c822c30e16d14bf6bf2ea73bfed2cfc416f041",
+    "engine/search/src/budgeted/engine.rs": "f98ed927c956cce196523777306dd86ee506ceb9599cc9ea03ab5b9aa4bbc742",
+    "engine/search/src/budgeted/matrix.rs": "fac4ba215c9d5e5599db195089c7ed19cdb3b489383875894a8f72435ca433f3",
+    "engine/search/src/budgeted/tests.rs": "9e307783ead70a1d8a564b22ab27ed02ff18e1d9cafb5275f8d807865e61eeea"
+  },
+  "inherited_files_unchanged": 4081,
+  "tests": {
+    "on": 34,
+    "new_on": 17,
+    "off_existing": 17,
+    "cli_checks": 4,
+    "synthetic_cases": 8,
+    "synthetic_conditions": 120
+  },
+  "receipts": {
+    "logic": {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r4-logic-receipt.json",
+      "sha256": "3493ed9a80e3e89c360e2c6fef8f7a98289a325267310e6214f24496855b4f0f"
+    },
+    "build": {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r4-build-receipt.json",
+      "sha256": "9f5108c73ff8897e0edce482a71acaf67eddcff9dbf3780d4a7e522ac9382835"
+    },
+    "smoke": {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r4-smoke-receipt.json",
+      "sha256": "9e4151de20fa96d5f562c5ee6ca7af85f9151888a81e58e683cb113d83d04b83"
+    }
+  },
+  "quality_grid": {
+    "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\quality-grid-r4.json",
+    "sha256": "593c2e1dc177558dd0946e35a8fc2d9cbd5bc4c1e3ee2a72e810411b5479af2a",
+    "summary": [
+      {
+        "budget": 4,
+        "count": 24,
+        "mean_reference_gap": 4.054493330419064,
+        "median_reference_gap": 3.319216012954712,
+        "max_reference_gap": 8.574658393859863
+      },
+      {
+        "budget": 8,
+        "count": 24,
+        "mean_reference_gap": 2.520020482867949,
+        "median_reference_gap": 0.7591307759284973,
+        "max_reference_gap": 7.574885368347168
+      },
+      {
+        "budget": 16,
+        "count": 24,
+        "mean_reference_gap": 1.046996644921516,
+        "median_reference_gap": 0.7591018676757812,
+        "max_reference_gap": 2.9934182167053223
+      },
+      {
+        "budget": 24,
+        "count": 24,
+        "mean_reference_gap": 0.7769882978500391,
+        "median_reference_gap": 0.00014825131802354008,
+        "max_reference_gap": 3.6808371543884277
+      },
+      {
+        "budget": 36,
+        "count": 24,
+        "mean_reference_gap": 0.000149826879351167,
+        "median_reference_gap": 9.294065966969356e-05,
+        "max_reference_gap": 0.0006419956916943192
+      }
+    ]
+  },
+  "cargo_fingerprints": [
+    {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\.fingerprint\\lab-search-033f47940a9b7b7b\\bin-lab-budget.json",
+      "sha256": "692cbae16094195262fdfb8771df4b4398954b75358acabb01219957f398a82a",
+      "features": [
+        "cli",
+        "default",
+        "experiment-budgeted-search",
+        "lab-scenario",
+        "scenario",
+        "serde_json"
+      ],
+      "rustflags": [
+        "-C",
+        "target-cpu=x86-64"
+      ]
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\.fingerprint\\lab-search-459dc475d651c42c\\bin-lab-budget.json",
+      "sha256": "002c249c1b21d9addbc9a096a5d4663e8c99ea86b635c69bfc96387712a7d687",
+      "features": [
+        "cli",
+        "default",
+        "experiment-budgeted-search",
+        "lab-scenario",
+        "scenario",
+        "serde_json"
+      ],
+      "rustflags": [
+        "-C",
+        "target-cpu=x86-64"
+      ]
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\.fingerprint\\lab-search-73525af3fb2bf91b\\test-lib-lab_search.json",
+      "sha256": "2f935cd094f4d32a522e21f4ab76cdc3212d2f5ac92fec7ea65d1e368863de33",
+      "features": [
+        "cli",
+        "default",
+        "experiment-budgeted-search",
+        "lab-scenario",
+        "scenario",
+        "serde_json"
+      ],
+      "rustflags": [
+        "-C",
+        "target-cpu=x86-64"
+      ]
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\.fingerprint\\lab-search-92feef38064170b7\\lib-lab_search.json",
+      "sha256": "b96da76ffccb01c1bb93c5177c3e92bde98bc0325062e38c7bea545b46302c5c",
+      "features": [
+        "experiment-budgeted-search"
+      ],
+      "rustflags": [
+        "-C",
+        "target-cpu=x86-64"
+      ]
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\.fingerprint\\lab-search-aed1ccc6ae4e3927\\lib-lab_search.json",
+      "sha256": "15b0958e927128ae8361ce5d27f2cb62ef935cc969c2086e863c69fd5d737c1e",
+      "features": [
+        "cli",
+        "default",
+        "experiment-budgeted-search",
+        "lab-scenario",
+        "scenario",
+        "serde_json"
+      ],
+      "rustflags": [
+        "-C",
+        "target-cpu=x86-64"
+      ]
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\.fingerprint\\lab-search-b00c23c3a639b0a5\\lib-lab_search.json",
+      "sha256": "15f0fb8a6e03941c3483d5925f3eda984ba217246fa48a66575d1e9ecc7c2721",
+      "features": [
+        "cli",
+        "default",
+        "experiment-budgeted-search",
+        "lab-scenario",
+        "scenario",
+        "serde_json"
+      ],
+      "rustflags": [
+        "-C",
+        "target-cpu=x86-64"
+      ]
+    },
+    {
+      "path": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\.fingerprint\\lab-search-d00f767d226bd43f\\test-lib-lab_search.json",
+      "sha256": "6c5569e9ac6da6d5de12d30fd771677dba441f7732a6f4e135480e155be31a15",
+      "features": [
+        "cli",
+        "default",
+        "lab-scenario",
+        "scenario",
+        "serde_json"
+      ],
+      "rustflags": [
+        "-C",
+        "target-cpu=x86-64"
+      ]
+    }
+  ],
+  "binary_sha256": "f224a113322e1640a264635c42b215d7544c199afa68585f7e2f06f3071c2af0",
+  "default_off": true,
+  "production_adopted": false,
+  "performance_measured": false,
+  "github_dispatched": false,
+  "scope": "Perfect information, existing evaluator, local opt0 tests. No PBS CFR, full-game exploitability or strength/speed claim.",
+  "documents": {
+    "README.md": "6d318c778a262af37d786ac09a484807133583cdf6502b84d56cddd36a1ae96b",
+    "RESULTS.md": "22c3f42182ca432c8d5e126789148a77e5f3e580bfdd0c1177bc68a8500ee594",
+    "SEARCH-LITERATURE.md": "7efb475041f88de55b8f04b958797a1664f81a12c0c8051ca15d877db46c2e0b",
+    "validate.py": "a11b408b782f481d8af159e02c5e2d645762646b06f1dc7657ce980a7c21d3e2"
+  }
+}

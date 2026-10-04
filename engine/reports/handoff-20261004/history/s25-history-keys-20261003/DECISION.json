@@ -1,0 +1,140 @@
+{
+  "state": "retain-experimental-candidate",
+  "name": "incrementally encoded private histories",
+  "flag": "pipeline.encoded_history",
+  "default_off": true,
+  "production_adopted": false,
+  "source_sha": "2bb9cf595f675d269406bbe783e88154ed517cb4",
+  "reason": "All 16 clean OFF/ON comparisons faster in bounded corpus with unchanged exported results, callbacks and work. Preserve as an opt-in candidate.",
+  "standalone_reduction_range": [
+    8.210187793679358,
+    14.417898832505315
+  ],
+  "added_to_all_four_reduction_range": [
+    9.695103129959504,
+    14.241519245512658
+  ],
+  "all_speed_intervals_below_one": true,
+  "all_speed_outside_descriptive_aa_envelope": true,
+  "memory_reduction_percent": {
+    "narrow-w1-d3": {
+      "history": {
+        "allocations": 8.35462310650048,
+        "requested_growth_bytes": 2.0359718216273803,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.030562347188256567
+      },
+      "all-history": {
+        "allocations": 8.648323761186061,
+        "requested_growth_bytes": 2.0487230421912805,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 0.09074410163338875
+      }
+    },
+    "narrow-w1-d3-cadence1": {
+      "history": {
+        "allocations": 6.9081035522055245,
+        "requested_growth_bytes": 1.6653983025542662,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.05867683731846096
+      },
+      "all-history": {
+        "allocations": 7.8243006464866145,
+        "requested_growth_bytes": 1.7051431522648874,
+        "peak_above_baseline_bytes": -0.015524488837903583,
+        "process_peak_rss_kib": 0.7326661901358111
+      }
+    },
+    "pivot-w1-d1": {
+      "history": {
+        "allocations": 9.556221506678996,
+        "requested_growth_bytes": 2.76763637146753,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 1.0720111862036807
+      },
+      "all-history": {
+        "allocations": 9.607525761630797,
+        "requested_growth_bytes": 2.770193791849984,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 1.688251618871417
+      }
+    },
+    "sand-damage-w1-d1": {
+      "history": {
+        "allocations": 16.461753098916944,
+        "requested_growth_bytes": 7.659541651612556,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.1073125862333324
+      },
+      "all-history": {
+        "allocations": 16.46412080276155,
+        "requested_growth_bytes": 7.719629105083536,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -5.577164366373899
+      }
+    },
+    "stats-w1-d2": {
+      "history": {
+        "allocations": 6.801433977295357,
+        "requested_growth_bytes": 0.4498844087558407,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 0.05083884087442314
+      },
+      "all-history": {
+        "allocations": 6.976890376621647,
+        "requested_growth_bytes": 0.45060075685120493,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.5012150668286752
+      }
+    },
+    "stats-w2-d2": {
+      "history": {
+        "allocations": 6.96538780601168,
+        "requested_growth_bytes": 0.4664835966265657,
+        "peak_above_baseline_bytes": 0.006961000141847418,
+        "process_peak_rss_kib": 0.1149665551839485
+      },
+      "all-history": {
+        "allocations": 7.114426565119758,
+        "requested_growth_bytes": 0.4665602459711149,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.21073509359117448
+      }
+    },
+    "stats-w4-d2": {
+      "history": {
+        "allocations": 7.033149827715945,
+        "requested_growth_bytes": 0.47151183459555046,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": 0.030823765122911517
+      },
+      "all-history": {
+        "allocations": 7.170647106685479,
+        "requested_growth_bytes": 0.4717500784835349,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.37384881918482993
+      }
+    },
+    "stats-w4-d2-cadence1": {
+      "history": {
+        "allocations": 6.688770470423055,
+        "requested_growth_bytes": 0.45275711316608014,
+        "peak_above_baseline_bytes": -5.001587795039342e-05,
+        "process_peak_rss_kib": 0.014997000599881183
+      },
+      "all-history": {
+        "allocations": 7.061831789377826,
+        "requested_growth_bytes": 0.45462675625489446,
+        "peak_above_baseline_bytes": 0.0,
+        "process_peak_rss_kib": -0.10945908966524254
+      }
+    }
+  },
+  "limitations": [
+    "Single runner session for new history option; not an all-game speed guarantee",
+    "Peak requested heap is essentially unchanged despite fewer allocations",
+    "Sand combined RSS median rises in this session; allocation counts are not RSS guarantees",
+    "No cross-version same-runner OFF overhead control yet",
+    "Emulated non-AVX2 rather than physical old CPU; no win-rate evaluation"
+  ]
+}

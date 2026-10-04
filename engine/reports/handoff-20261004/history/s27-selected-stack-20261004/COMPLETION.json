@@ -1,0 +1,33 @@
+{
+  "complete": true,
+  "run_id": 37173941021,
+  "source_sha": "8c1bd43c0589ea74b99de439f38ae6f24cf87fd5",
+  "elapsed_ci_seconds": 352,
+  "immutable_published_source": true,
+  "shared_git_unchanged": true,
+  "library_unchanged": true,
+  "measured_cases": 10,
+  "faster_cases": 9,
+  "slower_cases": 1,
+  "all_result_work_witnesses_equal": true,
+  "completed_tasks": [
+    "S26k-direct-selected-stack-comparison",
+    "S26l-major-bottleneck-selection"
+  ],
+  "open_tasks": [
+    "S26k-history-off-regression",
+    "S26l-tiny-stack-regression",
+    "S26m-engine-observation-batch"
+  ],
+  "next_optimization_implemented": false,
+  "production_adopted": false,
+  "win_rates_evaluated": false,
+  "vault_new_notes": 5,
+  "vault_total_notes": 3805,
+  "vault_new_errors": 0,
+  "vault_new_stale_references": 0,
+  "inherited_vault_errors": 14,
+  "inherited_vault_stale_references": 1069,
+  "strict_global_vault_pass": false,
+  "vault_gitignored": true
+}

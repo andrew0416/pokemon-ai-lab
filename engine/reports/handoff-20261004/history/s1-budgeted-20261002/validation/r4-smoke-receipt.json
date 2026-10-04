@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "phase": "smoke",
+  "revision": "r4",
+  "passed": true,
+  "profile": "opt0 generic x86-64",
+  "performance_measurement": false,
+  "checks": [
+    {
+      "name": "cli-help",
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\lab-budget.exe",
+        "--help"
+      ],
+      "returncode": 0,
+      "expected": 0,
+      "timed_out": false,
+      "passed": true,
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r4-cli-help.log",
+      "sha256": "3d2ccf999ea8c31e5ff9301ad7d0633451928d586dd427bd5ccd2de06f4850c9"
+    },
+    {
+      "name": "cli-no-policy",
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\lab-budget.exe",
+        "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\source\\engine\\oracle\\scenarios\\eject-button-uturn.json",
+        "--position",
+        "0",
+        "--depth",
+        "1",
+        "--budget",
+        "0",
+        "--rolls",
+        "median"
+      ],
+      "returncode": 1,
+      "expected": 1,
+      "timed_out": false,
+      "passed": true,
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r4-cli-no-policy.log",
+      "sha256": "05e9a2ad8ea896ccf94987dfcd78892c088be0b1ec85f5638833ec3450716a69"
+    },
+    {
+      "name": "cli-policy",
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\lab-budget.exe",
+        "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\source\\engine\\oracle\\scenarios\\eject-button-uturn.json",
+        "--position",
+        "0",
+        "--depth",
+        "1",
+        "--budget",
+        "1000",
+        "--rolls",
+        "median"
+      ],
+      "returncode": 0,
+      "expected": 0,
+      "timed_out": false,
+      "passed": true,
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r4-cli-policy.log",
+      "sha256": "1de035abd19833aac58c32618095cba51020bc7e860be5272aef42012f11c4c8"
+    },
+    {
+      "name": "cli-p2",
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\target\\debug\\lab-budget.exe",
+        "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\source\\engine\\oracle\\scenarios\\eject-button-uturn.json",
+        "--position",
+        "0",
+        "--side",
+        "p2",
+        "--depth",
+        "1",
+        "--budget",
+        "1000",
+        "--rolls",
+        "median"
+      ],
+      "returncode": 0,
+      "expected": 0,
+      "timed_out": false,
+      "passed": true,
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r4-cli-p2.log",
+      "sha256": "3fedc660b5a07896a0f6b1f817292fa021656f1f7a374de58eea02c13fec8eaa"
+    }
+  ]
+}

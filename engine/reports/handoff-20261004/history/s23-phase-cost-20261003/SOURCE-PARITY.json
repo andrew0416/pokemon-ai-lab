@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "parent": "70d5b0b463dc2cab2deb365c67ffcb2e2e7f95b8",
+  "production_engine_unchanged": true,
+  "default_off": true,
+  "changed_sha256": {
+    ".github/workflows/engine-s26h-phases.yml": "a84ed534936821678abacf90025e33ff2c3cbb7c3e11e6fc4a00f51f47f39e9f",
+    "engine/benchmarks/s26_phases/README.md": "66ba4329eca4dbe29112e5931ea9c53265dc896a26fd49fa25e2bb99e7916713",
+    "engine/benchmarks/s26_phases/plan.json": "2761a2f634fd75d0b8620a394f3b40453de3076790ff0d8510d6e2eab3947104",
+    "engine/benchmarks/s26_phases/run.py": "5c01967f3c627ef62ec546c99ceaeb2e50508a4d28b9e78a61775d55efaf9c7b",
+    "engine/search/Cargo.toml": "da8325a42932f98c53db88cb214644db36f6132be1131ca89d6bc03f8c426985",
+    "engine/search/src/bayesian/tree.rs": "b4425ca541e82a2fc7661bc2770d35950fa82dbf05165381d8cf4a5bffcac1df",
+    "engine/search/src/bayesian/tree/builder/growing.rs": "cfbe7c782b0368fc76b7c5d89c27e80c07cb54b6957ef6aa6d261dd1762e18de",
+    "engine/search/src/bayesian/tree/builder/growing/reuse/paper.rs": "329aed5dff6e904f32c85a166e6f3e5f144bcc9a399795b43567a413a4c748c7",
+    "engine/search/src/bayesian/tree/builder/growing/reuse/pipeline.rs": "3da0d7c36f8e3c04f452f05db7de10f304a3288850329525cf9f8f9486d68b5a",
+    "engine/search/src/bayesian/tree/phase_cost.rs": "4647e64582cbec1450fb72069714d8bb74aae8643aff17d60cca9dc296a0870c",
+    "engine/search/src/bayesian/tree/workspace/cached/paper.rs": "2ebb4dde77722322b8e869f7a19e390f806026b58f28bd4614655e3604d07b69",
+    "engine/search/src/bayesian/tree/workspace/cached/paper/pipeline.rs": "fcb3ace5079644a6dbef6f853b1009b2f44c2c403e64ce01e0feefb19ade4949",
+    "engine/search/src/bin/lab-phase-speed.rs": "6982792c347c8f2ec0fbecb00ec2ecbcd0ced3ce738797320836d64eb0aa05ed"
+  },
+  "inherited_unchanged": 4201
+}

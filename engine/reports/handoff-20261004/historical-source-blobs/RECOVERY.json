@@ -1,0 +1,195 @@
+{
+  "recovered": [
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/core/src/turn/abilities.rs",
+      "sha256": "d51345aa873382dc0e2b995741e623439cafdda0fa29377063b6618a06be1ea4",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/d51345aa873382dc0e2b995741e623439cafdda0fa29377063b6618a06be1ea4/abilities.rs",
+      "method": "pinned-git-commit:crlf",
+      "references": 123,
+      "bytes": 128924,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/d51345aa873382dc0e2b995741e623439cafdda0fa29377063b6618a06be1ea4/abilities.rs"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/core/src/turn/battle.rs",
+      "sha256": "f9e3a11ffe8790df41914d960d4480675f199738eaa9eef3ed22c1f6c503e0b7",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/f9e3a11ffe8790df41914d960d4480675f199738eaa9eef3ed22c1f6c503e0b7/battle.rs",
+      "method": "pinned-git-commit:crlf",
+      "references": 151,
+      "bytes": 114247,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/f9e3a11ffe8790df41914d960d4480675f199738eaa9eef3ed22c1f6c503e0b7/battle.rs"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/core/src/turn/lock.rs",
+      "sha256": "1a5c97b5bad9ed82a528d63d80916040e6a87ce5cf2c4ac8f930577f011fdd39",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/1a5c97b5bad9ed82a528d63d80916040e6a87ce5cf2c4ac8f930577f011fdd39/lock.rs",
+      "method": "pinned-git-commit:crlf",
+      "references": 9,
+      "bytes": 4397,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/1a5c97b5bad9ed82a528d63d80916040e6a87ce5cf2c4ac8f930577f011fdd39/lock.rs"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/core/src/turn/moves.rs",
+      "sha256": "2f1b7ba341fd0cbd4447b268c554dbf8d4620db8145c1ae82c601397c54280f1",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/2f1b7ba341fd0cbd4447b268c554dbf8d4620db8145c1ae82c601397c54280f1/moves.rs",
+      "method": "pinned-git-commit:crlf",
+      "references": 124,
+      "bytes": 197808,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/2f1b7ba341fd0cbd4447b268c554dbf8d4620db8145c1ae82c601397c54280f1/moves.rs"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/core/src/turn/moves/ability_hooks.rs",
+      "sha256": "05b7cfd73d51fba1a6c801a94224efb8dbca85fa5ccc6aa775786c915d396240",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/05b7cfd73d51fba1a6c801a94224efb8dbca85fa5ccc6aa775786c915d396240/ability_hooks.rs",
+      "method": "pinned-git-commit:crlf",
+      "references": 17,
+      "bytes": 37590,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/05b7cfd73d51fba1a6c801a94224efb8dbca85fa5ccc6aa775786c915d396240/ability_hooks.rs"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/scenario/src/parity.rs",
+      "sha256": "2d5acb764ab3cdeb340afea45bfb1b37988fc1943b05b3cfc87c30b08599e39c",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/2d5acb764ab3cdeb340afea45bfb1b37988fc1943b05b3cfc87c30b08599e39c/parity.rs",
+      "method": "pinned-git-commit:crlf",
+      "references": 13,
+      "bytes": 9213,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/2d5acb764ab3cdeb340afea45bfb1b37988fc1943b05b3cfc87c30b08599e39c/parity.rs"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/scenario/tests/refusals_rr.rs",
+      "sha256": "f791b990035d58a10c377323b0dec7e2487835f704c360d30989a80638af0280",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/f791b990035d58a10c377323b0dec7e2487835f704c360d30989a80638af0280/refusals_rr.rs",
+      "method": "pinned-git-commit:crlf",
+      "references": 1,
+      "bytes": 9332,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/f791b990035d58a10c377323b0dec7e2487835f704c360d30989a80638af0280/refusals_rr.rs"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/search/src/game.rs",
+      "sha256": "722b35b635056b14f40c5c981c0d02ab348c4495a04ecbe68d80ea4d7ddb6db2",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/722b35b635056b14f40c5c981c0d02ab348c4495a04ecbe68d80ea4d7ddb6db2/game.rs",
+      "method": "pinned-git-commit:crlf",
+      "references": 20,
+      "bytes": 11947,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/722b35b635056b14f40c5c981c0d02ab348c4495a04ecbe68d80ea4d7ddb6db2/game.rs"
+    },
+    {
+      "original_path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/experiments/github-benchmark-20260929/repo/engine/benchmarks/paired/ci.py",
+      "sha256": "3c5f5718dcea93f47630fc16cc4290542463cb9cf889b056f4239d47b8f008a4",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/3c5f5718dcea93f47630fc16cc4290542463cb9cf889b056f4239d47b8f008a4/ci.py",
+      "method": "git-history:588cb592786ec5391f3f2a69537fff6eb41a2f75:crlf",
+      "references": 2,
+      "bytes": 21995,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/3c5f5718dcea93f47630fc16cc4290542463cb9cf889b056f4239d47b8f008a4/ci.py"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/scripts/refusals.classification.json",
+      "sha256": "dc0f027b47a255d83b513b1299a486da4d8366c0d1017e850b32080bebd85c0e",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/dc0f027b47a255d83b513b1299a486da4d8366c0d1017e850b32080bebd85c0e/refusals.classification.json",
+      "method": "pinned-git-commit:crlf",
+      "references": 1,
+      "bytes": 83922,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/dc0f027b47a255d83b513b1299a486da4d8366c0d1017e850b32080bebd85c0e/refusals.classification.json"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/CONTEXT.md",
+      "sha256": "02a8b1409d295f87774ec563252c8de1697064a9e94e1bce0eb2a693c36a5885",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/02a8b1409d295f87774ec563252c8de1697064a9e94e1bce0eb2a693c36a5885/CONTEXT.md",
+      "method": "pinned-git-commit:crlf",
+      "references": 6,
+      "bytes": 92019,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/02a8b1409d295f87774ec563252c8de1697064a9e94e1bce0eb2a693c36a5885/CONTEXT.md"
+    },
+    {
+      "original_path": "D:/pokemon-ai-lab/engine/REFUSALS.md",
+      "sha256": "7c6477b65fc274f97a5d309f193bb2b94dfd042564c69805338e8ddb7c5cbea6",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/7c6477b65fc274f97a5d309f193bb2b94dfd042564c69805338e8ddb7c5cbea6/REFUSALS.md",
+      "method": "pinned-git-commit:crlf",
+      "references": 1,
+      "bytes": 89862,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/7c6477b65fc274f97a5d309f193bb2b94dfd042564c69805338e8ddb7c5cbea6/REFUSALS.md"
+    },
+    {
+      "original_path": "D:/tools/prog/projects/pokemon-ai-lab/lab-engine/progress.jsonl",
+      "sha256": "1f26f723b77b3da0860b8341c94dd6e979279b0a4a21412d568a252d22fbbbc2",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/1f26f723b77b3da0860b8341c94dd6e979279b0a4a21412d568a252d22fbbbc2/progress.jsonl",
+      "method": "original-size-prefix:raw",
+      "references": 297,
+      "bytes": 138439,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/1f26f723b77b3da0860b8341c94dd6e979279b0a4a21412d568a252d22fbbbc2/progress.jsonl"
+    },
+    {
+      "original_path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/experiments/p14-matrix-pass-through-20260930/README.md",
+      "sha256": "f5480ea7cedccd119285210559956315d659f6eac145fdf7b9a804b2b34699e7",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/f5480ea7cedccd119285210559956315d659f6eac145fdf7b9a804b2b34699e7/README.md",
+      "method": "original-size-prefix:raw",
+      "references": 1,
+      "bytes": 7291,
+      "old_snapshot_commits": [
+        "bc4fb5ef7d1aaa2400edd34931071ec6f0b64781"
+      ],
+      "portable_path": "historical-source-blobs/f5480ea7cedccd119285210559956315d659f6eac145fdf7b9a804b2b34699e7/README.md"
+    },
+    {
+      "original_path": "D:/tools/prog/projects/pokemon-ai-lab/lab-engine/tasks.yaml",
+      "sha256": "36a2ca363c3b48cc7a850a44576249005b2eb61084dac53a49c12fa2551ec2c1",
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/handoff-20261004/evidence-archive/36a2ca363c3b48cc7a850a44576249005b2eb61084dac53a49c12fa2551ec2c1/tasks.yaml",
+      "method": "verified-backup-prefix:D:/pokemon-ai-lab-chat-workspace/experiments/p17-factored-frontier-20261001/board-before.yaml",
+      "references": 297,
+      "bytes": 91330,
+      "old_snapshot_commits": [
+        "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26"
+      ],
+      "portable_path": "historical-source-blobs/36a2ca363c3b48cc7a850a44576249005b2eb61084dac53a49c12fa2551ec2c1/tasks.yaml"
+    }
+  ],
+  "unresolved": [
+    {
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/experiments/p8c-github-20260929/README.md",
+      "expected": "e013a0412b951cc2e163bc96a7b68fa1a1821968383b7d327a12f566f0462c04",
+      "bytes": 2898,
+      "references": 6
+    }
+  ],
+  "same_bytes": true,
+  "hashes_not_refreshed": true,
+  "meaning": "Historical evidence, not a revalidation of the latest production code."
+}

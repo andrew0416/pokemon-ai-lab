@@ -1,0 +1,20 @@
+{
+  "source_sha": "b10b08477f196ce0b9b361fa7878e311fdf1d4c8",
+  "run_id": 37119405706,
+  "production_adopted": false,
+  "strongest_consistent_candidate": "LCFR + sequence kernel; original periodic32 and cadence4 retained",
+  "sequence_six_case_reduction_percent": [
+    1.9916019087603987,
+    3.98464176657104
+  ],
+  "sequence_all_six_within_runner_intervals_faster": true,
+  "policy_gate": "conditional: stats fixtures save solves, pivot/narrow regress; no universal enable",
+  "warm": "conditional: same-rule cold simultaneous CFR gains on stats, regressions on narrow3turn; still slower than S19 LCFR on the tested end-to-end fixtures",
+  "rules": "conditional: DCFR/SAP/HS reduce solver cost in selected cases, but can regress in shallow low-iteration end-to-end cases",
+  "next_candidates": [
+    "replicate LCFR sequence results on another runner session before default adoption",
+    "test sequence + certified policy gate with the same LCFR rule independently",
+    "evaluate tighter gaps end-to-end rather than generalizing fixed-tree speedups"
+  ],
+  "fixed_max_warning": "99.76% is sand fixed-tree gap .01 with SAP + matrix; excludes engine construction and is not an end-to-end gain"
+}

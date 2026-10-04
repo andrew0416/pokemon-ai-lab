@@ -1,0 +1,21 @@
+{
+  "id": 37123954718,
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/andrew0416/pokemon-ai-lab/actions/runs/37123954718",
+  "created_at": "2026-10-03T12:46:24Z",
+  "run_started_at": "2026-10-03T12:46:24Z",
+  "updated_at": "2026-10-03T12:53:10Z",
+  "head_sha": "70d5b0b463dc2cab2deb365c67ffcb2e2e7f95b8",
+  "jobs": [
+    {
+      "id": 111205399003,
+      "name": "compare",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-03T12:46:28Z",
+      "completed_at": "2026-10-03T12:53:09Z",
+      "active_steps": []
+    }
+  ]
+}

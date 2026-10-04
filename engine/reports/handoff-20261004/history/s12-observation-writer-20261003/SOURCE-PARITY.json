@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "format_sites": 6,
+  "shared_allowlist": true,
+  "parent_sha256": "cbe6214572c752aa392b6bda155d872c850121f58dd6c1023c76660e0958073d",
+  "candidate_sha256": "24e4860ae5c26575547054ae9b11b131ab5a1f532c0cb6513ab10a798b12da01",
+  "proof": "Undo six append macro sites; original observer body Rust tokens, including string literals, are identical to frozen S11.",
+  "limitations": "Static equivalence of disclosure/control-flow and formatting arguments; runtime same-tree comparisons provide independent end-to-end checks."
+}

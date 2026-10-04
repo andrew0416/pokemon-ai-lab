@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "parent": "2bb9cf595f675d269406bbe783e88154ed517cb4",
+  "retained_library_byte_identical": true,
+  "production_engine_unchanged": true,
+  "default_off": true,
+  "inherited_unchanged": 4234,
+  "changed_sha256": {
+    ".github/workflows/engine-s26l-stack.yml": "3cdc7e4aa3df8de26583f5c1d95bbee466c6aa5e56e4639f69d2b75ecb7092fe",
+    "engine/benchmarks/s26_stack/README.md": "0d66639b47be1149e64ac60c99ebaac3758496198b970ab499ec582b8163053d",
+    "engine/benchmarks/s26_stack/plan.json": "2cf3f1fe4d08f07bcfe73bb4d2a1abd58762744046082a8dd275bf64806c3102",
+    "engine/benchmarks/s26_stack/provenance.py": "eae5e414f9093a760fdfee99342b3b6ceefd22ae2f1c4deabf94af504750613c",
+    "engine/benchmarks/s26_stack/run.py": "39f65a8df1da8e57353c55d53d1f013f3e7df2a485e4e7026cc6f74f59a66260",
+    "engine/search/src/bin/lab-phase-speed.rs": "8b33f8e05a9c0ab2178ff4b4cd892c498e598275007f71bbe51bdc9f013c9bd4"
+  }
+}

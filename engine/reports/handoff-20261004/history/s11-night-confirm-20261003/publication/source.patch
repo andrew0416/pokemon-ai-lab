@@ -1,0 +1,1221 @@
+diff --git a/.github/workflows/engine-s26c-confirm.yml b/.github/workflows/engine-s26c-confirm.yml
+new file mode 100644
+index 0000000..cdb07fa
+--- /dev/null
++++ b/.github/workflows/engine-s26c-confirm.yml
+@@ -0,0 +1,64 @@
++name: S26c final broader confirmation
++on:
++  push:
++    branches: [codex/s26c-confirm-20261003]
++permissions:
++  contents: read
++concurrency:
++  group: s26c-confirm
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  CARGO_PROFILE_RELEASE_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  RAYON_NUM_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++jobs:
++  compare:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 25
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Correctness and portable release binary
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26c-confirm-results
++          cd engine
++          cargo clippy --locked -p lab-search --lib --bin lab-belief-workspace --bin lab-belief-workspace-speed --features experiment-belief-workspace -- -D warnings 2>&1 | tee ../s26c-confirm-results/clippy.log
++          cargo build --locked --release -p lab-search --bin lab-belief-workspace-speed --features experiment-belief-workspace 2>&1 | tee ../s26c-confirm-results/release-build.log
++          git rev-parse HEAD > ../s26c-confirm-results/source-sha.txt
++          rustc --version > ../s26c-confirm-results/rustc.txt
++      - name: Exact same-work paired comparison
++        run: python -B engine/benchmarks/s26_confirm/run.py --binary target-s25/release/lab-belief-workspace-speed --out s26c-confirm-results/paired
++      - name: Preserve evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26c-confirm-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26c-confirm-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_confirm/fixtures/atk.json b/engine/benchmarks/s26_confirm/fixtures/atk.json
+new file mode 100644
+index 0000000..bea26de
+--- /dev/null
++++ b/engine/benchmarks/s26_confirm/fixtures/atk.json
+@@ -0,0 +1,94 @@
++{
++  "description": "Hidden-stat timing variant: Clefable EV allocation differs.",
++  "format": "gen9championsdoublescustomgame",
++  "p1": {
++    "team": [
++      {
++        "species": "Weavile",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "spe": 2
++        },
++        "moves": [
++          "Speed Swap",
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Hitmontop",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "def": 2
++        },
++        "moves": [
++          "Psych Up",
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "p2": {
++    "team": [
++      {
++        "species": "Snorlax",
++        "item": "Lansat Berry",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "atk": 32,
++          "def": 30,
++          "spe": 4
++        },
++        "moves": [
++          "Swords Dance",
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Clefable",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Bold",
++        "evs": {
++          "hp": 32,
++          "def": 32,
++          "atk": 2
++        },
++        "moves": [
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "setupTurns": [
++    [
++      "move speedswap 1, move calmmind",
++      "move calmmind, move calmmind"
++    ]
++  ],
++  "patch": {
++    "p2": {
++      "Snorlax": {
++        "hp": 50
++      }
++    }
++  },
++  "turn": {
++    "p1": "move calmmind, move psychup 1",
++    "p2": "move swordsdance, move calmmind"
++  }
++}
+diff --git a/engine/benchmarks/s26_confirm/fixtures/narrow.json b/engine/benchmarks/s26_confirm/fixtures/narrow.json
+new file mode 100644
+index 0000000..e32aeb0
+--- /dev/null
++++ b/engine/benchmarks/s26_confirm/fixtures/narrow.json
+@@ -0,0 +1,87 @@
++{
++  "description": "Narrow three-turn timing fixture: one Calm Mind user, one Psych Up/Calm Mind user, two opponent setup moves.",
++  "format": "gen9championsdoublescustomgame",
++  "p1": {
++    "team": [
++      {
++        "species": "Weavile",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "spe": 2
++        },
++        "moves": [
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Hitmontop",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "def": 2
++        },
++        "moves": [
++          "Psych Up",
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "p2": {
++    "team": [
++      {
++        "species": "Snorlax",
++        "item": "Lansat Berry",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "atk": 32,
++          "def": 30,
++          "spe": 4
++        },
++        "moves": [
++          "Swords Dance",
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Clefable",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Bold",
++        "evs": {
++          "hp": 32,
++          "def": 32,
++          "spd": 2
++        },
++        "moves": [
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "patch": {
++    "p2": {
++      "Snorlax": {
++        "hp": 50
++      }
++    }
++  },
++  "turn": {
++    "p1": "move calmmind, move calmmind",
++    "p2": "move swordsdance, move calmmind"
++  }
++}
+diff --git a/engine/benchmarks/s26_confirm/fixtures/spa.json b/engine/benchmarks/s26_confirm/fixtures/spa.json
+new file mode 100644
+index 0000000..73974ad
+--- /dev/null
++++ b/engine/benchmarks/s26_confirm/fixtures/spa.json
+@@ -0,0 +1,94 @@
++{
++  "description": "Hidden-stat timing variant: Clefable EV allocation differs.",
++  "format": "gen9championsdoublescustomgame",
++  "p1": {
++    "team": [
++      {
++        "species": "Weavile",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "spe": 2
++        },
++        "moves": [
++          "Speed Swap",
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Hitmontop",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "hp": 32,
++          "atk": 32,
++          "def": 2
++        },
++        "moves": [
++          "Psych Up",
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "p2": {
++    "team": [
++      {
++        "species": "Snorlax",
++        "item": "Lansat Berry",
++        "ability": "Honey Gather",
++        "nature": "Adamant",
++        "evs": {
++          "atk": 32,
++          "def": 30,
++          "spe": 4
++        },
++        "moves": [
++          "Swords Dance",
++          "Calm Mind"
++        ],
++        "level": 50
++      },
++      {
++        "species": "Clefable",
++        "item": "",
++        "ability": "Honey Gather",
++        "nature": "Bold",
++        "evs": {
++          "hp": 32,
++          "def": 32,
++          "spa": 2
++        },
++        "moves": [
++          "Calm Mind"
++        ],
++        "level": 50
++      }
++    ],
++    "order": "12"
++  },
++  "setupTurns": [
++    [
++      "move speedswap 1, move calmmind",
++      "move calmmind, move calmmind"
++    ]
++  ],
++  "patch": {
++    "p2": {
++      "Snorlax": {
++        "hp": 50
++      }
++    }
++  },
++  "turn": {
++    "p1": "move calmmind, move psychup 1",
++    "p2": "move swordsdance, move calmmind"
++  }
++}
+diff --git a/engine/benchmarks/s26_confirm/plan.json b/engine/benchmarks/s26_confirm/plan.json
+new file mode 100644
+index 0000000..659614d
+--- /dev/null
++++ b/engine/benchmarks/s26_confirm/plan.json
+@@ -0,0 +1,694 @@
++{
++  "rounds": 9,
++  "sample_ms": 100,
++  "cases": [
++    {
++      "id": "stats-w1-d2-same-work-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-same-work-seed7",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 7
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 7,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-same-work-seed31",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 31
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 31,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-vs-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "kind": "growing",
++          "id": "growing",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        },
++        {
++          "kind": "all-cached",
++          "id": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-same-work-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-same-work-seed7",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 7
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 7,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-same-work-seed31",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 31
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 31,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-vs-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "kind": "growing",
++          "id": "growing",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        },
++        {
++          "kind": "all-cached",
++          "id": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1-same-work-seed1",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1-vs-exhaustive",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "kind": "growing",
++          "id": "growing",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        },
++        {
++          "kind": "all-cached",
++          "id": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1-same-work-seed1",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1-vs-exhaustive",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "kind": "growing",
++          "id": "growing",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        },
++        {
++          "kind": "all-cached",
++          "id": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        }
++      ]
++    },
++    {
++      "id": "stats-w4-d2-same-work-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w4-d2-vs-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "kind": "growing",
++          "id": "growing",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        },
++        {
++          "kind": "all-cached",
++          "id": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        }
++      ]
++    },
++    {
++      "id": "narrow-w1-d3-same-work-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "all-cached",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "narrow-w1-d3-vs-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "kind": "growing",
++          "id": "growing",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        },
++        {
++          "kind": "all-cached",
++          "id": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "comparison": "same-finite-game"
++        }
++      ]
++    }
++  ]
++}
+diff --git a/engine/benchmarks/s26_confirm/run.py b/engine/benchmarks/s26_confirm/run.py
+new file mode 100644
+index 0000000..054271a
+--- /dev/null
++++ b/engine/benchmarks/s26_confirm/run.py
+@@ -0,0 +1,76 @@
++"""Bounded single-runner speed-only comparison; paired blocks, one release binary."""
++from pathlib import Path
++import argparse,copy,hashlib,json,math,os,platform,random,statistics,subprocess,sys,time
++
++def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8')
++def summarize(rows):
++    base=next(r['diagnostics'] for r in rows if r['type']=='baseline');results=[]
++    for validation in [r for r in rows if r['type']=='validation']:
++        variant=validation['variant'];pairs=[]
++        for r in rows:
++            if r['type']!='paired' or r['variant']!=variant['id']:continue
++            b=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='baseline')
++            c=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='candidate')
++            assert min(b,c)>0 and math.isfinite(b+c)
++            pairs.append(dict(block=r['block'],baseline_ms=b/1e6,candidate_ms=c/1e6,ratio=c/b))
++        rng=random.Random(261003);ratios=[p['ratio'] for p in pairs]
++        bootstrap=sorted(statistics.median(rng.choices(ratios,k=len(ratios))) for _ in range(4000))
++        ratio=statistics.median(ratios)
++        results.append(dict(variant=variant,diagnostics=validation['diagnostics'],pairs=pairs,
++            baseline_ms=statistics.median(p['baseline_ms'] for p in pairs),candidate_ms=statistics.median(p['candidate_ms'] for p in pairs),
++            ratio_median=ratio,time_reduction_percent=100*(1-ratio),speedup=1/ratio,
++            ratio_bootstrap95=[bootstrap[100],bootstrap[3899]],baseline_diagnostics=base,
++            comparison=variant.get('comparison','exact-same-work')))
++    return results
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
++    if not a.check and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Timing is restricted to the authorized GitHub runner; use --check locally.')
++    here=Path(__file__).resolve().parent;repo=here.parents[2];plan=json.loads((here/'plan.json').read_bytes());binary=a.binary.resolve()
++    a.out.mkdir(parents=True,exist_ok=False)
++    env=dict(os.environ,RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
++    metadata=dict(platform=platform.platform(),python=sys.version,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
++        source_sha=os.environ.get('GITHUB_SHA'),runner_os=os.environ.get('RUNNER_OS'),timing=not a.check,
++        mode='generic x86-64 release; one binary runtime selection',plan_sha256=hashlib.sha256((here/'plan.json').read_bytes()).hexdigest())
++    if not a.check:
++        allowed=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,{allowed[0]})
++        metadata.update(available_cpus=allowed,pinned_cpu=allowed[0],load_before=os.getloadavg(),
++            cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0],sample_scope='build + CFR to result; excludes loading/JSON/final result destruction')
++    write(a.out/'environment.json',metadata);all_results=[];statuses=[]
++    for case in plan['cases']:
++        request=copy.deepcopy(case)
++        for world in request['worlds']:world['scenario']=(repo/world['scenario']).as_posix()
++        request['rounds']=plan['rounds'];request['sample_ms']=plan['sample_ms']
++        path=a.out/(case['id']+'-request.json');write(path,request)
++        log=a.out/(case['id']+'-raw.jsonl');error=a.out/(case['id']+'-stderr.txt')
++        with log.open('wb') as stdout,error.open('wb') as stderr:
++            try:
++                run=subprocess.run([str(binary),'--check' if a.check else '--measure',str(path.resolve())],stdout=stdout,stderr=stderr,env=env,timeout=300)
++                code=run.returncode
++            except subprocess.TimeoutExpired:code=-999
++        status=dict(case=case['id'],exit_code=code)
++        if code==0:
++            rows=[json.loads(s) for s in log.read_text().splitlines()]
++            assert rows[-1]['type']==('checked' if a.check else 'completed')
++            if not a.check:
++                results=summarize(rows)
++                assert all(len(r['pairs'])==plan['rounds'] for r in results)
++                all_results.extend(dict(case=case['id'],**r) for r in results)
++        else:status['error']=error.read_text(errors='replace')[-3000:]
++        statuses.append(status);print(json.dumps(status),flush=True)
++    passed=all(s['exit_code']==0 for s in statuses)
++    summary=dict(passed=passed,timing=not a.check,paired_rounds=plan['rounds'],cases=statuses,results=all_results,
++        wins_evaluated=False,engine_unchanged=True,search_workspace_candidate=True,source_sha=os.environ.get('GITHUB_SHA'))
++    if not a.check:summary['load_after']=os.getloadavg()
++    write(a.out/'summary.json',summary)
++    if not a.check:
++        lines=['# S26c speed-only benchmark','',
++            'One generic x86-64 release binary; serial execution pinned to one runner CPU. Seven ABBA/BAAB blocks; three selection seeds where applicable.',
++            'Intervals describe paired block variability on this runner, not variability between machines. Same-work pairs preserve all counters; finite-game pairs preserve the entire canonical tree and policy but growing performs intermediate solves.','',
++            '| Case | Variant | Baseline ms | Candidate ms | Time reduction | Complete horizon |',
++            '|---|---|---:|---:|---:|---|']
++        for r in all_results:
++            lines.append(f"| {r['case']} | {r['variant']['id']} | {r['baseline_ms']:.3f} | {r['candidate_ms']:.3f} | {r['time_reduction_percent']:+.2f}% | {r['diagnostics']['horizon_complete']} |")
++        (a.out/'RESULTS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
++    raise SystemExit(0 if passed else 1)
++if __name__=='__main__':main()
+diff --git a/engine/search/src/bin/lab-belief-workspace-speed.rs b/engine/search/src/bin/lab-belief-workspace-speed.rs
+index bbec3a7..77f3acd 100644
+--- a/engine/search/src/bin/lab-belief-workspace-speed.rs
++++ b/engine/search/src/bin/lab-belief-workspace-speed.rs
+@@ -173,10 +173,70 @@ fn diagnostics(o: &Output) -> Value {
+         "solver_converged":o.solved.converged,"horizon_complete":o.complete,"growth":growth,
+         "root_policy":root_policy(o)})
+ }
+-fn validate(reference: &Output, o: &Output, _: &Value) -> Result<(), String> {
++// Full and growing builders assign different physical IDs. Canonical preorder removes
++// only this numbering; information keys, menus, chance probabilities and leaf values stay.
++fn canonical(t: &tree::Tree) -> String {
++    fn visit(n: usize, raw: &[tree::Node], out: &mut Vec<tree::Node>) -> usize {
++        let id = out.len();
++        out.push(tree::Node::Terminal(0.));
++        out[id] = match &raw[n] {
++            tree::Node::Terminal(v) => tree::Node::Terminal(*v),
++            tree::Node::Chance(edges) => tree::Node::Chance(
++                edges
++                    .iter()
++                    .map(|(p, c)| (*p, visit(*c, raw, out)))
++                    .collect(),
++            ),
++            tree::Node::Decision {
++                player,
++                information,
++                actions,
++                children,
++            } => tree::Node::Decision {
++                player: *player,
++                information: information.clone(),
++                actions: actions.clone(),
++                children: children.iter().map(|c| visit(*c, raw, out)).collect(),
++            },
++        };
++        id
++    }
++    let raw = t.export_nodes();
++    let mut out = Vec::new();
++    visit(t.root(), &raw, &mut out);
++    format!("{:?}|{:?}", t.worlds(), out)
++}
++fn semantic_policy(o: &Output) -> BTreeMap<String, Vec<u64>> {
++    o.built
++        .tree
++        .information()
++        .iter()
++        .enumerate()
++        .map(|(id, i)| {
++            (
++                i.key.clone(),
++                o.solved.policy[id].iter().map(|p| p.to_bits()).collect(),
++            )
++        })
++        .collect()
++}
++fn validate(reference: &Output, o: &Output, variant: &Value) -> Result<(), String> {
+     if !o.solved.converged {
+         return Err("requested solver tolerance was not met".into());
+     }
++    if variant["comparison"] == "same-finite-game" {
++        if !reference.complete || !o.complete {
++            return Err("incomplete requested horizon".into());
++        }
++        if canonical(&reference.built.tree) != canonical(&o.built.tree)
++            || semantic_policy(reference) != semantic_policy(o)
++            || format!("{:?}", reference.solved.assessment) != format!("{:?}", o.solved.assessment)
++            || reference.built.stats.transitions != o.built.stats.transitions
++        {
++            return Err("finite-game tree/policy/certificate parity failed".into());
++        }
++        return Ok(());
++    }
+     // Exact comparison of the entire policy, tree, observation metadata, best responses,
+     // stopping state and charged/committed work. This also covers partial/limited trees.
+     if format!("{:?}", reference.built.tree) != format!("{:?}", o.built.tree)

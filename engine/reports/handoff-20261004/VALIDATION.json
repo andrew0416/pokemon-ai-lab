@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "scope": "Handoff preparation only; no new engine build, correctness campaign or timing benchmark.",
+  "source_commit": "8c1bd43c0589ea74b99de439f38ae6f24cf87fd5",
+  "offline_reanalysis": {
+    "passed": true,
+    "archives_verified": 41,
+    "all_archive_crc_checked": true,
+    "cases": 10,
+    "paired_blocks": 288,
+    "compute_samples": 1152,
+    "phase_captures": 100,
+    "expected_output": "REPLAY-EXPECTED.json",
+    "expected_output_is_not_verifier_input": true
+  },
+  "portability": {
+    "passed": true,
+    "relocated_path_with_spaces": true,
+    "no_absolute_local_dependency": true,
+    "result_identical": true,
+    "changed_metadata_rejected": true,
+    "deep_archives_checked_in_original_run": true,
+    "scope": "Portable offline audit only; minimal source CLI/plan copied for identity check, not a new engine build"
+  },
+  "vault": {
+    "installed": true,
+    "files": 779,
+    "new_notes": 20,
+    "total_notes": 3825,
+    "repaired_source_references": 1063,
+    "repaired_historical_notes": 745,
+    "new_unexpected_errors": 0,
+    "remaining_global_errors": 2,
+    "remaining_stale_references": 6,
+    "strict_global_pass": false,
+    "gitignored": true,
+    "tracked_files": 0,
+    "source_hash_claim_line_preserved": true,
+    "production_git_unchanged": true,
+    "unselected_notes_unchanged": true
+  },
+  "vault_scope_delta": {
+    "passed": true,
+    "new_notes": 20,
+    "new_direct_evidence_valid": true,
+    "global_strict_pass": false,
+    "baseline_errors": 14,
+    "remaining_errors": 2,
+    "baseline_stale": 1069,
+    "remaining_stale": 6,
+    "repaired_references": 1063,
+    "repaired_historical_notes": 745,
+    "old_claim_hash_line_unchanged": true,
+    "new_unexpected_errors": 0,
+    "remaining_gap": "Unrecovered historical P8c README, not used by latest S27 inference chain",
+    "portable_reanalysis_passed": true
+  },
+  "remaining_gap": "Six references to an unrecovered historical P8c README. Whole-vault strict validation is false.",
+  "new_notes_have_valid_direct_sources_and_typed_links": true,
+  "engine_algorithms_modified_by_handoff": false,
+  "production_wip_merged": false,
+  "archive_content_safety_scope": "Packaging inspected ZIP members for unsafe paths, symlinks and high-confidence credential patterns; only original text-like evidence files were retained.",
+  "non_archive_credential_pattern_scan": {
+    "passed": true,
+    "files": 328,
+    "scope": "High-confidence private key/GitHub/AWS token patterns; not an exhaustive secret detector."
+  }
+}

@@ -1,0 +1,4945 @@
+diff --git a/.github/workflows/engine-s26c-workspace.yml b/.github/workflows/engine-s26c-workspace.yml
+new file mode 100644
+index 0000000..3043451
+--- /dev/null
++++ b/.github/workflows/engine-s26c-workspace.yml
+@@ -0,0 +1,75 @@
++name: S26c workspace exact parity and speed
++on:
++  push:
++    branches: [codex/s26c-workspace-20261003]
++permissions:
++  contents: read
++concurrency:
++  group: s26c-workspace
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  CARGO_PROFILE_RELEASE_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  RAYON_NUM_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++jobs:
++  compare:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 25
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Independent oracle dependencies
++        run: python -m pip install numpy==2.2.6 scipy==1.15.3
++      - name: Correctness and portable release binary
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26c-workspace-results
++          cd engine
++          cargo test --locked -p lab-search --lib --features experiment-belief-workspace,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26c-workspace-results/on.log
++          cargo test --locked -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26c-workspace-results/cli.log
++          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26c-workspace-results/off.log
++          cargo check --locked -p lab-search --lib --no-default-features --features experiment-belief-workspace 2>&1 | tee ../s26c-workspace-results/library.log
++          cargo clippy --locked -p lab-search --lib --bin lab-belief-workspace --bin lab-belief-workspace-speed --features experiment-belief-workspace -- -D warnings 2>&1 | tee ../s26c-workspace-results/clippy.log
++          cargo build --locked -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26c-workspace-results/debug-build.log
++          cargo build --locked --release -p lab-search --bin lab-belief-workspace-speed --features experiment-belief-workspace 2>&1 | tee ../s26c-workspace-results/release-build.log
++          git rev-parse HEAD > ../s26c-workspace-results/source-sha.txt
++          rustc --version > ../s26c-workspace-results/rustc.txt
++      - name: Independent full-tree LP certificates
++        run: python -B engine/benchmarks/s26_tree/check.py --binary target-s25/debug/lab-belief-workspace --out s26c-workspace-results/tree-lp
++      - name: Independent growing-tree LP certificates and rollback
++        run: python -B engine/benchmarks/s26_tree/growing_check.py --binary target-s25/debug/lab-belief-workspace --out s26c-workspace-results/growing-lp
++      - name: Exact same-work paired comparison
++        run: python -B engine/benchmarks/s26_workspace/run.py --binary target-s25/release/lab-belief-workspace-speed --out s26c-workspace-results/paired
++      - name: Preserve evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26c-workspace-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26c-workspace-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_workspace/plan.json b/engine/benchmarks/s26_workspace/plan.json
+new file mode 100644
+index 0000000..5000716
+--- /dev/null
++++ b/engine/benchmarks/s26_workspace/plan.json
+@@ -0,0 +1,665 @@
++{
++  "rounds": 7,
++  "sample_ms": 80,
++  "cases": [
++    {
++      "id": "stats-w1-d2-b4-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 4,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-b10000-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-b10000-seed7",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 7
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-b10000-seed31",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 31
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "id": "workspace",
++          "kind": "exhaustive-workspace"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-b4-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 4,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-b10000-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-b10000-seed7",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 7
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-b10000-seed31",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 31
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "id": "workspace",
++          "kind": "exhaustive-workspace"
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1-b10000-seed1",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1-exhaustive",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "id": "workspace",
++          "kind": "exhaustive-workspace"
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1-b10000-seed1",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place"
++        },
++        {
++          "kind": "workspace",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "workspace"
++        },
++        {
++          "kind": "combined",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "combined"
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1-exhaustive",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "id": "workspace",
++          "kind": "exhaustive-workspace"
++        }
++      ]
++    }
++  ]
++}
+diff --git a/engine/benchmarks/s26_workspace/run.py b/engine/benchmarks/s26_workspace/run.py
+new file mode 100644
+index 0000000..068fbfd
+--- /dev/null
++++ b/engine/benchmarks/s26_workspace/run.py
+@@ -0,0 +1,76 @@
++"""Bounded single-runner speed-only comparison; paired blocks, one release binary."""
++from pathlib import Path
++import argparse,copy,hashlib,json,math,os,platform,random,statistics,subprocess,sys,time
++
++def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8')
++def summarize(rows):
++    base=next(r['diagnostics'] for r in rows if r['type']=='baseline');results=[]
++    for validation in [r for r in rows if r['type']=='validation']:
++        variant=validation['variant'];pairs=[]
++        for r in rows:
++            if r['type']!='paired' or r['variant']!=variant['id']:continue
++            b=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='baseline')
++            c=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='candidate')
++            assert min(b,c)>0 and math.isfinite(b+c)
++            pairs.append(dict(block=r['block'],baseline_ms=b/1e6,candidate_ms=c/1e6,ratio=c/b))
++        rng=random.Random(261003);ratios=[p['ratio'] for p in pairs]
++        bootstrap=sorted(statistics.median(rng.choices(ratios,k=len(ratios))) for _ in range(4000))
++        ratio=statistics.median(ratios)
++        results.append(dict(variant=variant,diagnostics=validation['diagnostics'],pairs=pairs,
++            baseline_ms=statistics.median(p['baseline_ms'] for p in pairs),candidate_ms=statistics.median(p['candidate_ms'] for p in pairs),
++            ratio_median=ratio,time_reduction_percent=100*(1-ratio),speedup=1/ratio,
++            ratio_bootstrap95=[bootstrap[100],bootstrap[3899]],baseline_diagnostics=base,
++            comparison='exact-same-work'))
++    return results
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
++    if not a.check and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Timing is restricted to the authorized GitHub runner; use --check locally.')
++    here=Path(__file__).resolve().parent;repo=here.parents[2];plan=json.loads((here/'plan.json').read_bytes());binary=a.binary.resolve()
++    a.out.mkdir(parents=True,exist_ok=False)
++    env=dict(os.environ,RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
++    metadata=dict(platform=platform.platform(),python=sys.version,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
++        source_sha=os.environ.get('GITHUB_SHA'),runner_os=os.environ.get('RUNNER_OS'),timing=not a.check,
++        mode='generic x86-64 release; one binary runtime selection',plan_sha256=hashlib.sha256((here/'plan.json').read_bytes()).hexdigest())
++    if not a.check:
++        allowed=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,{allowed[0]})
++        metadata.update(available_cpus=allowed,pinned_cpu=allowed[0],load_before=os.getloadavg(),
++            cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0],sample_scope='build + CFR to result; excludes loading/JSON/final result destruction')
++    write(a.out/'environment.json',metadata);all_results=[];statuses=[]
++    for case in plan['cases']:
++        request=copy.deepcopy(case)
++        for world in request['worlds']:world['scenario']=(repo/world['scenario']).as_posix()
++        request['rounds']=plan['rounds'];request['sample_ms']=plan['sample_ms']
++        path=a.out/(case['id']+'-request.json');write(path,request)
++        log=a.out/(case['id']+'-raw.jsonl');error=a.out/(case['id']+'-stderr.txt')
++        with log.open('wb') as stdout,error.open('wb') as stderr:
++            try:
++                run=subprocess.run([str(binary),'--check' if a.check else '--measure',str(path.resolve())],stdout=stdout,stderr=stderr,env=env,timeout=300)
++                code=run.returncode
++            except subprocess.TimeoutExpired:code=-999
++        status=dict(case=case['id'],exit_code=code)
++        if code==0:
++            rows=[json.loads(s) for s in log.read_text().splitlines()]
++            assert rows[-1]['type']==('checked' if a.check else 'completed')
++            if not a.check:
++                results=summarize(rows)
++                assert all(len(r['pairs'])==plan['rounds'] for r in results)
++                all_results.extend(dict(case=case['id'],**r) for r in results)
++        else:status['error']=error.read_text(errors='replace')[-3000:]
++        statuses.append(status);print(json.dumps(status),flush=True)
++    passed=all(s['exit_code']==0 for s in statuses)
++    summary=dict(passed=passed,timing=not a.check,paired_rounds=plan['rounds'],cases=statuses,results=all_results,
++        wins_evaluated=False,engine_unchanged=True,search_workspace_candidate=True,source_sha=os.environ.get('GITHUB_SHA'))
++    if not a.check:summary['load_after']=os.getloadavg()
++    write(a.out/'summary.json',summary)
++    if not a.check:
++        lines=['# S26c speed-only benchmark','',
++            'One generic x86-64 release binary; serial execution pinned to one runner CPU. Seven ABBA/BAAB blocks; three selection seeds where applicable.',
++            'Intervals describe paired block variability on this runner, not variability between machines. Every candidate matches its reference tree, entire policy, certificate and work exactly.','',
++            '| Case | Variant | Baseline ms | Candidate ms | Time reduction | Complete horizon |',
++            '|---|---|---:|---:|---:|---|']
++        for r in all_results:
++            lines.append(f"| {r['case']} | {r['variant']['id']} | {r['baseline_ms']:.3f} | {r['candidate_ms']:.3f} | {r['time_reduction_percent']:+.2f}% | {r['diagnostics']['horizon_complete']} |")
++        (a.out/'RESULTS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
++    raise SystemExit(0 if passed else 1)
++if __name__=='__main__':main()
+diff --git a/engine/search/Cargo.toml b/engine/search/Cargo.toml
+index ecd6015..ca2b588 100644
+--- a/engine/search/Cargo.toml
++++ b/engine/search/Cargo.toml
+@@ -1,109 +1,120 @@
+-[package]
+-autotests = false
+-name = "lab-search"
+-version.workspace = true
+-edition.workspace = true
+-license.workspace = true
+-description = "Offline planning against a known team on lab-engine: legal choices, exact chance, maximin (DESIGN.md 탐색의 용도와 정보 모델)."
+-
+-[lib]
+-name = "lab_search"
+-path = "src/lib.rs"
+-
+-# The library depends on lab-engine only. The `lab-plan` binary needs the scenario loader
+-# (serde); it sits behind the default `cli` feature so hot-path users can turn it off with
+-# `default-features = false`.
+-[features]
+-default = ["cli"]
+-experiment-bayesian-cfr = ["experiment-budgeted-search"]
+-experiment-public-belief = ["experiment-bayesian-cfr"]
+-experiment-growing-belief = ["experiment-public-belief"]
+-experiment-budgeted-search = []
+-experiment-response-sweeps = ["experiment-budgeted-search"]
+-experiment-search-quality = ["experiment-budgeted-search", "cli"]
+-experiment-prepared-turn = ["lab-engine/experiment-prepared-turn"]
+-experiment-prepared-turn-observe = ["experiment-prepared-turn", "lab-engine/experiment-prepared-turn-observe"]
+-# `node`: positions stepped by choice strings over the scenario loader (the Python API's core,
+-# `engine/py`).
+-scenario = ["lab-scenario", "serde_json"]
+-cli = ["scenario"]
+-# P9 only: read completed flat turn endings at Next::Depth(0).
+-experiment-leaf-ending-states = ["lab-engine/experiment-leaf-ending-states"]
+-experiment-leaf-ending-observer = ["experiment-leaf-ending-states", "lab-engine/experiment-leaf-ending-observer"]
+-# P13 runtime and observer are independently opt-in so OFF/ON captures can be audited.
+-experiment-borrowed-child-keys = ["lab-engine/experiment-borrowed-child-keys"]
+-experiment-borrowed-child-keys-observer = []
+-
+-[dependencies]
+-lab-engine = { path = "../core" }
+-lab-scenario = { path = "../scenario", optional = true }
+-# The worker pool of the payoff matrices and child batches (board S24p).
+-rayon = "1.10"
+-serde_json = { version = "1", optional = true }
+-
+-[dev-dependencies]
+-lab-scenario = { path = "../scenario" }
+-serde_json = "1"
+-
+-[[bin]]
+-name = "lab-plan"
+-path = "src/bin/lab-plan.rs"
+-required-features = ["cli"]
+-
+-[[bin]]
+-name = "lab-rollout"
+-path = "src/bin/lab-rollout.rs"
+-required-features = ["cli"]
+-
+-[[bin]]
+-name = "lab-parity"
+-path = "src/bin/lab-parity.rs"
+-required-features = ["cli"]
+-
+-[[bin]]
+-name = "lab-replay"
+-path = "src/bin/lab-replay.rs"
+-required-features = ["cli"]
+-
+-[[bin]]
+-name = "lab-budget"
+-path = "src/bin/lab-budget.rs"
+-required-features = ["cli", "experiment-budgeted-search"]
+-
+-[[bin]]
+-name = "lab-bayes"
+-path = "src/bin/lab-bayes.rs"
+-required-features = ["cli", "experiment-bayesian-cfr"]
+-
+-[[bin]]
+-name = "lab-belief"
+-path = "src/bin/lab-belief.rs"
+-required-features = ["cli", "experiment-public-belief"]
+-
+-[[bin]]
+-name = "lab-belief-speed"
+-path = "src/bin/lab-belief-speed.rs"
+-required-features = ["cli", "experiment-growing-belief"]
+-
+-[[bin]]
+-name = "lab-search-quality"
+-path = "src/bin/lab-search-quality.rs"
+-required-features = ["experiment-search-quality"]
+-
+-# Experiment: preserve tests while reducing integration-test executable count.
+-
+-[[test]]
+-name = "bundle_search_01"
+-path = "tests/bundle_search_01.rs"
+-
+-[[test]]
+-name = "bundle_search_02"
+-path = "tests/bundle_search_02.rs"
+-
+-[[test]]
+-name = "prepared_turn"
+-path = "tests/prepared_turn.rs"
+-
+-[[test]]
+-name = "borrowed_child_keys"
+-path = "tests/borrowed_child_keys.rs"
++[package]
++autotests = false
++name = "lab-search"
++version.workspace = true
++edition.workspace = true
++license.workspace = true
++description = "Offline planning against a known team on lab-engine: legal choices, exact chance, maximin (DESIGN.md 탐색의 용도와 정보 모델)."
++
++[lib]
++name = "lab_search"
++path = "src/lib.rs"
++
++# The library depends on lab-engine only. The `lab-plan` binary needs the scenario loader
++# (serde); it sits behind the default `cli` feature so hot-path users can turn it off with
++# `default-features = false`.
++[features]
++default = ["cli"]
++experiment-bayesian-cfr = ["experiment-budgeted-search"]
++experiment-public-belief = ["experiment-bayesian-cfr"]
++experiment-growing-belief = ["experiment-public-belief"]
++experiment-belief-workspace = ["experiment-growing-belief"]
++experiment-budgeted-search = []
++experiment-response-sweeps = ["experiment-budgeted-search"]
++experiment-search-quality = ["experiment-budgeted-search", "cli"]
++experiment-prepared-turn = ["lab-engine/experiment-prepared-turn"]
++experiment-prepared-turn-observe = ["experiment-prepared-turn", "lab-engine/experiment-prepared-turn-observe"]
++# `node`: positions stepped by choice strings over the scenario loader (the Python API's core,
++# `engine/py`).
++scenario = ["lab-scenario", "serde_json"]
++cli = ["scenario"]
++# P9 only: read completed flat turn endings at Next::Depth(0).
++experiment-leaf-ending-states = ["lab-engine/experiment-leaf-ending-states"]
++experiment-leaf-ending-observer = ["experiment-leaf-ending-states", "lab-engine/experiment-leaf-ending-observer"]
++# P13 runtime and observer are independently opt-in so OFF/ON captures can be audited.
++experiment-borrowed-child-keys = ["lab-engine/experiment-borrowed-child-keys"]
++experiment-borrowed-child-keys-observer = []
++
++[dependencies]
++lab-engine = { path = "../core" }
++lab-scenario = { path = "../scenario", optional = true }
++# The worker pool of the payoff matrices and child batches (board S24p).
++rayon = "1.10"
++serde_json = { version = "1", optional = true }
++
++[dev-dependencies]
++lab-scenario = { path = "../scenario" }
++serde_json = "1"
++
++[[bin]]
++name = "lab-plan"
++path = "src/bin/lab-plan.rs"
++required-features = ["cli"]
++
++[[bin]]
++name = "lab-rollout"
++path = "src/bin/lab-rollout.rs"
++required-features = ["cli"]
++
++[[bin]]
++name = "lab-parity"
++path = "src/bin/lab-parity.rs"
++required-features = ["cli"]
++
++[[bin]]
++name = "lab-replay"
++path = "src/bin/lab-replay.rs"
++required-features = ["cli"]
++
++[[bin]]
++name = "lab-budget"
++path = "src/bin/lab-budget.rs"
++required-features = ["cli", "experiment-budgeted-search"]
++
++[[bin]]
++name = "lab-bayes"
++path = "src/bin/lab-bayes.rs"
++required-features = ["cli", "experiment-bayesian-cfr"]
++
++[[bin]]
++name = "lab-belief"
++path = "src/bin/lab-belief.rs"
++required-features = ["cli", "experiment-public-belief"]
++
++[[bin]]
++name = "lab-belief-speed"
++path = "src/bin/lab-belief-speed.rs"
++required-features = ["cli", "experiment-growing-belief"]
++
++[[bin]]
++name = "lab-search-quality"
++path = "src/bin/lab-search-quality.rs"
++required-features = ["experiment-search-quality"]
++
++# Experiment: preserve tests while reducing integration-test executable count.
++
++[[test]]
++name = "bundle_search_01"
++path = "tests/bundle_search_01.rs"
++
++[[test]]
++name = "bundle_search_02"
++path = "tests/bundle_search_02.rs"
++
++[[test]]
++name = "prepared_turn"
++path = "tests/prepared_turn.rs"
++
++[[test]]
++name = "borrowed_child_keys"
++path = "tests/borrowed_child_keys.rs"
++
++[[bin]]
++name = "lab-belief-workspace-speed"
++path = "src/bin/lab-belief-workspace-speed.rs"
++required-features = ["cli", "experiment-belief-workspace"]
++
++[[bin]]
++name = "lab-belief-workspace"
++path = "src/bin/lab-belief-workspace.rs"
++required-features = ["cli", "experiment-belief-workspace"]
+diff --git a/engine/search/src/bayesian/tree.rs b/engine/search/src/bayesian/tree.rs
+index 8ea6c38..3c3b0f4 100644
+--- a/engine/search/src/bayesian/tree.rs
++++ b/engine/search/src/bayesian/tree.rs
+@@ -1,568 +1,570 @@
+-//! Bounded extensive-form CFR with perfect recall and strategy-induced public beliefs.
+-//!
+-//! Histories remain separate in the tree; indistinguishable decision histories share a
+-//! regret table. Simultaneous choices are represented sequentially WITHOUT disclosing the
+-//! first choice. The certificate is for this fully built, finite, fixed-leaf game only.
+-//! No independent perfect-information continuation solves or belief-independent neural
+-//! value claims are made. See `builder` and `engine` for observation contracts.
+-
+-pub mod builder;
+-pub mod engine;
+-use super::{labels, probability, strategy, Config, Error};
+-use std::collections::HashMap;
+-
+-#[derive(Clone, Debug)]
+-pub enum Node {
+-    Terminal(f64),
+-    Chance(Vec<(f64, usize)>),
+-    Decision {
+-        player: usize,
+-        information: String,
+-        actions: Vec<String>,
+-        children: Vec<usize>,
+-    },
+-}
+-#[derive(Clone, Debug)]
+-enum Compiled {
+-    Terminal(f64),
+-    Chance(Vec<(f64, usize)>),
+-    Decision { info: usize, children: Vec<usize> },
+-}
+-#[derive(Clone, Debug)]
+-pub struct Information {
+-    pub player: usize,
+-    pub key: String,
+-    pub actions: Vec<String>,
+-    pub nodes: Vec<usize>,
+-    /// Validated identical own information/action sequence at every member history.
+-    pub own_sequence: Vec<(usize, usize)>,
+-}
+-#[derive(Clone, Debug)]
+-pub struct Boundary {
+-    pub node: usize,
+-    pub world: usize,
+-    pub public: usize,
+-    pub private: [usize; 2],
+-}
+-#[derive(Clone, Debug)]
+-pub struct Tree {
+-    nodes: Vec<Compiled>,
+-    root: usize,
+-    order: Vec<usize>,
+-    information: Vec<Information>,
+-    scale: f64,
+-    pub(crate) worlds: Vec<String>,
+-    pub(crate) public_keys: Vec<String>,
+-    pub(crate) private_keys: Vec<String>,
+-    pub(crate) boundaries: Vec<Boundary>,
+-}
+-pub type Policy = Vec<Vec<f64>>;
+-
+-fn multiply(a: f64, b: f64) -> Result<f64, Error> {
+-    let v = a * b;
+-    if a > 0. && b > 0. && v == 0. {
+-        return Err(Error(
+-            "positive history reach underflow; history was not dropped".into(),
+-        ));
+-    }
+-    Ok(v)
+-}
+-
+-impl Tree {
+-    /// All nodes must form one reachable tree (no shared history nodes/cycles). Information
+-    /// keys can repeat only with the same owner, menu, and complete own action recall.
+-    pub fn new(raw: Vec<Node>, root: usize) -> Result<Self, Error> {
+-        if raw.is_empty() || root >= raw.len() {
+-            return Err(Error("invalid root".into()));
+-        }
+-        let mut nodes = Vec::with_capacity(raw.len());
+-        let mut information: Vec<Information> = Vec::new();
+-        let mut ids = HashMap::new();
+-        let mut scale = 0f64;
+-        for node in raw {
+-            nodes.push(match node {
+-                Node::Terminal(v) => {
+-                    if !v.is_finite() || v.abs() > f64::MAX / 8. {
+-                        return Err(Error("invalid terminal value".into()));
+-                    }
+-                    scale = scale.max(v.abs());
+-                    Compiled::Terminal(v)
+-                }
+-                Node::Chance(edges) => {
+-                    if edges.is_empty()
+-                        || edges
+-                            .iter()
+-                            .any(|(p, _)| !p.is_finite() || *p < 0. || *p > 1.)
+-                        || (edges.iter().map(|v| v.0).sum::<f64>() - 1.).abs() > 1e-10
+-                    {
+-                        return Err(Error("chance probabilities must sum to one".into()));
+-                    }
+-                    Compiled::Chance(edges)
+-                }
+-                Node::Decision {
+-                    player,
+-                    information: key,
+-                    actions,
+-                    children,
+-                } => {
+-                    if player > 1 || key.is_empty() || actions.len() != children.len() {
+-                        return Err(Error("invalid information/menu".into()));
+-                    }
+-                    labels(actions.iter().map(String::as_str), "action ID")?;
+-                    let info = if let Some(&i) = ids.get(&key) {
+-                        let existing: &Information = &information[i];
+-                        if existing.player != player || existing.actions != actions {
+-                            return Err(Error(format!("inconsistent information set: {key}")));
+-                        }
+-                        i
+-                    } else {
+-                        let i = information.len();
+-                        ids.insert(key.clone(), i);
+-                        information.push(Information {
+-                            player,
+-                            key,
+-                            actions,
+-                            nodes: Vec::new(),
+-                            own_sequence: Vec::new(),
+-                        });
+-                        i
+-                    };
+-                    Compiled::Decision { info, children }
+-                }
+-            });
+-        }
+-        let mut seen = vec![false; nodes.len()];
+-        let mut order = Vec::new();
+-        let mut stack = vec![(root, [Vec::new(), Vec::new()], 0usize)];
+-        while let Some((id, sequences, depth)) = stack.pop() {
+-            if id >= nodes.len() || seen[id] || depth > 512 {
+-                return Err(Error(
+-                    "tree has invalid/shared/cyclic nodes or exceeds depth 512".into(),
+-                ));
+-            }
+-            seen[id] = true;
+-            order.push(id);
+-            match &nodes[id] {
+-                Compiled::Terminal(_) => {}
+-                Compiled::Chance(edges) => {
+-                    for &(_, child) in edges.iter().rev() {
+-                        stack.push((child, sequences.clone(), depth + 1));
+-                    }
+-                }
+-                Compiled::Decision { info, children } => {
+-                    let i = &mut information[*info];
+-                    if i.nodes.is_empty() {
+-                        i.own_sequence = sequences[i.player].clone();
+-                    } else if i.own_sequence != sequences[i.player] {
+-                        return Err(Error(format!("imperfect recall in {}", i.key)));
+-                    }
+-                    i.nodes.push(id);
+-                    for (a, &child) in children.iter().enumerate().rev() {
+-                        let mut next = sequences.clone();
+-                        next[i.player].push((*info, a));
+-                        stack.push((child, next, depth + 1));
+-                    }
+-                }
+-            }
+-        }
+-        if seen.iter().any(|v| !*v) {
+-            return Err(Error("unreachable tree node".into()));
+-        }
+-        Ok(Self {
+-            nodes,
+-            root,
+-            order,
+-            information,
+-            scale: scale.max(f64::MIN_POSITIVE),
+-            worlds: Vec::new(),
+-            public_keys: Vec::new(),
+-            private_keys: Vec::new(),
+-            boundaries: Vec::new(),
+-        })
+-    }
+-    pub fn information(&self) -> &[Information] {
+-        &self.information
+-    }
+-    pub fn node_count(&self) -> usize {
+-        self.nodes.len()
+-    }
+-    /// Developer/oracle export, NOT an observation supplied to the playing agent.
+-    #[cfg(feature = "experiment-growing-belief")]
+-    pub fn export_nodes(&self) -> Vec<Node> {
+-        self.nodes
+-            .iter()
+-            .map(|n| match n {
+-                Compiled::Terminal(v) => Node::Terminal(*v),
+-                Compiled::Chance(e) => Node::Chance(e.clone()),
+-                Compiled::Decision { info, children } => Node::Decision {
+-                    player: self.information[*info].player,
+-                    information: self.information[*info].key.clone(),
+-                    actions: self.information[*info].actions.clone(),
+-                    children: children.clone(),
+-                },
+-            })
+-            .collect()
+-    }
+-    pub fn root(&self) -> usize {
+-        self.root
+-    }
+-    pub fn worlds(&self) -> &[String] {
+-        &self.worlds
+-    }
+-    pub fn boundaries(&self) -> &[Boundary] {
+-        &self.boundaries
+-    }
+-    pub fn information_at(&self, node: usize) -> Option<usize> {
+-        match self.nodes.get(node) {
+-            Some(Compiled::Decision { info, .. }) => Some(*info),
+-            _ => None,
+-        }
+-    }
+-    pub fn uniform(&self) -> Policy {
+-        self.information
+-            .iter()
+-            .map(|i| vec![1. / i.actions.len() as f64; i.actions.len()])
+-            .collect()
+-    }
+-    fn check_policy(&self, policy: &Policy) -> Result<(), Error> {
+-        if policy.len() != self.information.len() {
+-            return Err(Error("information policy count mismatch".into()));
+-        }
+-        for (i, p) in self.information.iter().zip(policy) {
+-            probability(p, i.actions.len())?;
+-        }
+-        Ok(())
+-    }
+-    fn values(&self, policy: &Policy) -> Vec<f64> {
+-        let mut values = vec![0.; self.nodes.len()];
+-        for &id in self.order.iter().rev() {
+-            values[id] = match &self.nodes[id] {
+-                Compiled::Terminal(v) => v / self.scale,
+-                Compiled::Chance(edges) => edges.iter().map(|(p, n)| p * values[*n]).sum(),
+-                Compiled::Decision { info, children } => children
+-                    .iter()
+-                    .zip(&policy[*info])
+-                    .map(|(n, p)| p * values[*n])
+-                    .sum(),
+-            };
+-        }
+-        values
+-    }
+-    /// `omit` removes that player's realization reach for counterfactual regret/BR.
+-    fn reach(&self, policy: &Policy, omit: Option<usize>) -> Result<Vec<f64>, Error> {
+-        let mut reach = vec![0.; self.nodes.len()];
+-        reach[self.root] = 1.;
+-        for &id in &self.order {
+-            match &self.nodes[id] {
+-                Compiled::Terminal(_) => {}
+-                Compiled::Chance(edges) => {
+-                    for &(p, n) in edges {
+-                        reach[n] = multiply(reach[id], p)?;
+-                    }
+-                }
+-                Compiled::Decision { info, children } => {
+-                    for (a, &n) in children.iter().enumerate() {
+-                        reach[n] = multiply(
+-                            reach[id],
+-                            if omit == Some(self.information[*info].player) {
+-                                1.
+-                            } else {
+-                                policy[*info][a]
+-                            },
+-                        )?;
+-                    }
+-                }
+-            }
+-        }
+-        Ok(reach)
+-    }
+-    pub fn assess(&self, policy: &Policy) -> Result<Assessment, Error> {
+-        self.check_policy(policy)?;
+-        let value = self.values(policy)[self.root] * self.scale;
+-        let upper = self.best_response(policy, 0)?.0;
+-        let lower = self.best_response(policy, 1)?.0;
+-        Ok(Assessment {
+-            value,
+-            lower,
+-            upper,
+-            gap: (upper - lower).max(0.),
+-        })
+-    }
+-    /// A pure best response with ONE chosen action per information set, including
+-    /// off-policy histories. Maximizing each physical node independently is invalid.
+-    pub fn best_response(
+-        &self,
+-        policy: &Policy,
+-        player: usize,
+-    ) -> Result<(f64, Vec<Option<usize>>), Error> {
+-        self.check_policy(policy)?;
+-        if player > 1 {
+-            return Err(Error("invalid player".into()));
+-        }
+-        let cf = self.reach(policy, Some(player))?;
+-        let mut work = Response {
+-            tree: self,
+-            policy,
+-            player,
+-            cf,
+-            memo: vec![None; self.nodes.len()],
+-            chosen: vec![None; self.information.len()],
+-            visiting: vec![false; self.information.len()],
+-        };
+-        let value = work.node(self.root)? * self.scale;
+-        Ok((value, work.chosen))
+-    }
+-    /// Diagnostics under the supplied strategy. Zero-reach public histories have no
+-    /// posterior (never an invented uniform belief). History weights retain hidden queued
+-    /// action alternatives even when those alternatives belong to the same world.
+-    pub fn public_beliefs(&self, policy: &Policy) -> Result<Vec<PublicBelief>, Error> {
+-        self.beliefs(policy, &self.public_keys, |b| Some(b.public))
+-    }
+-    /// A player's posterior also conditions on remembered own actions and private
+-    /// observations. Public belief alone is insufficient after a hidden own commitment.
+-    /// This works at horizon endpoints as well as at decision nodes.
+-    pub fn private_belief(
+-        &self,
+-        player: usize,
+-        key: &str,
+-        policy: &Policy,
+-    ) -> Result<Option<PublicBelief>, Error> {
+-        if player > 1 {
+-            return Err(Error("invalid belief owner".into()));
+-        }
+-        let id = self.private_keys.iter().position(|v| v == key);
+-        let keys = [key.to_owned()];
+-        let mut result = self.beliefs(policy, &keys, |b| {
+-            (Some(b.private[player]) == id).then_some(0)
+-        })?;
+-        let belief = result.remove(0);
+-        Ok((!belief.histories.is_empty()).then_some(belief))
+-    }
+-    fn beliefs(
+-        &self,
+-        policy: &Policy,
+-        keys: &[String],
+-        select: impl Fn(&Boundary) -> Option<usize>,
+-    ) -> Result<Vec<PublicBelief>, Error> {
+-        self.check_policy(policy)?;
+-        let reach = self.reach(policy, None)?;
+-        let values = self.values(policy);
+-        let mut result: Vec<_> = keys
+-            .iter()
+-            .enumerate()
+-            .map(|(id, key)| PublicBelief {
+-                id,
+-                key: key.clone(),
+-                reach: 0.,
+-                posterior: None,
+-                world_values: vec![None; self.worlds.len()],
+-                histories: Vec::new(),
+-            })
+-            .collect();
+-        let mut masses = vec![vec![0.; self.worlds.len()]; result.len()];
+-        let mut sums = masses.clone();
+-        for b in &self.boundaries {
+-            let Some(group) = select(b) else {
+-                continue;
+-            };
+-            let r = reach[b.node];
+-            let out = &mut result[group];
+-            out.reach += r;
+-            out.histories.push((b.node, r));
+-            masses[group][b.world] += r;
+-            if r > 0.0 {
+-                // Conditional averaging avoids multiplying a tiny world reach by a
+-                // small scaled payoff and then attempting to divide the underflow away.
+-                let alpha = r / masses[group][b.world];
+-                sums[group][b.world] += alpha * (values[b.node] - sums[group][b.world]);
+-            }
+-        }
+-        for (id, out) in result.iter_mut().enumerate() {
+-            if out.reach > 0. {
+-                out.posterior = Some(masses[id].iter().map(|v| v / out.reach).collect());
+-                for (w, v) in out.world_values.iter_mut().enumerate() {
+-                    if masses[id][w] > 0. {
+-                        *v = Some(sums[id][w] * self.scale);
+-                    }
+-                }
+-                for (_, r) in &mut out.histories {
+-                    *r /= out.reach;
+-                }
+-            }
+-        }
+-        Ok(result)
+-    }
+-}
+-
+-struct Response<'a> {
+-    tree: &'a Tree,
+-    policy: &'a Policy,
+-    player: usize,
+-    cf: Vec<f64>,
+-    memo: Vec<Option<f64>>,
+-    chosen: Vec<Option<usize>>,
+-    visiting: Vec<bool>,
+-}
+-impl Response<'_> {
+-    fn node(&mut self, id: usize) -> Result<f64, Error> {
+-        if let Some(v) = self.memo[id] {
+-            return Ok(v);
+-        }
+-        let v = match &self.tree.nodes[id] {
+-            Compiled::Terminal(v) => v / self.tree.scale,
+-            Compiled::Chance(edges) => {
+-                let mut v = 0.;
+-                for &(p, n) in edges {
+-                    v += p * self.node(n)?;
+-                }
+-                v
+-            }
+-            Compiled::Decision { info, children } => {
+-                let i = *info;
+-                if self.tree.information[i].player != self.player {
+-                    let mut v = 0.;
+-                    for (a, &n) in children.iter().enumerate() {
+-                        v += self.policy[i][a] * self.node(n)?;
+-                    }
+-                    v
+-                } else {
+-                    if self.chosen[i].is_none() {
+-                        if self.visiting[i] {
+-                            return Err(Error("cyclic information dependencies".into()));
+-                        }
+-                        self.visiting[i] = true;
+-                        let mut scores = vec![0.; children.len()];
+-                        for &member in &self.tree.information[i].nodes {
+-                            let Compiled::Decision { children, .. } = &self.tree.nodes[member]
+-                            else {
+-                                unreachable!()
+-                            };
+-                            for (a, &child) in children.iter().enumerate() {
+-                                scores[a] += self.cf[member] * self.node(child)?;
+-                            }
+-                        }
+-                        let sign = if self.player == 0 { 1. } else { -1. };
+-                        let mut best = 0;
+-                        for a in 1..scores.len() {
+-                            if sign * scores[a] > sign * scores[best] {
+-                                best = a;
+-                            }
+-                        }
+-                        self.chosen[i] = Some(best);
+-                        self.visiting[i] = false;
+-                    }
+-                    self.node(children[self.chosen[i].unwrap()])?
+-                }
+-            }
+-        };
+-        self.memo[id] = Some(v);
+-        Ok(v)
+-    }
+-}
+-
+-#[derive(Clone, Debug)]
+-pub struct Assessment {
+-    pub value: f64,
+-    pub lower: f64,
+-    pub upper: f64,
+-    pub gap: f64,
+-}
+-#[derive(Clone, Debug)]
+-pub struct PublicBelief {
+-    pub id: usize,
+-    pub key: String,
+-    pub reach: f64,
+-    pub posterior: Option<Vec<f64>>,
+-    pub world_values: Vec<Option<f64>>,
+-    pub histories: Vec<(usize, f64)>,
+-}
+-#[derive(Clone, Debug)]
+-pub struct Solution {
+-    pub policy: Policy,
+-    pub assessment: Assessment,
+-    pub iterations: usize,
+-    pub converged: bool,
+-}
+-
+-/// Full-tree alternating linear CFR. Each pass freezes all policies, accumulates the
+-/// counterfactual regret of ALL histories in an information set, then updates that side.
+-/// The average uses t * own realization reach ONCE per information set, not chance reach
+-/// or number of member histories. This distinction matters beyond a single matrix game.
+-pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
+-    if config.iterations == 0
+-        || config.iterations > 10_000_000
+-        || config.check_every == 0
+-        || !config.tolerance.is_finite()
+-        || config.tolerance < 0.
+-    {
+-        return Err(Error("invalid CFR configuration".into()));
+-    }
+-    let mut policy = tree.uniform();
+-    let mut regrets: Policy = policy.iter().map(|p| vec![0.; p.len()]).collect();
+-    let mut sums = regrets.clone();
+-    let mut total = vec![0.; policy.len()];
+-    for t in 1..=config.iterations {
+-        let weight = t as f64 / config.iterations as f64;
+-        for player in 0..2 {
+-            let values = tree.values(&policy);
+-            let cf = tree.reach(&policy, Some(player))?;
+-            let sign = if player == 0 { 1. } else { -1. };
+-            for (i, info) in tree.information.iter().enumerate() {
+-                if info.player == player {
+-                    for &node in &info.nodes {
+-                        let Compiled::Decision { children, .. } = &tree.nodes[node] else {
+-                            unreachable!()
+-                        };
+-                        for (a, &child) in children.iter().enumerate() {
+-                            regrets[i][a] +=
+-                                weight * cf[node] * sign * (values[child] - values[node]);
+-                        }
+-                    }
+-                }
+-            }
+-            for (i, info) in tree.information.iter().enumerate() {
+-                if info.player == player {
+-                    strategy(&regrets[i], &mut policy[i]);
+-                }
+-            }
+-        }
+-        for (i, info) in tree.information.iter().enumerate() {
+-            let mut own = 1.;
+-            for &(j, a) in &info.own_sequence {
+-                own = multiply(own, policy[j][a])?;
+-            }
+-            let w = multiply(weight, own)?;
+-            total[i] += w;
+-            for (s, &p) in sums[i].iter_mut().zip(&policy[i]) {
+-                *s += w * p;
+-            }
+-        }
+-        if t % config.check_every == 0 || t == config.iterations {
+-            let average: Policy = sums
+-                .iter()
+-                .enumerate()
+-                .map(|(i, p)| {
+-                    if total[i] > 0. {
+-                        p.iter().map(|v| v / total[i]).collect()
+-                    } else {
+-                        vec![1. / p.len() as f64; p.len()]
+-                    }
+-                })
+-                .collect();
+-            let assessment = tree.assess(&average)?;
+-            let converged = assessment.gap <= config.tolerance;
+-            if converged || t == config.iterations {
+-                return Ok(Solution {
+-                    policy: average,
+-                    assessment,
+-                    iterations: t,
+-                    converged,
+-                });
+-            }
+-        }
+-    }
+-    unreachable!()
+-}
+-
+-#[cfg(test)]
+-mod tests;
++//! Bounded extensive-form CFR with perfect recall and strategy-induced public beliefs.
++//!
++//! Histories remain separate in the tree; indistinguishable decision histories share a
++//! regret table. Simultaneous choices are represented sequentially WITHOUT disclosing the
++//! first choice. The certificate is for this fully built, finite, fixed-leaf game only.
++//! No independent perfect-information continuation solves or belief-independent neural
++//! value claims are made. See `builder` and `engine` for observation contracts.
++
++pub mod builder;
++pub mod engine;
++#[cfg(feature = "experiment-belief-workspace")]
++pub mod workspace;
++use super::{labels, probability, strategy, Config, Error};
++use std::collections::HashMap;
++
++#[derive(Clone, Debug)]
++pub enum Node {
++    Terminal(f64),
++    Chance(Vec<(f64, usize)>),
++    Decision {
++        player: usize,
++        information: String,
++        actions: Vec<String>,
++        children: Vec<usize>,
++    },
++}
++#[derive(Clone, Debug)]
++enum Compiled {
++    Terminal(f64),
++    Chance(Vec<(f64, usize)>),
++    Decision { info: usize, children: Vec<usize> },
++}
++#[derive(Clone, Debug)]
++pub struct Information {
++    pub player: usize,
++    pub key: String,
++    pub actions: Vec<String>,
++    pub nodes: Vec<usize>,
++    /// Validated identical own information/action sequence at every member history.
++    pub own_sequence: Vec<(usize, usize)>,
++}
++#[derive(Clone, Debug)]
++pub struct Boundary {
++    pub node: usize,
++    pub world: usize,
++    pub public: usize,
++    pub private: [usize; 2],
++}
++#[derive(Clone, Debug)]
++pub struct Tree {
++    nodes: Vec<Compiled>,
++    root: usize,
++    order: Vec<usize>,
++    information: Vec<Information>,
++    scale: f64,
++    pub(crate) worlds: Vec<String>,
++    pub(crate) public_keys: Vec<String>,
++    pub(crate) private_keys: Vec<String>,
++    pub(crate) boundaries: Vec<Boundary>,
++}
++pub type Policy = Vec<Vec<f64>>;
++
++fn multiply(a: f64, b: f64) -> Result<f64, Error> {
++    let v = a * b;
++    if a > 0. && b > 0. && v == 0. {
++        return Err(Error(
++            "positive history reach underflow; history was not dropped".into(),
++        ));
++    }
++    Ok(v)
++}
++
++impl Tree {
++    /// All nodes must form one reachable tree (no shared history nodes/cycles). Information
++    /// keys can repeat only with the same owner, menu, and complete own action recall.
++    pub fn new(raw: Vec<Node>, root: usize) -> Result<Self, Error> {
++        if raw.is_empty() || root >= raw.len() {
++            return Err(Error("invalid root".into()));
++        }
++        let mut nodes = Vec::with_capacity(raw.len());
++        let mut information: Vec<Information> = Vec::new();
++        let mut ids = HashMap::new();
++        let mut scale = 0f64;
++        for node in raw {
++            nodes.push(match node {
++                Node::Terminal(v) => {
++                    if !v.is_finite() || v.abs() > f64::MAX / 8. {
++                        return Err(Error("invalid terminal value".into()));
++                    }
++                    scale = scale.max(v.abs());
++                    Compiled::Terminal(v)
++                }
++                Node::Chance(edges) => {
++                    if edges.is_empty()
++                        || edges
++                            .iter()
++                            .any(|(p, _)| !p.is_finite() || *p < 0. || *p > 1.)
++                        || (edges.iter().map(|v| v.0).sum::<f64>() - 1.).abs() > 1e-10
++                    {
++                        return Err(Error("chance probabilities must sum to one".into()));
++                    }
++                    Compiled::Chance(edges)
++                }
++                Node::Decision {
++                    player,
++                    information: key,
++                    actions,
++                    children,
++                } => {
++                    if player > 1 || key.is_empty() || actions.len() != children.len() {
++                        return Err(Error("invalid information/menu".into()));
++                    }
++                    labels(actions.iter().map(String::as_str), "action ID")?;
++                    let info = if let Some(&i) = ids.get(&key) {
++                        let existing: &Information = &information[i];
++                        if existing.player != player || existing.actions != actions {
++                            return Err(Error(format!("inconsistent information set: {key}")));
++                        }
++                        i
++                    } else {
++                        let i = information.len();
++                        ids.insert(key.clone(), i);
++                        information.push(Information {
++                            player,
++                            key,
++                            actions,
++                            nodes: Vec::new(),
++                            own_sequence: Vec::new(),
++                        });
++                        i
++                    };
++                    Compiled::Decision { info, children }
++                }
++            });
++        }
++        let mut seen = vec![false; nodes.len()];
++        let mut order = Vec::new();
++        let mut stack = vec![(root, [Vec::new(), Vec::new()], 0usize)];
++        while let Some((id, sequences, depth)) = stack.pop() {
++            if id >= nodes.len() || seen[id] || depth > 512 {
++                return Err(Error(
++                    "tree has invalid/shared/cyclic nodes or exceeds depth 512".into(),
++                ));
++            }
++            seen[id] = true;
++            order.push(id);
++            match &nodes[id] {
++                Compiled::Terminal(_) => {}
++                Compiled::Chance(edges) => {
++                    for &(_, child) in edges.iter().rev() {
++                        stack.push((child, sequences.clone(), depth + 1));
++                    }
++                }
++                Compiled::Decision { info, children } => {
++                    let i = &mut information[*info];
++                    if i.nodes.is_empty() {
++                        i.own_sequence = sequences[i.player].clone();
++                    } else if i.own_sequence != sequences[i.player] {
++                        return Err(Error(format!("imperfect recall in {}", i.key)));
++                    }
++                    i.nodes.push(id);
++                    for (a, &child) in children.iter().enumerate().rev() {
++                        let mut next = sequences.clone();
++                        next[i.player].push((*info, a));
++                        stack.push((child, next, depth + 1));
++                    }
++                }
++            }
++        }
++        if seen.iter().any(|v| !*v) {
++            return Err(Error("unreachable tree node".into()));
++        }
++        Ok(Self {
++            nodes,
++            root,
++            order,
++            information,
++            scale: scale.max(f64::MIN_POSITIVE),
++            worlds: Vec::new(),
++            public_keys: Vec::new(),
++            private_keys: Vec::new(),
++            boundaries: Vec::new(),
++        })
++    }
++    pub fn information(&self) -> &[Information] {
++        &self.information
++    }
++    pub fn node_count(&self) -> usize {
++        self.nodes.len()
++    }
++    /// Developer/oracle export, NOT an observation supplied to the playing agent.
++    #[cfg(feature = "experiment-growing-belief")]
++    pub fn export_nodes(&self) -> Vec<Node> {
++        self.nodes
++            .iter()
++            .map(|n| match n {
++                Compiled::Terminal(v) => Node::Terminal(*v),
++                Compiled::Chance(e) => Node::Chance(e.clone()),
++                Compiled::Decision { info, children } => Node::Decision {
++                    player: self.information[*info].player,
++                    information: self.information[*info].key.clone(),
++                    actions: self.information[*info].actions.clone(),
++                    children: children.clone(),
++                },
++            })
++            .collect()
++    }
++    pub fn root(&self) -> usize {
++        self.root
++    }
++    pub fn worlds(&self) -> &[String] {
++        &self.worlds
++    }
++    pub fn boundaries(&self) -> &[Boundary] {
++        &self.boundaries
++    }
++    pub fn information_at(&self, node: usize) -> Option<usize> {
++        match self.nodes.get(node) {
++            Some(Compiled::Decision { info, .. }) => Some(*info),
++            _ => None,
++        }
++    }
++    pub fn uniform(&self) -> Policy {
++        self.information
++            .iter()
++            .map(|i| vec![1. / i.actions.len() as f64; i.actions.len()])
++            .collect()
++    }
++    fn check_policy(&self, policy: &Policy) -> Result<(), Error> {
++        if policy.len() != self.information.len() {
++            return Err(Error("information policy count mismatch".into()));
++        }
++        for (i, p) in self.information.iter().zip(policy) {
++            probability(p, i.actions.len())?;
++        }
++        Ok(())
++    }
++    fn values(&self, policy: &Policy) -> Vec<f64> {
++        let mut values = vec![0.; self.nodes.len()];
++        for &id in self.order.iter().rev() {
++            values[id] = match &self.nodes[id] {
++                Compiled::Terminal(v) => v / self.scale,
++                Compiled::Chance(edges) => edges.iter().map(|(p, n)| p * values[*n]).sum(),
++                Compiled::Decision { info, children } => children
++                    .iter()
++                    .zip(&policy[*info])
++                    .map(|(n, p)| p * values[*n])
++                    .sum(),
++            };
++        }
++        values
++    }
++    /// `omit` removes that player's realization reach for counterfactual regret/BR.
++    fn reach(&self, policy: &Policy, omit: Option<usize>) -> Result<Vec<f64>, Error> {
++        let mut reach = vec![0.; self.nodes.len()];
++        reach[self.root] = 1.;
++        for &id in &self.order {
++            match &self.nodes[id] {
++                Compiled::Terminal(_) => {}
++                Compiled::Chance(edges) => {
++                    for &(p, n) in edges {
++                        reach[n] = multiply(reach[id], p)?;
++                    }
++                }
++                Compiled::Decision { info, children } => {
++                    for (a, &n) in children.iter().enumerate() {
++                        reach[n] = multiply(
++                            reach[id],
++                            if omit == Some(self.information[*info].player) {
++                                1.
++                            } else {
++                                policy[*info][a]
++                            },
++                        )?;
++                    }
++                }
++            }
++        }
++        Ok(reach)
++    }
++    pub fn assess(&self, policy: &Policy) -> Result<Assessment, Error> {
++        self.check_policy(policy)?;
++        let value = self.values(policy)[self.root] * self.scale;
++        let upper = self.best_response(policy, 0)?.0;
++        let lower = self.best_response(policy, 1)?.0;
++        Ok(Assessment {
++            value,
++            lower,
++            upper,
++            gap: (upper - lower).max(0.),
++        })
++    }
++    /// A pure best response with ONE chosen action per information set, including
++    /// off-policy histories. Maximizing each physical node independently is invalid.
++    pub fn best_response(
++        &self,
++        policy: &Policy,
++        player: usize,
++    ) -> Result<(f64, Vec<Option<usize>>), Error> {
++        self.check_policy(policy)?;
++        if player > 1 {
++            return Err(Error("invalid player".into()));
++        }
++        let cf = self.reach(policy, Some(player))?;
++        let mut work = Response {
++            tree: self,
++            policy,
++            player,
++            cf,
++            memo: vec![None; self.nodes.len()],
++            chosen: vec![None; self.information.len()],
++            visiting: vec![false; self.information.len()],
++        };
++        let value = work.node(self.root)? * self.scale;
++        Ok((value, work.chosen))
++    }
++    /// Diagnostics under the supplied strategy. Zero-reach public histories have no
++    /// posterior (never an invented uniform belief). History weights retain hidden queued
++    /// action alternatives even when those alternatives belong to the same world.
++    pub fn public_beliefs(&self, policy: &Policy) -> Result<Vec<PublicBelief>, Error> {
++        self.beliefs(policy, &self.public_keys, |b| Some(b.public))
++    }
++    /// A player's posterior also conditions on remembered own actions and private
++    /// observations. Public belief alone is insufficient after a hidden own commitment.
++    /// This works at horizon endpoints as well as at decision nodes.
++    pub fn private_belief(
++        &self,
++        player: usize,
++        key: &str,
++        policy: &Policy,
++    ) -> Result<Option<PublicBelief>, Error> {
++        if player > 1 {
++            return Err(Error("invalid belief owner".into()));
++        }
++        let id = self.private_keys.iter().position(|v| v == key);
++        let keys = [key.to_owned()];
++        let mut result = self.beliefs(policy, &keys, |b| {
++            (Some(b.private[player]) == id).then_some(0)
++        })?;
++        let belief = result.remove(0);
++        Ok((!belief.histories.is_empty()).then_some(belief))
++    }
++    fn beliefs(
++        &self,
++        policy: &Policy,
++        keys: &[String],
++        select: impl Fn(&Boundary) -> Option<usize>,
++    ) -> Result<Vec<PublicBelief>, Error> {
++        self.check_policy(policy)?;
++        let reach = self.reach(policy, None)?;
++        let values = self.values(policy);
++        let mut result: Vec<_> = keys
++            .iter()
++            .enumerate()
++            .map(|(id, key)| PublicBelief {
++                id,
++                key: key.clone(),
++                reach: 0.,
++                posterior: None,
++                world_values: vec![None; self.worlds.len()],
++                histories: Vec::new(),
++            })
++            .collect();
++        let mut masses = vec![vec![0.; self.worlds.len()]; result.len()];
++        let mut sums = masses.clone();
++        for b in &self.boundaries {
++            let Some(group) = select(b) else {
++                continue;
++            };
++            let r = reach[b.node];
++            let out = &mut result[group];
++            out.reach += r;
++            out.histories.push((b.node, r));
++            masses[group][b.world] += r;
++            if r > 0.0 {
++                // Conditional averaging avoids multiplying a tiny world reach by a
++                // small scaled payoff and then attempting to divide the underflow away.
++                let alpha = r / masses[group][b.world];
++                sums[group][b.world] += alpha * (values[b.node] - sums[group][b.world]);
++            }
++        }
++        for (id, out) in result.iter_mut().enumerate() {
++            if out.reach > 0. {
++                out.posterior = Some(masses[id].iter().map(|v| v / out.reach).collect());
++                for (w, v) in out.world_values.iter_mut().enumerate() {
++                    if masses[id][w] > 0. {
++                        *v = Some(sums[id][w] * self.scale);
++                    }
++                }
++                for (_, r) in &mut out.histories {
++                    *r /= out.reach;
++                }
++            }
++        }
++        Ok(result)
++    }
++}
++
++struct Response<'a> {
++    tree: &'a Tree,
++    policy: &'a Policy,
++    player: usize,
++    cf: Vec<f64>,
++    memo: Vec<Option<f64>>,
++    chosen: Vec<Option<usize>>,
++    visiting: Vec<bool>,
++}
++impl Response<'_> {
++    fn node(&mut self, id: usize) -> Result<f64, Error> {
++        if let Some(v) = self.memo[id] {
++            return Ok(v);
++        }
++        let v = match &self.tree.nodes[id] {
++            Compiled::Terminal(v) => v / self.tree.scale,
++            Compiled::Chance(edges) => {
++                let mut v = 0.;
++                for &(p, n) in edges {
++                    v += p * self.node(n)?;
++                }
++                v
++            }
++            Compiled::Decision { info, children } => {
++                let i = *info;
++                if self.tree.information[i].player != self.player {
++                    let mut v = 0.;
++                    for (a, &n) in children.iter().enumerate() {
++                        v += self.policy[i][a] * self.node(n)?;
++                    }
++                    v
++                } else {
++                    if self.chosen[i].is_none() {
++                        if self.visiting[i] {
++                            return Err(Error("cyclic information dependencies".into()));
++                        }
++                        self.visiting[i] = true;
++                        let mut scores = vec![0.; children.len()];
++                        for &member in &self.tree.information[i].nodes {
++                            let Compiled::Decision { children, .. } = &self.tree.nodes[member]
++                            else {
++                                unreachable!()
++                            };
++                            for (a, &child) in children.iter().enumerate() {
++                                scores[a] += self.cf[member] * self.node(child)?;
++                            }
++                        }
++                        let sign = if self.player == 0 { 1. } else { -1. };
++                        let mut best = 0;
++                        for a in 1..scores.len() {
++                            if sign * scores[a] > sign * scores[best] {
++                                best = a;
++                            }
++                        }
++                        self.chosen[i] = Some(best);
++                        self.visiting[i] = false;
++                    }
++                    self.node(children[self.chosen[i].unwrap()])?
++                }
++            }
++        };
++        self.memo[id] = Some(v);
++        Ok(v)
++    }
++}
++
++#[derive(Clone, Debug)]
++pub struct Assessment {
++    pub value: f64,
++    pub lower: f64,
++    pub upper: f64,
++    pub gap: f64,
++}
++#[derive(Clone, Debug)]
++pub struct PublicBelief {
++    pub id: usize,
++    pub key: String,
++    pub reach: f64,
++    pub posterior: Option<Vec<f64>>,
++    pub world_values: Vec<Option<f64>>,
++    pub histories: Vec<(usize, f64)>,
++}
++#[derive(Clone, Debug)]
++pub struct Solution {
++    pub policy: Policy,
++    pub assessment: Assessment,
++    pub iterations: usize,
++    pub converged: bool,
++}
++
++/// Full-tree alternating linear CFR. Each pass freezes all policies, accumulates the
++/// counterfactual regret of ALL histories in an information set, then updates that side.
++/// The average uses t * own realization reach ONCE per information set, not chance reach
++/// or number of member histories. This distinction matters beyond a single matrix game.
++pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
++    if config.iterations == 0
++        || config.iterations > 10_000_000
++        || config.check_every == 0
++        || !config.tolerance.is_finite()
++        || config.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    let mut policy = tree.uniform();
++    let mut regrets: Policy = policy.iter().map(|p| vec![0.; p.len()]).collect();
++    let mut sums = regrets.clone();
++    let mut total = vec![0.; policy.len()];
++    for t in 1..=config.iterations {
++        let weight = t as f64 / config.iterations as f64;
++        for player in 0..2 {
++            let values = tree.values(&policy);
++            let cf = tree.reach(&policy, Some(player))?;
++            let sign = if player == 0 { 1. } else { -1. };
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    for &node in &info.nodes {
++                        let Compiled::Decision { children, .. } = &tree.nodes[node] else {
++                            unreachable!()
++                        };
++                        for (a, &child) in children.iter().enumerate() {
++                            regrets[i][a] +=
++                                weight * cf[node] * sign * (values[child] - values[node]);
++                        }
++                    }
++                }
++            }
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    strategy(&regrets[i], &mut policy[i]);
++                }
++            }
++        }
++        for (i, info) in tree.information.iter().enumerate() {
++            let mut own = 1.;
++            for &(j, a) in &info.own_sequence {
++                own = multiply(own, policy[j][a])?;
++            }
++            let w = multiply(weight, own)?;
++            total[i] += w;
++            for (s, &p) in sums[i].iter_mut().zip(&policy[i]) {
++                *s += w * p;
++            }
++        }
++        if t % config.check_every == 0 || t == config.iterations {
++            let average: Policy = sums
++                .iter()
++                .enumerate()
++                .map(|(i, p)| {
++                    if total[i] > 0. {
++                        p.iter().map(|v| v / total[i]).collect()
++                    } else {
++                        vec![1. / p.len() as f64; p.len()]
++                    }
++                })
++                .collect();
++            let assessment = tree.assess(&average)?;
++            let converged = assessment.gap <= config.tolerance;
++            if converged || t == config.iterations {
++                return Ok(Solution {
++                    policy: average,
++                    assessment,
++                    iterations: t,
++                    converged,
++                });
++            }
++        }
++    }
++    unreachable!()
++}
++
++#[cfg(test)]
++mod tests;
+diff --git a/engine/search/src/bayesian/tree/builder/growing.rs b/engine/search/src/bayesian/tree/builder/growing.rs
+index 93f5a23..e9dbe5b 100644
+--- a/engine/search/src/bayesian/tree/builder/growing.rs
++++ b/engine/search/src/bayesian/tree/builder/growing.rs
+@@ -1,591 +1,593 @@
+-//! Public-history-closed growing-tree CFR reference experiment.
+-//!
+-//! Admission expands every physical history of a public prefix, with every legal joint
+-//! action and chance outcome. It never expands just the world sampled by the PUCT walk.
+-//! CFR restarts after growth: old regrets/averages are not certificates for a new game.
+-//! The last committed, fully solved snapshot survives resource exhaustion. Its gap is
+-//! only for the current fixed-leaf surrogate, never for omitted continuations.
+-
+-use super::super::{self as tree, Compiled, Information, Policy, Solution};
+-use super::*;
+-use crate::bayesian::Config as CfrConfig;
+-use std::collections::BTreeMap;
+-
+-#[derive(Clone, Copy, Debug)]
+-pub struct Config {
+-    /// Public-prefix admissions, including root and automatic switch closure.
+-    pub max_expansions: usize,
+-    /// Selection walks, including walks ending in an already terminal/horizon node.
+-    pub max_walks: usize,
+-    /// Dimensionless: action values are scaled by the current tree's utility scale.
+-    pub exploration: f64,
+-    pub seed: u64,
+-    pub solver: CfrConfig,
+-}
+-impl Default for Config {
+-    fn default() -> Self {
+-        Self {
+-            max_expansions: 16,
+-            max_walks: 256,
+-            exploration: 1.,
+-            seed: 1,
+-            solver: CfrConfig::default(),
+-        }
+-    }
+-}
+-
+-/// The prior sees ONLY an information key, its owner and semantic menu. No true world
+-/// or physical state is supplied. Keys may contain the owner's legitimate private type.
+-pub trait Prior {
+-    fn weights(&self, information: &Information) -> Vec<f64>;
+-}
+-pub struct Uniform;
+-impl Prior for Uniform {
+-    fn weights(&self, information: &Information) -> Vec<f64> {
+-        vec![1.; information.actions.len()]
+-    }
+-}
+-
+-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+-pub enum Stop {
+-    HorizonComplete,
+-    ExpansionLimit,
+-    TransitionLimit,
+-    NodeLimit,
+-    DecisionLimit,
+-    WalkLimit,
+-}
+-#[derive(Clone, Debug, Default)]
+-pub struct Work {
+-    /// Includes work in a rejected atomic admission; counters never roll back.
+-    pub attempted_transitions: usize,
+-    pub attempted_expansions: usize,
+-    pub committed_expansions: usize,
+-    pub walks: usize,
+-    pub solves: usize,
+-    pub cfr_iterations: usize,
+-}
+-pub struct ResultTree {
+-    pub built: Built,
+-    pub solution: Solution,
+-    pub stop: Stop,
+-    pub work: Work,
+-    pub frontier_histories: usize,
+-    pub frontier_public_groups: usize,
+-    /// Exact only for the requested turn horizon and supplied observations/evaluator.
+-    pub horizon_complete: bool,
+-}
+-
+-#[derive(Debug)]
+-enum Failure {
+-    Limit(Stop),
+-    Invalid(Error),
+-}
+-impl From<Error> for Failure {
+-    fn from(e: Error) -> Self {
+-        Self::Invalid(e)
+-    }
+-}
+-impl From<String> for Failure {
+-    fn from(e: String) -> Self {
+-        Self::Invalid(Error(e))
+-    }
+-}
+-type Attempt<T> = Result<T, Failure>;
+-
+-struct Frontier<P> {
+-    node: usize,
+-    position: P,
+-    world: usize,
+-    memory: [Vec<Memory>; 2],
+-    public: Vec<String>,
+-    turns: u32,
+-    decisions: usize,
+-    phase: Phase,
+-}
+-impl<P: Clone> Clone for Frontier<P> {
+-    fn clone(&self) -> Self {
+-        Self {
+-            node: self.node,
+-            position: self.position.clone(),
+-            world: self.world,
+-            memory: self.memory.clone(),
+-            public: self.public.clone(),
+-            turns: self.turns,
+-            decisions: self.decisions,
+-            phase: self.phase,
+-        }
+-    }
+-}
+-struct Growing<'a, D: ObservedDomain> {
+-    b: Builder<'a, D>,
+-    root: usize,
+-    worlds: Vec<String>,
+-    frontier: BTreeMap<Vec<String>, Vec<Frontier<D::Position>>>,
+-}
+-impl<'a, D: ObservedDomain> Growing<'a, D> {
+-    fn fork(&self) -> Self {
+-        Self {
+-            b: Builder {
+-                domain: self.b.domain,
+-                limits: self.b.limits,
+-                nodes: self.b.nodes.clone(),
+-                stats: self.b.stats.clone(),
+-                menus: self.b.menus.clone(),
+-                public: self.b.public.clone(),
+-                public_keys: self.b.public_keys.clone(),
+-                private: self.b.private.clone(),
+-                private_keys: self.b.private_keys.clone(),
+-                boundaries: self.b.boundaries.clone(),
+-            },
+-            root: self.root,
+-            worlds: self.worlds.clone(),
+-            frontier: self.frontier.clone(),
+-        }
+-    }
+-    fn compile(&self) -> Result<Tree, Error> {
+-        let mut t = Tree::new(self.b.nodes.clone(), self.root)?;
+-        t.worlds = self.worlds.clone();
+-        t.public_keys = self.b.public_keys.clone();
+-        t.private_keys = self.b.private_keys.clone();
+-        t.boundaries = self.b.boundaries.clone();
+-        Ok(t)
+-    }
+-    fn push(&mut self, n: Node) -> Attempt<usize> {
+-        if self.b.nodes.len() >= self.b.limits.max_nodes {
+-            return Err(Failure::Limit(Stop::NodeLimit));
+-        }
+-        Ok(self.b.push(n)?)
+-    }
+-    fn leaf(&mut self, mut h: Frontier<D::Position>) -> Attempt<usize> {
+-        let value = f64::from(self.b.domain.value(&h.position));
+-        if !value.is_finite() || value.abs() > f64::MAX / 8. {
+-            return Err(Error("invalid frontier evaluation".into()).into());
+-        }
+-        let node = self.push(Node::Terminal(value))?;
+-        h.node = node;
+-        self.b.stats.leaves += 1;
+-        let keys = [
+-            format!("0:{:?}", h.memory[0]),
+-            format!("1:{:?}", h.memory[1]),
+-        ];
+-        self.b.mark(node, h.world, h.public.clone(), &keys);
+-        if h.phase != Phase::Terminal && !(h.phase == Phase::Turn && h.turns == 0) {
+-            let group = self.frontier.entry(h.public.clone()).or_default();
+-            if group
+-                .first()
+-                .is_some_and(|old| old.phase != h.phase || old.turns != h.turns)
+-            {
+-                return Err(
+-                    Error("public observation must distinguish decision phases".into()).into(),
+-                );
+-            }
+-            group.push(h);
+-        }
+-        Ok(node)
+-    }
+-    fn expand(&mut self, key: &[String], work: &mut Work, cfg: Config) -> Attempt<()> {
+-        if work.attempted_expansions >= cfg.max_expansions {
+-            return Err(Failure::Limit(Stop::ExpansionLimit));
+-        }
+-        work.attempted_expansions += 1;
+-        let group = self
+-            .frontier
+-            .remove(key)
+-            .ok_or_else(|| Error("selection targeted an absent public frontier".into()))?;
+-        // All histories (including zero-current-policy ones) are mandatory. Reaching only
+-        // some of these histories under today's policy does not license dropping the rest.
+-        for h in group {
+-            if h.decisions >= self.b.limits.max_decisions {
+-                return Err(Failure::Limit(Stop::DecisionLimit));
+-            }
+-            let p = &h.position;
+-            let left = self.b.domain.actions(p, 0)?;
+-            let right = self.b.domain.actions(p, 1)?;
+-            let rows: Vec<_> = left
+-                .iter()
+-                .map(|a| self.b.domain.action_id(p, 0, a))
+-                .collect();
+-            let cols: Vec<_> = right
+-                .iter()
+-                .map(|a| self.b.domain.action_id(p, 1, a))
+-                .collect();
+-            let keys = [
+-                format!("0:{:?}", h.memory[0]),
+-                format!("1:{:?}", h.memory[1]),
+-            ];
+-            self.b.menu(&keys[0], &rows)?;
+-            self.b.menu(&keys[1], &cols)?;
+-            let turns = if h.phase == Phase::Turn {
+-                self.b.stats.turn_decisions += 1;
+-                h.turns - 1
+-            } else {
+-                self.b.stats.switch_decisions += 1;
+-                h.turns
+-            };
+-            self.b.stats.leaves -= 1;
+-            let mut row_children = Vec::new();
+-            for (r, row) in left.iter().enumerate() {
+-                let col_node = self.push(Node::Terminal(0.))?;
+-                row_children.push(col_node);
+-                let mut col_children = Vec::new();
+-                for (c, col) in right.iter().enumerate() {
+-                    if work.attempted_transitions >= self.b.limits.max_transitions {
+-                        return Err(Failure::Limit(Stop::TransitionLimit));
+-                    }
+-                    // Charge before calling the engine, including failed invocations.
+-                    work.attempted_transitions += 1;
+-                    self.b.stats.transitions += 1;
+-                    let children = self.b.domain.transitions(p, [row, col])?;
+-                    if children.is_empty()
+-                        || children
+-                            .iter()
+-                            .any(|(q, _)| !q.is_finite() || *q < 0. || *q > 1.)
+-                        || (children.iter().map(|(q, _)| q).sum::<f64>() - 1.).abs() > 1e-10
+-                    {
+-                        return Err(Error(
+-                            "chance mass must be one; no truncation or renormalization".into(),
+-                        )
+-                        .into());
+-                    }
+-                    self.b.stats.chance_outcomes = self
+-                        .b
+-                        .stats
+-                        .chance_outcomes
+-                        .checked_add(children.len())
+-                        .ok_or_else(|| Error("outcome count overflow".into()))?;
+-                    let chance = self.push(Node::Terminal(0.))?;
+-                    col_children.push(chance);
+-                    let mut edges = Vec::new();
+-                    for (probability, position) in children {
+-                        let obs = self.b.domain.observation(&position)?;
+-                        let phase = self.b.domain.phase(&position)?;
+-                        let mut memory = h.memory.clone();
+-                        memory[0].push(Memory::Action(rows[r].clone()));
+-                        memory[1].push(Memory::Action(cols[c].clone()));
+-                        for (side, m) in memory.iter_mut().enumerate() {
+-                            m.push(Memory::Observe(
+-                                obs.public.clone(),
+-                                obs.private[side].clone(),
+-                            ));
+-                        }
+-                        let mut public = h.public.clone();
+-                        public.push(obs.public);
+-                        let child = self.leaf(Frontier {
+-                            node: 0,
+-                            position,
+-                            world: h.world,
+-                            memory,
+-                            public,
+-                            turns,
+-                            decisions: h.decisions + 1,
+-                            phase,
+-                        })?;
+-                        edges.push((probability, child));
+-                    }
+-                    self.b.nodes[chance] = Node::Chance(edges);
+-                }
+-                // Column information must not contain the hidden row commitment.
+-                self.b.nodes[col_node] = Node::Decision {
+-                    player: 1,
+-                    information: keys[1].clone(),
+-                    actions: cols.clone(),
+-                    children: col_children,
+-                };
+-            }
+-            self.b.nodes[h.node] = Node::Decision {
+-                player: 0,
+-                information: keys[0].clone(),
+-                actions: rows,
+-                children: row_children,
+-            };
+-        }
+-        Ok(())
+-    }
+-    fn admit(&mut self, key: &[String], work: &mut Work, cfg: Config) -> Attempt<()> {
+-        self.expand(key, work, cfg)?;
+-        // Publishing a snapshot while a pending replacement is priced as a heuristic
+-        // leaf would change the previous solver's horizon contract. Close ALL switches.
+-        loop {
+-            let next = self
+-                .frontier
+-                .iter()
+-                .find(|(_, g)| g[0].phase == Phase::Switch)
+-                .map(|(k, _)| k.clone());
+-            match next {
+-                Some(k) => self.expand(&k, work, cfg)?,
+-                None => return Ok(()),
+-            }
+-        }
+-    }
+-}
+-
+-struct Random(u64);
+-impl Random {
+-    fn unit(&mut self) -> f64 {
+-        self.0 = self.0.wrapping_add(0x9e3779b97f4a7c15);
+-        let mut z = self.0;
+-        z = (z ^ (z >> 30)).wrapping_mul(0xbf58476d1ce4e5b9);
+-        z = (z ^ (z >> 27)).wrapping_mul(0x94d049bb133111eb);
+-        ((z ^ (z >> 31)) >> 11) as f64 * (1. / ((1u64 << 53) as f64))
+-    }
+-    fn sample(&mut self, weights: &[f64]) -> usize {
+-        let mut x = self.unit();
+-        for (i, &p) in weights.iter().enumerate() {
+-            if x < p {
+-                return i;
+-            }
+-            x -= p;
+-        }
+-        weights
+-            .iter()
+-            .rposition(|p| *p > 0.)
+-            .expect("validated probability vector")
+-    }
+-}
+-type Visits = HashMap<String, Vec<u64>>;
+-
+-/// CF action values aggregate all member histories before selection. No sampled-world
+-/// value or node-wise best response is used as a substitute for information-set Q.
+-fn scores(t: &Tree, policy: &Policy) -> Result<Vec<Vec<f64>>, Error> {
+-    let values = t.values(policy);
+-    let cf = [t.reach(policy, Some(0))?, t.reach(policy, Some(1))?];
+-    let mut result = Vec::new();
+-    for info in t.information() {
+-        let mut q = vec![0.; info.actions.len()];
+-        let mass: f64 = info.nodes.iter().map(|n| cf[info.player][*n]).sum();
+-        if mass > 0. {
+-            for &n in &info.nodes {
+-                let Compiled::Decision { children, .. } = &t.nodes[n] else {
+-                    unreachable!()
+-                };
+-                for (a, &child) in children.iter().enumerate() {
+-                    q[a] += cf[info.player][n] / mass
+-                        * values[child]
+-                        * if info.player == 0 { 1. } else { -1. };
+-                }
+-            }
+-        }
+-        result.push(q);
+-    }
+-    Ok(result)
+-}
+-
+-fn select<P: Prior>(
+-    t: &Tree,
+-    policy: &Policy,
+-    q: &[Vec<f64>],
+-    prior: &P,
+-    visits: &mut Visits,
+-    random: &mut Random,
+-    exploration: f64,
+-) -> Result<usize, Error> {
+-    let mut n = t.root();
+-    loop {
+-        n = match &t.nodes[n] {
+-            Compiled::Terminal(_) => return Ok(n),
+-            Compiled::Chance(edges) => {
+-                edges[random.sample(&edges.iter().map(|(p, _)| *p).collect::<Vec<_>>())].1
+-            }
+-            Compiled::Decision { info, children } => {
+-                let information = &t.information[*info];
+-                let mut p = prior.weights(information);
+-                if p.len() != children.len() {
+-                    return Err(Error("prior menu width mismatch".into()));
+-                }
+-                normalize(&mut p)?;
+-                let counts = visits
+-                    .entry(information.key.clone())
+-                    .or_insert_with(|| vec![0; children.len()]);
+-                if counts.len() != children.len() {
+-                    return Err(Error("changed selection menu".into()));
+-                }
+-                let total = counts.iter().map(|v| *v as f64).sum::<f64>();
+-                let mut best = 0;
+-                let mut score = f64::NEG_INFINITY;
+-                for a in 0..children.len() {
+-                    let s = q[*info][a]
+-                        + exploration * p[a] * (total + 1.).sqrt() / (1. + counts[a] as f64);
+-                    if !s.is_finite() {
+-                        return Err(Error("nonfinite PUCT score".into()));
+-                    }
+-                    if s > score {
+-                        score = s;
+-                        best = a;
+-                    }
+-                }
+-                let a = if random.unit() < 0.5 {
+-                    best
+-                } else {
+-                    random.sample(&policy[*info])
+-                };
+-                counts[a] = counts[a]
+-                    .checked_add(1)
+-                    .ok_or_else(|| Error("visit count overflow".into()))?;
+-                children[a]
+-            }
+-        };
+-    }
+-}
+-
+-/// Bounded correctness reference for growing-tree CFR with the Pokai/SoG 50:50 PUCT /
+-/// average-policy selection rule. This is not a learned CFV network or safe re-solving.
+-pub fn search<D: ObservedDomain, P: Prior>(
+-    domain: &D,
+-    seeds: &[Seed<D::Position>],
+-    limits: Limits,
+-    cfg: Config,
+-    prior: &P,
+-) -> Result<ResultTree, Error> {
+-    if cfg.max_expansions == 0
+-        || cfg.max_walks == 0
+-        || !cfg.exploration.is_finite()
+-        || cfg.exploration < 0.
+-        || limits.turns == 0
+-        || limits.turns > 32
+-        || limits.max_decisions == 0
+-        || limits.max_decisions > 128
+-        || limits.max_nodes == 0
+-        || limits.max_transitions == 0
+-    {
+-        return Err(Error("invalid growing-tree configuration".into()));
+-    }
+-    // Validate solver configuration before any domain calls or transition work.
+-    if cfg.solver.iterations == 0
+-        || cfg.solver.iterations > 10_000_000
+-        || cfg.solver.check_every == 0
+-        || !cfg.solver.tolerance.is_finite()
+-        || cfg.solver.tolerance < 0.
+-    {
+-        return Err(Error("invalid CFR configuration".into()));
+-    }
+-    labels(seeds.iter().map(|s| s.id.as_str()), "world ID")?;
+-    let mut weights: Vec<_> = seeds.iter().map(|s| s.weight).collect();
+-    normalize(&mut weights)?;
+-    let first = domain.observation(&seeds[0].position)?;
+-    let mut growing = Growing {
+-        b: Builder {
+-            domain,
+-            limits,
+-            nodes: Vec::new(),
+-            stats: Stats::default(),
+-            menus: HashMap::new(),
+-            public: HashMap::new(),
+-            public_keys: Vec::new(),
+-            private: HashMap::new(),
+-            private_keys: Vec::new(),
+-            boundaries: Vec::new(),
+-        },
+-        root: 0,
+-        worlds: seeds.iter().map(|s| s.id.clone()).collect(),
+-        frontier: BTreeMap::new(),
+-    };
+-    let initial = (|| -> Attempt<()> {
+-        growing.root = growing.push(Node::Terminal(0.))?;
+-        let mut edges = Vec::new();
+-        for (world, (s, weight)) in seeds.iter().zip(weights).enumerate() {
+-            let obs = domain.observation(&s.position)?;
+-            if obs.public != first.public
+-                || obs.private[0] != first.private[0]
+-                || domain.phase(&s.position)? != Phase::Turn
+-            {
+-                return Err(Error(
+-                    "root worlds must share our initial information at a normal turn".into(),
+-                )
+-                .into());
+-            }
+-            let memory = [
+-                Cursor::new(0, None, &obs)?.memory,
+-                Cursor::new(1, Some(&s.id), &obs)?.memory,
+-            ];
+-            let n = growing.leaf(Frontier {
+-                node: 0,
+-                position: s.position.clone(),
+-                world,
+-                memory,
+-                public: vec![obs.public],
+-                turns: limits.turns,
+-                decisions: 0,
+-                phase: Phase::Turn,
+-            })?;
+-            edges.push((weight, n));
+-        }
+-        growing.b.nodes[growing.root] = Node::Chance(edges);
+-        Ok(())
+-    })();
+-    let fatal = |e: Failure| match e {
+-        Failure::Invalid(e) => e,
+-        Failure::Limit(s) => Error(format!("root incomplete: {s:?}; no strategy returned")),
+-    };
+-    initial.map_err(fatal)?;
+-    let mut work = Work::default();
+-    growing
+-        .admit(&[first.public], &mut work, cfg)
+-        .map_err(fatal)?;
+-    work.committed_expansions = work.attempted_expansions;
+-    let mut t = growing.compile()?;
+-    let mut solved = tree::solve(&t, cfg.solver)?;
+-    work.solves += 1;
+-    work.cfr_iterations += solved.iterations;
+-    let mut q = scores(&t, &solved.policy)?;
+-    let mut random = Random(cfg.seed);
+-    let mut visits = Visits::new();
+-    let stop = loop {
+-        if growing.frontier.is_empty() {
+-            break Stop::HorizonComplete;
+-        }
+-        if work.attempted_expansions >= cfg.max_expansions {
+-            break Stop::ExpansionLimit;
+-        }
+-        if work.walks >= cfg.max_walks {
+-            break Stop::WalkLimit;
+-        }
+-        work.walks += 1;
+-        let selected = select(
+-            &t,
+-            &solved.policy,
+-            &q,
+-            prior,
+-            &mut visits,
+-            &mut random,
+-            cfg.exploration,
+-        )?;
+-        let key = growing
+-            .frontier
+-            .iter()
+-            .find(|(_, g)| g.iter().any(|h| h.node == selected))
+-            .map(|(k, _)| k.clone());
+-        let Some(key) = key else { continue };
+-        let mut candidate = growing.fork();
+-        let before = work.attempted_expansions;
+-        match candidate.admit(&key, &mut work, cfg) {
+-            Err(Failure::Limit(s)) => break s,
+-            Err(Failure::Invalid(e)) => return Err(e),
+-            Ok(()) => {}
+-        }
+-        let next = candidate.compile()?;
+-        let solution = tree::solve(&next, cfg.solver)?;
+-        q = scores(&next, &solution.policy)?;
+-        work.committed_expansions += work.attempted_expansions - before;
+-        work.solves += 1;
+-        work.cfr_iterations += solution.iterations;
+-        growing = candidate;
+-        t = next;
+-        solved = solution;
+-    };
+-    Ok(ResultTree {
+-        built: Built {
+-            tree: t,
+-            stats: growing.b.stats,
+-        },
+-        solution: solved,
+-        stop,
+-        frontier_histories: growing.frontier.values().map(Vec::len).sum(),
+-        frontier_public_groups: growing.frontier.len(),
+-        horizon_complete: growing.frontier.is_empty(),
+-        work,
+-    })
+-}
+-
+-#[cfg(test)]
+-mod tests;
++//! Public-history-closed growing-tree CFR reference experiment.
++//!
++//! Admission expands every physical history of a public prefix, with every legal joint
++//! action and chance outcome. It never expands just the world sampled by the PUCT walk.
++//! CFR restarts after growth: old regrets/averages are not certificates for a new game.
++//! The last committed, fully solved snapshot survives resource exhaustion. Its gap is
++//! only for the current fixed-leaf surrogate, never for omitted continuations.
++
++use super::super::{self as tree, Compiled, Information, Policy, Solution};
++use super::*;
++use crate::bayesian::Config as CfrConfig;
++use std::collections::BTreeMap;
++#[cfg(feature = "experiment-belief-workspace")]
++pub mod reuse;
++
++#[derive(Clone, Copy, Debug)]
++pub struct Config {
++    /// Public-prefix admissions, including root and automatic switch closure.
++    pub max_expansions: usize,
++    /// Selection walks, including walks ending in an already terminal/horizon node.
++    pub max_walks: usize,
++    /// Dimensionless: action values are scaled by the current tree's utility scale.
++    pub exploration: f64,
++    pub seed: u64,
++    pub solver: CfrConfig,
++}
++impl Default for Config {
++    fn default() -> Self {
++        Self {
++            max_expansions: 16,
++            max_walks: 256,
++            exploration: 1.,
++            seed: 1,
++            solver: CfrConfig::default(),
++        }
++    }
++}
++
++/// The prior sees ONLY an information key, its owner and semantic menu. No true world
++/// or physical state is supplied. Keys may contain the owner's legitimate private type.
++pub trait Prior {
++    fn weights(&self, information: &Information) -> Vec<f64>;
++}
++pub struct Uniform;
++impl Prior for Uniform {
++    fn weights(&self, information: &Information) -> Vec<f64> {
++        vec![1.; information.actions.len()]
++    }
++}
++
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub enum Stop {
++    HorizonComplete,
++    ExpansionLimit,
++    TransitionLimit,
++    NodeLimit,
++    DecisionLimit,
++    WalkLimit,
++}
++#[derive(Clone, Debug, Default)]
++pub struct Work {
++    /// Includes work in a rejected atomic admission; counters never roll back.
++    pub attempted_transitions: usize,
++    pub attempted_expansions: usize,
++    pub committed_expansions: usize,
++    pub walks: usize,
++    pub solves: usize,
++    pub cfr_iterations: usize,
++}
++pub struct ResultTree {
++    pub built: Built,
++    pub solution: Solution,
++    pub stop: Stop,
++    pub work: Work,
++    pub frontier_histories: usize,
++    pub frontier_public_groups: usize,
++    /// Exact only for the requested turn horizon and supplied observations/evaluator.
++    pub horizon_complete: bool,
++}
++
++#[derive(Debug)]
++enum Failure {
++    Limit(Stop),
++    Invalid(Error),
++}
++impl From<Error> for Failure {
++    fn from(e: Error) -> Self {
++        Self::Invalid(e)
++    }
++}
++impl From<String> for Failure {
++    fn from(e: String) -> Self {
++        Self::Invalid(Error(e))
++    }
++}
++type Attempt<T> = Result<T, Failure>;
++
++struct Frontier<P> {
++    node: usize,
++    position: P,
++    world: usize,
++    memory: [Vec<Memory>; 2],
++    public: Vec<String>,
++    turns: u32,
++    decisions: usize,
++    phase: Phase,
++}
++impl<P: Clone> Clone for Frontier<P> {
++    fn clone(&self) -> Self {
++        Self {
++            node: self.node,
++            position: self.position.clone(),
++            world: self.world,
++            memory: self.memory.clone(),
++            public: self.public.clone(),
++            turns: self.turns,
++            decisions: self.decisions,
++            phase: self.phase,
++        }
++    }
++}
++struct Growing<'a, D: ObservedDomain> {
++    b: Builder<'a, D>,
++    root: usize,
++    worlds: Vec<String>,
++    frontier: BTreeMap<Vec<String>, Vec<Frontier<D::Position>>>,
++}
++impl<'a, D: ObservedDomain> Growing<'a, D> {
++    fn fork(&self) -> Self {
++        Self {
++            b: Builder {
++                domain: self.b.domain,
++                limits: self.b.limits,
++                nodes: self.b.nodes.clone(),
++                stats: self.b.stats.clone(),
++                menus: self.b.menus.clone(),
++                public: self.b.public.clone(),
++                public_keys: self.b.public_keys.clone(),
++                private: self.b.private.clone(),
++                private_keys: self.b.private_keys.clone(),
++                boundaries: self.b.boundaries.clone(),
++            },
++            root: self.root,
++            worlds: self.worlds.clone(),
++            frontier: self.frontier.clone(),
++        }
++    }
++    fn compile(&self) -> Result<Tree, Error> {
++        let mut t = Tree::new(self.b.nodes.clone(), self.root)?;
++        t.worlds = self.worlds.clone();
++        t.public_keys = self.b.public_keys.clone();
++        t.private_keys = self.b.private_keys.clone();
++        t.boundaries = self.b.boundaries.clone();
++        Ok(t)
++    }
++    fn push(&mut self, n: Node) -> Attempt<usize> {
++        if self.b.nodes.len() >= self.b.limits.max_nodes {
++            return Err(Failure::Limit(Stop::NodeLimit));
++        }
++        Ok(self.b.push(n)?)
++    }
++    fn leaf(&mut self, mut h: Frontier<D::Position>) -> Attempt<usize> {
++        let value = f64::from(self.b.domain.value(&h.position));
++        if !value.is_finite() || value.abs() > f64::MAX / 8. {
++            return Err(Error("invalid frontier evaluation".into()).into());
++        }
++        let node = self.push(Node::Terminal(value))?;
++        h.node = node;
++        self.b.stats.leaves += 1;
++        let keys = [
++            format!("0:{:?}", h.memory[0]),
++            format!("1:{:?}", h.memory[1]),
++        ];
++        self.b.mark(node, h.world, h.public.clone(), &keys);
++        if h.phase != Phase::Terminal && !(h.phase == Phase::Turn && h.turns == 0) {
++            let group = self.frontier.entry(h.public.clone()).or_default();
++            if group
++                .first()
++                .is_some_and(|old| old.phase != h.phase || old.turns != h.turns)
++            {
++                return Err(
++                    Error("public observation must distinguish decision phases".into()).into(),
++                );
++            }
++            group.push(h);
++        }
++        Ok(node)
++    }
++    fn expand(&mut self, key: &[String], work: &mut Work, cfg: Config) -> Attempt<()> {
++        if work.attempted_expansions >= cfg.max_expansions {
++            return Err(Failure::Limit(Stop::ExpansionLimit));
++        }
++        work.attempted_expansions += 1;
++        let group = self
++            .frontier
++            .remove(key)
++            .ok_or_else(|| Error("selection targeted an absent public frontier".into()))?;
++        // All histories (including zero-current-policy ones) are mandatory. Reaching only
++        // some of these histories under today's policy does not license dropping the rest.
++        for h in group {
++            if h.decisions >= self.b.limits.max_decisions {
++                return Err(Failure::Limit(Stop::DecisionLimit));
++            }
++            let p = &h.position;
++            let left = self.b.domain.actions(p, 0)?;
++            let right = self.b.domain.actions(p, 1)?;
++            let rows: Vec<_> = left
++                .iter()
++                .map(|a| self.b.domain.action_id(p, 0, a))
++                .collect();
++            let cols: Vec<_> = right
++                .iter()
++                .map(|a| self.b.domain.action_id(p, 1, a))
++                .collect();
++            let keys = [
++                format!("0:{:?}", h.memory[0]),
++                format!("1:{:?}", h.memory[1]),
++            ];
++            self.b.menu(&keys[0], &rows)?;
++            self.b.menu(&keys[1], &cols)?;
++            let turns = if h.phase == Phase::Turn {
++                self.b.stats.turn_decisions += 1;
++                h.turns - 1
++            } else {
++                self.b.stats.switch_decisions += 1;
++                h.turns
++            };
++            self.b.stats.leaves -= 1;
++            let mut row_children = Vec::new();
++            for (r, row) in left.iter().enumerate() {
++                let col_node = self.push(Node::Terminal(0.))?;
++                row_children.push(col_node);
++                let mut col_children = Vec::new();
++                for (c, col) in right.iter().enumerate() {
++                    if work.attempted_transitions >= self.b.limits.max_transitions {
++                        return Err(Failure::Limit(Stop::TransitionLimit));
++                    }
++                    // Charge before calling the engine, including failed invocations.
++                    work.attempted_transitions += 1;
++                    self.b.stats.transitions += 1;
++                    let children = self.b.domain.transitions(p, [row, col])?;
++                    if children.is_empty()
++                        || children
++                            .iter()
++                            .any(|(q, _)| !q.is_finite() || *q < 0. || *q > 1.)
++                        || (children.iter().map(|(q, _)| q).sum::<f64>() - 1.).abs() > 1e-10
++                    {
++                        return Err(Error(
++                            "chance mass must be one; no truncation or renormalization".into(),
++                        )
++                        .into());
++                    }
++                    self.b.stats.chance_outcomes = self
++                        .b
++                        .stats
++                        .chance_outcomes
++                        .checked_add(children.len())
++                        .ok_or_else(|| Error("outcome count overflow".into()))?;
++                    let chance = self.push(Node::Terminal(0.))?;
++                    col_children.push(chance);
++                    let mut edges = Vec::new();
++                    for (probability, position) in children {
++                        let obs = self.b.domain.observation(&position)?;
++                        let phase = self.b.domain.phase(&position)?;
++                        let mut memory = h.memory.clone();
++                        memory[0].push(Memory::Action(rows[r].clone()));
++                        memory[1].push(Memory::Action(cols[c].clone()));
++                        for (side, m) in memory.iter_mut().enumerate() {
++                            m.push(Memory::Observe(
++                                obs.public.clone(),
++                                obs.private[side].clone(),
++                            ));
++                        }
++                        let mut public = h.public.clone();
++                        public.push(obs.public);
++                        let child = self.leaf(Frontier {
++                            node: 0,
++                            position,
++                            world: h.world,
++                            memory,
++                            public,
++                            turns,
++                            decisions: h.decisions + 1,
++                            phase,
++                        })?;
++                        edges.push((probability, child));
++                    }
++                    self.b.nodes[chance] = Node::Chance(edges);
++                }
++                // Column information must not contain the hidden row commitment.
++                self.b.nodes[col_node] = Node::Decision {
++                    player: 1,
++                    information: keys[1].clone(),
++                    actions: cols.clone(),
++                    children: col_children,
++                };
++            }
++            self.b.nodes[h.node] = Node::Decision {
++                player: 0,
++                information: keys[0].clone(),
++                actions: rows,
++                children: row_children,
++            };
++        }
++        Ok(())
++    }
++    fn admit(&mut self, key: &[String], work: &mut Work, cfg: Config) -> Attempt<()> {
++        self.expand(key, work, cfg)?;
++        // Publishing a snapshot while a pending replacement is priced as a heuristic
++        // leaf would change the previous solver's horizon contract. Close ALL switches.
++        loop {
++            let next = self
++                .frontier
++                .iter()
++                .find(|(_, g)| g[0].phase == Phase::Switch)
++                .map(|(k, _)| k.clone());
++            match next {
++                Some(k) => self.expand(&k, work, cfg)?,
++                None => return Ok(()),
++            }
++        }
++    }
++}
++
++struct Random(u64);
++impl Random {
++    fn unit(&mut self) -> f64 {
++        self.0 = self.0.wrapping_add(0x9e3779b97f4a7c15);
++        let mut z = self.0;
++        z = (z ^ (z >> 30)).wrapping_mul(0xbf58476d1ce4e5b9);
++        z = (z ^ (z >> 27)).wrapping_mul(0x94d049bb133111eb);
++        ((z ^ (z >> 31)) >> 11) as f64 * (1. / ((1u64 << 53) as f64))
++    }
++    fn sample(&mut self, weights: &[f64]) -> usize {
++        let mut x = self.unit();
++        for (i, &p) in weights.iter().enumerate() {
++            if x < p {
++                return i;
++            }
++            x -= p;
++        }
++        weights
++            .iter()
++            .rposition(|p| *p > 0.)
++            .expect("validated probability vector")
++    }
++}
++type Visits = HashMap<String, Vec<u64>>;
++
++/// CF action values aggregate all member histories before selection. No sampled-world
++/// value or node-wise best response is used as a substitute for information-set Q.
++fn scores(t: &Tree, policy: &Policy) -> Result<Vec<Vec<f64>>, Error> {
++    let values = t.values(policy);
++    let cf = [t.reach(policy, Some(0))?, t.reach(policy, Some(1))?];
++    let mut result = Vec::new();
++    for info in t.information() {
++        let mut q = vec![0.; info.actions.len()];
++        let mass: f64 = info.nodes.iter().map(|n| cf[info.player][*n]).sum();
++        if mass > 0. {
++            for &n in &info.nodes {
++                let Compiled::Decision { children, .. } = &t.nodes[n] else {
++                    unreachable!()
++                };
++                for (a, &child) in children.iter().enumerate() {
++                    q[a] += cf[info.player][n] / mass
++                        * values[child]
++                        * if info.player == 0 { 1. } else { -1. };
++                }
++            }
++        }
++        result.push(q);
++    }
++    Ok(result)
++}
++
++fn select<P: Prior>(
++    t: &Tree,
++    policy: &Policy,
++    q: &[Vec<f64>],
++    prior: &P,
++    visits: &mut Visits,
++    random: &mut Random,
++    exploration: f64,
++) -> Result<usize, Error> {
++    let mut n = t.root();
++    loop {
++        n = match &t.nodes[n] {
++            Compiled::Terminal(_) => return Ok(n),
++            Compiled::Chance(edges) => {
++                edges[random.sample(&edges.iter().map(|(p, _)| *p).collect::<Vec<_>>())].1
++            }
++            Compiled::Decision { info, children } => {
++                let information = &t.information[*info];
++                let mut p = prior.weights(information);
++                if p.len() != children.len() {
++                    return Err(Error("prior menu width mismatch".into()));
++                }
++                normalize(&mut p)?;
++                let counts = visits
++                    .entry(information.key.clone())
++                    .or_insert_with(|| vec![0; children.len()]);
++                if counts.len() != children.len() {
++                    return Err(Error("changed selection menu".into()));
++                }
++                let total = counts.iter().map(|v| *v as f64).sum::<f64>();
++                let mut best = 0;
++                let mut score = f64::NEG_INFINITY;
++                for a in 0..children.len() {
++                    let s = q[*info][a]
++                        + exploration * p[a] * (total + 1.).sqrt() / (1. + counts[a] as f64);
++                    if !s.is_finite() {
++                        return Err(Error("nonfinite PUCT score".into()));
++                    }
++                    if s > score {
++                        score = s;
++                        best = a;
++                    }
++                }
++                let a = if random.unit() < 0.5 {
++                    best
++                } else {
++                    random.sample(&policy[*info])
++                };
++                counts[a] = counts[a]
++                    .checked_add(1)
++                    .ok_or_else(|| Error("visit count overflow".into()))?;
++                children[a]
++            }
++        };
++    }
++}
++
++/// Bounded correctness reference for growing-tree CFR with the Pokai/SoG 50:50 PUCT /
++/// average-policy selection rule. This is not a learned CFV network or safe re-solving.
++pub fn search<D: ObservedDomain, P: Prior>(
++    domain: &D,
++    seeds: &[Seed<D::Position>],
++    limits: Limits,
++    cfg: Config,
++    prior: &P,
++) -> Result<ResultTree, Error> {
++    if cfg.max_expansions == 0
++        || cfg.max_walks == 0
++        || !cfg.exploration.is_finite()
++        || cfg.exploration < 0.
++        || limits.turns == 0
++        || limits.turns > 32
++        || limits.max_decisions == 0
++        || limits.max_decisions > 128
++        || limits.max_nodes == 0
++        || limits.max_transitions == 0
++    {
++        return Err(Error("invalid growing-tree configuration".into()));
++    }
++    // Validate solver configuration before any domain calls or transition work.
++    if cfg.solver.iterations == 0
++        || cfg.solver.iterations > 10_000_000
++        || cfg.solver.check_every == 0
++        || !cfg.solver.tolerance.is_finite()
++        || cfg.solver.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    labels(seeds.iter().map(|s| s.id.as_str()), "world ID")?;
++    let mut weights: Vec<_> = seeds.iter().map(|s| s.weight).collect();
++    normalize(&mut weights)?;
++    let first = domain.observation(&seeds[0].position)?;
++    let mut growing = Growing {
++        b: Builder {
++            domain,
++            limits,
++            nodes: Vec::new(),
++            stats: Stats::default(),
++            menus: HashMap::new(),
++            public: HashMap::new(),
++            public_keys: Vec::new(),
++            private: HashMap::new(),
++            private_keys: Vec::new(),
++            boundaries: Vec::new(),
++        },
++        root: 0,
++        worlds: seeds.iter().map(|s| s.id.clone()).collect(),
++        frontier: BTreeMap::new(),
++    };
++    let initial = (|| -> Attempt<()> {
++        growing.root = growing.push(Node::Terminal(0.))?;
++        let mut edges = Vec::new();
++        for (world, (s, weight)) in seeds.iter().zip(weights).enumerate() {
++            let obs = domain.observation(&s.position)?;
++            if obs.public != first.public
++                || obs.private[0] != first.private[0]
++                || domain.phase(&s.position)? != Phase::Turn
++            {
++                return Err(Error(
++                    "root worlds must share our initial information at a normal turn".into(),
++                )
++                .into());
++            }
++            let memory = [
++                Cursor::new(0, None, &obs)?.memory,
++                Cursor::new(1, Some(&s.id), &obs)?.memory,
++            ];
++            let n = growing.leaf(Frontier {
++                node: 0,
++                position: s.position.clone(),
++                world,
++                memory,
++                public: vec![obs.public],
++                turns: limits.turns,
++                decisions: 0,
++                phase: Phase::Turn,
++            })?;
++            edges.push((weight, n));
++        }
++        growing.b.nodes[growing.root] = Node::Chance(edges);
++        Ok(())
++    })();
++    let fatal = |e: Failure| match e {
++        Failure::Invalid(e) => e,
++        Failure::Limit(s) => Error(format!("root incomplete: {s:?}; no strategy returned")),
++    };
++    initial.map_err(fatal)?;
++    let mut work = Work::default();
++    growing
++        .admit(&[first.public], &mut work, cfg)
++        .map_err(fatal)?;
++    work.committed_expansions = work.attempted_expansions;
++    let mut t = growing.compile()?;
++    let mut solved = tree::solve(&t, cfg.solver)?;
++    work.solves += 1;
++    work.cfr_iterations += solved.iterations;
++    let mut q = scores(&t, &solved.policy)?;
++    let mut random = Random(cfg.seed);
++    let mut visits = Visits::new();
++    let stop = loop {
++        if growing.frontier.is_empty() {
++            break Stop::HorizonComplete;
++        }
++        if work.attempted_expansions >= cfg.max_expansions {
++            break Stop::ExpansionLimit;
++        }
++        if work.walks >= cfg.max_walks {
++            break Stop::WalkLimit;
++        }
++        work.walks += 1;
++        let selected = select(
++            &t,
++            &solved.policy,
++            &q,
++            prior,
++            &mut visits,
++            &mut random,
++            cfg.exploration,
++        )?;
++        let key = growing
++            .frontier
++            .iter()
++            .find(|(_, g)| g.iter().any(|h| h.node == selected))
++            .map(|(k, _)| k.clone());
++        let Some(key) = key else { continue };
++        let mut candidate = growing.fork();
++        let before = work.attempted_expansions;
++        match candidate.admit(&key, &mut work, cfg) {
++            Err(Failure::Limit(s)) => break s,
++            Err(Failure::Invalid(e)) => return Err(e),
++            Ok(()) => {}
++        }
++        let next = candidate.compile()?;
++        let solution = tree::solve(&next, cfg.solver)?;
++        q = scores(&next, &solution.policy)?;
++        work.committed_expansions += work.attempted_expansions - before;
++        work.solves += 1;
++        work.cfr_iterations += solution.iterations;
++        growing = candidate;
++        t = next;
++        solved = solution;
++    };
++    Ok(ResultTree {
++        built: Built {
++            tree: t,
++            stats: growing.b.stats,
++        },
++        solution: solved,
++        stop,
++        frontier_histories: growing.frontier.values().map(Vec::len).sum(),
++        frontier_public_groups: growing.frontier.len(),
++        horizon_complete: growing.frontier.is_empty(),
++        work,
++    })
++}
++
++#[cfg(test)]
++mod tests;
+diff --git a/engine/search/src/bayesian/tree/builder/growing/reuse.rs b/engine/search/src/bayesian/tree/builder/growing/reuse.rs
+new file mode 100644
+index 0000000..4402ead
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/builder/growing/reuse.rs
+@@ -0,0 +1,194 @@
++//! Same growing-tree algorithm with optional owned-builder reuse and CFR scratch reuse.
++//! A failed admission terminates this call. Its mutable builder is never published;
++//! the last compiled tree, policy and committed counters are returned atomically.
++use super::*;
++
++#[derive(Clone, Copy, Debug, Default)]
++pub struct Options {
++    pub in_place: bool,
++    pub workspace: bool,
++}
++#[derive(Clone, Copy, Debug)]
++pub struct Settings {
++    pub growth: Config,
++    pub storage: Options,
++}
++fn summary<D: ObservedDomain>(g: &Growing<'_, D>) -> (Stats, usize, usize) {
++    (
++        g.b.stats.clone(),
++        g.frontier.values().map(Vec::len).sum(),
++        g.frontier.len(),
++    )
++}
++fn solve(t: &Tree, config: CfrConfig, workspace: bool) -> Result<Solution, Error> {
++    if workspace {
++        tree::workspace::solve(t, config)
++    } else {
++        tree::solve(t, config)
++    }
++}
++
++pub fn search<D: ObservedDomain, P: Prior>(
++    domain: &D,
++    seeds: &[Seed<D::Position>],
++    limits: Limits,
++    cfg: Config,
++    prior: &P,
++    options: Options,
++) -> Result<ResultTree, Error> {
++    if cfg.max_expansions == 0
++        || cfg.max_walks == 0
++        || !cfg.exploration.is_finite()
++        || cfg.exploration < 0.
++        || limits.turns == 0
++        || limits.turns > 32
++        || limits.max_decisions == 0
++        || limits.max_decisions > 128
++        || limits.max_nodes == 0
++        || limits.max_transitions == 0
++    {
++        return Err(Error("invalid growing-tree configuration".into()));
++    }
++    // Validate solver configuration before any domain calls or transition work.
++    if cfg.solver.iterations == 0
++        || cfg.solver.iterations > 10_000_000
++        || cfg.solver.check_every == 0
++        || !cfg.solver.tolerance.is_finite()
++        || cfg.solver.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    labels(seeds.iter().map(|s| s.id.as_str()), "world ID")?;
++    let mut weights: Vec<_> = seeds.iter().map(|s| s.weight).collect();
++    normalize(&mut weights)?;
++    let first = domain.observation(&seeds[0].position)?;
++    let mut growing = Growing {
++        b: Builder {
++            domain,
++            limits,
++            nodes: Vec::new(),
++            stats: Stats::default(),
++            menus: HashMap::new(),
++            public: HashMap::new(),
++            public_keys: Vec::new(),
++            private: HashMap::new(),
++            private_keys: Vec::new(),
++            boundaries: Vec::new(),
++        },
++        root: 0,
++        worlds: seeds.iter().map(|s| s.id.clone()).collect(),
++        frontier: BTreeMap::new(),
++    };
++    let initial = (|| -> Attempt<()> {
++        growing.root = growing.push(Node::Terminal(0.))?;
++        let mut edges = Vec::new();
++        for (world, (s, weight)) in seeds.iter().zip(weights).enumerate() {
++            let obs = domain.observation(&s.position)?;
++            if obs.public != first.public
++                || obs.private[0] != first.private[0]
++                || domain.phase(&s.position)? != Phase::Turn
++            {
++                return Err(Error(
++                    "root worlds must share our initial information at a normal turn".into(),
++                )
++                .into());
++            }
++            let memory = [
++                Cursor::new(0, None, &obs)?.memory,
++                Cursor::new(1, Some(&s.id), &obs)?.memory,
++            ];
++            let n = growing.leaf(Frontier {
++                node: 0,
++                position: s.position.clone(),
++                world,
++                memory,
++                public: vec![obs.public],
++                turns: limits.turns,
++                decisions: 0,
++                phase: Phase::Turn,
++            })?;
++            edges.push((weight, n));
++        }
++        growing.b.nodes[growing.root] = Node::Chance(edges);
++        Ok(())
++    })();
++    let fatal = |e: Failure| match e {
++        Failure::Invalid(e) => e,
++        Failure::Limit(s) => Error(format!("root incomplete: {s:?}; no strategy returned")),
++    };
++    initial.map_err(fatal)?;
++    let mut work = Work::default();
++    growing
++        .admit(&[first.public], &mut work, cfg)
++        .map_err(fatal)?;
++    work.committed_expansions = work.attempted_expansions;
++    let mut t = growing.compile()?;
++    let mut solved = solve(&t, cfg.solver, options.workspace)?;
++    work.solves += 1;
++    work.cfr_iterations += solved.iterations;
++    // Only this compact committed summary is externally observable if admission fails.
++    // The working builder is private to this call and is discarded on any failed attempt.
++    let mut committed = summary(&growing);
++    let mut q = scores(&t, &solved.policy)?;
++    let mut random = Random(cfg.seed);
++    let mut visits = Visits::new();
++    let stop = loop {
++        if growing.frontier.is_empty() {
++            break Stop::HorizonComplete;
++        }
++        if work.attempted_expansions >= cfg.max_expansions {
++            break Stop::ExpansionLimit;
++        }
++        if work.walks >= cfg.max_walks {
++            break Stop::WalkLimit;
++        }
++        work.walks += 1;
++        let selected = select(
++            &t,
++            &solved.policy,
++            &q,
++            prior,
++            &mut visits,
++            &mut random,
++            cfg.exploration,
++        )?;
++        let key = growing
++            .frontier
++            .iter()
++            .find(|(_, g)| g.iter().any(|h| h.node == selected))
++            .map(|(k, _)| k.clone());
++        let Some(key) = key else { continue };
++        let mut fork = (!options.in_place).then(|| growing.fork());
++        let candidate = fork.as_mut().unwrap_or(&mut growing);
++        let before = work.attempted_expansions;
++        match candidate.admit(&key, &mut work, cfg) {
++            Err(Failure::Limit(s)) => break s,
++            Err(Failure::Invalid(e)) => return Err(e),
++            Ok(()) => {}
++        }
++        let next = candidate.compile()?;
++        let solution = solve(&next, cfg.solver, options.workspace)?;
++        q = scores(&next, &solution.policy)?;
++        work.committed_expansions += work.attempted_expansions - before;
++        work.solves += 1;
++        work.cfr_iterations += solution.iterations;
++        committed = summary(candidate);
++        if let Some(candidate) = fork {
++            growing = candidate;
++        }
++        t = next;
++        solved = solution;
++    };
++    Ok(ResultTree {
++        built: Built {
++            tree: t,
++            stats: committed.0,
++        },
++        solution: solved,
++        stop,
++        frontier_histories: committed.1,
++        frontier_public_groups: committed.2,
++        horizon_complete: committed.2 == 0,
++        work,
++    })
++}
+diff --git a/engine/search/src/bayesian/tree/builder/growing/tests.rs b/engine/search/src/bayesian/tree/builder/growing/tests.rs
+index 552447d..70f1c3d 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/tests.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/tests.rs
+@@ -364,3 +364,147 @@ fn invalid_solver_fails_before_engine_work() {
+     assert!(search(&game, &seeds(), Limits::default(), c, &Uniform).is_err());
+     assert_eq!(game.calls.get(), 0);
+ }
++
++#[cfg(feature = "experiment-belief-workspace")]
++fn exact_result(r: Result<ResultTree, Error>) -> String {
++    match r {
++        Err(e) => format!("error: {e:?}"),
++        Ok(r) => format!(
++            "{:?}|{:?}|{:?}|{:?}|{:?}|{}|{}|{}",
++            r.built.tree,
++            r.built.stats,
++            r.solution,
++            r.stop,
++            r.work,
++            r.frontier_histories,
++            r.frontier_public_groups,
++            r.horizon_complete
++        ),
++    }
++}
++
++#[cfg(feature = "experiment-belief-workspace")]
++#[test]
++fn allocation_candidates_match_all_admission_failure_boundaries() {
++    let mut trials = Vec::new();
++    for cap in 0..=42 {
++        trials.push((
++            Limits {
++                max_transitions: cap,
++                ..Limits::default()
++            },
++            config(100),
++        ));
++    }
++    for cap in (0..=180).step_by(3) {
++        trials.push((
++            Limits {
++                max_nodes: cap,
++                ..Limits::default()
++            },
++            config(100),
++        ));
++    }
++    for cap in 0..=3 {
++        trials.push((
++            Limits {
++                max_decisions: cap,
++                ..Limits::default()
++            },
++            config(100),
++        ));
++    }
++    for cap in 0..=4 {
++        trials.push((Limits::default(), config(cap)));
++    }
++    for cap in 0..=4 {
++        trials.push((
++            Limits::default(),
++            Config {
++                max_walks: cap,
++                ..config(100)
++            },
++        ));
++    }
++    for switch in [false, true] {
++        for (limits, cfg) in &trials {
++            let g = Game {
++                switch,
++                ..Game::new()
++            };
++            let expected = exact_result(search(&g, &seeds(), *limits, *cfg, &Uniform));
++            let expected_calls = g.calls.get();
++            for options in [
++                reuse::Options {
++                    in_place: true,
++                    workspace: false,
++                },
++                reuse::Options {
++                    in_place: false,
++                    workspace: true,
++                },
++                reuse::Options {
++                    in_place: true,
++                    workspace: true,
++                },
++            ] {
++                let g = Game {
++                    switch,
++                    ..Game::new()
++                };
++                let actual = exact_result(reuse::search(
++                    &g,
++                    &seeds(),
++                    *limits,
++                    *cfg,
++                    &Uniform,
++                    options,
++                ));
++                assert_eq!(
++                    actual, expected,
++                    "{limits:?}, {cfg:?}, {options:?}, switch={switch}"
++                );
++                assert_eq!(g.calls.get(), expected_calls);
++            }
++        }
++    }
++}
++
++#[cfg(feature = "experiment-belief-workspace")]
++#[test]
++fn allocation_candidates_keep_zero_mass_and_malformed_domain_behavior() {
++    let mut s = seeds();
++    s[1].weight = 0.;
++    for bad_mass in [false, true] {
++        for seed in [1, 7, 31, u64::MAX] {
++            let cfg = Config {
++                seed,
++                ..config(100)
++            };
++            let a = Game {
++                bad_mass,
++                ..Game::new()
++            };
++            let b = Game {
++                bad_mass,
++                ..Game::new()
++            };
++            assert_eq!(
++                exact_result(search(&a, &s, Limits::default(), cfg, &Uniform)),
++                exact_result(reuse::search(
++                    &b,
++                    &s,
++                    Limits::default(),
++                    cfg,
++                    &Uniform,
++                    reuse::Options {
++                        in_place: true,
++                        workspace: true
++                    }
++                ))
++            );
++            assert_eq!(a.calls.get(), b.calls.get());
++        }
++    }
++    assert_eq!(s[0].position.stage, 0);
++}
+diff --git a/engine/search/src/bayesian/tree/engine.rs b/engine/search/src/bayesian/tree/engine.rs
+index 80005f8..acef331 100644
+--- a/engine/search/src/bayesian/tree/engine.rs
++++ b/engine/search/src/bayesian/tree/engine.rs
+@@ -197,6 +197,56 @@ pub fn growing<const N: usize, E: Evaluator<N> + ?Sized>(
+     builder::growing::search(&domain, &seeds, limits, config, &builder::growing::Uniform)
+ }
+ 
++/// Allocation-only candidate; same root information checks as `growing`.
++#[cfg(feature = "experiment-belief-workspace")]
++pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: builder::growing::reuse::Settings,
++) -> Result<builder::growing::ResultTree, Error> {
++    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
++    let reference = visible(&first.position.state, us, knowledge)?;
++    for w in worlds {
++        if w.position.suspension.is_some() {
++            return Err(Error(
++                "root suspended state needs prior action memory".into(),
++            ));
++        }
++        if visible(&w.position.state, us, knowledge)? != reference {
++            return Err(Error("worlds disagree on declared known root state".into()));
++        }
++    }
++    let domain = SnapshotDomain {
++        inner: EngineDomain {
++            ruleset,
++            options: EnumerateOptions::default(),
++            pruning: Pruning::All,
++            us,
++            evaluator,
++        },
++    };
++    let seeds: Vec<_> = worlds
++        .iter()
++        .map(|w| Seed {
++            id: w.id.clone(),
++            weight: w.weight,
++            position: w.position.clone(),
++        })
++        .collect();
++    builder::growing::reuse::search(
++        &domain,
++        &seeds,
++        limits,
++        settings.growth,
++        &builder::growing::Uniform,
++        settings.storage,
++    )
++}
++
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+diff --git a/engine/search/src/bayesian/tree/tests.rs b/engine/search/src/bayesian/tree/tests.rs
+index 18ad6bc..196be4f 100644
+--- a/engine/search/src/bayesian/tree/tests.rs
++++ b/engine/search/src/bayesian/tree/tests.rs
+@@ -44,6 +44,72 @@ fn simultaneous_choices_do_not_observe_each_other() {
+     assert_eq!(t.information[1].nodes.len(), 2);
+ }
+ 
++#[cfg(feature = "experiment-belief-workspace")]
++#[test]
++fn scratch_reuse_matches_reference_kuhn_at_every_check_schedule() {
++    let tree = kuhn();
++    for iterations in [1, 2, 3, 31, 32, 127, 511] {
++        for check_every in [1, 7, 32] {
++            for tolerance in [0., 0.1] {
++                let config = Config {
++                    iterations,
++                    check_every,
++                    tolerance,
++                };
++                let reference = solve(&tree, config).unwrap();
++                let candidate = workspace::solve(&tree, config).unwrap();
++                assert_eq!(format!("{reference:?}"), format!("{candidate:?}"));
++            }
++        }
++    }
++}
++
++#[cfg(feature = "experiment-belief-workspace")]
++#[test]
++fn scratch_reuse_matches_scaled_hidden_games_and_invalid_configs() {
++    for scale in [0., 1e-300, 1., 1e100] {
++        for mass in [0., 0.01, 0.5, 1.] {
++            let t = Tree::new(
++                vec![
++                    Node::Chance(vec![(mass, 1), (1. - mass, 2)]),
++                    decision(0, "same", vec![3, 4]),
++                    decision(0, "same", vec![5, 6]),
++                    Node::Terminal(scale),
++                    Node::Terminal(-scale),
++                    Node::Terminal(-scale * 0.7),
++                    Node::Terminal(scale * 0.3),
++                ],
++                0,
++            )
++            .unwrap();
++            for config in [
++                Config {
++                    iterations: 100,
++                    check_every: 7,
++                    tolerance: 0.,
++                },
++                Config {
++                    iterations: 0,
++                    ..cfg()
++                },
++                Config {
++                    check_every: 0,
++                    ..cfg()
++                },
++                Config {
++                    tolerance: f64::NAN,
++                    ..cfg()
++                },
++            ] {
++                assert_eq!(
++                    format!("{:?}", solve(&t, config)),
++                    format!("{:?}", workspace::solve(&t, config))
++                );
++            }
++        }
++    }
++}
++
+ #[test]
+ fn best_response_shares_actions_across_indistinguishable_histories() {
+     let t = Tree::new(
+diff --git a/engine/search/src/bayesian/tree/workspace.rs b/engine/search/src/bayesian/tree/workspace.rs
+new file mode 100644
+index 0000000..856b404
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/workspace.rs
+@@ -0,0 +1,122 @@
++//! Allocation-only CFR workspace experiment. Every physical node belongs to exactly one
++//! reachable tree, so values/reach overwrite each entry before its next read. No clearing
++//! or history pruning is needed. Arithmetic and update order match the reference solver.
++use super::*;
++
++fn values_into(tree: &Tree, policy: &Policy, values: &mut [f64]) {
++    for &id in tree.order.iter().rev() {
++        values[id] = match &tree.nodes[id] {
++            Compiled::Terminal(v) => v / tree.scale,
++            Compiled::Chance(edges) => edges.iter().map(|(p, n)| p * values[*n]).sum(),
++            Compiled::Decision { info, children } => children
++                .iter()
++                .zip(&policy[*info])
++                .map(|(n, p)| p * values[*n])
++                .sum(),
++        };
++    }
++}
++fn reach_into(tree: &Tree, policy: &Policy, player: usize, reach: &mut [f64]) -> Result<(), Error> {
++    reach[tree.root] = 1.;
++    for &id in &tree.order {
++        match &tree.nodes[id] {
++            Compiled::Terminal(_) => {}
++            Compiled::Chance(edges) => {
++                for &(p, n) in edges {
++                    reach[n] = multiply(reach[id], p)?;
++                }
++            }
++            Compiled::Decision { info, children } => {
++                for (a, &n) in children.iter().enumerate() {
++                    reach[n] = multiply(
++                        reach[id],
++                        if player == tree.information[*info].player {
++                            1.
++                        } else {
++                            policy[*info][a]
++                        },
++                    )?;
++                }
++            }
++        }
++    }
++    Ok(())
++}
++
++pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
++    if config.iterations == 0
++        || config.iterations > 10_000_000
++        || config.check_every == 0
++        || !config.tolerance.is_finite()
++        || config.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    let mut policy = tree.uniform();
++    let mut regrets: Policy = policy.iter().map(|p| vec![0.; p.len()]).collect();
++    let mut sums = regrets.clone();
++    let mut total = vec![0.; policy.len()];
++    let mut values = vec![0.; tree.nodes.len()];
++    let mut cf = vec![0.; tree.nodes.len()];
++    for t in 1..=config.iterations {
++        let weight = t as f64 / config.iterations as f64;
++        for player in 0..2 {
++            values_into(tree, &policy, &mut values);
++            reach_into(tree, &policy, player, &mut cf)?;
++            let sign = if player == 0 { 1. } else { -1. };
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    for &node in &info.nodes {
++                        let Compiled::Decision { children, .. } = &tree.nodes[node] else {
++                            unreachable!()
++                        };
++                        for (a, &child) in children.iter().enumerate() {
++                            regrets[i][a] +=
++                                weight * cf[node] * sign * (values[child] - values[node]);
++                        }
++                    }
++                }
++            }
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    strategy(&regrets[i], &mut policy[i]);
++                }
++            }
++        }
++        for (i, info) in tree.information.iter().enumerate() {
++            let mut own = 1.;
++            for &(j, a) in &info.own_sequence {
++                own = multiply(own, policy[j][a])?;
++            }
++            let w = multiply(weight, own)?;
++            total[i] += w;
++            for (s, &p) in sums[i].iter_mut().zip(&policy[i]) {
++                *s += w * p;
++            }
++        }
++        if t % config.check_every == 0 || t == config.iterations {
++            let average: Policy = sums
++                .iter()
++                .enumerate()
++                .map(|(i, p)| {
++                    if total[i] > 0. {
++                        p.iter().map(|v| v / total[i]).collect()
++                    } else {
++                        vec![1. / p.len() as f64; p.len()]
++                    }
++                })
++                .collect();
++            let assessment = tree.assess(&average)?;
++            let converged = assessment.gap <= config.tolerance;
++            if converged || t == config.iterations {
++                return Ok(Solution {
++                    policy: average,
++                    assessment,
++                    iterations: t,
++                    converged,
++                });
++            }
++        }
++    }
++    unreachable!()
++}
+diff --git a/engine/search/src/bin/lab-belief-workspace-speed.rs b/engine/search/src/bin/lab-belief-workspace-speed.rs
+new file mode 100644
+index 0000000..8d9677f
+--- /dev/null
++++ b/engine/search/src/bin/lab-belief-workspace-speed.rs
+@@ -0,0 +1,319 @@
++//! Same-work paired benchmark: exact reference/candidate parity precedes timing.
++//! Loading, JSON serialization, diagnostics and returned-tree destruction are not timed.
++use lab_engine::{eval::Evaluator, rules::Ruleset, state::SideId, turn::EnumerateOptions};
++use lab_search::{
++    bayesian::{
++        self,
++        engine::{EngineWorld, Knowledge},
++        tree::{
++            self,
++            builder::{growing, Built, Limits},
++        },
++    },
++    budgeted::Position,
++};
++use serde_json::{json, Value};
++use std::{collections::BTreeMap, hint::black_box, io::Write, path::Path, time::Instant};
++
++struct Input {
++    worlds: Vec<EngineWorld<2>>,
++    knowledge: Knowledge,
++    limits: Limits,
++    solver: bayesian::Config,
++}
++struct Output {
++    built: Built,
++    solved: tree::Solution,
++    growth: Option<(growing::Work, growing::Stop, usize)>,
++    complete: bool,
++}
++enum Method {
++    Exhaustive,
++    Growing(growing::Config),
++    Reusing(growing::Config, growing::reuse::Options),
++    ExhaustiveWorkspace,
++}
++fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
++    match v.get(k) {
++        None => Ok(d),
++        Some(x) => x
++            .as_u64()
++            .and_then(|v| usize::try_from(v).ok())
++            .ok_or_else(|| format!("invalid {k}")),
++    }
++}
++fn string<'a>(v: &'a Value, k: &str) -> Result<&'a str, String> {
++    v[k].as_str().ok_or_else(|| format!("invalid {k}"))
++}
++fn load(v: &Value, base: &Path) -> Result<Input, String> {
++    let mut worlds = Vec::new();
++    for w in v["worlds"].as_array().ok_or("worlds array")? {
++        let loaded = lab_scenario::load_scenario_file(base.join(string(w, "scenario")?))
++            .map_err(|e| e.to_string())?;
++        let mut positions =
++            lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
++                .map_err(|e| e.to_string())?;
++        if positions.len() != 1 {
++            return Err("ambiguous root".into());
++        }
++        worlds.push(EngineWorld {
++            id: string(w, "id")?.into(),
++            weight: w["weight"].as_f64().ok_or("weight")?,
++            position: Position {
++                state: positions.remove(0).state,
++                suspension: None,
++            },
++        });
++    }
++    let l = &v["limits"];
++    let s = &v["solver"];
++    Ok(Input {
++        worlds,
++        knowledge: Knowledge {
++            hidden_stats: v["hidden_stats"].as_bool().unwrap_or(false),
++            ..Knowledge::default()
++        },
++        limits: Limits {
++            turns: uint(l, "turns", 2)?
++                .try_into()
++                .map_err(|_| "turn overflow")?,
++            max_nodes: uint(l, "max_nodes", 50000)?,
++            max_transitions: uint(l, "max_transitions", 20000)?,
++            max_decisions: uint(l, "max_decisions", 32)?,
++        },
++        solver: bayesian::Config {
++            iterations: uint(s, "iterations", 1000)?,
++            check_every: uint(s, "check_every", 32)?,
++            tolerance: s["tolerance"].as_f64().unwrap_or(0.1),
++        },
++    })
++}
++fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, String> {
++    let i = black_box(i);
++    if matches!(variant, Method::Exhaustive | Method::ExhaustiveWorkspace) {
++        let built = tree::engine::build(
++            &i.worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            e,
++            &i.knowledge,
++            i.limits,
++        )
++        .map_err(|e| e.to_string())?;
++        let solved = if matches!(variant, Method::ExhaustiveWorkspace) {
++            tree::workspace::solve(&built.tree, i.solver)
++        } else {
++            tree::solve(&built.tree, i.solver)
++        }
++        .map_err(|e| e.to_string())?;
++        Ok(Output {
++            built,
++            solved,
++            growth: None,
++            complete: true,
++        })
++    } else {
++        let r = match variant {
++            Method::Growing(g) => tree::engine::growing(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                *g,
++            ),
++            Method::Reusing(g, options) => tree::engine::growing_reusing(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                growing::reuse::Settings {
++                    growth: *g,
++                    storage: *options,
++                },
++            ),
++            _ => unreachable!(),
++        }
++        .map_err(|e| e.to_string())?;
++        Ok(Output {
++            built: r.built,
++            solved: r.solution,
++            growth: Some((r.work, r.stop, r.frontier_public_groups)),
++            complete: r.horizon_complete,
++        })
++    }
++}
++fn root_policy(o: &Output) -> BTreeMap<String, Vec<f64>> {
++    o.built
++        .tree
++        .information()
++        .iter()
++        .enumerate()
++        .filter(|(_, i)| i.player == 0 && i.own_sequence.is_empty())
++        .map(|(id, i)| (i.key.clone(), o.solved.policy[id].clone()))
++        .collect()
++}
++fn diagnostics(o: &Output) -> Value {
++    let growth=o.growth.as_ref().map(|(w,stop,frontier)|json!({"attempted_transitions":w.attempted_transitions,
++        "committed_expansions":w.committed_expansions,"walks":w.walks,"solves":w.solves,
++        "total_cfr_iterations":w.cfr_iterations,"stop":format!("{stop:?}"),"frontier_groups":frontier}));
++    json!({"nodes":o.built.tree.node_count(),"information_sets":o.built.tree.information().len(),
++        "transitions":o.built.stats.transitions,"chance_outcomes":o.built.stats.chance_outcomes,
++        "leaves":o.built.stats.leaves,"switch_decisions":o.built.stats.switch_decisions,
++        "iterations":o.solved.iterations,"gap":o.solved.assessment.gap,"value":o.solved.assessment.value,
++        "solver_converged":o.solved.converged,"horizon_complete":o.complete,"growth":growth,
++        "root_policy":root_policy(o)})
++}
++fn validate(reference: &Output, o: &Output, _: &Value) -> Result<(), String> {
++    if !o.solved.converged {
++        return Err("requested solver tolerance was not met".into());
++    }
++    // Exact comparison of the entire policy, tree, observation metadata, best responses,
++    // stopping state and charged/committed work. This also covers partial/limited trees.
++    if format!("{:?}", reference.built.tree) != format!("{:?}", o.built.tree)
++        || format!("{:?}", reference.solved) != format!("{:?}", o.solved)
++        || format!("{:?}", reference.built.stats) != format!("{:?}", o.built.stats)
++        || diagnostics(reference) != diagnostics(o)
++    {
++        return Err("exact same-work parity failed".into());
++    }
++    Ok(())
++}
++fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
++    let config = growing::Config {
++        max_expansions: uint(v, "max_expansions", 10000)?,
++        max_walks: uint(v, "max_walks", 20000)?,
++        exploration: 1.,
++        seed: v["seed"].as_u64().unwrap_or(1),
++        solver,
++    };
++    Ok(match string(v, "kind")? {
++        "exhaustive" => Method::Exhaustive,
++        "exhaustive-workspace" => Method::ExhaustiveWorkspace,
++        "growing" => Method::Growing(config),
++        "in-place" | "workspace" | "combined" => Method::Reusing(
++            config,
++            growing::reuse::Options {
++                in_place: v["kind"] != "workspace",
++                workspace: v["kind"] != "in-place",
++            },
++        ),
++        _ => return Err("invalid method".into()),
++    })
++}
++fn emit(v: Value) -> Result<(), String> {
++    println!("{}", serde_json::to_string(&v).map_err(|e| e.to_string())?);
++    std::io::stdout().flush().map_err(|e| e.to_string())
++}
++// Each timing covers build + CFR until a decision result is available. Diagnostics and
++// the returned graph's destructor run after the timer, identically for both paths.
++fn timed(i: &Input, e: &dyn Evaluator<2>, v: &Method, n: usize) -> Result<(f64, Output), String> {
++    let mut ns = 0.;
++    let mut last = None;
++    for _ in 0..n {
++        drop(last.take());
++        let start = Instant::now();
++        let output = compute(i, e, v)?;
++        black_box(&output);
++        ns += start.elapsed().as_nanos() as f64;
++        last = Some(output);
++    }
++    Ok((ns / n as f64, last.unwrap()))
++}
++fn main() -> std::process::ExitCode {
++    let work = || -> Result<(), String> {
++        let args: Vec<_> = std::env::args().skip(1).collect();
++        if args.len() != 2 || !["--check", "--measure"].contains(&args[0].as_str()) {
++            return Err("usage: lab-belief-workspace-speed --check|--measure case.json".into());
++        }
++        let path = Path::new(&args[1]);
++        let v: Value = serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
++            .map_err(|e| e.to_string())?;
++        let i = load(&v, path.parent().unwrap_or(Path::new(".")))?;
++        let evaluator = lab_search::model::load_evaluator("heuristic")?;
++        let variants = v["variants"].as_array().ok_or("variants")?;
++        let methods = variants
++            .iter()
++            .map(|v| method(v, i.solver))
++            .collect::<Result<Vec<_>, _>>()?;
++        let base = &v["baseline"];
++        let baseline_method = method(base, i.solver)?;
++        let reference = compute(&i, evaluator.as_ref(), &baseline_method)?;
++        validate(&reference, &reference, base)?;
++        emit(json!({"type":"baseline","diagnostics":diagnostics(&reference)}))?;
++        let mut batches = Vec::new();
++        let mut expected = Vec::new();
++        let target = uint(&v, "sample_ms", 80)? as f64 * 1e6;
++        for (variant, method) in variants.iter().zip(&methods) {
++            let o = compute(&i, evaluator.as_ref(), method)?;
++            validate(&reference, &o, variant)?;
++            let d = diagnostics(&o);
++            expected.push(d.clone());
++            emit(json!({"type":"validation","variant":variant,"diagnostics":d}))?;
++            if args[0] == "--measure" {
++                let (baseline_ns, _) = timed(&i, evaluator.as_ref(), &baseline_method, 1)?;
++                let (variant_ns, _) = timed(&i, evaluator.as_ref(), method, 1)?;
++                let counts = [baseline_ns, variant_ns]
++                    .map(|ns| (target / ns).ceil().clamp(1., 64.) as usize);
++                batches.push(counts);
++                emit(
++                    json!({"type":"calibration","variant":variant["id"],"baseline_ns":baseline_ns,"variant_ns":variant_ns,"counts":counts}),
++                )?;
++            }
++        }
++        if args[0] == "--check" {
++            return emit(json!({"type":"checked","timing":false}));
++        }
++        let rounds = uint(&v, "rounds", 7)?;
++        if !(3..=31).contains(&rounds) {
++            return Err("rounds range 3..31".into());
++        }
++        let base_d = diagnostics(&reference);
++        drop(reference);
++        for block in 0..rounds {
++            for offset in 0..variants.len() {
++                // Rotate treatments between blocks; ABBA/BAAB balances within-block drift.
++                let index = (offset + block) % variants.len();
++                let variant = &variants[index];
++                let order = if block % 2 == 0 {
++                    [0, 1, 1, 0]
++                } else {
++                    [1, 0, 0, 1]
++                };
++                let mut samples = Vec::new();
++                for (slot, which) in order.into_iter().enumerate() {
++                    let treatment = if which == 0 {
++                        &baseline_method
++                    } else {
++                        &methods[index]
++                    };
++                    let (ns, o) = timed(&i, evaluator.as_ref(), treatment, batches[index][which])?;
++                    if diagnostics(&o)
++                        != if which == 0 {
++                            base_d.clone()
++                        } else {
++                            expected[index].clone()
++                        }
++                    {
++                        return Err("nondeterministic result during timing".into());
++                    }
++                    samples.push(json!({"slot":slot,"treatment":if which==0 {"baseline"} else {"candidate"},"ns_per_solve":ns,"batch":batches[index][which]}));
++                }
++                emit(
++                    json!({"type":"paired","block":block,"variant":variant["id"],"samples":samples}),
++                )?;
++            }
++        }
++        emit(json!({"type":"completed","rounds":rounds,"timing":true}))
++    };
++    match work() {
++        Ok(()) => std::process::ExitCode::SUCCESS,
++        Err(e) => {
++            eprintln!("lab-belief-workspace-speed: {e}");
++            std::process::ExitCode::FAILURE
++        }
++    }
++}
+diff --git a/engine/search/src/bin/lab-belief-workspace.rs b/engine/search/src/bin/lab-belief-workspace.rs
+new file mode 100644
+index 0000000..324f53e
+--- /dev/null
++++ b/engine/search/src/bin/lab-belief-workspace.rs
+@@ -0,0 +1,375 @@
++//! Experimental finite information-tree CLI. See benchmarks/s26_tree/CONTRACT.md.
++use lab_engine::{rules::Ruleset, state::SideId, turn::EnumerateOptions};
++use lab_search::bayesian::{
++    engine::{EngineWorld, Knowledge},
++    tree::{self, builder::Limits, Node, Tree},
++    Config,
++};
++use lab_search::budgeted::Position;
++use serde_json::{json, Value};
++use std::path::Path;
++
++#[cfg(feature = "experiment-growing-belief")]
++#[path = "lab-belief-workspace/observed.rs"]
++mod observed;
++
++fn string(v: &Value, k: &str) -> Result<String, String> {
++    v[k].as_str()
++        .map(str::to_owned)
++        .ok_or_else(|| format!("{k}: expected string"))
++}
++fn number(v: &Value, k: &str) -> Result<f64, String> {
++    v[k].as_f64().ok_or_else(|| format!("{k}: expected number"))
++}
++fn index(v: &Value) -> Result<usize, String> {
++    v.as_u64()
++        .and_then(|n| usize::try_from(n).ok())
++        .ok_or("expected nonnegative integer".into())
++}
++fn integer(v: &Value, k: &str, d: usize) -> Result<usize, String> {
++    v.get(k).map_or(Ok(d), index)
++}
++fn boolean(v: &Value, k: &str, d: bool) -> Result<bool, String> {
++    v.get(k).map_or(Ok(d), |x| {
++        x.as_bool().ok_or_else(|| format!("{k}: expected boolean"))
++    })
++}
++fn array(v: &Value) -> Result<&Vec<Value>, String> {
++    v.as_array().ok_or("expected array".into())
++}
++fn strings(v: &Value) -> Result<Vec<String>, String> {
++    array(v)?
++        .iter()
++        .map(|x| {
++            x.as_str()
++                .map(str::to_owned)
++                .ok_or("expected string".into())
++        })
++        .collect()
++}
++fn keys(v: &Value, allowed: &[&str]) -> Result<(), String> {
++    for k in v.as_object().ok_or("expected object")?.keys() {
++        if !allowed.contains(&k.as_str()) {
++            return Err(format!("unknown field {k}"));
++        }
++    }
++    Ok(())
++}
++
++fn request(v: &Value, base: &Path) -> Result<Value, String> {
++    let mut config = Config::default();
++    if let Some(c) = v.get("solver") {
++        keys(c, &["iterations", "tolerance", "check_every"])?;
++        config.iterations = integer(c, "iterations", config.iterations)?;
++        config.check_every = integer(c, "check_every", config.check_every)?;
++        if c.get("tolerance").is_some() {
++            config.tolerance = number(c, "tolerance")?;
++        }
++    }
++    if config.iterations == 0
++        || config.iterations > 10_000_000
++        || config.check_every == 0
++        || !config.tolerance.is_finite()
++        || config.tolerance < 0.
++    {
++        return Err("invalid solver config".into());
++    }
++    let mode = string(v, "mode")?;
++    let include_keys = boolean(v, "include_keys", false)?;
++    let mut growth_solution = None;
++    let (tree, metadata) = match mode.as_str() {
++        #[cfg(feature = "experiment-growing-belief")]
++        "observed" => {
++            let (built, solution, metadata) = observed::request(v, config)?;
++            growth_solution = solution;
++            (built.tree, metadata)
++        }
++        "tree" => {
++            keys(v, &["mode", "nodes", "root", "solver", "include_keys"])?;
++            let mut nodes = Vec::new();
++            for n in array(&v["nodes"])? {
++                nodes.push(match string(n, "type")?.as_str() {
++                    "terminal" => {
++                        keys(n, &["type", "value"])?;
++                        Node::Terminal(number(n, "value")?)
++                    }
++                    "chance" => {
++                        keys(n, &["type", "edges"])?;
++                        Node::Chance(
++                            array(&n["edges"])?
++                                .iter()
++                                .map(|e| {
++                                    keys(e, &["probability", "child"])?;
++                                    Ok((number(e, "probability")?, index(&e["child"])?))
++                                })
++                                .collect::<Result<_, String>>()?,
++                        )
++                    }
++                    "decision" => {
++                        keys(n, &["type", "player", "information", "actions", "children"])?;
++                        Node::Decision {
++                            player: index(&n["player"])?,
++                            information: string(n, "information")?,
++                            actions: strings(&n["actions"])?,
++                            children: array(&n["children"])?
++                                .iter()
++                                .map(index)
++                                .collect::<Result<_, _>>()?,
++                        }
++                    }
++                    _ => return Err("unknown node type".into()),
++                });
++            }
++            (
++                Tree::new(nodes, integer(v, "root", 0)?).map_err(|e| e.to_string())?,
++                json!({"scope":"supplied-finite-information-tree"}),
++            )
++        }
++        "engine" => {
++            keys(
++                v,
++                &[
++                    "mode",
++                    "worlds",
++                    "side",
++                    "evaluator",
++                    "knowledge",
++                    "limits",
++                    "solver",
++                    "include_keys",
++                    "observation_model",
++                    "growth",
++                ],
++            )?;
++            if string(v, "observation_model")? != "snapshot-information-v1" {
++                return Err("explicit observation_model snapshot-information-v1 required; complete battle-log observations are not implemented".into());
++            }
++            let side = match v.get("side") {
++                None => SideId::One,
++                Some(_) => match string(v, "side")?.as_str() {
++                    "p1" => SideId::One,
++                    "p2" => SideId::Two,
++                    _ => return Err("side must be p1 or p2".into()),
++                },
++            };
++            let mut knowledge = Knowledge::default();
++            if let Some(k) = v.get("knowledge") {
++                keys(k, &["hidden_stats", "unrevealed_reserves"])?;
++                knowledge.hidden_stats = boolean(k, "hidden_stats", false)?;
++                if let Some(indices) = k.get("unrevealed_reserves") {
++                    knowledge.unrevealed_reserves = array(indices)?
++                        .iter()
++                        .map(index)
++                        .collect::<Result<_, _>>()?;
++                }
++            }
++            let mut limits = Limits::default();
++            if let Some(l) = v.get("limits") {
++                keys(
++                    l,
++                    &["turns", "max_nodes", "max_transitions", "max_decisions"],
++                )?;
++                limits.turns = u32::try_from(integer(l, "turns", limits.turns as usize)?)
++                    .map_err(|_| "turn count overflow")?;
++                limits.max_nodes = integer(l, "max_nodes", limits.max_nodes)?;
++                limits.max_transitions = integer(l, "max_transitions", limits.max_transitions)?;
++                limits.max_decisions = integer(l, "max_decisions", limits.max_decisions)?;
++            }
++            let mut worlds = Vec::new();
++            for w in array(&v["worlds"])? {
++                keys(w, &["id", "weight", "scenario"])?;
++                let loaded = lab_scenario::load_scenario_file(base.join(string(w, "scenario")?))
++                    .map_err(|e| e.to_string())?;
++                if !knowledge.unrevealed_reserves.is_empty() && !loaded.setup_turns.is_empty() {
++                    return Err(
++                        "hidden-reserve roots require opening scenarios without setup".into(),
++                    );
++                }
++                let mut positions =
++                    lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
++                        .map_err(|e| e.to_string())?;
++                if positions.len() != 1 {
++                    return Err("each world must have one root position; ambiguous setup cannot be silently selected".into());
++                }
++                worlds.push(EngineWorld {
++                    id: string(w, "id")?,
++                    weight: number(w, "weight")?,
++                    position: Position {
++                        state: positions.remove(0).state,
++                        suspension: None,
++                    },
++                });
++            }
++            let evaluation = if v.get("evaluator").is_some() {
++                string(v, "evaluator")?
++            } else {
++                "heuristic".into()
++            };
++            let evaluator = lab_search::model::load_evaluator(&evaluation)?;
++            #[cfg(not(feature = "experiment-growing-belief"))]
++            if v.get("growth").is_some() {
++                return Err("growth requires experiment-growing-belief".into());
++            }
++            #[cfg(feature = "experiment-growing-belief")]
++            let growing_config = observed::growth_config(v, config)?;
++            #[cfg(feature = "experiment-growing-belief")]
++            let grown = if let Some(c) = growing_config {
++                Some(
++                    tree::engine::growing_reusing(
++                        &worlds,
++                        side,
++                        Ruleset::CHAMPIONS_MC,
++                        evaluator.as_ref(),
++                        &knowledge,
++                        limits,
++                        tree::builder::growing::reuse::Settings {
++                            growth: c,
++                            storage: tree::builder::growing::reuse::Options {
++                                in_place: true,
++                                workspace: true,
++                            },
++                        },
++                    )
++                    .map_err(|e| e.to_string())?,
++                )
++            } else {
++                None
++            };
++            #[cfg(not(feature = "experiment-growing-belief"))]
++            let grown: Option<()> = None;
++            let (built, growth_metadata, solution) = match grown {
++                None => (
++                    tree::engine::build(
++                        &worlds,
++                        side,
++                        Ruleset::CHAMPIONS_MC,
++                        evaluator.as_ref(),
++                        &knowledge,
++                        limits,
++                    )
++                    .map_err(|e| e.to_string())?,
++                    Value::Null,
++                    None,
++                ),
++                Some(g) => {
++                    #[cfg(feature = "experiment-growing-belief")]
++                    {
++                        let meta = observed::metadata(&g);
++                        (g.built, meta, Some(g.solution))
++                    }
++                    #[cfg(not(feature = "experiment-growing-belief"))]
++                    {
++                        let () = g;
++                        unreachable!()
++                    }
++                }
++            };
++            growth_solution = solution;
++            let stats = built.stats;
++            let root_ours: Vec<_> = built
++                .tree
++                .boundaries()
++                .iter()
++                .filter(|b| b.public == 0)
++                .map(|b| built.tree.information_at(b.node).unwrap())
++                .collect();
++            (
++                built.tree,
++                json!({"scope":"finite-depth-snapshot-information-game","observation_model":"snapshot-information-v1",
++                "full_battle_log_information":false,"rolls":"full","pruning":"all","evaluator":evaluation,"turns":limits.turns,
++                "root_our_information":root_ours,"transitions":stats.transitions,"chance_outcomes":stats.chance_outcomes,
++                "turn_decisions":stats.turn_decisions,"switch_decisions":stats.switch_decisions,"leaves":stats.leaves,"growth":growth_metadata}),
++            )
++        }
++        _ => return Err("mode must be tree or engine".into()),
++    };
++    let solved = match growth_solution {
++        Some(s) => s,
++        None => tree::workspace::solve(&tree, config).map_err(|e| e.to_string())?,
++    };
++    let beliefs = tree
++        .public_beliefs(&solved.policy)
++        .map_err(|e| e.to_string())?;
++    let policies:Vec<_>=tree.information().iter().enumerate().map(|(id,i)|{
++        let mut v=json!({"id":id,"player":i.player,"actions":i.actions,"probabilities":solved.policy[id],"history_count":i.nodes.len(),"own_sequence":i.own_sequence});
++        if include_keys{v["key"]=json!(i.key);}v
++    }).collect();
++    let beliefs:Vec<_>=beliefs.into_iter().map(|b|{
++        let mut v=json!({"id":b.id,"reach":b.reach,"posterior":b.posterior,"world_conditional_values":b.world_values,"history_count":b.histories.len()});
++        if include_keys{v["key"]=json!(b.key);v["history_weights"]=json!(b.histories);}v
++    }).collect();
++    let mut result = json!({"schema":1,"mode":mode,"algorithm":"extensive-form-alternating-linear-cfr","metadata":metadata,
++        "nodes":tree.node_count(),"information_sets":policies.len(),"iterations":solved.iterations,"converged":solved.converged,
++        "tolerance":config.tolerance,"value":solved.assessment.value,"lower":solved.assessment.lower,"upper":solved.assessment.upper,
++        "finite_game_gap":solved.assessment.gap,"policies":policies,"worlds":tree.worlds(),"public_beliefs":beliefs});
++    if !result["metadata"]["growth"].is_null() {
++        let complete = result["metadata"]["growth"]["horizon_complete"]
++            .as_bool()
++            .unwrap();
++        result["algorithm"] = json!("public-history-closed-growing-tree-cfr");
++        result["surrogate_converged"] = json!(solved.converged);
++        result["converged"] = json!(complete && solved.converged);
++        result["full_horizon_gap"] = if complete {
++            json!(solved.assessment.gap)
++        } else {
++            Value::Null
++        };
++        result["certificate_scope"] = json!(if complete {
++            "requested-finite-horizon"
++        } else {
++            "current-fixed-leaf-surrogate-only"
++        });
++    }
++    #[cfg(feature = "experiment-growing-belief")]
++    if mode == "observed" {
++        result["oracle_tree"] = observed::export(&tree);
++    }
++    Ok(result)
++}
++
++fn main() -> std::process::ExitCode {
++    let args: Vec<_> = std::env::args().skip(1).collect();
++    if args == ["--help"] {
++        println!("lab-belief <request.json>\nmode: tree | engine; engine requires explicit snapshot-information-v1 observation model");
++        return std::process::ExitCode::SUCCESS;
++    }
++    let run = || -> Result<Value, String> {
++        if args.len() != 1 {
++            return Err("usage: lab-belief <request.json>".into());
++        }
++        let path = Path::new(&args[0]);
++        let v: Value = serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
++            .map_err(|e| e.to_string())?;
++        request(&v, path.parent().unwrap_or(Path::new(".")))
++    };
++    match run() {
++        Ok(value) => {
++            println!("{}", serde_json::to_string_pretty(&value).unwrap());
++            std::process::ExitCode::SUCCESS
++        }
++        Err(e) => {
++            eprintln!("lab-belief: {e}");
++            std::process::ExitCode::FAILURE
++        }
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn tree_cli_validates_and_reports_scope() {
++        let mut v =
++            json!({"mode":"tree","nodes":[{"type":"terminal","value":3}],"include_keys":true});
++        let r = request(&v, Path::new(".")).unwrap();
++        assert_eq!(r["value"], 3.);
++        assert_eq!(r["finite_game_gap"], 0.);
++        v["solver"] = json!({"iterations":0});
++        assert!(request(&v, Path::new(".")).is_err());
++        let v = json!({"mode":"engine","worlds":[]});
++        assert!(request(&v, Path::new("."))
++            .err()
++            .unwrap()
++            .contains("observation_model"));
++    }
++}
+diff --git a/engine/search/src/bin/lab-belief-workspace/observed.rs b/engine/search/src/bin/lab-belief-workspace/observed.rs
+new file mode 100644
+index 0000000..3543c8a
+--- /dev/null
++++ b/engine/search/src/bin/lab-belief-workspace/observed.rs
+@@ -0,0 +1,215 @@
++//! Explicit observed transition tables for integration/oracle fixtures. State IDs are
++//! simulator references only; only supplied observations enter the information key.
++use super::*;
++use lab_search::budgeted::{Domain, Phase};
++use tree::builder::{self, growing, Built, Observation, ObservedDomain, Seed};
++
++struct State {
++    phase: Phase,
++    value: f32,
++    observed: Observation,
++    actions: [Vec<String>; 2],
++    transitions: Vec<Vec<Vec<(f64, usize)>>>,
++}
++struct Table(Vec<State>);
++impl Domain for Table {
++    type Position = usize;
++    type Action = usize;
++    fn phase(&self, p: &usize) -> Result<Phase, String> {
++        Ok(self.0[*p].phase)
++    }
++    fn value(&self, p: &usize) -> f32 {
++        self.0[*p].value
++    }
++    fn actions(&self, p: &usize, player: usize) -> Result<Vec<usize>, String> {
++        Ok((0..self.0[*p].actions[player].len()).collect())
++    }
++    fn transitions(&self, p: &usize, a: [&usize; 2]) -> Result<Vec<(f64, usize)>, String> {
++        Ok(self.0[*p].transitions[*a[0]][*a[1]].clone())
++    }
++}
++impl ObservedDomain for Table {
++    fn observation(&self, p: &usize) -> Result<Observation, String> {
++        Ok(self.0[*p].observed.clone())
++    }
++    fn action_id(&self, p: &usize, player: usize, a: &usize) -> String {
++        self.0[*p].actions[player][*a].clone()
++    }
++}
++
++pub fn growth_config(v: &Value, solver: Config) -> Result<Option<growing::Config>, String> {
++    let Some(c) = v.get("growth") else {
++        return Ok(None);
++    };
++    keys(c, &["max_expansions", "max_walks", "exploration", "seed"])?;
++    let mut g = growing::Config {
++        solver,
++        ..growing::Config::default()
++    };
++    g.max_expansions = integer(c, "max_expansions", g.max_expansions)?;
++    g.max_walks = integer(c, "max_walks", g.max_walks)?;
++    if let Some(x) = c.get("seed") {
++        g.seed = x.as_u64().ok_or("seed must be u64")?;
++    }
++    if c.get("exploration").is_some() {
++        g.exploration = number(c, "exploration")?;
++    }
++    Ok(Some(g))
++}
++pub fn metadata(r: &growing::ResultTree) -> Value {
++    json!({"stop":format!("{:?}",r.stop),"horizon_complete":r.horizon_complete,
++        "frontier_histories":r.frontier_histories,"frontier_public_groups":r.frontier_public_groups,
++        "attempted_transitions":r.work.attempted_transitions,"committed_transitions":r.built.stats.transitions,
++        "attempted_expansions":r.work.attempted_expansions,"committed_expansions":r.work.committed_expansions,
++        "walks":r.work.walks,"solves":r.work.solves,"total_cfr_iterations":r.work.cfr_iterations,
++        "selection":"half-puct-half-average-policy","prior":"uniform-information-menu",
++        "regrets":"reset-after-growth","switch_closure":true,"performance_measured":false})
++}
++pub fn request(
++    v: &Value,
++    config: Config,
++) -> Result<(Built, Option<tree::Solution>, Value), String> {
++    keys(
++        v,
++        &[
++            "mode",
++            "states",
++            "worlds",
++            "limits",
++            "growth",
++            "solver",
++            "include_keys",
++        ],
++    )?;
++    let mut limits = Limits::default();
++    if let Some(l) = v.get("limits") {
++        keys(
++            l,
++            &["turns", "max_nodes", "max_transitions", "max_decisions"],
++        )?;
++        limits.turns = u32::try_from(integer(l, "turns", limits.turns as usize)?)
++            .map_err(|_| "turns overflow")?;
++        limits.max_nodes = integer(l, "max_nodes", limits.max_nodes)?;
++        limits.max_transitions = integer(l, "max_transitions", limits.max_transitions)?;
++        limits.max_decisions = integer(l, "max_decisions", limits.max_decisions)?;
++    }
++    let raw = array(&v["states"])?;
++    let mut states = Vec::new();
++    for s in raw {
++        keys(
++            s,
++            &[
++                "phase",
++                "value",
++                "public",
++                "private",
++                "actions",
++                "transitions",
++            ],
++        )?;
++        let phase = match string(s, "phase")?.as_str() {
++            "turn" => Phase::Turn,
++            "switch" => Phase::Switch,
++            "terminal" => Phase::Terminal,
++            _ => return Err("invalid phase".into()),
++        };
++        let value = number(s, "value")? as f32;
++        if !value.is_finite() {
++            return Err("invalid table utility".into());
++        }
++        let private = strings(&s["private"])?;
++        if private.len() != 2 {
++            return Err("private needs two owner observations".into());
++        }
++        let observed = Observation {
++            public: string(s, "public")?,
++            private: [private[0].clone(), private[1].clone()],
++        };
++        let mut actions = [Vec::new(), Vec::new()];
++        let mut transitions = Vec::new();
++        if phase != Phase::Terminal {
++            let a = array(&s["actions"])?;
++            if a.len() != 2 {
++                return Err("actions needs two menus".into());
++            }
++            actions = [strings(&a[0])?, strings(&a[1])?];
++            for row in array(&s["transitions"])? {
++                let mut columns = Vec::new();
++                for cell in array(row)? {
++                    let mut edges = Vec::new();
++                    for edge in array(cell)? {
++                        keys(edge, &["probability", "to"])?;
++                        let to = index(&edge["to"])?;
++                        if to >= raw.len() {
++                            return Err("transition outside table".into());
++                        }
++                        edges.push((number(edge, "probability")?, to));
++                    }
++                    columns.push(edges);
++                }
++                if columns.len() != actions[1].len() {
++                    return Err("column count mismatch".into());
++                }
++                transitions.push(columns);
++            }
++            if transitions.len() != actions[0].len() {
++                return Err("row count mismatch".into());
++            }
++        }
++        states.push(State {
++            phase,
++            value,
++            observed,
++            actions,
++            transitions,
++        });
++    }
++    let mut seeds = Vec::new();
++    for w in array(&v["worlds"])? {
++        keys(w, &["id", "weight", "position"])?;
++        let position = index(&w["position"])?;
++        if position >= states.len() {
++            return Err("world outside table".into());
++        }
++        seeds.push(Seed {
++            id: string(w, "id")?,
++            weight: number(w, "weight")?,
++            position,
++        });
++    }
++    let domain = Table(states);
++    let (built, solution, growth) = if let Some(c) = growth_config(v, config)? {
++        let r = growing::reuse::search(
++            &domain,
++            &seeds,
++            limits,
++            c,
++            &growing::Uniform,
++            growing::reuse::Options {
++                in_place: true,
++                workspace: true,
++            },
++        )
++        .map_err(|e| e.to_string())?;
++        let m = metadata(&r);
++        (r.built, Some(r.solution), m)
++    } else {
++        (
++            builder::build(&domain, &seeds, limits).map_err(|e| e.to_string())?,
++            None,
++            Value::Null,
++        )
++    };
++    let meta = json!({"scope":"caller-supplied-observed-transition-game","growth":growth,
++        "observation_source":"explicit-table-fields","engine_battle_log_implemented":false,
++        "transitions":built.stats.transitions,"switch_decisions":built.stats.switch_decisions});
++    Ok((built, solution, meta))
++}
++pub fn export(t: &Tree) -> Value {
++    let nodes:Vec<_>=t.export_nodes().into_iter().map(|n|match n {
++        Node::Terminal(v)=>json!({"type":"terminal","value":v}),
++        Node::Chance(e)=>json!({"type":"chance","edges":e.into_iter().map(|(p,c)|json!({"probability":p,"child":c})).collect::<Vec<_>>()}),
++        Node::Decision {player,information,actions,children}=>json!({"type":"decision","player":player,"information":information,"actions":actions,"children":children}),
++    }).collect();
++    json!({"mode":"tree","root":t.root(),"nodes":nodes})
++}

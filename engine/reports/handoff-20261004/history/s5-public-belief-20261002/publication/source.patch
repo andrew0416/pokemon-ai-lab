@@ -1,0 +1,2427 @@
+diff --git a/.github/workflows/engine-s26b-public-belief.yml b/.github/workflows/engine-s26b-public-belief.yml
+new file mode 100644
+index 0000000..21bcad6
+--- /dev/null
++++ b/.github/workflows/engine-s26b-public-belief.yml
+@@ -0,0 +1,70 @@
++name: S26b information-tree CFR correctness
++on:
++  push:
++    branches: [codex/s26b-public-belief-20261002]
++permissions:
++  contents: read
++concurrency:
++  group: s26b-public-belief
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++jobs:
++  correctness:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 20
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Independent LP dependency
++        run: python -m pip install numpy==2.2.6 scipy==1.15.3
++      - name: Fresh logic checks and executables
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26b-results
++          cd engine
++          cargo test --locked -p lab-search --lib --features experiment-public-belief,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26b-results/on.log
++          cargo test --locked -p lab-search --bin lab-belief --bin lab-bayes --features experiment-public-belief 2>&1 | tee ../s26b-results/cli.log
++          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26b-results/off.log
++          cargo check --locked -p lab-search --lib --no-default-features --features experiment-public-belief 2>&1 | tee ../s26b-results/library.log
++          cargo clippy --locked -p lab-search --lib --bin lab-belief --features experiment-public-belief,experiment-response-sweeps,experiment-search-quality -- -D warnings 2>&1 | tee ../s26b-results/clippy.log
++          cargo build --locked -p lab-search --bin lab-belief --bin lab-bayes --features experiment-public-belief 2>&1 | tee ../s26b-results/build.log
++          git rev-parse HEAD > ../s26b-results/source-sha.txt
++          rustc --version > ../s26b-results/rustc.txt
++      - name: Independent extensive-game LP and information-constrained best responses
++        run: python -B engine/benchmarks/s26_tree/check.py --binary target-s25/debug/lab-belief --out s26b-results/tree-lp
++      - name: Previous Bayesian matrix LP regression
++        run: python -B engine/benchmarks/s26_bayesian/check.py --binary target-s25/debug/lab-bayes --out s26b-results/matrix-lp
++      - name: Preserve correctness evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26b-correctness-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26b-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_tree/CONTRACT.md b/engine/benchmarks/s26_tree/CONTRACT.md
+new file mode 100644
+index 0000000..88f22d1
+--- /dev/null
++++ b/engine/benchmarks/s26_tree/CONTRACT.md
+@@ -0,0 +1,138 @@
++# S26b: finite information-tree CFR and belief continuation
++
++`experiment-public-belief` is default OFF, layered on the S26a Bayesian experiment.
++The library adds a multi-turn, perfect-recall extensive-form solver, public/private belief
++queries and an engine bridge that resolves mid-turn and KO replacements. `lab-belief`
++exposes raw finite games and bounded engine scenarios. No production planner is switched.
++
++## Information and CFR
++
++Each physical history remains a separate tree node. A decision refers to an information
++set whose members share one action menu and one regret table. The constructor rejects
++cycles, shared history nodes, unreachable nodes, inconsistent menus/owners and forgotten
++own information/action sequences. Different initial types can share our information set;
++the informed opponent's types differ. Raw trees also support two-sided private information.
++
++The domain compiler sequentializes simultaneous choices without disclosing the first
++choice to the second player. Public observations are remembered by both; each player's
++private observations and own actions are remembered only by that player. A suspended
++opponent command stays hidden unless the observation contract reveals it. World identity,
++queue contents, full State hashes and the transition branch index are not observation keys.
++
++For each alternating player pass, policies remain frozen while accumulating regret over
++ALL member histories. Regret increments use `t * opponent-and-chance reach * advantage`.
++Only after accumulation are that player's policies updated. Average strategies use
++`t * own realization reach`, once per information set. Weighting by member count or full
++history probability is incorrect. Per-world perfect-information re-solving is not used.
++
++Best responses also choose ONE action per information set. They aggregate continuation
++values using opponent-and-chance reach before selecting an action. The reported upper
++bound is our best-response value; the lower bound is the opponent's best-response value
++(both from our perspective). `finite_game_gap = upper - lower` certifies the fully built
++finite game, to numerical precision. A low gap does not certify omitted observations,
++the real battle beyond the horizon or the leaf evaluator's quality.
++
++## Beliefs, cursor and leaves
++
++Current-strategy history reach induces the posterior; it is not a fixed average of worlds.
++`Tree::public_beliefs` groups full PUBLIC observation histories and sums reach by world.
++`Cursor::belief` also conditions on the owner's private observations and remembered own
++actions. These can differ: a public signal may be ambiguous until our own hidden action
++is taken into account. Both APIs retain horizon endpoints, world IDs, physical-history
++weights and conditional world values. A zero-reach history has `posterior: None`, not an
++invented uniform prior. The returned conditional values are diagnostics, not learned CFVs.
++
++`Cursor::new(0, None, observation)` cannot accept a hidden world ID. After each transition,
++`advance(own_action_id, observation)` identifies the next policy through `information`.
++This retrieves the same continuation at indistinguishable histories. At a horizon endpoint
++there is no further policy, but `belief` still supplies the posterior for another search.
++Opponent cursors require their known type ID. New external observations must have exactly
++the same semantics as the domain used to build the tree; an absent key is not guessed.
++
++Leaves are fixed utilities from the replaceable existing Evaluator (terminal scores use
++the existing WIN convention). CFR evaluates their counterfactual contributions throughout
++the game. No belief-dependent neural leaf model or independently solved full-information
++child value is substituted. These interfaces leave evaluation outside the regret kernel.
++
++## Engine observation abstraction
++
++The current engine merges some histories with equal state before exposing outcomes. It
++does not export a complete public event transcript. Therefore the bridge requires an
++explicit `snapshot-information-v1` model. This is an information abstraction, NOT a claim
++of Showdown-log equivalence or conservative strength against a fully observing opponent.
++
++The observer allows public decision phase, turn/result, active species (Illusion is
++rejected), HP percentage buckets, status, boosts, switch requests and active field/side
++effects. It does not expose effect timers. Champions HP buckets use floor with minimum
++one for living Pokémon; boundary color distinctions are coarsened. Own HP, current
++item/ability and move/PP request data are private observations. Hidden bench identity,
++random status durations, substitute HP, ability ordering, queued actions and raw last-move
++fields are omitted. Executed move messages, move order and within-segment reveals are
++not reconstructed from state deltas. `ObservedDomain` can be replaced by a future engine
++that preserves event traces. New mechanics require a disclosure-contract review.
++
++The existing S26a `Knowledge` check still conservatively validates initial worlds: our
++entire side and undeclared fields agree, optional hidden non-HP stats may differ, and
++explicitly unrevealed reserves may differ only at opening roots. Team-sheet/history
++consistency is the caller's responsibility. Ambiguous scenario setup is rejected. Roots
++start at a normal turn; an arbitrary suspended root without past action memory is rejected.
++Within the built tree, suspended turns and forced replacements ARE handled.
++
++Full damage rolls and all legal actions are enumerated. Turn horizon decrements only for
++normal turns; switches are resolved even after the last turn's budget is consumed. A node,
++transition or decision-depth limit aborts the whole build. No incomplete game is returned
++as solved. One enumeration is indivisible, so limits are not strict wall-time/RSS limits.
++
++## CLI examples
++
++From `engine/`:
++
++```
++cargo run --locked -p lab-search --features experiment-public-belief --bin lab-belief -- request.json
++```
++
++A two-turn engine request (paths relative to the request file):
++
++```json
++{"mode":"engine","observation_model":"snapshot-information-v1","side":"p1",
++ "worlds":[{"id":"candidate-a","weight":3,"scenario":"candidate-a.json"},
++           {"id":"candidate-b","weight":1,"scenario":"candidate-b.json"}],
++ "knowledge":{"hidden_stats":true},
++ "limits":{"turns":2,"max_nodes":50000,"max_transitions":20000,"max_decisions":32},
++ "solver":{"iterations":20000,"tolerance":0.01,"check_every":32}}
++```
++
++Raw finite-game request:
++
++```json
++{"mode":"tree","root":0,"include_keys":true,"nodes":[
++ {"type":"chance","edges":[{"probability":0.5,"child":1},{"probability":0.5,"child":2}]},
++ {"type":"decision","player":0,"information":"unseen-type","actions":["a","b"],"children":[3,4]},
++ {"type":"decision","player":0,"information":"unseen-type","actions":["a","b"],"children":[5,6]},
++ {"type":"terminal","value":1},{"type":"terminal","value":-1},
++ {"type":"terminal","value":-1},{"type":"terminal","value":1}]}
++```
++
++This game's value is zero: the same action distribution must serve both hidden types.
++Output includes all information policies, finite-game bounds, convergence status and, for
++engine trees, public beliefs. `include_keys` adds memory keys and history weights; these
++are developer diagnostics, not an observation stream to feed the playing agent.
++
++## Validation / next boundary
++
++Tests cover Kuhn poker's known value -1/18, a hidden versus revealed queued-action pivot,
++public signaling posteriors, own-action-dependent posterior at the horizon, perfect
++recall rejection, continuation cursors, input restoration, resource limits, two actual
++engine turns, U-turn/Eject Button, KO replacements and actual differing Suspensions with
++the same observation. CI independently expands 48 generated extensive games plus Kuhn
++into pure contingent strategies, solves a normal-form LP and recomputes each reported
++best-response bound. The preceding 72 Bayesian matrix LP checks run unchanged.
++
++Remaining work is distinct: event-preserving battle observations; scalable selective
++GT-CFR/PUCT expansion; re-solving safety; learned belief-dependent CFVs; speed/strength
++evaluation. A fully enumerated bounded reference implementation does not establish those.
++
++Primary references:
++[PokaiTrainer §4](https://arxiv.org/html/2608.29197v2#S4),
++[Brown & Sandholm 2019](https://ojs.aaai.org/index.php/AAAI/article/view/4007),
++[Showdown public health](https://github.com/smogon/pokemon-showdown/blob/master/sim/pokemon.ts).
+diff --git a/engine/benchmarks/s26_tree/check.py b/engine/benchmarks/s26_tree/check.py
+new file mode 100644
+index 0000000..53a9d2f
+--- /dev/null
++++ b/engine/benchmarks/s26_tree/check.py
+@@ -0,0 +1,84 @@
++"""Independent strategic-form LP and exact best responses for finite information trees."""
++from pathlib import Path
++import argparse,hashlib,itertools,json,math,random,subprocess
++import numpy as np
++from scipy.optimize import linprog
++
++def generated(rng,case):
++ nodes=[None];worlds=1+case%3
++ weights=[float(1+rng.randrange(9)) for _ in range(worlds)]
++ if worlds>1 and case%7==0:weights[0]=0.
++ weights=[v/sum(weights) for v in weights]
++ def add(value):nodes.append(value);return len(nodes)-1
++ edges=[]
++ for w in range(worlds):
++  root=add(None);edges.append(dict(probability=weights[w],child=root));rows=[]
++  for a in range(2):
++   col=add(None);rows.append(col);columns=[]
++   for c in range(2):
++    chance=add(None);columns.append(chance);signals=[]
++    signal_p=[0.2,0.5,0.8][(case+w+c)%3]
++    for signal in range(2):
++     us=add(None);signals.append(dict(probability=signal_p if signal==0 else 1-signal_p,child=us));leaves=[]
++     for b in range(2):leaves.append(add(dict(type='terminal',value=rng.randrange(-5,6))))
++     # Our first action is remembered; neither world nor hidden opponent action is known.
++     nodes[us]=dict(type='decision',player=0,information=f'us/a{a}/signal{signal}',actions=['guess0','guess1'],children=leaves)
++    nodes[chance]=dict(type='chance',edges=signals)
++   nodes[col]=dict(type='decision',player=1,information=f'them/type{w}',actions=['commit0','commit1'],children=columns)
++  nodes[root]=dict(type='decision',player=0,information='us/root',actions=['start0','start1'],children=rows)
++ nodes[0]=dict(type='chance',edges=edges)
++ return dict(mode='tree',root=0,nodes=nodes,include_keys=True,solver=dict(iterations=50000,tolerance=0.01,check_every=32))
++
++def kuhn():
++ nodes=[None];edges=[]
++ def visit(cards,h):
++  sign=1 if cards[0]>cards[1] else -1
++  terminal={'cc':sign,'bf':1,'bc':2*sign,'cbf':-1,'cbc':2*sign}
++  i=len(nodes);nodes.append(None)
++  if h in terminal:nodes[i]=dict(type='terminal',value=terminal[h]);return i
++  player=0 if h in ('','cb') else 1;actions=['f','c'] if h.endswith('b') else ['c','b']
++  nodes[i]=dict(type='decision',player=player,information=f'p{player}/card{cards[player]}/{h}',actions=actions,children=[visit(cards,h+a) for a in actions]);return i
++ for a,b in itertools.permutations(range(3),2):edges.append(dict(probability=1/6,child=visit([a,b],'')))
++ nodes[0]=dict(type='chance',edges=edges)
++ return dict(mode='tree',root=0,nodes=nodes,include_keys=True,solver=dict(iterations=50000,tolerance=.003,check_every=32))
++
++def normal_form(request):
++ info=[{},{}]
++ for n in request['nodes']:
++  if n['type']=='decision':info[n['player']][n['information']]=len(n['actions'])
++ keys=[list(x) for x in info];plans=[list(itertools.product(*[range(m) for m in x.values()])) for x in info]
++ def value(node,chosen):
++  n=request['nodes'][node]
++  if n['type']=='terminal':return n['value']
++  if n['type']=='chance':return sum(e['probability']*value(e['child'],chosen) for e in n['edges'])
++  return value(n['children'][chosen[n['player']][n['information']]],chosen)
++ A=np.array([[value(request['root'],[dict(zip(keys[0],p)),dict(zip(keys[1],q))]) for q in plans[1]] for p in plans[0]])
++ return keys,plans,A
++
++def main():
++ p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
++ a.out.mkdir(parents=True,exist_ok=False);binary=a.binary.resolve();rng=random.Random(26100226);records=[]
++ cases=[(f'generated-{i:02}',generated(rng,i)) for i in range(48)]+[('kuhn',kuhn())]
++ for name,request in cases:
++  path=a.out/(name+'-request.json');path.write_text(json.dumps(request),encoding='utf-8')
++  run=subprocess.run([str(binary),str(path)],capture_output=True,text=True,timeout=45)
++  (a.out/(name+'-stderr.txt')).write_text(run.stderr,encoding='utf-8');assert run.returncode==0,run.stderr
++  (a.out/(name+'-result.json')).write_text(run.stdout,encoding='utf-8');r=json.loads(run.stdout)
++  keys,plans,A=normal_form(request);n,m=A.shape
++  lp=linprog(np.r_[np.zeros(n),-1.],A_ub=np.c_[-A.T,np.ones(m)],b_ub=np.zeros(m),A_eq=np.array([np.r_[np.ones(n),0.]]),b_eq=[1.],bounds=[(0,None)]*n+[(None,None)],method='highs')
++  assert lp.success,lp.message
++  value=-lp.fun;lookup={v['key']:v for v in r['policies']}
++  assert set(lookup)==set(keys[0]+keys[1])
++  for v in lookup.values():assert min(v['probabilities'])>=0 and abs(sum(v['probabilities'])-1)<1e-10
++  pure=[np.array([math.prod(lookup[k]['probabilities'][action] for k,action in zip(keys[player],plan)) for plan in plans[player]]) for player in range(2)]
++  assert all(abs(sum(v)-1)<1e-9 for v in pure)
++  lower=float(min(pure[0]@A));upper=float(max(A@pure[1]));profile=float(pure[0]@A@pure[1]);gap=upper-lower
++  for key,expected in [('value',profile),('lower',lower),('upper',upper),('finite_game_gap',gap)]:assert abs(r[key]-expected)<1e-8,(name,key,r[key],expected)
++  assert lower-1e-7<=value<=upper+1e-7,(name,value,lower,upper)
++  assert r['converged']==(r['finite_game_gap']<=request['solver']['tolerance'])
++  assert gap<=.025,(name,gap)
++  if name=='kuhn':assert abs(value+1/18)<1e-10
++  records.append(dict(case=name,nodes=len(request['nodes']),row_plans=n,column_plans=m,lp_value=value,lower=lower,upper=upper,gap=gap,iterations=r['iterations'],converged=r['converged']))
++ summary=dict(schema=1,passed=len(records),converged=sum(r['converged'] for r in records),max_gap=max(r['gap'] for r in records),binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),performance=False,cases=records)
++ (a.out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8');print(json.dumps({k:v for k,v in summary.items() if k!='cases'}))
++if __name__=='__main__':main()
+diff --git a/engine/search/Cargo.toml b/engine/search/Cargo.toml
+index 337eeed..ba71c85 100644
+--- a/engine/search/Cargo.toml
++++ b/engine/search/Cargo.toml
+@@ -16,6 +16,7 @@ path = "src/lib.rs"
+ [features]
+ default = ["cli"]
+ experiment-bayesian-cfr = ["experiment-budgeted-search"]
++experiment-public-belief = ["experiment-bayesian-cfr"]
+ experiment-budgeted-search = []
+ experiment-response-sweeps = ["experiment-budgeted-search"]
+ experiment-search-quality = ["experiment-budgeted-search", "cli"]
+@@ -73,6 +74,11 @@ name = "lab-bayes"
+ path = "src/bin/lab-bayes.rs"
+ required-features = ["cli", "experiment-bayesian-cfr"]
+ 
++[[bin]]
++name = "lab-belief"
++path = "src/bin/lab-belief.rs"
++required-features = ["cli", "experiment-public-belief"]
++
+ [[bin]]
+ name = "lab-search-quality"
+ path = "src/bin/lab-search-quality.rs"
+diff --git a/engine/search/src/bayesian.rs b/engine/search/src/bayesian.rs
+index ed118ea..d9e9d74 100644
+--- a/engine/search/src/bayesian.rs
++++ b/engine/search/src/bayesian.rs
+@@ -7,6 +7,8 @@
+ //! perfect-information continuation policies must not be advertised as safe leaf values.
+ 
+ pub mod engine;
++#[cfg(feature = "experiment-public-belief")]
++pub mod tree;
+ 
+ use std::collections::HashSet;
+ 
+diff --git a/engine/search/src/bayesian/engine.rs b/engine/search/src/bayesian/engine.rs
+index e03d593..94b4940 100644
+--- a/engine/search/src/bayesian/engine.rs
++++ b/engine/search/src/bayesian/engine.rs
+@@ -37,7 +37,7 @@ pub struct BuiltGame<const N: usize> {
+     pub outcomes: usize,
+ }
+ 
+-fn visible<const N: usize>(
++pub(crate) fn visible<const N: usize>(
+     state: &State<N>,
+     us: SideId,
+     knowledge: &Knowledge,
+diff --git a/engine/search/src/bayesian/tree.rs b/engine/search/src/bayesian/tree.rs
+new file mode 100644
+index 0000000..fd9aec3
+--- /dev/null
++++ b/engine/search/src/bayesian/tree.rs
+@@ -0,0 +1,551 @@
++//! Bounded extensive-form CFR with perfect recall and strategy-induced public beliefs.
++//!
++//! Histories remain separate in the tree; indistinguishable decision histories share a
++//! regret table. Simultaneous choices are represented sequentially WITHOUT disclosing the
++//! first choice. The certificate is for this fully built, finite, fixed-leaf game only.
++//! No independent perfect-information continuation solves or belief-independent neural
++//! value claims are made. See `builder` and `engine` for observation contracts.
++
++pub mod builder;
++pub mod engine;
++use super::{labels, probability, strategy, Config, Error};
++use std::collections::HashMap;
++
++#[derive(Clone, Debug)]
++pub enum Node {
++    Terminal(f64),
++    Chance(Vec<(f64, usize)>),
++    Decision {
++        player: usize,
++        information: String,
++        actions: Vec<String>,
++        children: Vec<usize>,
++    },
++}
++#[derive(Clone, Debug)]
++enum Compiled {
++    Terminal(f64),
++    Chance(Vec<(f64, usize)>),
++    Decision { info: usize, children: Vec<usize> },
++}
++#[derive(Clone, Debug)]
++pub struct Information {
++    pub player: usize,
++    pub key: String,
++    pub actions: Vec<String>,
++    pub nodes: Vec<usize>,
++    /// Validated identical own information/action sequence at every member history.
++    pub own_sequence: Vec<(usize, usize)>,
++}
++#[derive(Clone, Debug)]
++pub struct Boundary {
++    pub node: usize,
++    pub world: usize,
++    pub public: usize,
++    pub private: [usize; 2],
++}
++#[derive(Clone, Debug)]
++pub struct Tree {
++    nodes: Vec<Compiled>,
++    root: usize,
++    order: Vec<usize>,
++    information: Vec<Information>,
++    scale: f64,
++    pub(crate) worlds: Vec<String>,
++    pub(crate) public_keys: Vec<String>,
++    pub(crate) private_keys: Vec<String>,
++    pub(crate) boundaries: Vec<Boundary>,
++}
++pub type Policy = Vec<Vec<f64>>;
++
++fn multiply(a: f64, b: f64) -> Result<f64, Error> {
++    let v = a * b;
++    if a > 0. && b > 0. && v == 0. {
++        return Err(Error(
++            "positive history reach underflow; history was not dropped".into(),
++        ));
++    }
++    Ok(v)
++}
++
++impl Tree {
++    /// All nodes must form one reachable tree (no shared history nodes/cycles). Information
++    /// keys can repeat only with the same owner, menu, and complete own action recall.
++    pub fn new(raw: Vec<Node>, root: usize) -> Result<Self, Error> {
++        if raw.is_empty() || root >= raw.len() {
++            return Err(Error("invalid root".into()));
++        }
++        let mut nodes = Vec::with_capacity(raw.len());
++        let mut information: Vec<Information> = Vec::new();
++        let mut ids = HashMap::new();
++        let mut scale = 0f64;
++        for node in raw {
++            nodes.push(match node {
++                Node::Terminal(v) => {
++                    if !v.is_finite() || v.abs() > f64::MAX / 8. {
++                        return Err(Error("invalid terminal value".into()));
++                    }
++                    scale = scale.max(v.abs());
++                    Compiled::Terminal(v)
++                }
++                Node::Chance(edges) => {
++                    if edges.is_empty()
++                        || edges
++                            .iter()
++                            .any(|(p, _)| !p.is_finite() || *p < 0. || *p > 1.)
++                        || (edges.iter().map(|v| v.0).sum::<f64>() - 1.).abs() > 1e-10
++                    {
++                        return Err(Error("chance probabilities must sum to one".into()));
++                    }
++                    Compiled::Chance(edges)
++                }
++                Node::Decision {
++                    player,
++                    information: key,
++                    actions,
++                    children,
++                } => {
++                    if player > 1 || key.is_empty() || actions.len() != children.len() {
++                        return Err(Error("invalid information/menu".into()));
++                    }
++                    labels(actions.iter().map(String::as_str), "action ID")?;
++                    let info = if let Some(&i) = ids.get(&key) {
++                        let existing: &Information = &information[i];
++                        if existing.player != player || existing.actions != actions {
++                            return Err(Error(format!("inconsistent information set: {key}")));
++                        }
++                        i
++                    } else {
++                        let i = information.len();
++                        ids.insert(key.clone(), i);
++                        information.push(Information {
++                            player,
++                            key,
++                            actions,
++                            nodes: Vec::new(),
++                            own_sequence: Vec::new(),
++                        });
++                        i
++                    };
++                    Compiled::Decision { info, children }
++                }
++            });
++        }
++        let mut seen = vec![false; nodes.len()];
++        let mut order = Vec::new();
++        let mut stack = vec![(root, [Vec::new(), Vec::new()], 0usize)];
++        while let Some((id, sequences, depth)) = stack.pop() {
++            if id >= nodes.len() || seen[id] || depth > 512 {
++                return Err(Error(
++                    "tree has invalid/shared/cyclic nodes or exceeds depth 512".into(),
++                ));
++            }
++            seen[id] = true;
++            order.push(id);
++            match &nodes[id] {
++                Compiled::Terminal(_) => {}
++                Compiled::Chance(edges) => {
++                    for &(_, child) in edges.iter().rev() {
++                        stack.push((child, sequences.clone(), depth + 1));
++                    }
++                }
++                Compiled::Decision { info, children } => {
++                    let i = &mut information[*info];
++                    if i.nodes.is_empty() {
++                        i.own_sequence = sequences[i.player].clone();
++                    } else if i.own_sequence != sequences[i.player] {
++                        return Err(Error(format!("imperfect recall in {}", i.key)));
++                    }
++                    i.nodes.push(id);
++                    for (a, &child) in children.iter().enumerate().rev() {
++                        let mut next = sequences.clone();
++                        next[i.player].push((*info, a));
++                        stack.push((child, next, depth + 1));
++                    }
++                }
++            }
++        }
++        if seen.iter().any(|v| !*v) {
++            return Err(Error("unreachable tree node".into()));
++        }
++        Ok(Self {
++            nodes,
++            root,
++            order,
++            information,
++            scale: scale.max(f64::MIN_POSITIVE),
++            worlds: Vec::new(),
++            public_keys: Vec::new(),
++            private_keys: Vec::new(),
++            boundaries: Vec::new(),
++        })
++    }
++    pub fn information(&self) -> &[Information] {
++        &self.information
++    }
++    pub fn node_count(&self) -> usize {
++        self.nodes.len()
++    }
++    pub fn root(&self) -> usize {
++        self.root
++    }
++    pub fn worlds(&self) -> &[String] {
++        &self.worlds
++    }
++    pub fn boundaries(&self) -> &[Boundary] {
++        &self.boundaries
++    }
++    pub fn information_at(&self, node: usize) -> Option<usize> {
++        match self.nodes.get(node) {
++            Some(Compiled::Decision { info, .. }) => Some(*info),
++            _ => None,
++        }
++    }
++    pub fn uniform(&self) -> Policy {
++        self.information
++            .iter()
++            .map(|i| vec![1. / i.actions.len() as f64; i.actions.len()])
++            .collect()
++    }
++    fn check_policy(&self, policy: &Policy) -> Result<(), Error> {
++        if policy.len() != self.information.len() {
++            return Err(Error("information policy count mismatch".into()));
++        }
++        for (i, p) in self.information.iter().zip(policy) {
++            probability(p, i.actions.len())?;
++        }
++        Ok(())
++    }
++    fn values(&self, policy: &Policy) -> Vec<f64> {
++        let mut values = vec![0.; self.nodes.len()];
++        for &id in self.order.iter().rev() {
++            values[id] = match &self.nodes[id] {
++                Compiled::Terminal(v) => v / self.scale,
++                Compiled::Chance(edges) => edges.iter().map(|(p, n)| p * values[*n]).sum(),
++                Compiled::Decision { info, children } => children
++                    .iter()
++                    .zip(&policy[*info])
++                    .map(|(n, p)| p * values[*n])
++                    .sum(),
++            };
++        }
++        values
++    }
++    /// `omit` removes that player's realization reach for counterfactual regret/BR.
++    fn reach(&self, policy: &Policy, omit: Option<usize>) -> Result<Vec<f64>, Error> {
++        let mut reach = vec![0.; self.nodes.len()];
++        reach[self.root] = 1.;
++        for &id in &self.order {
++            match &self.nodes[id] {
++                Compiled::Terminal(_) => {}
++                Compiled::Chance(edges) => {
++                    for &(p, n) in edges {
++                        reach[n] = multiply(reach[id], p)?;
++                    }
++                }
++                Compiled::Decision { info, children } => {
++                    for (a, &n) in children.iter().enumerate() {
++                        reach[n] = multiply(
++                            reach[id],
++                            if omit == Some(self.information[*info].player) {
++                                1.
++                            } else {
++                                policy[*info][a]
++                            },
++                        )?;
++                    }
++                }
++            }
++        }
++        Ok(reach)
++    }
++    pub fn assess(&self, policy: &Policy) -> Result<Assessment, Error> {
++        self.check_policy(policy)?;
++        let value = self.values(policy)[self.root] * self.scale;
++        let upper = self.best_response(policy, 0)?.0;
++        let lower = self.best_response(policy, 1)?.0;
++        Ok(Assessment {
++            value,
++            lower,
++            upper,
++            gap: (upper - lower).max(0.),
++        })
++    }
++    /// A pure best response with ONE chosen action per information set, including
++    /// off-policy histories. Maximizing each physical node independently is invalid.
++    pub fn best_response(
++        &self,
++        policy: &Policy,
++        player: usize,
++    ) -> Result<(f64, Vec<Option<usize>>), Error> {
++        self.check_policy(policy)?;
++        if player > 1 {
++            return Err(Error("invalid player".into()));
++        }
++        let cf = self.reach(policy, Some(player))?;
++        let mut work = Response {
++            tree: self,
++            policy,
++            player,
++            cf,
++            memo: vec![None; self.nodes.len()],
++            chosen: vec![None; self.information.len()],
++            visiting: vec![false; self.information.len()],
++        };
++        let value = work.node(self.root)? * self.scale;
++        Ok((value, work.chosen))
++    }
++    /// Diagnostics under the supplied strategy. Zero-reach public histories have no
++    /// posterior (never an invented uniform belief). History weights retain hidden queued
++    /// action alternatives even when those alternatives belong to the same world.
++    pub fn public_beliefs(&self, policy: &Policy) -> Result<Vec<PublicBelief>, Error> {
++        self.beliefs(policy, &self.public_keys, |b| Some(b.public))
++    }
++    /// A player's posterior also conditions on remembered own actions and private
++    /// observations. Public belief alone is insufficient after a hidden own commitment.
++    /// This works at horizon endpoints as well as at decision nodes.
++    pub fn private_belief(
++        &self,
++        player: usize,
++        key: &str,
++        policy: &Policy,
++    ) -> Result<Option<PublicBelief>, Error> {
++        if player > 1 {
++            return Err(Error("invalid belief owner".into()));
++        }
++        let id = self.private_keys.iter().position(|v| v == key);
++        let keys = [key.to_owned()];
++        let mut result = self.beliefs(policy, &keys, |b| {
++            (Some(b.private[player]) == id).then_some(0)
++        })?;
++        let belief = result.remove(0);
++        Ok((!belief.histories.is_empty()).then_some(belief))
++    }
++    fn beliefs(
++        &self,
++        policy: &Policy,
++        keys: &[String],
++        select: impl Fn(&Boundary) -> Option<usize>,
++    ) -> Result<Vec<PublicBelief>, Error> {
++        self.check_policy(policy)?;
++        let reach = self.reach(policy, None)?;
++        let values = self.values(policy);
++        let mut result: Vec<_> = keys
++            .iter()
++            .enumerate()
++            .map(|(id, key)| PublicBelief {
++                id,
++                key: key.clone(),
++                reach: 0.,
++                posterior: None,
++                world_values: vec![None; self.worlds.len()],
++                histories: Vec::new(),
++            })
++            .collect();
++        let mut masses = vec![vec![0.; self.worlds.len()]; result.len()];
++        let mut sums = masses.clone();
++        for b in &self.boundaries {
++            let Some(group) = select(b) else {
++                continue;
++            };
++            let r = reach[b.node];
++            let out = &mut result[group];
++            out.reach += r;
++            out.histories.push((b.node, r));
++            masses[group][b.world] += r;
++            if r > 0.0 {
++                // Conditional averaging avoids multiplying a tiny world reach by a
++                // small scaled payoff and then attempting to divide the underflow away.
++                let alpha = r / masses[group][b.world];
++                sums[group][b.world] += alpha * (values[b.node] - sums[group][b.world]);
++            }
++        }
++        for (id, out) in result.iter_mut().enumerate() {
++            if out.reach > 0. {
++                out.posterior = Some(masses[id].iter().map(|v| v / out.reach).collect());
++                for (w, v) in out.world_values.iter_mut().enumerate() {
++                    if masses[id][w] > 0. {
++                        *v = Some(sums[id][w] * self.scale);
++                    }
++                }
++                for (_, r) in &mut out.histories {
++                    *r /= out.reach;
++                }
++            }
++        }
++        Ok(result)
++    }
++}
++
++struct Response<'a> {
++    tree: &'a Tree,
++    policy: &'a Policy,
++    player: usize,
++    cf: Vec<f64>,
++    memo: Vec<Option<f64>>,
++    chosen: Vec<Option<usize>>,
++    visiting: Vec<bool>,
++}
++impl Response<'_> {
++    fn node(&mut self, id: usize) -> Result<f64, Error> {
++        if let Some(v) = self.memo[id] {
++            return Ok(v);
++        }
++        let v = match &self.tree.nodes[id] {
++            Compiled::Terminal(v) => v / self.tree.scale,
++            Compiled::Chance(edges) => {
++                let mut v = 0.;
++                for &(p, n) in edges {
++                    v += p * self.node(n)?;
++                }
++                v
++            }
++            Compiled::Decision { info, children } => {
++                let i = *info;
++                if self.tree.information[i].player != self.player {
++                    let mut v = 0.;
++                    for (a, &n) in children.iter().enumerate() {
++                        v += self.policy[i][a] * self.node(n)?;
++                    }
++                    v
++                } else {
++                    if self.chosen[i].is_none() {
++                        if self.visiting[i] {
++                            return Err(Error("cyclic information dependencies".into()));
++                        }
++                        self.visiting[i] = true;
++                        let mut scores = vec![0.; children.len()];
++                        for &member in &self.tree.information[i].nodes {
++                            let Compiled::Decision { children, .. } = &self.tree.nodes[member]
++                            else {
++                                unreachable!()
++                            };
++                            for (a, &child) in children.iter().enumerate() {
++                                scores[a] += self.cf[member] * self.node(child)?;
++                            }
++                        }
++                        let sign = if self.player == 0 { 1. } else { -1. };
++                        let mut best = 0;
++                        for a in 1..scores.len() {
++                            if sign * scores[a] > sign * scores[best] {
++                                best = a;
++                            }
++                        }
++                        self.chosen[i] = Some(best);
++                        self.visiting[i] = false;
++                    }
++                    self.node(children[self.chosen[i].unwrap()])?
++                }
++            }
++        };
++        self.memo[id] = Some(v);
++        Ok(v)
++    }
++}
++
++#[derive(Clone, Debug)]
++pub struct Assessment {
++    pub value: f64,
++    pub lower: f64,
++    pub upper: f64,
++    pub gap: f64,
++}
++#[derive(Clone, Debug)]
++pub struct PublicBelief {
++    pub id: usize,
++    pub key: String,
++    pub reach: f64,
++    pub posterior: Option<Vec<f64>>,
++    pub world_values: Vec<Option<f64>>,
++    pub histories: Vec<(usize, f64)>,
++}
++#[derive(Clone, Debug)]
++pub struct Solution {
++    pub policy: Policy,
++    pub assessment: Assessment,
++    pub iterations: usize,
++    pub converged: bool,
++}
++
++/// Full-tree alternating linear CFR. Each pass freezes all policies, accumulates the
++/// counterfactual regret of ALL histories in an information set, then updates that side.
++/// The average uses t * own realization reach ONCE per information set, not chance reach
++/// or number of member histories. This distinction matters beyond a single matrix game.
++pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
++    if config.iterations == 0
++        || config.iterations > 10_000_000
++        || config.check_every == 0
++        || !config.tolerance.is_finite()
++        || config.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    let mut policy = tree.uniform();
++    let mut regrets: Policy = policy.iter().map(|p| vec![0.; p.len()]).collect();
++    let mut sums = regrets.clone();
++    let mut total = vec![0.; policy.len()];
++    for t in 1..=config.iterations {
++        let weight = t as f64 / config.iterations as f64;
++        for player in 0..2 {
++            let values = tree.values(&policy);
++            let cf = tree.reach(&policy, Some(player))?;
++            let sign = if player == 0 { 1. } else { -1. };
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    for &node in &info.nodes {
++                        let Compiled::Decision { children, .. } = &tree.nodes[node] else {
++                            unreachable!()
++                        };
++                        for (a, &child) in children.iter().enumerate() {
++                            regrets[i][a] +=
++                                weight * cf[node] * sign * (values[child] - values[node]);
++                        }
++                    }
++                }
++            }
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    strategy(&regrets[i], &mut policy[i]);
++                }
++            }
++        }
++        for (i, info) in tree.information.iter().enumerate() {
++            let mut own = 1.;
++            for &(j, a) in &info.own_sequence {
++                own = multiply(own, policy[j][a])?;
++            }
++            let w = multiply(weight, own)?;
++            total[i] += w;
++            for (s, &p) in sums[i].iter_mut().zip(&policy[i]) {
++                *s += w * p;
++            }
++        }
++        if t % config.check_every == 0 || t == config.iterations {
++            let average: Policy = sums
++                .iter()
++                .enumerate()
++                .map(|(i, p)| {
++                    if total[i] > 0. {
++                        p.iter().map(|v| v / total[i]).collect()
++                    } else {
++                        vec![1. / p.len() as f64; p.len()]
++                    }
++                })
++                .collect();
++            let assessment = tree.assess(&average)?;
++            let converged = assessment.gap <= config.tolerance;
++            if converged || t == config.iterations {
++                return Ok(Solution {
++                    policy: average,
++                    assessment,
++                    iterations: t,
++                    converged,
++                });
++            }
++        }
++    }
++    unreachable!()
++}
++
++#[cfg(test)]
++mod tests;
+diff --git a/engine/search/src/bayesian/tree/builder.rs b/engine/search/src/bayesian/tree/builder.rs
+new file mode 100644
+index 0000000..8c9a774
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/builder.rs
+@@ -0,0 +1,350 @@
++//! Full finite-tree compiler from a simultaneous transition domain and explicit observations.
++//! Public histories and each player's own observations/actions are remembered separately.
++//! A domain author must never put hidden commitments/state in an observation or action ID.
++use super::{Boundary, Node, Tree};
++use crate::bayesian::{labels, normalize, Error};
++use crate::budgeted::{Domain, Phase};
++use std::collections::HashMap;
++
++#[derive(Clone, Debug, PartialEq, Eq)]
++pub struct Observation {
++    pub public: String,
++    pub private: [String; 2],
++}
++pub trait ObservedDomain: Domain {
++    fn observation(&self, position: &Self::Position) -> Result<Observation, String>;
++    /// Semantic identity in THIS player's menu, not a hidden-world/global array index.
++    fn action_id(&self, position: &Self::Position, player: usize, action: &Self::Action) -> String;
++}
++#[derive(Clone, Debug)]
++pub struct Seed<P> {
++    pub id: String,
++    pub weight: f64,
++    pub position: P,
++}
++#[derive(Clone, Copy, Debug)]
++pub struct Limits {
++    pub turns: u32,
++    pub max_nodes: usize,
++    pub max_transitions: usize,
++    pub max_decisions: usize,
++}
++impl Default for Limits {
++    fn default() -> Self {
++        Self {
++            turns: 2,
++            max_nodes: 50_000,
++            max_transitions: 20_000,
++            max_decisions: 32,
++        }
++    }
++}
++#[derive(Clone, Debug, Default)]
++pub struct Stats {
++    pub transitions: usize,
++    pub chance_outcomes: usize,
++    pub turn_decisions: usize,
++    pub switch_decisions: usize,
++    pub leaves: usize,
++}
++pub struct Built {
++    pub tree: Tree,
++    pub stats: Stats,
++}
++#[derive(Clone, Debug, PartialEq, Eq, Hash)]
++enum Memory {
++    Type(String),
++    Observe(String, String),
++    Action(String),
++}
++
++/// Live continuation lookup uses only the acting player's memory. Player 0 cannot
++/// supply a world ID. A pending opponent commitment is never part of this cursor.
++#[derive(Clone, Debug)]
++pub struct Cursor {
++    player: usize,
++    memory: Vec<Memory>,
++}
++impl Cursor {
++    pub fn new(player: usize, world: Option<&str>, observed: &Observation) -> Result<Self, Error> {
++        if player > 1 || (player == 0 && world.is_some()) || (player == 1 && world.is_none()) {
++            return Err(Error(
++                "cursor requires no world for player 0, a private type for player 1".into(),
++            ));
++        }
++        let mut memory = Vec::new();
++        if let Some(id) = world {
++            memory.push(Memory::Type(id.into()));
++        }
++        memory.push(Memory::Observe(
++            observed.public.clone(),
++            observed.private[player].clone(),
++        ));
++        Ok(Self { player, memory })
++    }
++    pub fn advance(&mut self, own_action: &str, observed: &Observation) {
++        self.memory.push(Memory::Action(own_action.into()));
++        self.memory.push(Memory::Observe(
++            observed.public.clone(),
++            observed.private[self.player].clone(),
++        ));
++    }
++    pub fn key(&self) -> String {
++        format!("{}:{:?}", self.player, self.memory)
++    }
++    pub fn information(&self, tree: &Tree) -> Option<usize> {
++        tree.information().iter().position(|i| i.key == self.key())
++    }
++    pub fn belief(
++        &self,
++        tree: &Tree,
++        policy: &super::Policy,
++    ) -> Result<Option<super::PublicBelief>, Error> {
++        tree.private_belief(self.player, &self.key(), policy)
++    }
++}
++
++struct Builder<'a, D: ObservedDomain> {
++    domain: &'a D,
++    limits: Limits,
++    nodes: Vec<Node>,
++    stats: Stats,
++    menus: HashMap<String, Vec<String>>,
++    public: HashMap<Vec<String>, usize>,
++    public_keys: Vec<String>,
++    private: HashMap<String, usize>,
++    private_keys: Vec<String>,
++    boundaries: Vec<Boundary>,
++}
++
++impl<D: ObservedDomain> Builder<'_, D> {
++    fn mark(&mut self, node: usize, world: usize, public: Vec<String>, keys: &[String; 2]) {
++        let public_id = if let Some(&id) = self.public.get(&public) {
++            id
++        } else {
++            let id = self.public_keys.len();
++            self.public_keys.push(format!("{public:?}"));
++            self.public.insert(public, id);
++            id
++        };
++        let mut private = [0; 2];
++        for (side, key) in keys.iter().enumerate() {
++            private[side] = if let Some(&id) = self.private.get(key) {
++                id
++            } else {
++                let id = self.private_keys.len();
++                self.private_keys.push(key.clone());
++                self.private.insert(key.clone(), id);
++                id
++            };
++        }
++        self.boundaries.push(Boundary {
++            node,
++            world,
++            public: public_id,
++            private,
++        });
++    }
++    fn push(&mut self, node: Node) -> Result<usize, Error> {
++        if self.nodes.len() >= self.limits.max_nodes {
++            return Err(Error(
++                "tree node cap exceeded; no partial solution returned".into(),
++            ));
++        }
++        let id = self.nodes.len();
++        self.nodes.push(node);
++        Ok(id)
++    }
++    fn menu(&mut self, key: &str, actions: &[String]) -> Result<(), Error> {
++        labels(actions.iter().map(String::as_str), "action ID")?;
++        if let Some(old) = self.menus.get(key) {
++            if old != actions {
++                return Err(Error("indistinguishable histories have different menus; observation contract is incomplete".into()));
++            }
++        } else {
++            self.menus.insert(key.into(), actions.to_vec());
++        }
++        Ok(())
++    }
++    fn walk(
++        &mut self,
++        pos: &D::Position,
++        world: usize,
++        memory: [Vec<Memory>; 2],
++        public: Vec<String>,
++        turns: u32,
++        decisions: usize,
++    ) -> Result<usize, Error> {
++        let phase = self.domain.phase(pos)?;
++        let keys = [format!("0:{:?}", memory[0]), format!("1:{:?}", memory[1])];
++        if phase == Phase::Terminal || (turns == 0 && phase == Phase::Turn) {
++            let value = f64::from(self.domain.value(pos));
++            self.stats.leaves += 1;
++            let node = self.push(Node::Terminal(value))?;
++            self.mark(node, world, public, &keys);
++            return Ok(node);
++        }
++        if decisions >= self.limits.max_decisions {
++            return Err(Error(
++                "decision depth cap exceeded; pending switches were not evaluated as leaves".into(),
++            ));
++        }
++        let left = self.domain.actions(pos, 0)?;
++        let right = self.domain.actions(pos, 1)?;
++        let row_ids: Vec<_> = left
++            .iter()
++            .map(|a| self.domain.action_id(pos, 0, a))
++            .collect();
++        let col_ids: Vec<_> = right
++            .iter()
++            .map(|a| self.domain.action_id(pos, 1, a))
++            .collect();
++        self.menu(&keys[0], &row_ids)?;
++        self.menu(&keys[1], &col_ids)?;
++        let next_turns = if phase == Phase::Turn {
++            self.stats.turn_decisions += 1;
++            turns - 1
++        } else {
++            self.stats.switch_decisions += 1;
++            turns
++        };
++        let row_node = self.push(Node::Terminal(0.))?;
++        self.mark(row_node, world, public.clone(), &keys);
++        let mut row_children = Vec::new();
++        for (r, row) in left.iter().enumerate() {
++            let col_node = self.push(Node::Terminal(0.))?;
++            row_children.push(col_node);
++            let mut col_children = Vec::new();
++            for (c, column) in right.iter().enumerate() {
++                if self.stats.transitions >= self.limits.max_transitions {
++                    return Err(Error(
++                        "transition cap exceeded; no partial solution returned".into(),
++                    ));
++                }
++                self.stats.transitions += 1;
++                let children = self.domain.transitions(pos, [row, column])?;
++                self.stats.chance_outcomes = self
++                    .stats
++                    .chance_outcomes
++                    .checked_add(children.len())
++                    .ok_or_else(|| Error("outcome count overflow".into()))?;
++                if children.is_empty()
++                    || children
++                        .iter()
++                        .any(|(p, _)| !p.is_finite() || *p < 0. || *p > 1.)
++                    || (children.iter().map(|v| v.0).sum::<f64>() - 1.).abs() > 1e-10
++                {
++                    return Err(Error("chance mass must be one; no renormalization".into()));
++                }
++                let chance = self.push(Node::Terminal(0.))?;
++                col_children.push(chance);
++                let mut edges = Vec::new();
++                for (p, child) in children {
++                    let observed = self.domain.observation(&child)?;
++                    let mut next = memory.clone();
++                    next[0].push(Memory::Action(row_ids[r].clone()));
++                    next[1].push(Memory::Action(col_ids[c].clone()));
++                    for (side, remembered) in next.iter_mut().enumerate() {
++                        remembered.push(Memory::Observe(
++                            observed.public.clone(),
++                            observed.private[side].clone(),
++                        ));
++                    }
++                    let mut trace = public.clone();
++                    trace.push(observed.public);
++                    let target =
++                        self.walk(&child, world, next, trace, next_turns, decisions + 1)?;
++                    edges.push((p, target));
++                }
++                self.nodes[chance] = Node::Chance(edges);
++            }
++            // Same key for every hidden row choice: player 1 does NOT observe it.
++            self.nodes[col_node] = Node::Decision {
++                player: 1,
++                information: keys[1].clone(),
++                actions: col_ids.clone(),
++                children: col_children,
++            };
++        }
++        self.nodes[row_node] = Node::Decision {
++            player: 0,
++            information: keys[0].clone(),
++            actions: row_ids,
++            children: row_children,
++        };
++        Ok(row_node)
++    }
++}
++
++pub fn build<D: ObservedDomain>(
++    domain: &D,
++    seeds: &[Seed<D::Position>],
++    limits: Limits,
++) -> Result<Built, Error> {
++    if limits.turns == 0
++        || limits.turns > 32
++        || limits.max_decisions == 0
++        || limits.max_decisions > 128
++        || limits.max_nodes == 0
++        || limits.max_transitions == 0
++    {
++        return Err(Error("invalid finite-tree limits".into()));
++    }
++    labels(seeds.iter().map(|s| s.id.as_str()), "world ID")?;
++    let mut weights: Vec<_> = seeds.iter().map(|s| s.weight).collect();
++    normalize(&mut weights)?;
++    let first = domain.observation(&seeds[0].position)?;
++    let mut b = Builder {
++        domain,
++        limits,
++        nodes: Vec::new(),
++        stats: Stats::default(),
++        menus: HashMap::new(),
++        public: HashMap::new(),
++        public_keys: Vec::new(),
++        private: HashMap::new(),
++        private_keys: Vec::new(),
++        boundaries: Vec::new(),
++    };
++    let root = b.push(Node::Terminal(0.))?;
++    let mut edges = Vec::new();
++    for (world, (seed, weight)) in seeds.iter().zip(weights).enumerate() {
++        if domain.phase(&seed.position)? != Phase::Turn {
++            return Err(Error(
++                "seed must be a normal turn; use the built continuation policy for switches".into(),
++            ));
++        }
++        let obs = domain.observation(&seed.position)?;
++        if obs.public != first.public || obs.private[0] != first.private[0] {
++            return Err(Error(
++                "root worlds do not share our initial information".into(),
++            ));
++        }
++        let memory = [
++            vec![Memory::Observe(obs.public.clone(), obs.private[0].clone())],
++            vec![
++                Memory::Type(seed.id.clone()),
++                Memory::Observe(obs.public.clone(), obs.private[1].clone()),
++            ],
++        ];
++        let child = b.walk(
++            &seed.position,
++            world,
++            memory,
++            vec![obs.public],
++            limits.turns,
++            0,
++        )?;
++        edges.push((weight, child));
++    }
++    b.nodes[root] = Node::Chance(edges);
++    let mut tree = Tree::new(b.nodes, root)?;
++    tree.worlds = seeds.iter().map(|s| s.id.clone()).collect();
++    tree.public_keys = b.public_keys;
++    tree.private_keys = b.private_keys;
++    tree.boundaries = b.boundaries;
++    Ok(Built {
++        tree,
++        stats: b.stats,
++    })
++}
+diff --git a/engine/search/src/bayesian/tree/engine.rs b/engine/search/src/bayesian/tree/engine.rs
+new file mode 100644
+index 0000000..ea230a6
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/engine.rs
+@@ -0,0 +1,185 @@
++//! Explicit boundary-snapshot information abstraction for the current engine.
++//! The engine merges some histories before exposing outcomes and has no complete public
++//! event log. This observer deliberately omits within-segment events/order. It is NOT a
++//! Showdown battle-log information model or a safety certificate for unabstracted VGC.
++//! ObservedDomain is replaceable when an event-preserving engine interface is available.
++
++use super::builder::{self, Built, Limits, Observation, ObservedDomain, Seed};
++use crate::bayesian::{
++    engine::{visible, EngineWorld, Knowledge},
++    Error,
++};
++use crate::budgeted::{Domain, EngineDomain, Phase, Position};
++use crate::{Choice, Pruning};
++use lab_engine::{
++    eval::Evaluator,
++    rules::Ruleset,
++    state::{SideId, State},
++    turn::EnumerateOptions,
++};
++
++pub struct SnapshotDomain<'a, const N: usize, E: Evaluator<N> + ?Sized> {
++    pub inner: EngineDomain<'a, N, E>,
++}
++impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for SnapshotDomain<'_, N, E> {
++    type Position = Position<N>;
++    type Action = Choice<N>;
++    fn phase(&self, p: &Self::Position) -> Result<Phase, String> {
++        self.inner.phase(p)
++    }
++    fn actions(&self, p: &Self::Position, player: usize) -> Result<Vec<Self::Action>, String> {
++        self.inner.actions(p, player)
++    }
++    fn value(&self, p: &Self::Position) -> f32 {
++        self.inner.value(p)
++    }
++    fn transitions(
++        &self,
++        p: &Self::Position,
++        a: [&Self::Action; 2],
++    ) -> Result<Vec<(f64, Self::Position)>, String> {
++        self.inner.transitions(p, a)
++    }
++}
++
++/// Champions public HP uses floor, minimum one for living Pokémon. Boundary-color
++/// distinctions at 20/50 are intentionally coarsened, never replaced with exact HP.
++fn hp_bucket(hp: i16, max: i16) -> Result<i32, String> {
++    if max <= 0 || hp < 0 || hp > max {
++        return Err("invalid active HP".into());
++    }
++    Ok(if hp == 0 {
++        0
++    } else {
++        (100 * i32::from(hp) / i32::from(max)).max(1)
++    })
++}
++
++fn snapshot<const N: usize>(
++    state: &State<N>,
++    us: SideId,
++    phase: &str,
++) -> Result<Observation, String> {
++    // Explicit allowlist. Never Debug/hash State, Side, Slot, Pokemon or Suspension here:
++    // they include hidden counters, bench identity, queue order and committed actions.
++    let mut public = format!("{phase}|{}|{:?}|", state.turn, state.result);
++    for effect in &state.field {
++        public.push_str(&format!("{},{};", effect.is_active(), effect.value));
++    }
++    let mut private = [String::new(), String::new()];
++    for (physical, side) in state.sides.iter().enumerate() {
++        public.push('|');
++        for effect in &side.effects {
++            public.push_str(&format!("{},{};", effect.is_active(), effect.value));
++        }
++        for slot in &side.slots {
++            // A last-move field is not a public event log: aborted/called moves need
++            // disclosure semantics that this engine API does not preserve.
++            public.push_str(&format!("{:?};{};", slot.boosts, slot.must_switch_out()));
++            if let Some(index) = slot.party_index.or(slot.fainted_occupant) {
++                let p = &side.party[index as usize];
++                if p.illusion {
++                    return Err("Illusion needs an appearance-aware observer".into());
++                }
++                public.push_str(&format!(
++                    "{:?},{},{:?};",
++                    p.species,
++                    hp_bucket(p.hp, p.max_hp)?,
++                    p.status
++                ));
++            } else {
++                public.push_str("empty;");
++            }
++        }
++        let player = if physical == us.index() { 0 } else { 1 };
++        // The owner's request supplies HP, item/ability and PP, not random status timers.
++        for p in &side.party {
++            private[player].push_str(&format!(
++                "{:?},{},{},{:?},{:?},{:?};",
++                p.species, p.hp, p.max_hp, p.status, p.item, p.ability
++            ));
++            for m in &p.moves {
++                private[player].push_str(&format!("{:?},{};", m.id, m.pp));
++            }
++        }
++    }
++    Ok(Observation { public, private })
++}
++
++impl<const N: usize, E: Evaluator<N> + ?Sized> ObservedDomain for SnapshotDomain<'_, N, E> {
++    fn observation(&self, p: &Position<N>) -> Result<Observation, String> {
++        let phase = crate::decision(&p.state, p.suspension.as_ref()).map_err(|e| e.to_string())?;
++        snapshot(&p.state, self.inner.us, &format!("{phase:?}"))
++    }
++    fn action_id(&self, _: &Position<N>, _: usize, a: &Choice<N>) -> String {
++        format!("{a:?}")
++    }
++}
++
++pub fn build<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++) -> Result<Built, Error> {
++    let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
++    let reference = visible(&first.position.state, us, knowledge)?;
++    for w in worlds {
++        if w.position.suspension.is_some() {
++            return Err(Error("root suspended state needs prior action memory; resume using this tree's continuation policy".into()));
++        }
++        if visible(&w.position.state, us, knowledge)? != reference {
++            return Err(Error("worlds disagree on declared known root state".into()));
++        }
++    }
++    let domain = SnapshotDomain {
++        inner: EngineDomain {
++            ruleset,
++            options: EnumerateOptions::default(),
++            pruning: Pruning::All,
++            us,
++            evaluator,
++        },
++    };
++    let seeds: Vec<_> = worlds
++        .iter()
++        .map(|w| Seed {
++            id: w.id.clone(),
++            weight: w.weight,
++            position: w.position.clone(),
++        })
++        .collect();
++    builder::build(&domain, &seeds, limits)
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn hp_is_not_exact_and_invalid_health_fails() {
++        assert_eq!(hp_bucket(51, 101).unwrap(), 50);
++        assert_eq!(hp_bucket(50, 100).unwrap(), 50);
++        assert_eq!(hp_bucket(1, 1000).unwrap(), 1);
++        assert!(hp_bucket(10, 0).is_err());
++    }
++    #[test]
++    fn owner_requests_follow_the_selected_seat_and_counters_are_not_observations() {
++        let mut state = State::<2>::default();
++        state.sides[0].party[0].hp = 77;
++        state.sides[0].party[0].max_hp = 100;
++        state.sides[1].party[0].hp = 88;
++        state.sides[1].party[0].max_hp = 100;
++        let a = snapshot(&state, SideId::One, "Turn").unwrap();
++        let b = snapshot(&state, SideId::Two, "Turn").unwrap();
++        assert_eq!(a.public, b.public);
++        assert_eq!(a.private[0], b.private[1]);
++        assert_eq!(a.private[1], b.private[0]);
++        state.sides[1].party[0].status_turns = 4;
++        state.sides[1].party[0].stats[4] = 201;
++        state.sides[1].slots[0].ability_order = 3;
++        state.sides[1].slots[0].substitute_hp = 43;
++        assert_eq!(a, snapshot(&state, SideId::One, "Turn").unwrap());
++    }
++}
+diff --git a/engine/search/src/bayesian/tree/tests.rs b/engine/search/src/bayesian/tree/tests.rs
+new file mode 100644
+index 0000000..18ad6bc
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/tests.rs
+@@ -0,0 +1,662 @@
++use super::builder::{self, Cursor, Limits, Observation, ObservedDomain, Seed};
++use super::*;
++use crate::budgeted::{Domain, Phase};
++
++fn cfg() -> Config {
++    Config {
++        iterations: 30_000,
++        tolerance: 0.005,
++        check_every: 64,
++    }
++}
++fn decision(player: usize, key: &str, children: Vec<usize>) -> Node {
++    Node::Decision {
++        player,
++        information: key.into(),
++        actions: (0..children.len()).map(|i| format!("a{i}")).collect(),
++        children,
++    }
++}
++fn near(a: f64, b: f64, eps: f64) {
++    assert!((a - b).abs() < eps, "{a} vs {b}");
++}
++
++#[test]
++fn simultaneous_choices_do_not_observe_each_other() {
++    let t = Tree::new(
++        vec![
++            decision(0, "us", vec![1, 2]),
++            decision(1, "them", vec![3, 4]),
++            decision(1, "them", vec![5, 6]),
++            Node::Terminal(1.),
++            Node::Terminal(-1.),
++            Node::Terminal(-1.),
++            Node::Terminal(1.),
++        ],
++        0,
++    )
++    .unwrap();
++    let s = solve(&t, cfg()).unwrap();
++    assert!(s.converged);
++    near(s.assessment.value, 0., 0.006);
++    near(s.policy[0][0], 0.5, 0.006);
++    near(s.policy[1][0], 0.5, 0.006);
++    assert_eq!(t.information[1].nodes.len(), 2);
++}
++
++#[test]
++fn best_response_shares_actions_across_indistinguishable_histories() {
++    let t = Tree::new(
++        vec![
++            Node::Chance(vec![(0.5, 1), (0.5, 2)]),
++            decision(0, "same", vec![3, 4]),
++            decision(0, "same", vec![5, 6]),
++            Node::Terminal(1.),
++            Node::Terminal(-1.),
++            Node::Terminal(-1.),
++            Node::Terminal(1.),
++        ],
++        0,
++    )
++    .unwrap();
++    let (value, chosen) = t.best_response(&t.uniform(), 0).unwrap();
++    assert_eq!(value, 0.);
++    assert_eq!(chosen.len(), 1);
++    assert_eq!(t.assess(&t.uniform()).unwrap().gap, 0.);
++}
++
++#[test]
++fn invalid_trees_and_imperfect_recall_are_rejected() {
++    assert!(Tree::new(vec![Node::Chance(vec![(0.9, 1)]), Node::Terminal(0.)], 0).is_err());
++    assert!(Tree::new(vec![Node::Chance(vec![(1., 0)])], 0).is_err());
++    assert!(Tree::new(
++        vec![Node::Chance(vec![(0.5, 1), (0.5, 1)]), Node::Terminal(0.)],
++        0
++    )
++    .is_err());
++    assert!(Tree::new(vec![Node::Terminal(0.), Node::Terminal(1.)], 0).is_err());
++    assert!(Tree::new(
++        vec![
++            decision(0, "start", vec![1, 2]),
++            decision(0, "forgot", vec![3]),
++            decision(0, "forgot", vec![4]),
++            Node::Terminal(0.),
++            Node::Terminal(0.)
++        ],
++        0
++    )
++    .is_err());
++    assert!(Tree::new(
++        vec![
++            Node::Chance(vec![(0.5, 1), (0.5, 2)]),
++            decision(0, "same", vec![3]),
++            decision(1, "same", vec![4]),
++            Node::Terminal(0.),
++            Node::Terminal(0.)
++        ],
++        0
++    )
++    .is_err());
++}
++
++fn kuhn() -> Tree {
++    fn add(nodes: &mut Vec<Node>, cards: [usize; 2], history: &str) -> usize {
++        let sign = if cards[0] > cards[1] { 1. } else { -1. };
++        let value = match history {
++            "cc" => Some(sign),
++            "bf" => Some(1.),
++            "bc" => Some(2. * sign),
++            "cbf" => Some(-1.),
++            "cbc" => Some(2. * sign),
++            _ => None,
++        };
++        let id = nodes.len();
++        nodes.push(Node::Terminal(value.unwrap_or(0.)));
++        if value.is_some() {
++            return id;
++        }
++        let player = if history.is_empty() || history == "cb" {
++            0
++        } else {
++            1
++        };
++        let actions = if history.ends_with('b') {
++            ["f", "c"]
++        } else {
++            ["c", "b"]
++        };
++        let children = actions
++            .iter()
++            .map(|a| add(nodes, cards, &format!("{history}{a}")))
++            .collect();
++        nodes[id] = Node::Decision {
++            player,
++            information: format!("p{player}:card{}:{history}", cards[player]),
++            actions: actions.iter().map(|s| s.to_string()).collect(),
++            children,
++        };
++        id
++    }
++    let mut nodes = vec![Node::Terminal(0.)];
++    let mut edges = Vec::new();
++    for a in 0..3 {
++        for b in 0..3 {
++            if a != b {
++                let n = add(&mut nodes, [a, b], "");
++                edges.push((1. / 6., n));
++            }
++        }
++    }
++    nodes[0] = Node::Chance(edges);
++    Tree::new(nodes, 0).unwrap()
++}
++
++#[test]
++fn kuhn_poker_matches_known_equilibrium_with_perfect_recall() {
++    let t = kuhn();
++    let s = solve(&t, cfg()).unwrap();
++    assert!(s.converged, "gap {}", s.assessment.gap);
++    near(s.assessment.value, -1. / 18., 0.005);
++    assert!(s.assessment.lower <= -1. / 18. + 1e-9 && s.assessment.upper >= -1. / 18. - 1e-9);
++}
++
++// The first simultaneous choice commits an opponent action, then a pivot asks us to
++// guess it. Physical histories differ but the pending action is not observable.
++#[derive(Clone, Debug)]
++struct Hidden {
++    world: usize,
++    stage: usize,
++    commit: usize,
++    value: f32,
++}
++struct Pivot {
++    reveal: bool,
++    signal: bool,
++}
++impl Domain for Pivot {
++    type Position = Hidden;
++    type Action = usize;
++    fn phase(&self, p: &Hidden) -> Result<Phase, String> {
++        Ok(match p.stage {
++            0 => Phase::Turn,
++            1 => Phase::Switch,
++            _ => Phase::Terminal,
++        })
++    }
++    fn actions(&self, p: &Hidden, player: usize) -> Result<Vec<usize>, String> {
++        Ok(
++            if (p.stage == 0 && player == 1) || (p.stage == 1 && player == 0) {
++                vec![0, 1]
++            } else {
++                vec![0]
++            },
++        )
++    }
++    fn value(&self, p: &Hidden) -> f32 {
++        p.value
++    }
++    fn transitions(&self, p: &Hidden, a: [&usize; 2]) -> Result<Vec<(f64, Hidden)>, String> {
++        let mut c = p.clone();
++        c.stage += 1;
++        if p.stage == 0 {
++            c.commit = *a[1];
++        } else {
++            c.value = if *a[0] == if self.signal { p.world } else { p.commit } {
++                1.
++            } else {
++                -1.
++            };
++        }
++        Ok(vec![(1., c)])
++    }
++}
++impl ObservedDomain for Pivot {
++    fn observation(&self, p: &Hidden) -> Result<Observation, String> {
++        Ok(Observation {
++            public: if p.stage == 1 && (self.reveal || self.signal) {
++                format!("switch-signal{}", p.commit)
++            } else {
++                format!("stage{}", p.stage)
++            },
++            private: [String::new(), String::new()],
++        })
++    }
++    fn action_id(&self, _: &Hidden, _: usize, a: &usize) -> String {
++        format!("a{a}")
++    }
++}
++fn seed(id: &str, world: usize, weight: f64) -> Seed<Hidden> {
++    Seed {
++        id: id.into(),
++        weight,
++        position: Hidden {
++            world,
++            stage: 0,
++            commit: 0,
++            value: 0.,
++        },
++    }
++}
++
++#[test]
++fn pending_commitment_stays_hidden_until_an_observation_reveals_it() {
++    for reveal in [false, true] {
++        let d = Pivot {
++            reveal,
++            signal: false,
++        };
++        let b = builder::build(
++            &d,
++            &[seed("one", 0, 1.)],
++            Limits {
++                turns: 1,
++                ..Limits::default()
++            },
++        )
++        .unwrap();
++        let s = solve(&b.tree, cfg()).unwrap();
++        near(s.assessment.value, if reveal { 1. } else { 0. }, 0.006);
++        let pivot_infos: Vec<_> = b
++            .tree
++            .information()
++            .iter()
++            .filter(|i| i.player == 0 && i.actions.len() == 2)
++            .collect();
++        assert_eq!(pivot_infos.len(), if reveal { 2 } else { 1 });
++        assert_eq!(b.stats.switch_decisions, 2);
++        if !reveal {
++            assert_eq!(pivot_infos[0].nodes.len(), 2);
++        }
++    }
++}
++
++#[test]
++fn public_belief_depends_on_world_specific_action_likelihoods() {
++    let d = Pivot {
++        reveal: false,
++        signal: true,
++    };
++    let b = builder::build(&d, &[seed("a", 0, 1.), seed("b", 1, 3.)], Limits::default()).unwrap();
++    let mut policy = b.tree.uniform();
++    for (i, info) in b.tree.information().iter().enumerate() {
++        if info.player == 1 && info.actions.len() == 2 {
++            policy[i] = if info.key.contains("Type(\"a\")") {
++                vec![0.75, 0.25]
++            } else {
++                vec![0.25, 0.75]
++            };
++        }
++    }
++    let beliefs = b.tree.public_beliefs(&policy).unwrap();
++    let red = beliefs
++        .iter()
++        .find(|b| b.key.contains("switch-signal0"))
++        .unwrap();
++    near(red.posterior.as_ref().unwrap()[0], 0.5, 1e-12);
++    near(red.reach, 0.375, 1e-12);
++    let blue = beliefs
++        .iter()
++        .find(|b| b.key.contains("switch-signal1"))
++        .unwrap();
++    near(blue.posterior.as_ref().unwrap()[0], 0.1, 1e-12);
++    for (i, info) in b.tree.information().iter().enumerate() {
++        if info.player == 1 && info.actions.len() == 2 {
++            policy[i] = vec![1., 0.];
++        }
++    }
++    let absent = b
++        .tree
++        .public_beliefs(&policy)
++        .unwrap()
++        .into_iter()
++        .find(|b| b.key.contains("switch-signal1"))
++        .unwrap();
++    assert_eq!(absent.reach, 0.);
++    assert!(absent.posterior.is_none());
++}
++
++#[test]
++fn continuation_cursor_needs_only_our_action_and_observation() {
++    let d = Pivot {
++        reveal: false,
++        signal: false,
++    };
++    let s = seed("world", 0, 1.);
++    let initial = d.observation(&s.position).unwrap();
++    assert!(Cursor::new(0, Some("world"), &initial).is_err());
++    let b = builder::build(&d, &[s.clone()], Limits::default()).unwrap();
++    let mut cursor = Cursor::new(0, None, &initial).unwrap();
++    assert!(cursor.information(&b.tree).is_some());
++    let after = d.transitions(&s.position, [&0, &1]).unwrap().remove(0).1;
++    cursor.advance("a0", &d.observation(&after).unwrap());
++    let id = cursor.information(&b.tree).unwrap();
++    assert_eq!(b.tree.information()[id].nodes.len(), 2);
++}
++
++#[test]
++fn budgets_fail_closed_instead_of_returning_a_partial_belief_tree() {
++    let d = Pivot {
++        reveal: false,
++        signal: false,
++    };
++    let seeds = [seed("x", 0, 1.)];
++    for limits in [
++        Limits {
++            max_nodes: 2,
++            ..Limits::default()
++        },
++        Limits {
++            max_transitions: 1,
++            ..Limits::default()
++        },
++        Limits {
++            max_decisions: 1,
++            ..Limits::default()
++        },
++    ] {
++        assert!(builder::build(&d, &seeds, limits).is_err());
++    }
++    assert_eq!(seeds[0].position.stage, 0);
++}
++
++#[derive(Clone)]
++struct TwoTurn;
++impl Domain for TwoTurn {
++    type Position = (u32, usize);
++    type Action = usize;
++    fn phase(&self, _: &Self::Position) -> Result<Phase, String> {
++        Ok(Phase::Turn)
++    }
++    fn actions(&self, _: &Self::Position, player: usize) -> Result<Vec<usize>, String> {
++        Ok(if player == 0 { vec![0, 1] } else { vec![0] })
++    }
++    fn value(&self, p: &Self::Position) -> f32 {
++        p.1 as f32
++    }
++    fn transitions(
++        &self,
++        p: &Self::Position,
++        a: [&usize; 2],
++    ) -> Result<Vec<(f64, Self::Position)>, String> {
++        Ok(vec![(1., (p.0 + 1, p.1 + *a[0]))])
++    }
++}
++impl ObservedDomain for TwoTurn {
++    fn observation(&self, p: &Self::Position) -> Result<Observation, String> {
++        Ok(Observation {
++            public: format!("turn{}", p.0),
++            private: [String::new(), String::new()],
++        })
++    }
++    fn action_id(&self, _: &Self::Position, _: usize, a: &usize) -> String {
++        format!("{a}")
++    }
++}
++#[test]
++fn multi_turn_horizon_counts_turns_and_own_memory_is_preserved() {
++    let b = builder::build(
++        &TwoTurn,
++        &[Seed {
++            id: "w".into(),
++            weight: 1.,
++            position: (0, 0),
++        }],
++        Limits {
++            turns: 2,
++            ..Limits::default()
++        },
++    )
++    .unwrap();
++    let s = solve(&b.tree, cfg()).unwrap();
++    near(s.assessment.value, 2., 0.006);
++    assert_eq!(b.stats.turn_decisions, 3);
++    assert_eq!(b.stats.leaves, 4);
++    assert_eq!(
++        b.tree
++            .information()
++            .iter()
++            .filter(|i| i.player == 0)
++            .count(),
++        3
++    );
++}
++
++fn position(name: &str) -> crate::budgeted::Position<2> {
++    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
++        .join("../oracle/scenarios")
++        .join(name);
++    let loaded = lab_scenario::load_scenario_file(path).unwrap();
++    let mut p = lab_scenario::scenario_positions_with(
++        &loaded,
++        lab_engine::turn::EnumerateOptions::default(),
++    )
++    .unwrap();
++    assert_eq!(p.len(), 1);
++    crate::budgeted::Position {
++        state: p.remove(0).state,
++        suspension: None,
++    }
++}
++fn ew(id: &str, p: crate::budgeted::Position<2>) -> crate::bayesian::engine::EngineWorld<2> {
++    crate::bayesian::engine::EngineWorld {
++        id: id.into(),
++        weight: 1.,
++        position: p,
++    }
++}
++
++#[test]
++fn actual_engine_two_turns_preserve_inputs_and_shared_root_policy() {
++    use lab_engine::{eval::Heuristic, rules::Ruleset, state::SideId};
++    let p = position("psych-up-speed-swap.json");
++    let before = p.state.clone();
++    let worlds = [ew("a", p.clone()), ew("b", p)];
++    let b = engine::build(
++        &worlds,
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Default::default(),
++        Limits::default(),
++    )
++    .unwrap();
++    assert!(b.stats.turn_decisions > 2);
++    assert_eq!(b.stats.switch_decisions, 0);
++    let roots: Vec<_> = b
++        .tree
++        .boundaries()
++        .iter()
++        .filter(|b| b.public == 0)
++        .map(|n| b.tree.information_at(n.node).unwrap())
++        .collect();
++    assert_eq!(roots.len(), 2);
++    assert_eq!(roots[0], roots[1]);
++    let s = solve(
++        &b.tree,
++        Config {
++            iterations: 500,
++            tolerance: 0.1,
++            check_every: 16,
++        },
++    )
++    .unwrap();
++    assert!(
++        s.assessment.lower <= s.assessment.value + 1e-9
++            && s.assessment.upper >= s.assessment.value - 1e-9
++    );
++    assert_eq!(worlds[0].position.state, before);
++    assert_eq!(worlds[1].position.state, before);
++}
++
++#[test]
++fn actual_engine_pivot_and_forced_replacements_are_resolved_at_horizon() {
++    use lab_engine::{eval::Heuristic, rules::Ruleset, state::SideId};
++    for fixture in ["eject-button-uturn.json", "memento-final-gambit.json"] {
++        let mut p = position(fixture);
++        if fixture == "memento-final-gambit.json" {
++            // Ensure fainted slots have a legal reserve; its set is already known to the engine.
++            for side in &mut p.state.sides {
++                side.party[2] = side.party[1].clone();
++            }
++        }
++        let before = p.state.clone();
++        let worlds = [ew("w", p)];
++        let b = engine::build(
++            &worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            &Heuristic,
++            &Default::default(),
++            Limits {
++                turns: 1,
++                max_nodes: 100_000,
++                ..Limits::default()
++            },
++        )
++        .unwrap();
++        assert!(b.stats.switch_decisions > 0, "{fixture}");
++        assert!(
++            b.tree
++                .public_keys
++                .iter()
++                .any(|k| k.contains(if fixture.starts_with("eject") {
++                    "MidTurn"
++                } else {
++                    "Replacement"
++                })),
++            "{fixture}"
++        );
++        let assessment = b.tree.assess(&b.tree.uniform()).unwrap();
++        assert!(assessment.gap.is_finite());
++        assert_eq!(worlds[0].position.state, before);
++    }
++}
++
++#[test]
++fn engine_snapshot_cannot_read_the_suspended_opponent_command() {
++    use crate::{
++        budgeted::{EngineDomain, Position},
++        Choice, Pruning,
++    };
++    use lab_engine::{eval::Heuristic, rules::Ruleset, state::SideId, turn::EnumerateOptions};
++    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
++        .join("../oracle/scenarios/eject-button-uturn.json");
++    let mut v: serde_json::Value = serde_json::from_slice(&std::fs::read(path).unwrap()).unwrap();
++    v["p2"]["team"][1]["moves"] = serde_json::json!(["Harden", "Calm Mind"]);
++    let loaded =
++        lab_scenario::load_scenario_str(&v.to_string(), std::path::Path::new(".")).unwrap();
++    let p = Position {
++        state: lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
++            .unwrap()
++            .remove(0)
++            .state,
++        suspension: None,
++    };
++    let d = engine::SnapshotDomain {
++        inner: EngineDomain {
++            ruleset: Ruleset::CHAMPIONS_MC,
++            options: EnumerateOptions::default(),
++            pruning: Pruning::All,
++            us: SideId::One,
++            evaluator: &Heuristic,
++        },
++    };
++    let named = |side, a: &Choice<2>| {
++        let Choice::Turn(a) = a else { panic!() };
++        crate::format_choice(&p.state, side, &[0, 1, 2], a)
++    };
++    let a = d
++        .actions(&p, 0)
++        .unwrap()
++        .into_iter()
++        .find(|a| named(SideId::One, a) == "move uturn 1, move harden")
++        .unwrap();
++    let theirs = d.actions(&p, 1).unwrap();
++    let x = theirs
++        .iter()
++        .find(|a| named(SideId::Two, a) == "move harden, move harden")
++        .unwrap();
++    let y = theirs
++        .iter()
++        .find(|a| named(SideId::Two, a) == "move harden, move calmmind")
++        .unwrap();
++    let xs = d.transitions(&p, [&a, x]).unwrap();
++    let ys = d.transitions(&p, [&a, y]).unwrap();
++    let pair = xs
++        .iter()
++        .flat_map(|(_, x)| ys.iter().map(move |(_, y)| (x, y)))
++        .find(|(x, y)| x.state == y.state && x.suspension.is_some() && x.suspension != y.suspension)
++        .unwrap();
++    assert_eq!(
++        d.observation(pair.0).unwrap(),
++        d.observation(pair.1).unwrap()
++    );
++}
++
++struct XorObservation;
++impl Domain for XorObservation {
++    type Position = Hidden;
++    type Action = usize;
++    fn phase(&self, _: &Hidden) -> Result<Phase, String> {
++        Ok(Phase::Turn)
++    }
++    fn actions(&self, _: &Hidden, p: usize) -> Result<Vec<usize>, String> {
++        Ok(if p == 0 { vec![0, 1] } else { vec![0] })
++    }
++    fn value(&self, p: &Hidden) -> f32 {
++        p.world as f32
++    }
++    fn transitions(&self, p: &Hidden, a: [&usize; 2]) -> Result<Vec<(f64, Hidden)>, String> {
++        let mut next = p.clone();
++        next.stage = 1;
++        next.commit = *a[0];
++        Ok(vec![(1., next)])
++    }
++}
++impl ObservedDomain for XorObservation {
++    fn observation(&self, p: &Hidden) -> Result<Observation, String> {
++        Ok(Observation {
++            public: if p.stage == 0 {
++                "start".into()
++            } else {
++                format!("xor{}", p.world ^ p.commit)
++            },
++            private: [String::new(), String::new()],
++        })
++    }
++    fn action_id(&self, _: &Hidden, _: usize, a: &usize) -> String {
++        format!("a{a}")
++    }
++}
++#[test]
++fn horizon_posterior_conditions_on_private_own_action_not_just_public_signal() {
++    let d = XorObservation;
++    let a = seed("a", 0, 1.);
++    let b = seed("b", 1, 1.);
++    let built = builder::build(
++        &d,
++        &[a.clone(), b],
++        Limits {
++            turns: 1,
++            ..Limits::default()
++        },
++    )
++    .unwrap();
++    let policy = built.tree.uniform();
++    let public = built
++        .tree
++        .public_beliefs(&policy)
++        .unwrap()
++        .into_iter()
++        .find(|b| b.key.contains("xor0"))
++        .unwrap();
++    assert_eq!(public.posterior, Some(vec![0.5, 0.5]));
++    let mut cursor = Cursor::new(0, None, &d.observation(&a.position).unwrap()).unwrap();
++    let after = d.transitions(&a.position, [&0, &0]).unwrap().remove(0).1;
++    cursor.advance("a0", &d.observation(&after).unwrap());
++    assert!(cursor.information(&built.tree).is_none()); // horizon, but posterior is retained
++    let private = cursor.belief(&built.tree, &policy).unwrap().unwrap();
++    assert_eq!(private.posterior, Some(vec![1., 0.]));
++    assert_eq!(private.histories.len(), 1);
++    near(private.world_values[0].unwrap(), 0., 1e-12);
++}
+diff --git a/engine/search/src/bin/lab-belief.rs b/engine/search/src/bin/lab-belief.rs
+new file mode 100644
+index 0000000..d3181a4
+--- /dev/null
++++ b/engine/search/src/bin/lab-belief.rs
+@@ -0,0 +1,289 @@
++//! Experimental finite information-tree CLI. See benchmarks/s26_tree/CONTRACT.md.
++use lab_engine::{rules::Ruleset, state::SideId, turn::EnumerateOptions};
++use lab_search::bayesian::{
++    engine::{EngineWorld, Knowledge},
++    tree::{self, builder::Limits, Node, Tree},
++    Config,
++};
++use lab_search::budgeted::Position;
++use serde_json::{json, Value};
++use std::path::Path;
++
++fn string(v: &Value, k: &str) -> Result<String, String> {
++    v[k].as_str()
++        .map(str::to_owned)
++        .ok_or_else(|| format!("{k}: expected string"))
++}
++fn number(v: &Value, k: &str) -> Result<f64, String> {
++    v[k].as_f64().ok_or_else(|| format!("{k}: expected number"))
++}
++fn index(v: &Value) -> Result<usize, String> {
++    v.as_u64()
++        .and_then(|n| usize::try_from(n).ok())
++        .ok_or("expected nonnegative integer".into())
++}
++fn integer(v: &Value, k: &str, d: usize) -> Result<usize, String> {
++    v.get(k).map_or(Ok(d), index)
++}
++fn boolean(v: &Value, k: &str, d: bool) -> Result<bool, String> {
++    v.get(k).map_or(Ok(d), |x| {
++        x.as_bool().ok_or_else(|| format!("{k}: expected boolean"))
++    })
++}
++fn array(v: &Value) -> Result<&Vec<Value>, String> {
++    v.as_array().ok_or("expected array".into())
++}
++fn strings(v: &Value) -> Result<Vec<String>, String> {
++    array(v)?
++        .iter()
++        .map(|x| {
++            x.as_str()
++                .map(str::to_owned)
++                .ok_or("expected string".into())
++        })
++        .collect()
++}
++fn keys(v: &Value, allowed: &[&str]) -> Result<(), String> {
++    for k in v.as_object().ok_or("expected object")?.keys() {
++        if !allowed.contains(&k.as_str()) {
++            return Err(format!("unknown field {k}"));
++        }
++    }
++    Ok(())
++}
++
++fn request(v: &Value, base: &Path) -> Result<Value, String> {
++    let mut config = Config::default();
++    if let Some(c) = v.get("solver") {
++        keys(c, &["iterations", "tolerance", "check_every"])?;
++        config.iterations = integer(c, "iterations", config.iterations)?;
++        config.check_every = integer(c, "check_every", config.check_every)?;
++        if c.get("tolerance").is_some() {
++            config.tolerance = number(c, "tolerance")?;
++        }
++    }
++    if config.iterations == 0
++        || config.iterations > 10_000_000
++        || config.check_every == 0
++        || !config.tolerance.is_finite()
++        || config.tolerance < 0.
++    {
++        return Err("invalid solver config".into());
++    }
++    let mode = string(v, "mode")?;
++    let include_keys = boolean(v, "include_keys", false)?;
++    let (tree, metadata) = match mode.as_str() {
++        "tree" => {
++            keys(v, &["mode", "nodes", "root", "solver", "include_keys"])?;
++            let mut nodes = Vec::new();
++            for n in array(&v["nodes"])? {
++                nodes.push(match string(n, "type")?.as_str() {
++                    "terminal" => {
++                        keys(n, &["type", "value"])?;
++                        Node::Terminal(number(n, "value")?)
++                    }
++                    "chance" => {
++                        keys(n, &["type", "edges"])?;
++                        Node::Chance(
++                            array(&n["edges"])?
++                                .iter()
++                                .map(|e| {
++                                    keys(e, &["probability", "child"])?;
++                                    Ok((number(e, "probability")?, index(&e["child"])?))
++                                })
++                                .collect::<Result<_, String>>()?,
++                        )
++                    }
++                    "decision" => {
++                        keys(n, &["type", "player", "information", "actions", "children"])?;
++                        Node::Decision {
++                            player: index(&n["player"])?,
++                            information: string(n, "information")?,
++                            actions: strings(&n["actions"])?,
++                            children: array(&n["children"])?
++                                .iter()
++                                .map(index)
++                                .collect::<Result<_, _>>()?,
++                        }
++                    }
++                    _ => return Err("unknown node type".into()),
++                });
++            }
++            (
++                Tree::new(nodes, integer(v, "root", 0)?).map_err(|e| e.to_string())?,
++                json!({"scope":"supplied-finite-information-tree"}),
++            )
++        }
++        "engine" => {
++            keys(
++                v,
++                &[
++                    "mode",
++                    "worlds",
++                    "side",
++                    "evaluator",
++                    "knowledge",
++                    "limits",
++                    "solver",
++                    "include_keys",
++                    "observation_model",
++                ],
++            )?;
++            if string(v, "observation_model")? != "snapshot-information-v1" {
++                return Err("explicit observation_model snapshot-information-v1 required; complete battle-log observations are not implemented".into());
++            }
++            let side = match v.get("side") {
++                None => SideId::One,
++                Some(_) => match string(v, "side")?.as_str() {
++                    "p1" => SideId::One,
++                    "p2" => SideId::Two,
++                    _ => return Err("side must be p1 or p2".into()),
++                },
++            };
++            let mut knowledge = Knowledge::default();
++            if let Some(k) = v.get("knowledge") {
++                keys(k, &["hidden_stats", "unrevealed_reserves"])?;
++                knowledge.hidden_stats = boolean(k, "hidden_stats", false)?;
++                if let Some(indices) = k.get("unrevealed_reserves") {
++                    knowledge.unrevealed_reserves = array(indices)?
++                        .iter()
++                        .map(index)
++                        .collect::<Result<_, _>>()?;
++                }
++            }
++            let mut limits = Limits::default();
++            if let Some(l) = v.get("limits") {
++                keys(
++                    l,
++                    &["turns", "max_nodes", "max_transitions", "max_decisions"],
++                )?;
++                limits.turns = u32::try_from(integer(l, "turns", limits.turns as usize)?)
++                    .map_err(|_| "turn count overflow")?;
++                limits.max_nodes = integer(l, "max_nodes", limits.max_nodes)?;
++                limits.max_transitions = integer(l, "max_transitions", limits.max_transitions)?;
++                limits.max_decisions = integer(l, "max_decisions", limits.max_decisions)?;
++            }
++            let mut worlds = Vec::new();
++            for w in array(&v["worlds"])? {
++                keys(w, &["id", "weight", "scenario"])?;
++                let loaded = lab_scenario::load_scenario_file(base.join(string(w, "scenario")?))
++                    .map_err(|e| e.to_string())?;
++                if !knowledge.unrevealed_reserves.is_empty() && !loaded.setup_turns.is_empty() {
++                    return Err(
++                        "hidden-reserve roots require opening scenarios without setup".into(),
++                    );
++                }
++                let mut positions =
++                    lab_scenario::scenario_positions_with(&loaded, EnumerateOptions::default())
++                        .map_err(|e| e.to_string())?;
++                if positions.len() != 1 {
++                    return Err("each world must have one root position; ambiguous setup cannot be silently selected".into());
++                }
++                worlds.push(EngineWorld {
++                    id: string(w, "id")?,
++                    weight: number(w, "weight")?,
++                    position: Position {
++                        state: positions.remove(0).state,
++                        suspension: None,
++                    },
++                });
++            }
++            let evaluation = if v.get("evaluator").is_some() {
++                string(v, "evaluator")?
++            } else {
++                "heuristic".into()
++            };
++            let evaluator = lab_search::model::load_evaluator(&evaluation)?;
++            let built = tree::engine::build(
++                &worlds,
++                side,
++                Ruleset::CHAMPIONS_MC,
++                evaluator.as_ref(),
++                &knowledge,
++                limits,
++            )
++            .map_err(|e| e.to_string())?;
++            let stats = built.stats;
++            let root_ours: Vec<_> = built
++                .tree
++                .boundaries()
++                .iter()
++                .filter(|b| b.public == 0)
++                .map(|b| built.tree.information_at(b.node).unwrap())
++                .collect();
++            (
++                built.tree,
++                json!({"scope":"finite-depth-snapshot-information-game","observation_model":"snapshot-information-v1",
++                "full_battle_log_information":false,"rolls":"full","pruning":"all","evaluator":evaluation,"turns":limits.turns,
++                "root_our_information":root_ours,"transitions":stats.transitions,"chance_outcomes":stats.chance_outcomes,
++                "turn_decisions":stats.turn_decisions,"switch_decisions":stats.switch_decisions,"leaves":stats.leaves}),
++            )
++        }
++        _ => return Err("mode must be tree or engine".into()),
++    };
++    let solved = tree::solve(&tree, config).map_err(|e| e.to_string())?;
++    let beliefs = tree
++        .public_beliefs(&solved.policy)
++        .map_err(|e| e.to_string())?;
++    let policies:Vec<_>=tree.information().iter().enumerate().map(|(id,i)|{
++        let mut v=json!({"id":id,"player":i.player,"actions":i.actions,"probabilities":solved.policy[id],"history_count":i.nodes.len(),"own_sequence":i.own_sequence});
++        if include_keys{v["key"]=json!(i.key);}v
++    }).collect();
++    let beliefs:Vec<_>=beliefs.into_iter().map(|b|{
++        let mut v=json!({"id":b.id,"reach":b.reach,"posterior":b.posterior,"world_conditional_values":b.world_values,"history_count":b.histories.len()});
++        if include_keys{v["key"]=json!(b.key);v["history_weights"]=json!(b.histories);}v
++    }).collect();
++    Ok(
++        json!({"schema":1,"mode":mode,"algorithm":"extensive-form-alternating-linear-cfr","metadata":metadata,
++        "nodes":tree.node_count(),"information_sets":policies.len(),"iterations":solved.iterations,"converged":solved.converged,
++        "tolerance":config.tolerance,"value":solved.assessment.value,"lower":solved.assessment.lower,"upper":solved.assessment.upper,
++        "finite_game_gap":solved.assessment.gap,"policies":policies,"worlds":tree.worlds(),"public_beliefs":beliefs}),
++    )
++}
++
++fn main() -> std::process::ExitCode {
++    let args: Vec<_> = std::env::args().skip(1).collect();
++    if args == ["--help"] {
++        println!("lab-belief <request.json>\nmode: tree | engine; engine requires explicit snapshot-information-v1 observation model");
++        return std::process::ExitCode::SUCCESS;
++    }
++    let run = || -> Result<Value, String> {
++        if args.len() != 1 {
++            return Err("usage: lab-belief <request.json>".into());
++        }
++        let path = Path::new(&args[0]);
++        let v: Value = serde_json::from_slice(&std::fs::read(path).map_err(|e| e.to_string())?)
++            .map_err(|e| e.to_string())?;
++        request(&v, path.parent().unwrap_or(Path::new(".")))
++    };
++    match run() {
++        Ok(value) => {
++            println!("{}", serde_json::to_string_pretty(&value).unwrap());
++            std::process::ExitCode::SUCCESS
++        }
++        Err(e) => {
++            eprintln!("lab-belief: {e}");
++            std::process::ExitCode::FAILURE
++        }
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn tree_cli_validates_and_reports_scope() {
++        let mut v =
++            json!({"mode":"tree","nodes":[{"type":"terminal","value":3}],"include_keys":true});
++        let r = request(&v, Path::new(".")).unwrap();
++        assert_eq!(r["value"], 3.);
++        assert_eq!(r["finite_game_gap"], 0.);
++        v["solver"] = json!({"iterations":0});
++        assert!(request(&v, Path::new(".")).is_err());
++        let v = json!({"mode":"engine","worlds":[]});
++        assert!(request(&v, Path::new("."))
++            .err()
++            .unwrap()
++            .contains("observation_model"));
++    }
++}

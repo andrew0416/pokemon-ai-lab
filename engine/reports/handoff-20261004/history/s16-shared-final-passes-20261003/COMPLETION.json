@@ -1,0 +1,20 @@
+{
+  "completed": true,
+  "candidate": 3,
+  "task": "S26e-shared-final-passes",
+  "source_sha": "8143386044d9690bb195cda7702887df7038a41d",
+  "run": 37087415542,
+  "decision": "미세하고 혼재된 결과로 일괄 누적하지 않는다. 6국면 중 5개 구간이 동률을 포함하며 좁은3턴의 약0.50%만 이번 구간이 동률 아래다. 독립 후보로 보관하고 다음 기준은 S14로 유지한다.",
+  "default_off": true,
+  "production_adopted": false,
+  "vault_notes_added": 4,
+  "vault_install_receipt": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/vault/install-receipt.json",
+  "new_vault_errors": 0,
+  "new_stale_references": 0,
+  "evidence_sha256": {
+    "RESULTS.md": "ea23f76fb26d42d44dc90a915596e35e9504145ac9ff7191f4136e6d09e35ef5",
+    "AUDIT-37087415542.json": "f1a432de014752851b874c7a447a88ba92800be24561836b275b7d2817de3292",
+    "SOURCE-PARITY.json": "e57039f9d7c42e216ca580c01418e231044bed577050eae7798d00b3300b79de",
+    "decision.json": "5da240a59aecf24e8518011d2d437242a23fd44e3d91af6336e805af5c22ee67"
+  }
+}

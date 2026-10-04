@@ -1,0 +1,86 @@
+{
+  "source_sha": "12a28a527d6b67856f77b2de4f077b9cf4b41d90",
+  "run": 37014537106,
+  "conclusion": "success",
+  "run_wall_seconds": 82,
+  "rust_tests": 87,
+  "test_groups": {
+    "on.log": 68,
+    "cli.log": 2,
+    "off.log": 17
+  },
+  "new_information_tests": 15,
+  "extensive_lp_cases": 49,
+  "extensive_converged": 49,
+  "max_extensive_gap": 0.009864860029363542,
+  "matrix_lp_regression_cases": 72,
+  "matrix_converged": 72,
+  "max_matrix_gap": 0.01968748357698491,
+  "raw_best_response_audits": 121,
+  "kuhn_lp_value": -0.05555555555555555,
+  "engine_cli_cases": [
+    {
+      "case": "two-turn-hidden-stats",
+      "nodes": 5283,
+      "information_sets": 63,
+      "iterations": 32,
+      "converged": true,
+      "gap": 0.07285339362319121,
+      "metadata": {
+        "chance_outcomes": 2112,
+        "evaluator": "heuristic",
+        "full_battle_log_information": false,
+        "leaves": 2048,
+        "observation_model": "snapshot-information-v1",
+        "pruning": "all",
+        "rolls": "full",
+        "root_our_information": [
+          0,
+          0
+        ],
+        "scope": "finite-depth-snapshot-information-game",
+        "switch_decisions": 0,
+        "transitions": 2112,
+        "turn_decisions": 66,
+        "turns": 2
+      }
+    },
+    {
+      "case": "pivot",
+      "nodes": 885,
+      "information_sets": 326,
+      "iterations": 64,
+      "converged": true,
+      "gap": 0.09359019408756986,
+      "metadata": {
+        "chance_outcomes": 429,
+        "evaluator": "heuristic",
+        "full_battle_log_information": false,
+        "leaves": 216,
+        "observation_model": "snapshot-information-v1",
+        "pruning": "all",
+        "rolls": "full",
+        "root_our_information": [
+          0
+        ],
+        "scope": "finite-depth-snapshot-information-game",
+        "switch_decisions": 213,
+        "transitions": 234,
+        "turn_decisions": 1,
+        "turns": 1
+      }
+    }
+  ],
+  "no_default_features_passed": true,
+  "clippy_passed": true,
+  "default_off": true,
+  "production_changed": false,
+  "full_battle_log_information": false,
+  "performance_measured": false,
+  "artifact_sha256": "d64f70dfadcfd6d7ccb4f75c275b471a6c86e3cf951d12f3f06e1828187ddfb0",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

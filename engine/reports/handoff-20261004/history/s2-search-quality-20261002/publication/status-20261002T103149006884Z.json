@@ -1,0 +1,93 @@
+{
+  "id": 36995572342,
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/andrew0416/pokemon-ai-lab/actions/runs/36995572342",
+  "created_at": "2026-10-02T10:27:29Z",
+  "run_started_at": "2026-10-02T10:27:29Z",
+  "updated_at": "2026-10-02T10:30:52Z",
+  "head_sha": "a0f7b556e30095e85ce56013c0e7d1f08206f03d",
+  "jobs": [
+    {
+      "id": 110801390880,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T10:27:32Z",
+      "completed_at": "2026-10-02T10:29:00Z",
+      "active_steps": []
+    },
+    {
+      "id": 110801820406,
+      "name": "compare (pivot-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T10:29:03Z",
+      "completed_at": "2026-10-02T10:29:17Z",
+      "active_steps": []
+    },
+    {
+      "id": 110801820414,
+      "name": "compare (coaching-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T10:29:20Z",
+      "completed_at": "2026-10-02T10:30:35Z",
+      "active_steps": []
+    },
+    {
+      "id": 110801820419,
+      "name": "compare (half-hp-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T10:29:03Z",
+      "completed_at": "2026-10-02T10:29:30Z",
+      "active_steps": []
+    },
+    {
+      "id": 110801820435,
+      "name": "compare (sand-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T10:29:25Z",
+      "completed_at": "2026-10-02T10:30:40Z",
+      "active_steps": []
+    },
+    {
+      "id": 110801820460,
+      "name": "compare (helping-hand-median)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T10:29:03Z",
+      "completed_at": "2026-10-02T10:29:22Z",
+      "active_steps": []
+    },
+    {
+      "id": 110801820490,
+      "name": "compare (speed-swap-full)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T10:29:02Z",
+      "completed_at": "2026-10-02T10:29:10Z",
+      "active_steps": []
+    },
+    {
+      "id": 110801820564,
+      "name": "compare (pivot-full)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T10:29:13Z",
+      "completed_at": "2026-10-02T10:29:29Z",
+      "active_steps": []
+    },
+    {
+      "id": 110802306646,
+      "name": "summary",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T10:30:43Z",
+      "completed_at": "2026-10-02T10:30:51Z",
+      "active_steps": []
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "phase": "build",
+  "revision": "r3",
+  "passed": true,
+  "profile": "opt0 generic x86-64",
+  "performance_measurement": false,
+  "checks": [
+    {
+      "name": "clippy-on",
+      "command": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "engine/Cargo.toml",
+        "-p",
+        "lab-search",
+        "--features",
+        "experiment-budgeted-search",
+        "--lib",
+        "--bin",
+        "lab-budget",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "returncode": 0,
+      "expected": 0,
+      "timed_out": false,
+      "passed": true,
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r3-clippy-on.log",
+      "sha256": "fe802774b74995d508aeec487aa046105ac35845655d58f1136356e7164affce"
+    },
+    {
+      "name": "portable-library",
+      "command": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "engine/Cargo.toml",
+        "-p",
+        "lab-search",
+        "--no-default-features",
+        "--features",
+        "experiment-budgeted-search",
+        "--lib"
+      ],
+      "returncode": 0,
+      "expected": 0,
+      "timed_out": false,
+      "passed": true,
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r3-portable-library.log",
+      "sha256": "746f5ffef5056641c2ee5df81cf21f78580abe3913d79ad5c94bf72d483b1fb6"
+    },
+    {
+      "name": "unit-off",
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "engine/Cargo.toml",
+        "-p",
+        "lab-search",
+        "--lib",
+        "--",
+        "--test-threads=1"
+      ],
+      "returncode": 0,
+      "expected": 0,
+      "timed_out": false,
+      "passed": true,
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r3-unit-off.log",
+      "sha256": "3c70bd81d6d98f5d7d00c21784f3e1283bef323efd41107d86335aa89453b84d"
+    },
+    {
+      "name": "cli-build",
+      "command": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "engine/Cargo.toml",
+        "-p",
+        "lab-search",
+        "--features",
+        "experiment-budgeted-search",
+        "--bin",
+        "lab-budget"
+      ],
+      "returncode": 0,
+      "expected": 0,
+      "timed_out": false,
+      "passed": true,
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s1-budgeted-20261002\\validation\\r3-cli-build.log",
+      "sha256": "25108987540bd9e1a6b566f91e708a24fde18c676e75b91ae1f33ac270f4c43f"
+    }
+  ]
+}

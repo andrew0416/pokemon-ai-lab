@@ -1,0 +1,3 @@
+# Preserve the original corpus bytes recorded in provenance.json on every platform.
+*.scenario.json -text whitespace=cr-at-eol
+*.before.json -text whitespace=cr-at-eol

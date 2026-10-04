@@ -1,0 +1,2538 @@
+{
+  "source_sha": "5b79d6e30b1fc0c39da227700ca3b169b60691b2",
+  "algorithm_parent": "26999d068dd541ac0f2cfcdafc8a091ce4427e12",
+  "run": 37025196260,
+  "conclusion": "success",
+  "run_wall_seconds": 177,
+  "cases": 4,
+  "treatments": 26,
+  "paired_blocks": 182,
+  "timing_samples": 728,
+  "timed_solves": 2380,
+  "release": true,
+  "portable_x86_64": true,
+  "kernels_changed": false,
+  "wins_evaluated": false,
+  "performance_measured": true,
+  "cpu_model": "AMD EPYC 7763 64-Core Processor",
+  "cpu": 0,
+  "binary_sha256": "c5084360aa853a0c0d3e26dcc380003227c7fa459562df6b6305b232761ade22",
+  "archive_sha256": "f8edbb467f3184ccc1f50bdb031e7cd9199fede9c7280ab5c1d074b1336c800e",
+  "groups": [
+    {
+      "case": "stats-w1-d2",
+      "budget": "b2",
+      "seed_count": 3,
+      "baseline_ms": 83.2622755,
+      "candidate_ms": 5.45650175,
+      "ratio_median": 0.06559866912360031,
+      "time_reduction_percent": 93.44013308763996,
+      "speedup": 15.244211709780433,
+      "seed_ratio_range": [
+        0.06558519614617765,
+        0.06560144716448665
+      ],
+      "horizon_complete": false,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 83.330509,
+          "candidate_ms": 5.457135133333333,
+          "ratio": 0.06560144716448665,
+          "ratio_bootstrap95": [
+            0.06511603547340712,
+            0.06596131023007291
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 85.1023,
+              "candidate_ms": 5.4494805,
+              "ratio": 0.06403446792859888
+            },
+            {
+              "block": 1,
+              "baseline_ms": 83.019487,
+              "candidate_ms": 5.457135133333333,
+              "ratio": 0.06573318302163603
+            },
+            {
+              "block": 2,
+              "baseline_ms": 83.7769165,
+              "candidate_ms": 5.455220666666666,
+              "ratio": 0.06511603547340712
+            },
+            {
+              "block": 3,
+              "baseline_ms": 83.264435,
+              "candidate_ms": 5.462267433333333,
+              "ratio": 0.06560144716448665
+            },
+            {
+              "block": 4,
+              "baseline_ms": 83.330509,
+              "candidate_ms": 5.437347033333333,
+              "ratio": 0.06525037586573884
+            },
+            {
+              "block": 5,
+              "baseline_ms": 82.994635,
+              "candidate_ms": 5.474434866666667,
+              "ratio": 0.06596131023007291
+            },
+            {
+              "block": 6,
+              "baseline_ms": 83.8383645,
+              "candidate_ms": 5.5540641,
+              "ratio": 0.066247285871136
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 64,
+            "gap": 0.027749021382888373,
+            "growth": {
+              "attempted_transitions": 64,
+              "committed_expansions": 2,
+              "frontier_groups": 13,
+              "solves": 2,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 96,
+              "walks": 1
+            },
+            "horizon_complete": false,
+            "information_sets": 4,
+            "iterations": 64,
+            "leaves": 63,
+            "nodes": 162,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 64,
+            "value": 63.69563965049211
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 7,
+          "baseline_ms": 83.145752,
+          "candidate_ms": 5.453641633333333,
+          "ratio": 0.06559866912360031,
+          "ratio_bootstrap95": [
+            0.06547280033830773,
+            0.06565601256901227
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 82.9658405,
+              "candidate_ms": 5.447206266666667,
+              "ratio": 0.06565601256901227
+            },
+            {
+              "block": 1,
+              "baseline_ms": 82.9678355,
+              "candidate_ms": 5.444165066666667,
+              "ratio": 0.06561777867118959
+            },
+            {
+              "block": 2,
+              "baseline_ms": 83.31252,
+              "candidate_ms": 5.465190433333333,
+              "ratio": 0.06559866912360031
+            },
+            {
+              "block": 3,
+              "baseline_ms": 83.3564565,
+              "candidate_ms": 5.4575806333333325,
+              "ratio": 0.06547280033830773
+            },
+            {
+              "block": 4,
+              "baseline_ms": 82.829621,
+              "candidate_ms": 5.432262466666667,
+              "ratio": 0.06558357265291201
+            },
+            {
+              "block": 5,
+              "baseline_ms": 83.145752,
+              "candidate_ms": 5.463074633333333,
+              "ratio": 0.06570479551779546
+            },
+            {
+              "block": 6,
+              "baseline_ms": 83.6255485,
+              "candidate_ms": 5.453641633333333,
+              "ratio": 0.06521501779247921
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 64,
+            "gap": 0.027749021382888373,
+            "growth": {
+              "attempted_transitions": 64,
+              "committed_expansions": 2,
+              "frontier_groups": 13,
+              "solves": 2,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 96,
+              "walks": 1
+            },
+            "horizon_complete": false,
+            "information_sets": 4,
+            "iterations": 64,
+            "leaves": 63,
+            "nodes": 162,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 64,
+            "value": 63.69563965049211
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 31,
+          "baseline_ms": 83.121392,
+          "candidate_ms": 5.45650175,
+          "ratio": 0.06558519614617765,
+          "ratio_bootstrap95": [
+            0.06533957777787378,
+            0.06590931572566698
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 83.647447,
+              "candidate_ms": 5.45650175,
+              "ratio": 0.0652321373299056
+            },
+            {
+              "block": 1,
+              "baseline_ms": 83.121392,
+              "candidate_ms": 5.453769142857142,
+              "ratio": 0.06561210070756686
+            },
+            {
+              "block": 2,
+              "baseline_ms": 82.8849665,
+              "candidate_ms": 5.467446214285714,
+              "ratio": 0.06596426885550728
+            },
+            {
+              "block": 3,
+              "baseline_ms": 83.608016,
+              "candidate_ms": 5.462912464285715,
+              "ratio": 0.06533957777787378
+            },
+            {
+              "block": 4,
+              "baseline_ms": 83.021293,
+              "candidate_ms": 5.444967785714286,
+              "ratio": 0.06558519614617765
+            },
+            {
+              "block": 5,
+              "baseline_ms": 83.017172,
+              "candidate_ms": 5.471605,
+              "ratio": 0.06590931572566698
+            },
+            {
+              "block": 6,
+              "baseline_ms": 83.2622755,
+              "candidate_ms": 5.445176892857144,
+              "ratio": 0.06539788710022877
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 64,
+            "gap": 0.027749021382888373,
+            "growth": {
+              "attempted_transitions": 64,
+              "committed_expansions": 2,
+              "frontier_groups": 13,
+              "solves": 2,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 96,
+              "walks": 1
+            },
+            "horizon_complete": false,
+            "information_sets": 4,
+            "iterations": 64,
+            "leaves": 63,
+            "nodes": 162,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 64,
+            "value": 63.69563965049211
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          }
+        }
+      ]
+    },
+    {
+      "case": "stats-w1-d2",
+      "budget": "b8",
+      "seed_count": 3,
+      "baseline_ms": 83.0983205,
+      "candidate_ms": 48.559468,
+      "ratio_median": 0.5838182206458875,
+      "time_reduction_percent": 41.618177935411246,
+      "speedup": 1.7128619228322197,
+      "seed_ratio_range": [
+        0.5796686918270147,
+        0.6572315126243751
+      ],
+      "horizon_complete": false,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 82.869598,
+          "candidate_ms": 48.50191525,
+          "ratio": 0.5836645168979344,
+          "ratio_bootstrap95": [
+            0.5809686035970522,
+            0.5873049255485452
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 82.8362255,
+              "candidate_ms": 48.65012325,
+              "ratio": 0.5873049255485452
+            },
+            {
+              "block": 1,
+              "baseline_ms": 83.583353,
+              "candidate_ms": 48.45431625,
+              "ratio": 0.5797125206259672
+            },
+            {
+              "block": 2,
+              "baseline_ms": 82.869598,
+              "candidate_ms": 48.38078125,
+              "ratio": 0.5838182206458875
+            },
+            {
+              "block": 3,
+              "baseline_ms": 83.5836355,
+              "candidate_ms": 48.559468,
+              "ratio": 0.5809686035970522
+            },
+            {
+              "block": 4,
+              "baseline_ms": 82.678184,
+              "candidate_ms": 48.7043635,
+              "ratio": 0.5890836148505633
+            },
+            {
+              "block": 5,
+              "baseline_ms": 83.301988,
+              "candidate_ms": 48.50191525,
+              "ratio": 0.582241989831023
+            },
+            {
+              "block": 6,
+              "baseline_ms": 82.7153315,
+              "candidate_ms": 48.278004,
+              "ratio": 0.5836645168979344
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 512,
+            "gap": 0.0909430476327131,
+            "growth": {
+              "attempted_transitions": 512,
+              "committed_expansions": 8,
+              "frontier_groups": 7,
+              "solves": 8,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 416,
+              "walks": 36
+            },
+            "horizon_complete": false,
+            "information_sets": 24,
+            "iterations": 32,
+            "leaves": 497,
+            "nodes": 1282,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 512,
+            "value": 63.63391699820144
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 7,
+          "baseline_ms": 83.0000355,
+          "candidate_ms": 54.53731075,
+          "ratio": 0.6572315126243751,
+          "ratio_bootstrap95": [
+            0.65627215955586,
+            0.6613643196540235
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 83.0272715,
+              "candidate_ms": 54.51451575,
+              "ratio": 0.6565856587253984
+            },
+            {
+              "block": 1,
+              "baseline_ms": 83.0000355,
+              "candidate_ms": 54.6234635,
+              "ratio": 0.6581137365899078
+            },
+            {
+              "block": 2,
+              "baseline_ms": 82.9492265,
+              "candidate_ms": 54.85965875,
+              "ratio": 0.6613643196540235
+            },
+            {
+              "block": 3,
+              "baseline_ms": 84.773107,
+              "candidate_ms": 54.53731075,
+              "ratio": 0.6433326874524016
+            },
+            {
+              "block": 4,
+              "baseline_ms": 83.0983205,
+              "candidate_ms": 54.53511425,
+              "ratio": 0.65627215955586
+            },
+            {
+              "block": 5,
+              "baseline_ms": 82.8919485,
+              "candidate_ms": 55.34239875,
+              "ratio": 0.6676450457670204
+            },
+            {
+              "block": 6,
+              "baseline_ms": 82.868617,
+              "candidate_ms": 54.4638665,
+              "ratio": 0.6572315126243751
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 576,
+            "gap": 0.03108476648814218,
+            "growth": {
+              "attempted_transitions": 576,
+              "committed_expansions": 8,
+              "frontier_groups": 7,
+              "solves": 8,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 448,
+              "walks": 34
+            },
+            "horizon_complete": false,
+            "information_sets": 26,
+            "iterations": 64,
+            "leaves": 559,
+            "nodes": 1442,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 576,
+            "value": 63.69304615231176
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 31,
+          "baseline_ms": 83.273721,
+          "candidate_ms": 48.1951405,
+          "ratio": 0.5796686918270147,
+          "ratio_bootstrap95": [
+            0.5787556977308603,
+            0.5802881699766773
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 83.390864,
+              "candidate_ms": 49.04811725,
+              "ratio": 0.5881713523198416
+            },
+            {
+              "block": 1,
+              "baseline_ms": 83.6732205,
+              "candidate_ms": 48.55458,
+              "ratio": 0.5802881699766773
+            },
+            {
+              "block": 2,
+              "baseline_ms": 83.273721,
+              "candidate_ms": 48.1951405,
+              "ratio": 0.5787556977308603
+            },
+            {
+              "block": 3,
+              "baseline_ms": 83.2180195,
+              "candidate_ms": 48.2388805,
+              "ratio": 0.5796686918270147
+            },
+            {
+              "block": 4,
+              "baseline_ms": 82.947908,
+              "candidate_ms": 48.08998175,
+              "ratio": 0.5797612370163694
+            },
+            {
+              "block": 5,
+              "baseline_ms": 83.349041,
+              "candidate_ms": 48.1298,
+              "ratio": 0.5774487555291727
+            },
+            {
+              "block": 6,
+              "baseline_ms": 83.10322,
+              "candidate_ms": 48.1706465,
+              "ratio": 0.5796483758391071
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 512,
+            "gap": 0.0909430476327131,
+            "growth": {
+              "attempted_transitions": 512,
+              "committed_expansions": 8,
+              "frontier_groups": 7,
+              "solves": 8,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 384,
+              "walks": 37
+            },
+            "horizon_complete": false,
+            "information_sets": 24,
+            "iterations": 32,
+            "leaves": 497,
+            "nodes": 1282,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 512,
+            "value": 63.63391699820144
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          }
+        }
+      ]
+    },
+    {
+      "case": "stats-w1-d2",
+      "budget": "full",
+      "seed_count": 3,
+      "baseline_ms": 83.3921285,
+      "candidate_ms": 117.0805715,
+      "ratio_median": 1.4002396780283828,
+      "time_reduction_percent": -40.02396780283828,
+      "speedup": 0.7141634505087422,
+      "seed_ratio_range": [
+        1.3911606452250809,
+        1.4340573322097556
+      ],
+      "horizon_complete": true,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 83.3921285,
+          "candidate_ms": 115.836035,
+          "ratio": 1.3911606452250809,
+          "ratio_bootstrap95": [
+            1.3846750116229496,
+            1.3924008576564513
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 83.782484,
+              "candidate_ms": 116.5548945,
+              "ratio": 1.3911606452250806
+            },
+            {
+              "block": 1,
+              "baseline_ms": 83.3147575,
+              "candidate_ms": 115.9111945,
+              "ratio": 1.3912444563017543
+            },
+            {
+              "block": 2,
+              "baseline_ms": 83.38343,
+              "candidate_ms": 115.5264525,
+              "ratio": 1.3854845321186715
+            },
+            {
+              "block": 3,
+              "baseline_ms": 83.3921285,
+              "candidate_ms": 115.4709965,
+              "ratio": 1.3846750116229496
+            },
+            {
+              "block": 4,
+              "baseline_ms": 83.1915855,
+              "candidate_ms": 115.836035,
+              "ratio": 1.3924008576564513
+            },
+            {
+              "block": 5,
+              "baseline_ms": 83.4126195,
+              "candidate_ms": 115.212748,
+              "ratio": 1.3812388184260296
+            },
+            {
+              "block": 6,
+              "baseline_ms": 83.8070145,
+              "candidate_ms": 117.349907,
+              "ratio": 1.4002396780283828
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": {
+              "attempted_transitions": 1056,
+              "committed_expansions": 15,
+              "frontier_groups": 0,
+              "solves": 15,
+              "stop": "HorizonComplete",
+              "total_cfr_iterations": 640,
+              "walks": 584
+            },
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 7,
+          "baseline_ms": 83.2133455,
+          "candidate_ms": 116.323659,
+          "ratio": 1.3944610122663559,
+          "ratio_bootstrap95": [
+            1.391573932288621,
+            1.4089100393369542
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 82.9618245,
+              "candidate_ms": 117.2305935,
+              "ratio": 1.4130667232372645
+            },
+            {
+              "block": 1,
+              "baseline_ms": 83.354291,
+              "candidate_ms": 115.9936585,
+              "ratio": 1.391573932288621
+            },
+            {
+              "block": 2,
+              "baseline_ms": 83.4428445,
+              "candidate_ms": 116.323659,
+              "ratio": 1.3940519369518856
+            },
+            {
+              "block": 3,
+              "baseline_ms": 83.1001045,
+              "candidate_ms": 117.0805715,
+              "ratio": 1.4089100393369542
+            },
+            {
+              "block": 4,
+              "baseline_ms": 83.2133455,
+              "candidate_ms": 116.037766,
+              "ratio": 1.3944610122663557
+            },
+            {
+              "block": 5,
+              "baseline_ms": 82.9585725,
+              "candidate_ms": 115.4089635,
+              "ratio": 1.3911638064890761
+            },
+            {
+              "block": 6,
+              "baseline_ms": 83.5691815,
+              "candidate_ms": 117.265419,
+              "ratio": 1.403213683503649
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": {
+              "attempted_transitions": 1056,
+              "committed_expansions": 15,
+              "frontier_groups": 0,
+              "solves": 15,
+              "stop": "HorizonComplete",
+              "total_cfr_iterations": 672,
+              "walks": 153
+            },
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 31,
+          "baseline_ms": 83.5308215,
+          "candidate_ms": 119.711825,
+          "ratio": 1.4340573322097556,
+          "ratio_bootstrap95": [
+            1.4212334904428061,
+            1.4451703844398105
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 83.978169,
+              "candidate_ms": 120.429509,
+              "ratio": 1.4340573322097556
+            },
+            {
+              "block": 1,
+              "baseline_ms": 83.398784,
+              "candidate_ms": 119.423695,
+              "ratio": 1.4319596674215298
+            },
+            {
+              "block": 2,
+              "baseline_ms": 83.0341815,
+              "candidate_ms": 119.99854,
+              "ratio": 1.4451703844398105
+            },
+            {
+              "block": 3,
+              "baseline_ms": 83.5308215,
+              "candidate_ms": 118.716801,
+              "ratio": 1.4212334904428061
+            },
+            {
+              "block": 4,
+              "baseline_ms": 85.168484,
+              "candidate_ms": 119.3860455,
+              "ratio": 1.4017631862509141
+            },
+            {
+              "block": 5,
+              "baseline_ms": 83.378416,
+              "candidate_ms": 119.711825,
+              "ratio": 1.4357651625331909
+            },
+            {
+              "block": 6,
+              "baseline_ms": 83.58842,
+              "candidate_ms": 121.103933,
+              "ratio": 1.4488123235251964
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": {
+              "attempted_transitions": 1056,
+              "committed_expansions": 15,
+              "frontier_groups": 0,
+              "solves": 15,
+              "stop": "HorizonComplete",
+              "total_cfr_iterations": 608,
+              "walks": 1199
+            },
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 1056,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 48,
+            "iterations": 32,
+            "leaves": 1024,
+            "nodes": 2642,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1056,
+            "value": 63.655023932858555
+          }
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2",
+      "budget": "b1",
+      "seed_count": 3,
+      "baseline_ms": 162.668226,
+      "candidate_ms": 5.133695599999999,
+      "ratio_median": 0.031602835412865696,
+      "time_reduction_percent": 96.83971645871343,
+      "speedup": 31.64273037326563,
+      "seed_ratio_range": [
+        0.03146225438261573,
+        0.03184785950980668
+      ],
+      "horizon_complete": false,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 162.5785875,
+          "candidate_ms": 5.127319466666667,
+          "ratio": 0.03146225438261573,
+          "ratio_bootstrap95": [
+            0.03143250398826352,
+            0.031695504907471625
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.655968,
+              "candidate_ms": 5.257375933333334,
+              "ratio": 0.0319294587204597
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.8825405,
+              "candidate_ms": 5.194339866666668,
+              "ratio": 0.031695504907471625
+            },
+            {
+              "block": 2,
+              "baseline_ms": 162.4881795,
+              "candidate_ms": 5.095087566666667,
+              "ratio": 0.03135666595776382
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.967326,
+              "candidate_ms": 5.127319466666667,
+              "ratio": 0.03146225438261573
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.5785875,
+              "candidate_ms": 5.110252099999999,
+              "ratio": 0.03143250398826352
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.357578,
+              "candidate_ms": 5.138191666666666,
+              "ratio": 0.03164737815112434
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.4802015,
+              "candidate_ms": 5.1076106999999995,
+              "ratio": 0.031435280439383255
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 64,
+            "gap": 0.04247966516695101,
+            "growth": {
+              "attempted_transitions": 64,
+              "committed_expansions": 1,
+              "frontier_groups": 14,
+              "solves": 1,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 32,
+              "walks": 0
+            },
+            "horizon_complete": false,
+            "information_sets": 3,
+            "iterations": 32,
+            "leaves": 64,
+            "nodes": 163,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 64,
+            "value": 63.68092426549711
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 7,
+          "baseline_ms": 162.57689,
+          "candidate_ms": 5.11120240625,
+          "ratio": 0.0314947751360311,
+          "ratio_bootstrap95": [
+            0.031410110863037806,
+            0.031804664130836324
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 163.7947625,
+              "candidate_ms": 5.23341503125,
+              "ratio": 0.03195105234973554
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.866115,
+              "candidate_ms": 5.21170675,
+              "ratio": 0.031804664130836324
+            },
+            {
+              "block": 2,
+              "baseline_ms": 161.8855065,
+              "candidate_ms": 5.098547625,
+              "ratio": 0.03149477513603109
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.724749,
+              "candidate_ms": 5.11120240625,
+              "ratio": 0.031410110863037806
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.57689,
+              "candidate_ms": 5.0828859375,
+              "ratio": 0.031264504675295485
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.504567,
+              "candidate_ms": 5.13846196875,
+              "ratio": 0.03162041574345415
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.3902935,
+              "candidate_ms": 5.10331978125,
+              "ratio": 0.031426261208463174
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 64,
+            "gap": 0.04247966516695101,
+            "growth": {
+              "attempted_transitions": 64,
+              "committed_expansions": 1,
+              "frontier_groups": 14,
+              "solves": 1,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 32,
+              "walks": 0
+            },
+            "horizon_complete": false,
+            "information_sets": 3,
+            "iterations": 32,
+            "leaves": 64,
+            "nodes": 163,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 64,
+            "value": 63.68092426549711
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 31,
+          "baseline_ms": 162.958613,
+          "candidate_ms": 5.192456466666667,
+          "ratio": 0.03184785950980668,
+          "ratio_bootstrap95": [
+            0.03158584390873766,
+            0.03194377308630697
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 163.801462,
+              "candidate_ms": 5.2324367333333335,
+              "ratio": 0.03194377308630697
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.134727,
+              "candidate_ms": 5.195491866666667,
+              "ratio": 0.03184785950980668
+            },
+            {
+              "block": 2,
+              "baseline_ms": 162.958613,
+              "candidate_ms": 5.272884933333334,
+              "ratio": 0.03235720307298721
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.1193415,
+              "candidate_ms": 5.123430866666667,
+              "ratio": 0.031602835412865696
+            },
+            {
+              "block": 4,
+              "baseline_ms": 163.541196,
+              "candidate_ms": 5.107529466666667,
+              "ratio": 0.031230843307925096
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.531532,
+              "candidate_ms": 5.133695599999999,
+              "ratio": 0.03158584390873766
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.668226,
+              "candidate_ms": 5.192456466666667,
+              "ratio": 0.0319205329421043
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 64,
+            "gap": 0.04247966516695101,
+            "growth": {
+              "attempted_transitions": 64,
+              "committed_expansions": 1,
+              "frontier_groups": 14,
+              "solves": 1,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 32,
+              "walks": 0
+            },
+            "horizon_complete": false,
+            "information_sets": 3,
+            "iterations": 32,
+            "leaves": 64,
+            "nodes": 163,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 64,
+            "value": 63.68092426549711
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2",
+      "budget": "b2",
+      "seed_count": 3,
+      "baseline_ms": 162.667012,
+      "candidate_ms": 10.7555353125,
+      "ratio_median": 0.06622238309093882,
+      "time_reduction_percent": 93.37776169090611,
+      "speedup": 15.100634458092003,
+      "seed_ratio_range": [
+        0.06608513414274206,
+        0.06627561654994076
+      ],
+      "horizon_complete": false,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 162.667012,
+          "candidate_ms": 10.7555353125,
+          "ratio": 0.06622238309093882,
+          "ratio_bootstrap95": [
+            0.06604358801413304,
+            0.06634759864438496
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.6425845,
+              "candidate_ms": 10.9564469375,
+              "ratio": 0.06654685949430052
+            },
+            {
+              "block": 1,
+              "baseline_ms": 164.2318965,
+              "candidate_ms": 10.875618,
+              "ratio": 0.0662211070551694
+            },
+            {
+              "block": 2,
+              "baseline_ms": 163.2963575,
+              "candidate_ms": 10.8343211875,
+              "ratio": 0.06634759864438496
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.275654,
+              "candidate_ms": 10.7172664375,
+              "ratio": 0.06604358801413304
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.667012,
+              "candidate_ms": 10.693782875,
+              "ratio": 0.06574032893036727
+            },
+            {
+              "block": 5,
+              "baseline_ms": 161.9957945,
+              "candidate_ms": 10.7277475625,
+              "ratio": 0.06622238309093882
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.40712,
+              "candidate_ms": 10.7555353125,
+              "ratio": 0.06622576222335573
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 128,
+            "gap": 0.027749021382881267,
+            "growth": {
+              "attempted_transitions": 128,
+              "committed_expansions": 2,
+              "frontier_groups": 13,
+              "solves": 2,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 96,
+              "walks": 1
+            },
+            "horizon_complete": false,
+            "information_sets": 6,
+            "iterations": 64,
+            "leaves": 126,
+            "nodes": 323,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 128,
+            "value": 63.69563965049211
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 7,
+          "baseline_ms": 162.6469465,
+          "candidate_ms": 10.7622023125,
+          "ratio": 0.06627561654994076,
+          "ratio_bootstrap95": [
+            0.06601838339336158,
+            0.06688873574224996
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.4437035,
+              "candidate_ms": 11.0785665,
+              "ratio": 0.0673699647004119
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.6739225,
+              "candidate_ms": 10.94794175,
+              "ratio": 0.06688873574224996
+            },
+            {
+              "block": 2,
+              "baseline_ms": 162.6469465,
+              "candidate_ms": 10.807135,
+              "ratio": 0.06644536053432765
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.30877,
+              "candidate_ms": 10.7484745625,
+              "ratio": 0.06622238935394557
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.385548,
+              "candidate_ms": 10.7622023125,
+              "ratio": 0.06627561654994076
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.731164,
+              "candidate_ms": 10.743248375,
+              "ratio": 0.06601838339336158
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.408763,
+              "candidate_ms": 10.712979125,
+              "ratio": 0.06596306090330853
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 128,
+            "gap": 0.027749021382881267,
+            "growth": {
+              "attempted_transitions": 128,
+              "committed_expansions": 2,
+              "frontier_groups": 13,
+              "solves": 2,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 96,
+              "walks": 1
+            },
+            "horizon_complete": false,
+            "information_sets": 6,
+            "iterations": 64,
+            "leaves": 126,
+            "nodes": 323,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 128,
+            "value": 63.69563965049211
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 31,
+          "baseline_ms": 162.8041495,
+          "candidate_ms": 10.747845285714286,
+          "ratio": 0.06608513414274206,
+          "ratio_bootstrap95": [
+            0.06594639102459927,
+            0.06645116921238502
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.1715715,
+              "candidate_ms": 10.91682657142857,
+              "ratio": 0.06649644924321486
+            },
+            {
+              "block": 1,
+              "baseline_ms": 188.5467795,
+              "candidate_ms": 10.891120642857143,
+              "ratio": 0.057763493344934816
+            },
+            {
+              "block": 2,
+              "baseline_ms": 163.34598,
+              "candidate_ms": 10.854531357142859,
+              "ratio": 0.06645116921238502
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.1626125,
+              "candidate_ms": 10.716538,
+              "ratio": 0.06608513414274206
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.387516,
+              "candidate_ms": 10.747845285714286,
+              "ratio": 0.06618640121149637
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.3299045,
+              "candidate_ms": 10.705071357142858,
+              "ratio": 0.06594639102459927
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.8041495,
+              "candidate_ms": 10.7385945,
+              "ratio": 0.06596020146280117
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 128,
+            "gap": 0.027749021382881267,
+            "growth": {
+              "attempted_transitions": 128,
+              "committed_expansions": 2,
+              "frontier_groups": 13,
+              "solves": 2,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 96,
+              "walks": 1
+            },
+            "horizon_complete": false,
+            "information_sets": 6,
+            "iterations": 64,
+            "leaves": 126,
+            "nodes": 323,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 128,
+            "value": 63.69563965049211
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2",
+      "budget": "b4",
+      "seed_count": 3,
+      "baseline_ms": 162.6519675,
+      "candidate_ms": 28.070218666666666,
+      "ratio_median": 0.1727144961698661,
+      "time_reduction_percent": 82.72855038301338,
+      "speedup": 5.789901960611876,
+      "seed_ratio_range": [
+        0.16990598250155606,
+        0.17392839085873762
+      ],
+      "horizon_complete": false,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 162.711345,
+          "candidate_ms": 28.355749666666668,
+          "ratio": 0.17392839085873762,
+          "ratio_bootstrap95": [
+            0.17276725555942282,
+            0.17454984221760014
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.046814,
+              "candidate_ms": 28.6343455,
+              "ratio": 0.17454984221760014
+            },
+            {
+              "block": 1,
+              "baseline_ms": 164.4636835,
+              "candidate_ms": 28.6742465,
+              "ratio": 0.17435001995440533
+            },
+            {
+              "block": 2,
+              "baseline_ms": 163.0311735,
+              "candidate_ms": 28.355749666666668,
+              "ratio": 0.17392839085873762
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.535593,
+              "candidate_ms": 28.080828333333336,
+              "ratio": 0.17276725555942282
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.237171,
+              "candidate_ms": 28.111551,
+              "ratio": 0.17327441563931117
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.711345,
+              "candidate_ms": 27.931506,
+              "ratio": 0.1716629286052549
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.5058295,
+              "candidate_ms": 28.399466166666663,
+              "ratio": 0.17475967633928274
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 320,
+            "gap": 0.03341089646972506,
+            "growth": {
+              "attempted_transitions": 320,
+              "committed_expansions": 4,
+              "frontier_groups": 11,
+              "solves": 4,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 224,
+              "walks": 15
+            },
+            "horizon_complete": false,
+            "information_sets": 13,
+            "iterations": 64,
+            "leaves": 312,
+            "nodes": 803,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 320,
+            "value": 63.690148923860036
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 7,
+          "baseline_ms": 162.946338,
+          "candidate_ms": 28.279113333333335,
+          "ratio": 0.17315003778122073,
+          "ratio_bootstrap95": [
+            0.1725766447777669,
+            0.17495317751895376
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.5915695,
+              "candidate_ms": 28.42735,
+              "ratio": 0.1727144961698661
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.3486165,
+              "candidate_ms": 28.5783595,
+              "ratio": 0.17495317751895376
+            },
+            {
+              "block": 2,
+              "baseline_ms": 163.321439,
+              "candidate_ms": 28.279113333333335,
+              "ratio": 0.17315003778122073
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.0131645,
+              "candidate_ms": 28.070218666666666,
+              "ratio": 0.1732588753098929
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.3924505,
+              "candidate_ms": 28.493861666666668,
+              "ratio": 0.17546296997757704
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.946338,
+              "candidate_ms": 27.993564333333335,
+              "ratio": 0.17179621633063846
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.461036,
+              "candidate_ms": 28.0369805,
+              "ratio": 0.1725766447777669
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 320,
+            "gap": 0.03341089646972506,
+            "growth": {
+              "attempted_transitions": 320,
+              "committed_expansions": 4,
+              "frontier_groups": 11,
+              "solves": 4,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 224,
+              "walks": 5
+            },
+            "horizon_complete": false,
+            "information_sets": 13,
+            "iterations": 64,
+            "leaves": 312,
+            "nodes": 803,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 320,
+            "value": 63.690148923860036
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 31,
+          "baseline_ms": 162.479561,
+          "candidate_ms": 27.576574666666666,
+          "ratio": 0.16990598250155606,
+          "ratio_bootstrap95": [
+            0.1689671252455768,
+            0.17035577513072506
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 163.280241,
+              "candidate_ms": 27.92182083333333,
+              "ratio": 0.17100550968278722
+            },
+            {
+              "block": 1,
+              "baseline_ms": 164.927423,
+              "candidate_ms": 27.810578333333332,
+              "ratio": 0.16862313026823522
+            },
+            {
+              "block": 2,
+              "baseline_ms": 162.6519675,
+              "candidate_ms": 27.708702,
+              "ratio": 0.17035577513072506
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.194257,
+              "candidate_ms": 27.558678333333336,
+              "ratio": 0.16991155447219894
+            },
+            {
+              "block": 4,
+              "baseline_ms": 161.4715195,
+              "candidate_ms": 27.434977166666666,
+              "ratio": 0.16990598250155606
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.479561,
+              "candidate_ms": 27.453704333333334,
+              "ratio": 0.1689671252455768
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.3105305,
+              "candidate_ms": 27.576574666666666,
+              "ratio": 0.16990009570985085
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 320,
+            "gap": 0.03341089646972506,
+            "growth": {
+              "attempted_transitions": 320,
+              "committed_expansions": 4,
+              "frontier_groups": 11,
+              "solves": 4,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 192,
+              "walks": 7
+            },
+            "horizon_complete": false,
+            "information_sets": 13,
+            "iterations": 64,
+            "leaves": 312,
+            "nodes": 803,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 320,
+            "value": 63.690148923860036
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2",
+      "budget": "b8",
+      "seed_count": 3,
+      "baseline_ms": 162.8627235,
+      "candidate_ms": 92.9100355,
+      "ratio_median": 0.5721775833150096,
+      "time_reduction_percent": 42.78224166849904,
+      "speedup": 1.747709153871998,
+      "seed_ratio_range": [
+        0.5623396354228766,
+        0.6473239914158838
+      ],
+      "horizon_complete": false,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 162.6020535,
+          "candidate_ms": 91.345513,
+          "ratio": 0.5623396354228766,
+          "ratio_bootstrap95": [
+            0.5603198670550615,
+            0.5638390780766509
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.000526,
+              "candidate_ms": 92.223996,
+              "ratio": 0.5623396354228767
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.1576345,
+              "candidate_ms": 91.5717935,
+              "ratio": 0.5612473714798801
+            },
+            {
+              "block": 2,
+              "baseline_ms": 163.1294155,
+              "candidate_ms": 92.089795,
+              "ratio": 0.5645198612263771
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.0063535,
+              "candidate_ms": 91.345513,
+              "ratio": 0.5638390780766509
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.1866215,
+              "candidate_ms": 90.7633075,
+              "ratio": 0.5596226535861344
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.195747,
+              "candidate_ms": 91.257469,
+              "ratio": 0.562637866207429
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.6020535,
+              "candidate_ms": 91.109161,
+              "ratio": 0.5603198670550615
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 1024,
+            "gap": 0.0909430476327131,
+            "growth": {
+              "attempted_transitions": 1024,
+              "committed_expansions": 8,
+              "frontier_groups": 7,
+              "solves": 8,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 416,
+              "walks": 27
+            },
+            "horizon_complete": false,
+            "information_sets": 32,
+            "iterations": 32,
+            "leaves": 994,
+            "nodes": 2563,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1024,
+            "value": 63.63391699820142
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 7,
+          "baseline_ms": 163.195833,
+          "candidate_ms": 105.640578,
+          "ratio": 0.6473239914158838,
+          "ratio_bootstrap95": [
+            0.6470762836464785,
+            0.65368207916277
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.514514,
+              "candidate_ms": 106.471517,
+              "ratio": 0.6471861625534145
+            },
+            {
+              "block": 1,
+              "baseline_ms": 162.6176675,
+              "candidate_ms": 106.300255,
+              "ratio": 0.65368207916277
+            },
+            {
+              "block": 2,
+              "baseline_ms": 163.195833,
+              "candidate_ms": 105.640578,
+              "ratio": 0.6473239914158838
+            },
+            {
+              "block": 3,
+              "baseline_ms": 163.6245635,
+              "candidate_ms": 107.208251,
+              "ratio": 0.6552087822681953
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.102798,
+              "candidate_ms": 105.3662985,
+              "ratio": 0.6499967909252251
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.019667,
+              "candidate_ms": 104.839084,
+              "ratio": 0.6470762836464785
+            },
+            {
+              "block": 6,
+              "baseline_ms": 164.2113015,
+              "candidate_ms": 104.9319145,
+              "ratio": 0.6390054371501342
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 1152,
+            "gap": 0.031084766488149285,
+            "growth": {
+              "attempted_transitions": 1152,
+              "committed_expansions": 8,
+              "frontier_groups": 7,
+              "solves": 8,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 448,
+              "walks": 34
+            },
+            "horizon_complete": false,
+            "information_sets": 34,
+            "iterations": 64,
+            "leaves": 1118,
+            "nodes": 2883,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1152,
+            "value": 63.693046152311744
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 31,
+          "baseline_ms": 162.8627235,
+          "candidate_ms": 92.9100355,
+          "ratio": 0.5721775833150096,
+          "ratio_bootstrap95": [
+            0.5704806692613119,
+            0.572661375438502
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 165.2016995,
+              "candidate_ms": 94.457673,
+              "ratio": 0.5717717994783704
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.0904685,
+              "candidate_ms": 93.377331,
+              "ratio": 0.5725492842029576
+            },
+            {
+              "block": 2,
+              "baseline_ms": 163.185048,
+              "candidate_ms": 94.0238115,
+              "ratio": 0.5761790841278547
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.4088265,
+              "candidate_ms": 92.1991835,
+              "ratio": 0.5676981078365221
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.3415015,
+              "candidate_ms": 92.888168,
+              "ratio": 0.5721775833150096
+            },
+            {
+              "block": 5,
+              "baseline_ms": 161.882643,
+              "candidate_ms": 92.703937,
+              "ratio": 0.572661375438502
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.8627235,
+              "candidate_ms": 92.9100355,
+              "ratio": 0.5704806692613119
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 1024,
+            "gap": 0.0909430476327131,
+            "growth": {
+              "attempted_transitions": 1024,
+              "committed_expansions": 8,
+              "frontier_groups": 7,
+              "solves": 8,
+              "stop": "ExpansionLimit",
+              "total_cfr_iterations": 384,
+              "walks": 37
+            },
+            "horizon_complete": false,
+            "information_sets": 32,
+            "iterations": 32,
+            "leaves": 994,
+            "nodes": 2563,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 1024,
+            "value": 63.63391699820142
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2",
+      "budget": "full",
+      "seed_count": 3,
+      "baseline_ms": 163.007432,
+      "candidate_ms": 223.6203385,
+      "ratio_median": 1.3700931888659762,
+      "time_reduction_percent": -37.00931888659762,
+      "speedup": 0.7298773602602158,
+      "seed_ratio_range": [
+        1.3510574394341663,
+        1.3814958903136425
+      ],
+      "horizon_complete": true,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 163.3725295,
+          "candidate_ms": 220.772761,
+          "ratio": 1.3510574394341663,
+          "ratio_bootstrap95": [
+            1.3444068300821705,
+            1.3643540070436326
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 163.958297,
+              "candidate_ms": 223.6971595,
+              "ratio": 1.3643540070436326
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.3725295,
+              "candidate_ms": 220.772761,
+              "ratio": 1.3513456740596037
+            },
+            {
+              "block": 2,
+              "baseline_ms": 163.7952905,
+              "candidate_ms": 223.984053,
+              "ratio": 1.3674633276467738
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.6131815,
+              "candidate_ms": 219.202903,
+              "ratio": 1.3480020560325856
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.1595425,
+              "candidate_ms": 218.0083965,
+              "ratio": 1.3444068300821705
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.711192,
+              "candidate_ms": 217.3860745,
+              "ratio": 1.3360241039841931
+            },
+            {
+              "block": 6,
+              "baseline_ms": 163.474469,
+              "candidate_ms": 220.8633975,
+              "ratio": 1.3510574394341663
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": {
+              "attempted_transitions": 2112,
+              "committed_expansions": 15,
+              "frontier_groups": 0,
+              "solves": 15,
+              "stop": "HorizonComplete",
+              "total_cfr_iterations": 640,
+              "walks": 405
+            },
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 7,
+          "baseline_ms": 162.7284815,
+          "candidate_ms": 224.762248,
+          "ratio": 1.3814958903136425,
+          "ratio_bootstrap95": [
+            1.3713074772584624,
+            1.3902514147715124
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.3914745,
+              "candidate_ms": 228.54548,
+              "ratio": 1.3902514147715124
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.741938,
+              "candidate_ms": 226.5683665,
+              "ratio": 1.3836917363223098
+            },
+            {
+              "block": 2,
+              "baseline_ms": 163.3945685,
+              "candidate_ms": 230.378804,
+              "ratio": 1.409953868815413
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.7284815,
+              "candidate_ms": 223.6203385,
+              "ratio": 1.374192989688778
+            },
+            {
+              "block": 4,
+              "baseline_ms": 162.6205455,
+              "candidate_ms": 223.00277,
+              "ratio": 1.3713074772584624
+            },
+            {
+              "block": 5,
+              "baseline_ms": 162.6948365,
+              "candidate_ms": 224.762248,
+              "ratio": 1.3814958903136425
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.702911,
+              "candidate_ms": 222.6233665,
+              "ratio": 1.3682813978663233
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": {
+              "attempted_transitions": 2112,
+              "committed_expansions": 15,
+              "frontier_groups": 0,
+              "solves": 15,
+              "stop": "HorizonComplete",
+              "total_cfr_iterations": 672,
+              "walks": 1035
+            },
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        },
+        {
+          "seed": 31,
+          "baseline_ms": 163.007432,
+          "candidate_ms": 224.7643365,
+          "ratio": 1.3813147596912219,
+          "ratio_bootstrap95": [
+            1.3680962288885086,
+            1.400205612869263
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 164.561862,
+              "candidate_ms": 230.551007,
+              "ratio": 1.4009990176217135
+            },
+            {
+              "block": 1,
+              "baseline_ms": 163.2290825,
+              "candidate_ms": 228.5542775,
+              "ratio": 1.400205612869263
+            },
+            {
+              "block": 2,
+              "baseline_ms": 162.257104,
+              "candidate_ms": 225.927599,
+              "ratio": 1.3924049759941481
+            },
+            {
+              "block": 3,
+              "baseline_ms": 162.7176825,
+              "candidate_ms": 224.7643365,
+              "ratio": 1.3813147596912216
+            },
+            {
+              "block": 4,
+              "baseline_ms": 163.007432,
+              "candidate_ms": 223.009853,
+              "ratio": 1.3680962288885086
+            },
+            {
+              "block": 5,
+              "baseline_ms": 164.4787755,
+              "candidate_ms": 223.5442135,
+              "ratio": 1.359106746876286
+            },
+            {
+              "block": 6,
+              "baseline_ms": 162.6148665,
+              "candidate_ms": 222.797521,
+              "ratio": 1.3700931888659762
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": {
+              "attempted_transitions": 2112,
+              "committed_expansions": 15,
+              "frontier_groups": 0,
+              "solves": 15,
+              "stop": "HorizonComplete",
+              "total_cfr_iterations": 608,
+              "walks": 1559
+            },
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 2112,
+            "gap": 0.07285339362319121,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 63,
+            "iterations": 32,
+            "leaves": 2048,
+            "nodes": 5283,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 2112,
+            "value": 63.655023932858555
+          }
+        }
+      ]
+    },
+    {
+      "case": "pivot-w1-d1",
+      "budget": "full",
+      "seed_count": 1,
+      "baseline_ms": 25.601855625,
+      "candidate_ms": 27.155727666666667,
+      "ratio_median": 1.057824222335116,
+      "time_reduction_percent": -5.782422233511597,
+      "speedup": 0.9453366437313463,
+      "seed_ratio_range": [
+        1.057824222335116,
+        1.057824222335116
+      ],
+      "horizon_complete": true,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 25.601855625,
+          "candidate_ms": 27.155727666666667,
+          "ratio": 1.057824222335116,
+          "ratio_bootstrap95": [
+            1.0572493119878066,
+            1.0667587318668221
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 25.752132625,
+              "candidate_ms": 27.2264245,
+              "ratio": 1.0572493119878066
+            },
+            {
+              "block": 1,
+              "baseline_ms": 25.609503375,
+              "candidate_ms": 27.533079333333333,
+              "ratio": 1.0751118024495205
+            },
+            {
+              "block": 2,
+              "baseline_ms": 25.54170825,
+              "candidate_ms": 27.018637666666667,
+              "ratio": 1.057824222335116
+            },
+            {
+              "block": 3,
+              "baseline_ms": 25.601855625,
+              "candidate_ms": 27.075525166666665,
+              "ratio": 1.0575610441388335
+            },
+            {
+              "block": 4,
+              "baseline_ms": 25.646093,
+              "candidate_ms": 27.155727666666667,
+              "ratio": 1.058864118860782
+            },
+            {
+              "block": 5,
+              "baseline_ms": 25.505113,
+              "candidate_ms": 27.207802,
+              "ratio": 1.0667587318668221
+            },
+            {
+              "block": 6,
+              "baseline_ms": 25.58488775,
+              "candidate_ms": 27.042614,
+              "ratio": 1.0569760658809222
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 429,
+            "gap": 0.09359019408756986,
+            "growth": {
+              "attempted_transitions": 234,
+              "committed_expansions": 112,
+              "frontier_groups": 0,
+              "solves": 1,
+              "stop": "HorizonComplete",
+              "total_cfr_iterations": 64,
+              "walks": 0
+            },
+            "horizon_complete": true,
+            "information_sets": 326,
+            "iterations": 64,
+            "leaves": 216,
+            "nodes": 885,
+            "solver_converged": true,
+            "switch_decisions": 213,
+            "transitions": 234,
+            "value": 7.9701933341332865
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 429,
+            "gap": 0.09359019408756986,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 326,
+            "iterations": 64,
+            "leaves": 216,
+            "nodes": 885,
+            "solver_converged": true,
+            "switch_decisions": 213,
+            "transitions": 234,
+            "value": 7.9701933341332865
+          }
+        }
+      ]
+    },
+    {
+      "case": "sand-damage-w1-d1",
+      "budget": "full",
+      "seed_count": 1,
+      "baseline_ms": 366.8716145,
+      "candidate_ms": 372.8728435,
+      "ratio_median": 1.0198381538524555,
+      "time_reduction_percent": -1.9838153852455465,
+      "speedup": 0.9805477430144023,
+      "seed_ratio_range": [
+        1.0198381538524552,
+        1.0198381538524552
+      ],
+      "horizon_complete": true,
+      "seeds": [
+        {
+          "seed": 1,
+          "baseline_ms": 366.8716145,
+          "candidate_ms": 372.8728435,
+          "ratio": 1.0198381538524552,
+          "ratio_bootstrap95": [
+            1.016103658426142,
+            1.0205935781385844
+          ],
+          "pairs": [
+            {
+              "block": 0,
+              "baseline_ms": 365.193773,
+              "candidate_ms": 372.7144195,
+              "ratio": 1.0205935781385844
+            },
+            {
+              "block": 1,
+              "baseline_ms": 367.3390135,
+              "candidate_ms": 373.2545155,
+              "ratio": 1.016103658426142
+            },
+            {
+              "block": 2,
+              "baseline_ms": 365.419897,
+              "candidate_ms": 372.86825,
+              "ratio": 1.020382997918693
+            },
+            {
+              "block": 3,
+              "baseline_ms": 367.18452,
+              "candidate_ms": 374.468783,
+              "ratio": 1.0198381538524555
+            },
+            {
+              "block": 4,
+              "baseline_ms": 365.850473,
+              "candidate_ms": 372.8728435,
+              "ratio": 1.019194646497013
+            },
+            {
+              "block": 5,
+              "baseline_ms": 391.8503955,
+              "candidate_ms": 372.543935,
+              "ratio": 0.9507300216569514
+            },
+            {
+              "block": 6,
+              "baseline_ms": 366.8716145,
+              "candidate_ms": 374.647049,
+              "ratio": 1.021193884161894
+            }
+          ],
+          "diagnostics": {
+            "chance_outcomes": 8013,
+            "gap": 0.0846751630950795,
+            "growth": {
+              "attempted_transitions": 64,
+              "committed_expansions": 1,
+              "frontier_groups": 0,
+              "solves": 1,
+              "stop": "HorizonComplete",
+              "total_cfr_iterations": 256,
+              "walks": 0
+            },
+            "horizon_complete": true,
+            "information_sets": 2,
+            "iterations": 256,
+            "leaves": 8013,
+            "nodes": 8087,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 64,
+            "value": -6.088779565184323
+          },
+          "baseline_diagnostics": {
+            "chance_outcomes": 8013,
+            "gap": 0.0846751630950795,
+            "growth": null,
+            "horizon_complete": true,
+            "information_sets": 2,
+            "iterations": 256,
+            "leaves": 8013,
+            "nodes": 8087,
+            "solver_converged": true,
+            "switch_decisions": 0,
+            "transitions": 64,
+            "value": -6.088779565184323
+          }
+        }
+      ]
+    }
+  ],
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

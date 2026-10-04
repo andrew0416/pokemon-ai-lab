@@ -1,0 +1,169 @@
+{
+  "source_sha": "26999d068dd541ac0f2cfcdafc8a091ce4427e12",
+  "run": 37020601917,
+  "conclusion": "success",
+  "run_wall_seconds": 79,
+  "rust_tests": 99,
+  "test_groups": {
+    "on.log": 80,
+    "cli.log": 2,
+    "off.log": 17
+  },
+  "new_growing_tests": 12,
+  "growing_lp_certificates": 96,
+  "growing_full_matches": 24,
+  "max_growing_gap": 0.019850403407383532,
+  "extensive_lp_cases": 49,
+  "extensive_converged": 49,
+  "max_extensive_gap": 0.009864860029363542,
+  "matrix_lp_regression_cases": 72,
+  "matrix_converged": 72,
+  "max_matrix_gap": 0.01968748357698491,
+  "raw_best_response_audits": 217,
+  "kuhn_lp_value": -0.05555555555555555,
+  "engine_cli_cases": [
+    {
+      "case": "root-only",
+      "nodes": 163,
+      "information_sets": 3,
+      "gap": 0.04247966516695101,
+      "value": 63.68092426549711,
+      "converged": false,
+      "metadata": {
+        "chance_outcomes": 64,
+        "evaluator": "heuristic",
+        "full_battle_log_information": false,
+        "growth": {
+          "attempted_expansions": 1,
+          "attempted_transitions": 64,
+          "committed_expansions": 1,
+          "committed_transitions": 64,
+          "frontier_histories": 64,
+          "frontier_public_groups": 14,
+          "horizon_complete": false,
+          "performance_measured": false,
+          "prior": "uniform-information-menu",
+          "regrets": "reset-after-growth",
+          "selection": "half-puct-half-average-policy",
+          "solves": 1,
+          "stop": "ExpansionLimit",
+          "switch_closure": true,
+          "total_cfr_iterations": 32,
+          "walks": 0
+        },
+        "leaves": 64,
+        "observation_model": "snapshot-information-v1",
+        "pruning": "all",
+        "rolls": "full",
+        "root_our_information": [
+          0,
+          0
+        ],
+        "scope": "finite-depth-snapshot-information-game",
+        "switch_decisions": 0,
+        "transitions": 64,
+        "turn_decisions": 2,
+        "turns": 2
+      }
+    },
+    {
+      "case": "one-continuation",
+      "nodes": 323,
+      "information_sets": 6,
+      "gap": 0.027749021382881267,
+      "value": 63.69563965049211,
+      "converged": false,
+      "metadata": {
+        "chance_outcomes": 128,
+        "evaluator": "heuristic",
+        "full_battle_log_information": false,
+        "growth": {
+          "attempted_expansions": 2,
+          "attempted_transitions": 128,
+          "committed_expansions": 2,
+          "committed_transitions": 128,
+          "frontier_histories": 62,
+          "frontier_public_groups": 13,
+          "horizon_complete": false,
+          "performance_measured": false,
+          "prior": "uniform-information-menu",
+          "regrets": "reset-after-growth",
+          "selection": "half-puct-half-average-policy",
+          "solves": 2,
+          "stop": "ExpansionLimit",
+          "switch_closure": true,
+          "total_cfr_iterations": 96,
+          "walks": 1
+        },
+        "leaves": 126,
+        "observation_model": "snapshot-information-v1",
+        "pruning": "all",
+        "rolls": "full",
+        "root_our_information": [
+          0,
+          0
+        ],
+        "scope": "finite-depth-snapshot-information-game",
+        "switch_decisions": 0,
+        "transitions": 128,
+        "turn_decisions": 4,
+        "turns": 2
+      }
+    },
+    {
+      "case": "pivot-closure",
+      "nodes": 885,
+      "information_sets": 326,
+      "gap": 0.09359019408756986,
+      "value": 7.9701933341332865,
+      "converged": true,
+      "metadata": {
+        "chance_outcomes": 429,
+        "evaluator": "heuristic",
+        "full_battle_log_information": false,
+        "growth": {
+          "attempted_expansions": 112,
+          "attempted_transitions": 234,
+          "committed_expansions": 112,
+          "committed_transitions": 234,
+          "frontier_histories": 0,
+          "frontier_public_groups": 0,
+          "horizon_complete": true,
+          "performance_measured": false,
+          "prior": "uniform-information-menu",
+          "regrets": "reset-after-growth",
+          "selection": "half-puct-half-average-policy",
+          "solves": 1,
+          "stop": "HorizonComplete",
+          "switch_closure": true,
+          "total_cfr_iterations": 64,
+          "walks": 0
+        },
+        "leaves": 216,
+        "observation_model": "snapshot-information-v1",
+        "pruning": "all",
+        "rolls": "full",
+        "root_our_information": [
+          0
+        ],
+        "scope": "finite-depth-snapshot-information-game",
+        "switch_decisions": 213,
+        "transitions": 234,
+        "turn_decisions": 1,
+        "turns": 1
+      }
+    }
+  ],
+  "no_default_features_passed": true,
+  "clippy_passed": true,
+  "default_off": true,
+  "production_changed": false,
+  "full_battle_log_information": false,
+  "performance_measured": false,
+  "artifact_sha256": "902d89c90338c23f43154c8b3e3691a728a86471ac0946adb42605bb9aa05c57",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

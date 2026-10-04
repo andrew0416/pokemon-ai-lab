@@ -1,0 +1,823 @@
+{"id": null, "event": "definition", "hash": "825a864d8651", "count": 50, "ts": "2026-09-26T07:55:03Z", "by": "fable"}
+{"id": "S16-belief-mixture", "event": "claim", "ts": "2026-09-26T07:55:03Z", "by": "fable"}
+{"id": "S16-belief-mixture", "event": "done", "ts": "2026-09-26T07:55:04Z", "duration": 1, "by": "fable"}
+{"id": "S16-belief-mixture", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:04Z", "by": "fable"}
+{"id": "S17-observed-once", "event": "claim", "ts": "2026-09-26T07:55:04Z", "by": "fable"}
+{"id": "S17-observed-once", "event": "done", "ts": "2026-09-26T07:55:05Z", "duration": 1, "by": "fable"}
+{"id": "S17-observed-once", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:05Z", "by": "fable"}
+{"id": "S18-observed-turns", "event": "claim", "ts": "2026-09-26T07:55:05Z", "by": "fable"}
+{"id": "S18-observed-turns", "event": "done", "ts": "2026-09-26T07:55:05Z", "duration": 0, "by": "fable"}
+{"id": "S18-observed-turns", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:05Z", "by": "fable"}
+{"id": "S19-lab-rollout", "event": "claim", "ts": "2026-09-26T07:55:05Z", "by": "fable"}
+{"id": "S19-lab-rollout", "event": "done", "ts": "2026-09-26T07:55:06Z", "duration": 1, "by": "fable"}
+{"id": "S19-lab-rollout", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:06Z", "by": "fable"}
+{"id": "merge-wave-8", "event": "claim", "ts": "2026-09-26T07:55:06Z", "by": "fable"}
+{"id": "merge-wave-8", "event": "done", "ts": "2026-09-26T07:55:06Z", "duration": 0, "by": "fable"}
+{"id": "merge-wave-8", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:06Z", "by": "fable"}
+{"id": "prog-install", "event": "claim", "ts": "2026-09-26T07:55:07Z", "by": "fable"}
+{"id": "prog-install", "event": "done", "ts": "2026-09-26T07:55:07Z", "duration": 0, "by": "fable"}
+{"id": "prog-install", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:07Z", "by": "fable"}
+{"id": "ctx-wave8-docs", "event": "claim", "ts": "2026-09-26T07:55:07Z", "by": "fable"}
+{"id": "ctx-wave8-docs", "event": "done", "ts": "2026-09-26T07:55:07Z", "duration": 0, "by": "fable"}
+{"id": "ctx-wave8-docs", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:07Z", "by": "fable"}
+{"id": "W1-eject-pack", "event": "claim", "ts": "2026-09-26T07:55:08Z", "by": "opus-w"}
+{"id": "W1-eject-pack", "event": "done", "ts": "2026-09-26T07:55:08Z", "duration": 0, "by": "opus-w"}
+{"id": "W1-eject-pack", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:08Z", "by": "opus-w"}
+{"id": "W2-metronome-destiny-knot", "event": "claim", "ts": "2026-09-26T07:55:08Z", "by": "opus-w"}
+{"id": "W2-metronome-destiny-knot", "event": "done", "ts": "2026-09-26T07:55:09Z", "duration": 1, "by": "opus-w"}
+{"id": "W2-metronome-destiny-knot", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:09Z", "by": "opus-w"}
+{"id": "W3-berry-juice", "event": "claim", "ts": "2026-09-26T07:55:09Z", "by": "opus-w"}
+{"id": "W3-berry-juice", "event": "done", "ts": "2026-09-26T07:55:09Z", "duration": 0, "by": "opus-w"}
+{"id": "W3-berry-juice", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:09Z", "by": "opus-w"}
+{"id": "W4-leek", "event": "claim", "ts": "2026-09-26T07:55:09Z", "by": "opus-w"}
+{"id": "W4-leek", "event": "done", "ts": "2026-09-26T07:55:10Z", "duration": 1, "by": "opus-w"}
+{"id": "W4-leek", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:10Z", "by": "opus-w"}
+{"id": "W5-autotomize", "event": "claim", "ts": "2026-09-26T07:55:10Z", "by": "opus-w"}
+{"id": "W5-autotomize", "event": "done", "ts": "2026-09-26T07:55:10Z", "duration": 0, "by": "opus-w"}
+{"id": "W5-autotomize", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:10Z", "by": "opus-w"}
+{"id": "W6-skill-swap-unify", "event": "claim", "ts": "2026-09-26T07:55:11Z", "by": "opus-w"}
+{"id": "W6-skill-swap-unify", "event": "done", "ts": "2026-09-26T07:55:11Z", "duration": 0, "by": "opus-w"}
+{"id": "W6-skill-swap-unify", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:11Z", "by": "opus-w"}
+{"id": "W7-update-order", "event": "claim", "ts": "2026-09-26T07:55:11Z", "by": "opus-w"}
+{"id": "W7-update-order", "event": "done", "ts": "2026-09-26T07:55:12Z", "duration": 1, "by": "opus-w"}
+{"id": "W7-update-order", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:12Z", "by": "opus-w"}
+{"id": "V1-sleep-moves", "event": "claim", "ts": "2026-09-26T07:55:12Z", "by": "opus-v"}
+{"id": "V1-sleep-moves", "event": "done", "ts": "2026-09-26T07:55:12Z", "duration": 0, "by": "opus-v"}
+{"id": "V1-sleep-moves", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:12Z", "by": "opus-v"}
+{"id": "V2-self-boost-moves", "event": "claim", "ts": "2026-09-26T07:55:13Z", "by": "opus-v"}
+{"id": "V2-self-boost-moves", "event": "done", "ts": "2026-09-26T07:55:13Z", "duration": 0, "by": "opus-v"}
+{"id": "V2-self-boost-moves", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:13Z", "by": "opus-v"}
+{"id": "V3-trapping-moves", "event": "claim", "ts": "2026-09-26T07:55:13Z", "by": "opus-v"}
+{"id": "V3-trapping-moves", "event": "done", "ts": "2026-09-26T07:55:14Z", "duration": 1, "by": "opus-v"}
+{"id": "V3-trapping-moves", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:14Z", "by": "opus-v"}
+{"id": "V4-crit-volatiles", "event": "claim", "ts": "2026-09-26T07:55:15Z", "by": "opus-v"}
+{"id": "V4-crit-volatiles", "event": "done", "ts": "2026-09-26T07:55:15Z", "duration": 0, "by": "opus-v"}
+{"id": "V4-crit-volatiles", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:15Z", "by": "opus-v"}
+{"id": "V5-copy-moves", "event": "claim", "ts": "2026-09-26T07:55:15Z", "by": "opus-v"}
+{"id": "V5-copy-moves", "event": "done", "ts": "2026-09-26T07:55:15Z", "duration": 0, "by": "opus-v"}
+{"id": "V5-copy-moves", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:15Z", "by": "opus-v"}
+{"id": "V6-utility-moves", "event": "claim", "ts": "2026-09-26T07:55:16Z", "by": "opus-v"}
+{"id": "V6-utility-moves", "event": "done", "ts": "2026-09-26T07:55:16Z", "duration": 0, "by": "opus-v"}
+{"id": "V6-utility-moves", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:16Z", "by": "opus-v"}
+{"id": "V7-two-turn-more", "event": "claim", "ts": "2026-09-26T07:55:16Z", "by": "opus-v"}
+{"id": "V7-two-turn-more", "event": "done", "ts": "2026-09-26T07:55:17Z", "duration": 1, "by": "opus-v"}
+{"id": "V7-two-turn-more", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:17Z", "by": "opus-v"}
+{"id": "V8-misc-moves", "event": "claim", "ts": "2026-09-26T07:55:17Z", "by": "opus-v"}
+{"id": "V8-misc-moves", "event": "done", "ts": "2026-09-26T07:55:17Z", "duration": 0, "by": "opus-v"}
+{"id": "V8-misc-moves", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:17Z", "by": "opus-v"}
+{"id": "V9-power-identify-rollout", "event": "claim", "ts": "2026-09-26T07:55:18Z", "by": "opus-v"}
+{"id": "V9-power-identify-rollout", "event": "done", "ts": "2026-09-26T07:55:18Z", "duration": 0, "by": "opus-v"}
+{"id": "V9-power-identify-rollout", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:18Z", "by": "opus-v"}
+{"id": "U1-ability-suppression", "event": "claim", "ts": "2026-09-26T07:55:18Z", "by": "opus-u"}
+{"id": "U1-ability-suppression", "event": "done", "ts": "2026-09-26T07:55:19Z", "duration": 1, "by": "opus-u"}
+{"id": "U1-ability-suppression", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:19Z", "by": "opus-u"}
+{"id": "U2-poison-heal-slow-start-truant", "event": "claim", "ts": "2026-09-26T07:55:19Z", "by": "opus-u"}
+{"id": "U2-poison-heal-slow-start-truant", "event": "done", "ts": "2026-09-26T07:55:19Z", "duration": 0, "by": "opus-u"}
+{"id": "U2-poison-heal-slow-start-truant", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:19Z", "by": "opus-u"}
+{"id": "U3-dancer-berries", "event": "claim", "ts": "2026-09-26T07:55:20Z", "by": "opus-u"}
+{"id": "U3-dancer-berries", "event": "done", "ts": "2026-09-26T07:55:20Z", "duration": 0, "by": "opus-u"}
+{"id": "U3-dancer-berries", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:20Z", "by": "opus-u"}
+{"id": "U4-gulp-missile-bad-dreams", "event": "claim", "ts": "2026-09-26T07:55:20Z", "by": "opus-u"}
+{"id": "U4-gulp-missile-bad-dreams", "event": "done", "ts": "2026-09-26T07:55:20Z", "duration": 0, "by": "opus-u"}
+{"id": "U4-gulp-missile-bad-dreams", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:20Z", "by": "opus-u"}
+{"id": "U5-opportunist-receiver", "event": "claim", "ts": "2026-09-26T07:55:21Z", "by": "opus-u"}
+{"id": "U5-opportunist-receiver", "event": "done", "ts": "2026-09-26T07:55:21Z", "duration": 0, "by": "opus-u"}
+{"id": "U5-opportunist-receiver", "event": "note", "text": "WORKPLAN §4 참조", "ts": "2026-09-26T07:55:21Z", "by": "opus-u"}
+{"id": "rollout-readme", "event": "claim", "ts": "2026-09-26T07:55:21Z", "by": "fable"}
+{"id": null, "event": "definition", "hash": "a684833b3755", "count": 51, "ts": "2026-09-26T08:26:20Z", "by": "opus-x"}
+{"id": "B6-status-immune-goggles-raw", "event": "claim", "ts": "2026-09-26T08:26:20Z", "by": "opus-x"}
+{"id": "cov-moves-vgc", "event": "claim", "ts": "2026-09-26T08:27:23Z", "by": "opus-y"}
+{"id": "cov-moves-rest", "event": "claim", "ts": "2026-09-26T08:28:57Z", "by": "opus-z"}
+{"id": "cov-abilities-32", "event": "claim", "ts": "2026-09-26T08:32:53Z", "by": "opus-aa"}
+{"id": "B6-status-immune-goggles-raw", "event": "done", "ts": "2026-09-26T08:35:06Z", "duration": 526, "by": "opus-x"}
+{"id": "B6-status-immune-goggles-raw", "event": "note", "text": "dd2b804", "ts": "2026-09-26T08:35:06Z", "by": "opus-x"}
+{"id": "B7-hazards-boots-raw", "event": "claim", "ts": "2026-09-26T08:35:06Z", "by": "opus-x"}
+{"id": "rollout-readme", "event": "done", "ts": "2026-09-26T08:35:10Z", "duration": 2389, "by": "fable"}
+{"id": "rollout-readme", "event": "note", "text": "runs/rollout-20260926/README.md, WORKPLAN S19 결과", "ts": "2026-09-26T08:35:10Z", "by": "fable"}
+{"id": "S20-position-mixture", "event": "claim", "ts": "2026-09-26T08:35:10Z", "by": "fable"}
+{"id": "B7-hazards-boots-raw", "event": "done", "ts": "2026-09-26T08:44:17Z", "duration": 551, "by": "opus-x"}
+{"id": "B7-hazards-boots-raw", "event": "note", "text": "2f5afb0", "ts": "2026-09-26T08:44:17Z", "by": "opus-x"}
+{"id": "B9-trace-shield-raw", "event": "claim", "ts": "2026-09-26T08:44:17Z", "by": "opus-x"}
+{"id": "S20-position-mixture", "event": "done", "ts": "2026-09-26T08:48:12Z", "duration": 782, "by": "fable"}
+{"id": "S20-position-mixture", "event": "note", "text": "8b38d2a", "ts": "2026-09-26T08:48:12Z", "by": "fable"}
+{"id": "S21-deep-mixed-tt", "event": "claim", "ts": "2026-09-26T08:48:12Z", "by": "fable"}
+{"id": "cov-moves-rest", "event": "note", "text": "unit 1 a26bc12: Minimize (Past skipped per coordinator: Embargo, Telekinesis, Magnitude)", "ts": "2026-09-26T08:52:36Z", "by": "opus-z"}
+{"id": "cov-abilities-32", "event": "note", "text": "unit 1 a52cd26: Corrosion, Early Bird, Steadfast, Anger Point, Stench, Long Reach", "ts": "2026-09-26T08:57:16Z", "by": "opus-aa"}
+{"id": "cov-moves-vgc", "event": "note", "text": "unit 1 bc85b6b: Baton Pass, Shed Tail, Chilly Reception (Teleport Past: skipped)", "ts": "2026-09-26T09:03:23Z", "by": "opus-y"}
+{"id": "B9-trace-shield-raw", "event": "done", "ts": "2026-09-26T09:05:49Z", "duration": 1292, "by": "opus-x"}
+{"id": "B9-trace-shield-raw", "event": "note", "text": "5082261", "ts": "2026-09-26T09:05:49Z", "by": "opus-x"}
+{"id": "B8-bug-bite-ignoring-item", "event": "claim", "ts": "2026-09-26T09:05:49Z", "by": "opus-x"}
+{"id": "S21-deep-mixed-tt", "event": "done", "ts": "2026-09-26T09:07:19Z", "duration": 1147, "by": "fable"}
+{"id": "S21-deep-mixed-tt", "event": "note", "text": "366dde9", "ts": "2026-09-26T09:07:19Z", "by": "fable"}
+{"id": "S22-rollout-depth2-policy", "event": "claim", "ts": "2026-09-26T09:07:19Z", "by": "fable"}
+{"id": "S22-rollout-depth2-policy", "event": "note", "text": "pilot deep-nash b3 o2: 312 s per game with all cores (psy-cona, 9 turns); batch script ready (psy-cona pair 30+30, then sand-owen 30+30), start after the wave-9 merge to avoid CPU contention", "ts": "2026-09-26T09:08:30Z", "by": "fable"}
+{"id": "cov-moves-rest", "event": "note", "text": "unit 2 fccc259: Forest's Curse, Trick-or-Treat (Volatile::AddedType, getTypes readers)", "ts": "2026-09-26T09:09:31Z", "by": "opus-z"}
+{"id": "cov-moves-rest", "event": "touch", "ts": "2026-09-26T09:09:38Z", "by": "opus-z"}
+{"id": "cov-moves-rest", "event": "note", "text": "unit 3 skipped: Assist, Metronome, Mimic, Sketch, Conversion 2, Doodle are all Champions Past", "ts": "2026-09-26T09:09:39Z", "by": "opus-z"}
+{"id": "cov-moves-vgc", "event": "note", "text": "unit 2 f6c7ae3: Tidy Up, Syrup Bomb, Curse (Tar Shot Past: skipped)", "ts": "2026-09-26T09:15:28Z", "by": "opus-y"}
+{"id": "cov-moves-vgc", "event": "touch", "ts": "2026-09-26T09:15:28Z", "by": "opus-y"}
+{"id": "cov-moves-rest", "event": "note", "text": "unit 4 8a5689b: Lock-On (Mind Reader, Bide, Grudge, Rage, Me First are Past)", "ts": "2026-09-26T09:19:25Z", "by": "opus-z"}
+{"id": "B8-bug-bite-ignoring-item", "event": "done", "ts": "2026-09-26T09:23:53Z", "duration": 1084, "by": "opus-x"}
+{"id": "B8-bug-bite-ignoring-item", "event": "note", "text": "113910e", "ts": "2026-09-26T09:23:53Z", "by": "opus-x"}
+{"id": "B1-trick-item-start-ignoring", "event": "claim", "ts": "2026-09-26T09:23:53Z", "by": "opus-x"}
+{"id": "cov-moves-rest", "event": "note", "text": "unit 5 765e6fd: Fairy Lock (FieldEffect::FairyLock), Electrify, Aura Wheel, Eerie Spell", "ts": "2026-09-26T09:27:57Z", "by": "opus-z"}
+{"id": "cov-moves-rest", "event": "touch", "ts": "2026-09-26T09:27:57Z", "by": "opus-z"}
+{"id": "cov-abilities-32", "event": "note", "text": "unit 2 9e2423d: Quick Draw, Mycelium Might, Run Away, Moody, Pickup, Power Construct", "ts": "2026-09-26T09:30:32Z", "by": "opus-aa"}
+{"id": "cov-abilities-32", "event": "touch", "ts": "2026-09-26T09:30:32Z", "by": "opus-aa"}
+{"id": "B1-trick-item-start-ignoring", "event": "touch", "ts": "2026-09-26T09:36:49Z", "by": "opus-x"}
+{"id": "B1-trick-item-start-ignoring", "event": "done", "ts": "2026-09-26T09:37:36Z", "duration": 823, "by": "opus-x"}
+{"id": "B1-trick-item-start-ignoring", "event": "note", "text": "8e8ed2b", "ts": "2026-09-26T09:37:36Z", "by": "opus-x"}
+{"id": "B3-switchflag-unprocessed-faint", "event": "claim", "ts": "2026-09-26T09:37:36Z", "by": "opus-x"}
+{"id": "B3-switchflag-unprocessed-faint", "event": "done", "ts": "2026-09-26T09:44:57Z", "duration": 441, "by": "opus-x"}
+{"id": "B3-switchflag-unprocessed-faint", "event": "note", "text": "cca13e1", "ts": "2026-09-26T09:44:57Z", "by": "opus-x"}
+{"id": "B5-oblivious-bypassed-stale", "event": "claim", "ts": "2026-09-26T09:44:57Z", "by": "opus-x"}
+{"id": "cov-abilities-32", "event": "note", "text": "unit 3 3073ce0: Surge Surfer, Orichalcum Pulse, Hadron Engine, Liquid Ooze, Sticky Hold", "ts": "2026-09-26T09:46:10Z", "by": "opus-aa"}
+{"id": "B5-oblivious-bypassed-stale", "event": "done", "ts": "2026-09-26T09:52:04Z", "duration": 427, "by": "opus-x"}
+{"id": "B5-oblivious-bypassed-stale", "event": "note", "text": "5e3063f", "ts": "2026-09-26T09:52:04Z", "by": "opus-x"}
+{"id": "B10-cud-chew-queue", "event": "claim", "ts": "2026-09-26T09:52:04Z", "by": "opus-x"}
+{"id": "cov-moves-rest", "event": "note", "text": "unit 6 1a5e5f2: Dragon Darts (smartTarget; extra non-Past non-Y move per coordinator)", "ts": "2026-09-26T09:54:54Z", "by": "opus-z"}
+{"id": "cov-moves-rest", "event": "touch", "ts": "2026-09-26T09:54:54Z", "by": "opus-z"}
+{"id": "cov-abilities-32", "event": "note", "text": "unit 4 e0baaee: Forecast", "ts": "2026-09-26T10:04:17Z", "by": "opus-aa"}
+{"id": "cov-abilities-32", "event": "touch", "ts": "2026-09-26T10:04:18Z", "by": "opus-aa"}
+{"id": "B10-cud-chew-queue", "event": "touch", "ts": "2026-09-26T10:04:58Z", "by": "opus-x"}
+{"id": "B10-cud-chew-queue", "event": "done", "ts": "2026-09-26T10:14:26Z", "duration": 1342, "by": "opus-x"}
+{"id": "B10-cud-chew-queue", "event": "note", "text": "b639c8d", "ts": "2026-09-26T10:14:26Z", "by": "opus-x"}
+{"id": "B4-sleep-talk-called-tail", "event": "claim", "ts": "2026-09-26T10:14:26Z", "by": "opus-x"}
+{"id": "cov-moves-vgc", "event": "note", "text": "unit 3 ae71a60: Uproar, Fling, Beat Up (bench-order refusal; Lunar Dance Past)", "ts": "2026-09-26T10:16:13Z", "by": "opus-y"}
+{"id": "cov-moves-vgc", "event": "touch", "ts": "2026-09-26T10:16:13Z", "by": "opus-y"}
+{"id": "cov-moves-rest", "event": "note", "text": "unit 7 1232dcb: Transform kept refused with a precise transformInto reason", "ts": "2026-09-26T10:16:54Z", "by": "opus-z"}
+{"id": "cov-moves-rest", "event": "done", "ts": "2026-09-26T10:17:01Z", "duration": 6484, "by": "opus-z"}
+{"id": "cov-moves-rest", "event": "note", "text": "units 1,2,4,5,6,7 (a26bc12 fccc259 8a5689b 765e6fd 1a5e5f2 1232dcb): Minimize, Forest's Curse, Trick-or-Treat, Lock-On, Fairy Lock, Electrify, Aura Wheel, Eerie Spell, Dragon Darts; Transform kept refused; 27 Champions-Past moves skipped; last 1232dcb, gate 839 passed", "ts": "2026-09-26T10:17:01Z", "by": "opus-z"}
+{"id": "cov-abilities-32", "event": "note", "text": "unit 5 8b04ce6: Parental Bond", "ts": "2026-09-26T10:25:25Z", "by": "opus-aa"}
+{"id": "cov-abilities-32", "event": "touch", "ts": "2026-09-26T10:25:26Z", "by": "opus-aa"}
+{"id": null, "event": "definition", "hash": "a30bce6af26e", "count": 53, "ts": "2026-09-26T10:30:35Z", "by": "opus-x"}
+{"id": "B4-sleep-talk-called-tail", "event": "done", "ts": "2026-09-26T10:30:35Z", "duration": 969, "by": "opus-x"}
+{"id": "B4-sleep-talk-called-tail", "event": "note", "text": "12de156", "ts": "2026-09-26T10:30:35Z", "by": "opus-x"}
+{"id": "B11-raw-ability-reads", "event": "claim", "ts": "2026-09-26T10:30:35Z", "by": "opus-x"}
+{"id": "cov-moves-vgc", "event": "note", "text": "unit 5 a2aa809: Charge (unit 4 all Past; Magic Coat/Snatch/Powder Past)", "ts": "2026-09-26T10:35:40Z", "by": "opus-y"}
+{"id": "cov-abilities-32", "event": "note", "text": "unit 6 bea2570: Mega Sol", "ts": "2026-09-26T10:37:58Z", "by": "opus-aa"}
+{"id": "cov-abilities-32", "event": "touch", "ts": "2026-09-26T10:37:58Z", "by": "opus-aa"}
+{"id": "cov-abilities-32", "event": "done", "ts": "2026-09-26T10:39:06Z", "duration": 7573, "by": "opus-aa"}
+{"id": "cov-abilities-32", "event": "note", "text": "abilities 289->309/321 (units 1-6: a52cd26 9e2423d 3073ce0 e0baaee 8b04ce6 bea2570). Left 12, all skipped: Multitype/RKS System (Arceus/Silvally Past), Persistent/Rebound/Mountaineer (CAP), Imposter/Illusion/primal weathers (excluded), Tera Shift/Teraform Zero (Tera). Refused parts: Zygarde-Complete faint (formeRegression), Power Construct+Zygardite, Pickup of Booster Energy, Forecast+Utility Umbrella", "ts": "2026-09-26T10:39:06Z", "by": "opus-aa"}
+{"id": "cov-items-87", "event": "claim", "ts": "2026-09-26T10:39:06Z", "by": "opus-aa"}
+{"id": "B14-canonical-pseudoweather-order", "event": "claim", "ts": "2026-09-26T10:50:35Z", "by": "fable"}
+{"id": "B11-raw-ability-reads", "event": "done", "ts": "2026-09-26T10:52:30Z", "duration": 1315, "by": "opus-x"}
+{"id": "B11-raw-ability-reads", "event": "note", "text": "1e5827a", "ts": "2026-09-26T10:52:30Z", "by": "opus-x"}
+{"id": "B12-set-ability-paths", "event": "claim", "ts": "2026-09-26T10:52:31Z", "by": "opus-x"}
+{"id": "cov-moves-vgc", "event": "note", "text": "unit 6 07e250f: Round (Fury Cutter/Echoed Voice/Pledges Past)", "ts": "2026-09-26T10:59:46Z", "by": "opus-y"}
+{"id": "cov-moves-vgc", "event": "touch", "ts": "2026-09-26T10:59:47Z", "by": "opus-y"}
+{"id": "cov-items-87", "event": "note", "text": "unit 7 0e46be9: Normal Gem", "ts": "2026-09-26T11:03:13Z", "by": "opus-aa"}
+{"id": "cov-items-87", "event": "touch", "ts": "2026-09-26T11:03:13Z", "by": "opus-aa"}
+{"id": "cov-items-87", "event": "done", "ts": "2026-09-26T11:03:49Z", "duration": 1483, "by": "opus-aa"}
+{"id": "cov-items-87", "event": "note", "text": "87 unsupported items classified: 85 Past + Vile Vial (CAP) stay refused; the one legal item, Normal Gem, implemented (unit 7 0e46be9: onSourceTryPrimaryHit + Volatile::Gem, volatiles 102). The items the prompt listed (Iron Ball, Quick Claw, Lagging Tail, Shed Shell, orbs, lenses, rocks, ...) were already supported. Items 496->497/583", "ts": "2026-09-26T11:03:49Z", "by": "opus-aa"}
+{"id": "B12-set-ability-paths", "event": "touch", "ts": "2026-09-26T11:08:02Z", "by": "opus-x"}
+{"id": "B14-canonical-pseudoweather-order", "event": "done", "ts": "2026-09-26T11:12:37Z", "duration": 1322, "by": "fable"}
+{"id": "B14-canonical-pseudoweather-order", "event": "note", "text": "27a2894", "ts": "2026-09-26T11:12:37Z", "by": "fable"}
+{"id": "S22-rollout-depth2-policy", "event": "touch", "ts": "2026-09-26T11:12:55Z", "by": "fable"}
+{"id": "B12-set-ability-paths", "event": "done", "ts": "2026-09-26T11:13:07Z", "duration": 1236, "by": "opus-x"}
+{"id": "B12-set-ability-paths", "event": "note", "text": "14a89a7", "ts": "2026-09-26T11:13:07Z", "by": "opus-x"}
+{"id": "cov-moves-vgc", "event": "note", "text": "unit 7 787a233: Steel Beam, Attract (Mind Blown Past)", "ts": "2026-09-26T11:18:26Z", "by": "opus-y"}
+{"id": null, "event": "definition", "hash": "9e5998c604e2", "count": 58, "ts": "2026-09-26T11:20:00Z", "by": "opus-y"}
+{"id": "cov-moves-vgc", "event": "done", "ts": "2026-09-26T11:20:00Z", "duration": 10357, "by": "opus-y"}
+{"id": "cov-moves-vgc", "event": "note", "text": "units 1,2,3,5,6,7 (bc85b6b f6c7ae3 ae71a60 a2aa809 07e250f 787a233); 13 moves supported (766->779); unit 4 and Teleport/Tar Shot/Lunar Dance/Magic Coat/Snatch/Powder/Fury Cutter/Echoed Voice/Pledges/Mind Blown skipped as Champions Past; last 787a233", "ts": "2026-09-26T11:20:00Z", "by": "opus-y"}
+{"id": "cov-items-87", "event": "note", "text": "found (not fixed, oracle-verified probes): King's Rock/Razor Fang flinch not doubled by Serene Grace (SD 20% vs engine 10%); recharge action ignores fractional priority (Stall probe TV 1.0); Hydro Steam in sun gets 0.5x instead of 1.5x", "ts": "2026-09-26T11:28:27Z", "by": "opus-aa"}
+{"id": "S22-rollout-depth2-policy", "event": "note", "text": "deep batch started on the merged tree (psy-cona 30+30, sand-owen 30+30), detached; results in runs/rollout-20260926/*.deep-nash.b3o2.rollout.json", "ts": "2026-09-26T11:40:28Z", "by": "fable"}
+{"id": "S22-rollout-depth2-policy", "event": "touch", "ts": "2026-09-26T11:40:29Z", "by": "fable"}
+{"id": null, "event": "definition", "hash": "a056cb269f03", "count": 64, "ts": "2026-09-26T11:40:55Z", "by": "fable"}
+{"id": "B19-umbrella-trick-start", "event": "skip", "reason": "B24-umbrella-weatherchange가 포괄(우산 WeatherChange 이벤트 실행이 근본 수정)", "ts": "2026-09-26T11:40:55Z", "by": "fable"}
+{"id": "B2-speed-snapshot", "event": "claim", "ts": "2026-09-26T11:40:55Z", "by": "fable"}
+{"id": "B22-recharge-fractional-priority", "event": "claim", "ts": "2026-09-26T11:40:56Z", "by": "fable"}
+{"id": "B13-no-guard-ohko", "event": "claim", "ts": "2026-09-26T11:42:17Z", "by": "opus-bb"}
+{"id": "B18-called-move-aftermove-lift", "event": "claim", "ts": "2026-09-26T11:42:22Z", "by": "opus-cc"}
+{"id": "B22-recharge-fractional-priority", "event": "done", "ts": "2026-09-26T12:01:37Z", "duration": 1241, "by": "fable"}
+{"id": "B22-recharge-fractional-priority", "event": "note", "text": "06c11e1", "ts": "2026-09-26T12:01:37Z", "by": "fable"}
+{"id": "B13-no-guard-ohko", "event": "done", "ts": "2026-09-26T12:01:54Z", "duration": 1177, "by": "opus-bb"}
+{"id": "B13-no-guard-ohko", "event": "note", "text": "8f3d709", "ts": "2026-09-26T12:01:54Z", "by": "opus-bb"}
+{"id": "B21-kings-rock-serene-grace", "event": "claim", "ts": "2026-09-26T12:01:56Z", "by": "opus-bb"}
+{"id": "B18-called-move-aftermove-lift", "event": "touch", "ts": "2026-09-26T12:08:23Z", "by": "opus-cc"}
+{"id": "B18-called-move-aftermove-lift", "event": "done", "ts": "2026-09-26T12:09:19Z", "duration": 1617, "by": "opus-cc"}
+{"id": "B18-called-move-aftermove-lift", "event": "note", "text": "3da128f", "ts": "2026-09-26T12:09:19Z", "by": "opus-cc"}
+{"id": "B17-emergency-exit-flags", "event": "claim", "ts": "2026-09-26T12:09:20Z", "by": "opus-cc"}
+{"id": "B21-kings-rock-serene-grace", "event": "touch", "ts": "2026-09-26T12:23:17Z", "by": "opus-bb"}
+{"id": "B21-kings-rock-serene-grace", "event": "done", "ts": "2026-09-26T12:24:52Z", "duration": 1376, "by": "opus-bb"}
+{"id": "B21-kings-rock-serene-grace", "event": "note", "text": "b6c0e00", "ts": "2026-09-26T12:24:52Z", "by": "opus-bb"}
+{"id": "B20-kings-rock-shield-dust", "event": "claim", "ts": "2026-09-26T12:24:53Z", "by": "opus-bb"}
+{"id": "B2-speed-snapshot", "event": "done", "ts": "2026-09-26T12:26:23Z", "duration": 2728, "by": "fable"}
+{"id": "B2-speed-snapshot", "event": "note", "text": "268ec91", "ts": "2026-09-26T12:26:23Z", "by": "fable"}
+{"id": "S22-rollout-depth2-policy", "event": "touch", "ts": "2026-09-26T12:30:41Z", "by": "fable"}
+{"id": "B17-emergency-exit-flags", "event": "done", "ts": "2026-09-26T12:35:04Z", "duration": 1544, "by": "opus-cc"}
+{"id": "B17-emergency-exit-flags", "event": "note", "text": "6527a63", "ts": "2026-09-26T12:35:04Z", "by": "opus-cc"}
+{"id": "verify-library-turns", "event": "claim", "ts": "2026-09-26T12:35:04Z", "by": "opus-cc"}
+{"id": "B20-kings-rock-shield-dust", "event": "done", "ts": "2026-09-26T12:41:47Z", "duration": 1014, "by": "opus-bb"}
+{"id": "B20-kings-rock-shield-dust", "event": "note", "text": "7827140", "ts": "2026-09-26T12:41:47Z", "by": "opus-bb"}
+{"id": "B23-hydro-steam-sun", "event": "claim", "ts": "2026-09-26T12:41:47Z", "by": "opus-bb"}
+{"id": "verify-library-turns", "event": "done", "ts": "2026-09-26T12:46:10Z", "duration": 666, "by": "opus-cc"}
+{"id": "verify-library-turns", "event": "note", "text": "67cfda0", "ts": "2026-09-26T12:46:10Z", "by": "opus-cc"}
+{"id": "B23-hydro-steam-sun", "event": "done", "ts": "2026-09-26T12:55:42Z", "duration": 835, "by": "opus-bb"}
+{"id": "B23-hydro-steam-sun", "event": "note", "text": "3720035", "ts": "2026-09-26T12:55:42Z", "by": "opus-bb"}
+{"id": "B25-mega-sol-duration", "event": "claim", "ts": "2026-09-26T12:55:42Z", "by": "opus-bb"}
+{"id": "B25-mega-sol-duration", "event": "escalate", "reason": "No observable difference (3429868): between the move end and runAction's clearActiveMove only phazing drag-ins, Update, faints and Emergency Exit run; none reads effectiveWeather from a Move/Weather effect (Forecast onStart = ability effect; oracle bb-mega-sol-roar-forecast gives Castform-Rainy, engine matches). Documented on Battle::move_weather; no code change.", "level": 1, "ts": "2026-09-26T13:06:34Z", "by": "opus-bb"}
+{"id": "B15-choicelock-struggle", "event": "claim", "ts": "2026-09-26T13:06:34Z", "by": "opus-bb"}
+{"id": "B15-choicelock-struggle", "event": "touch", "ts": "2026-09-26T13:09:21Z", "by": "opus-bb"}
+{"id": "B15-choicelock-struggle", "event": "done", "ts": "2026-09-26T13:14:43Z", "duration": 489, "by": "opus-bb"}
+{"id": "B15-choicelock-struggle", "event": "note", "text": "065810c", "ts": "2026-09-26T13:14:43Z", "by": "opus-bb"}
+{"id": "B16-choicelock-hasmove", "event": "claim", "ts": "2026-09-26T13:14:43Z", "by": "opus-bb"}
+{"id": "B16-choicelock-hasmove", "event": "done", "ts": "2026-09-26T13:22:51Z", "duration": 488, "by": "opus-bb"}
+{"id": "B16-choicelock-hasmove", "event": "note", "text": "0e93e3f", "ts": "2026-09-26T13:22:51Z", "by": "opus-bb"}
+{"id": "B24-umbrella-weatherchange", "event": "claim", "ts": "2026-09-26T13:22:51Z", "by": "opus-bb"}
+{"id": "B24-umbrella-weatherchange", "event": "done", "ts": "2026-09-26T13:33:35Z", "duration": 644, "by": "opus-bb"}
+{"id": "B24-umbrella-weatherchange", "event": "note", "text": "327e870", "ts": "2026-09-26T13:33:35Z", "by": "opus-bb"}
+{"id": "S22-rollout-depth2-policy", "event": "touch", "ts": "2026-09-26T13:38:05Z", "by": "fable"}
+{"id": null, "event": "definition", "hash": "4c1dee0dc24a", "count": 66, "ts": "2026-09-26T13:38:13Z", "by": "opus-dd"}
+{"id": "B26-mold-breaker-phaze-window", "event": "claim", "ts": "2026-09-26T13:38:13Z", "by": "opus-dd"}
+{"id": "B26-mold-breaker-phaze-window", "event": "touch", "ts": "2026-09-26T13:55:02Z", "by": "opus-dd"}
+{"id": "B26-mold-breaker-phaze-window", "event": "done", "ts": "2026-09-26T14:03:00Z", "duration": 1487, "by": "opus-dd"}
+{"id": "B26-mold-breaker-phaze-window", "event": "note", "text": "1039571", "ts": "2026-09-26T14:03:00Z", "by": "opus-dd"}
+{"id": "B27-emergency-exit-recoil-lift", "event": "claim", "ts": "2026-09-26T14:03:00Z", "by": "opus-dd"}
+{"id": "B27-emergency-exit-recoil-lift", "event": "touch", "ts": "2026-09-26T14:30:47Z", "by": "opus-dd"}
+{"id": "B27-emergency-exit-recoil-lift", "event": "done", "ts": "2026-09-26T14:41:47Z", "duration": 2327, "by": "opus-dd"}
+{"id": "B27-emergency-exit-recoil-lift", "event": "note", "text": "84a0123", "ts": "2026-09-26T14:41:47Z", "by": "opus-dd"}
+{"id": null, "event": "definition", "hash": "32d54b500c08", "count": 67, "ts": "2026-09-26T14:51:17Z", "by": "fable"}
+{"id": "B28-guard-dog-phazing", "event": "claim", "ts": "2026-09-26T14:51:17Z", "by": "fable"}
+{"id": "B28-guard-dog-phazing", "event": "done", "ts": "2026-09-26T14:56:37Z", "duration": 320, "by": "fable"}
+{"id": "B28-guard-dog-phazing", "event": "note", "text": "d92cb9c", "ts": "2026-09-26T14:56:37Z", "by": "fable"}
+{"id": "S12-fit-proper", "event": "claim", "ts": "2026-09-26T15:09:32Z", "by": "fable"}
+{"id": "S12-fit-proper", "event": "note", "text": "sample dumps running: 40 mid-game positions from rollout games (make_positions.py, --setup-lenient --position max, beam 4 / outcomes 2, ~26 rows each); fit with fit_eval.py when done", "ts": "2026-09-26T15:09:34Z", "by": "fable"}
+{"id": "S12-fit-proper", "event": "note", "text": "fit done on 2,016 rows (weights.combined.json; sleep -72, stall -20; RMSE 37.7->35.9); still open: real-game calibration, status-feature samples, rollout with fitted weights", "ts": "2026-09-26T15:51:43Z", "by": "fable"}
+{"id": "S22-rollout-depth2-policy", "event": "note", "text": "psy-cona pair done: gard 33.3% vs star 62.1% (30 games each, p=0.027; depth 1 was 46/68, p=0.026). sand-owen pair running", "ts": "2026-09-26T16:00:01Z", "by": "fable"}
+{"id": "S22-rollout-depth2-policy", "event": "done", "ts": "2026-09-26T20:35:27Z", "duration": 41288, "by": "fable"}
+{"id": "S22-rollout-depth2-policy", "event": "note", "text": "52f1379: sand-owen deep 50.0/51.7 (p=0.90); psy-cona deep 33.3/62.1 (p=0.027); fitted 36/64 (p=0.005), 32/46 (p=0.15)", "ts": "2026-09-26T20:35:27Z", "by": "fable"}
+{"id": "S12-fit-proper", "event": "note", "text": "paused: mid-game bootstrap fit and fitted-eval rollouts done (WORKPLAN S12 결과 2); remaining = status-feature samples and real-game calibration", "ts": "2026-09-26T20:35:44Z", "by": "fable"}
+{"id": "S12-fit-proper", "event": "release", "ts": "2026-09-26T20:35:44Z", "by": "fable"}
+{"id": null, "event": "definition", "hash": "bebc8c01044c", "count": 74, "ts": "2026-09-26T23:38:42Z", "by": "opus-ff"}
+{"id": "FF-parity-harness", "event": "claim", "ts": "2026-09-26T23:38:42Z", "by": "opus-ff"}
+{"id": "GG-turn-throughput", "event": "claim", "ts": "2026-09-26T23:39:21Z", "by": "opus-gg"}
+{"id": "HH-python-api", "event": "claim", "ts": "2026-09-26T23:40:44Z", "by": "opus-hh"}
+{"id": "DOC-showdown-gaps-refresh", "event": "claim", "ts": "2026-09-26T23:42:04Z", "by": "fable"}
+{"id": "DOC-showdown-gaps-refresh", "event": "done", "ts": "2026-09-26T23:42:05Z", "duration": 1, "by": "fable"}
+{"id": "DOC-showdown-gaps-refresh", "event": "note", "text": "f4181da", "ts": "2026-09-26T23:42:06Z", "by": "fable"}
+{"id": "EE1-transform-imposter", "event": "claim", "ts": "2026-09-26T23:47:56Z", "by": "opus-ee"}
+{"id": "HH-python-api", "event": "note", "text": "pure-Rust helper lab_search::node (Node<N>: legal/parse/enumerate/sample/state_json/evaluate/nash_turn) + 10 unit tests green; py bindings drafted", "ts": "2026-09-26T23:58:55Z", "by": "opus-hh"}
+{"id": "GG-turn-throughput", "event": "note", "text": "baseline 466b8d8 (bench): library lead turns Median 0.18-1.08 ms, Extremes 0.45-7.1 ms, Full 2.6-930 ms; sample_turn 33-53 us; State clone ~150 ns; legal 3-165 us. Profile (own in-process sampler; samply needs xperf/admin): SipHash of State in stage merge ~55% of a Median sweep, heap alloc ~20%", "ts": "2026-09-27T00:00:32Z", "by": "opus-gg"}
+{"id": "FF-parity-harness", "event": "note", "text": "design: pinned-prefix replay (setupStates canonical pins + oracle traces); lab-parity/lab-check/parity_sweep.py working; smoke 24/24 match", "ts": "2026-09-27T00:01:19Z", "by": "opus-ff"}
+{"id": "HH-python-api", "event": "done", "ts": "2026-09-27T00:16:05Z", "duration": 2121, "by": "opus-hh"}
+{"id": "HH-python-api", "event": "note", "text": "34e0d2e (58928e9 node API + 34e0d2e pyo3 bindings; cargo test 991 ok, pytest 19 ok)", "ts": "2026-09-27T00:16:05Z", "by": "opus-hh"}
+{"id": "FF-parity-harness", "event": "note", "text": "harness committed 5fb726f; sweep of 729 positions (14 matchups, random+nash) running", "ts": "2026-09-27T00:22:42Z", "by": "opus-ff"}
+{"id": "FF-parity-harness", "event": "touch", "ts": "2026-09-27T00:22:43Z", "by": "opus-ff"}
+{"id": "FF-parity-harness", "event": "touch", "ts": "2026-09-27T00:34:26Z", "by": "opus-ff"}
+{"id": "EE1-transform-imposter", "event": "touch", "ts": "2026-09-27T00:38:41Z", "by": "opus-ee"}
+{"id": "EE1-transform-imposter", "event": "touch", "ts": "2026-09-27T00:51:32Z", "by": "opus-ee"}
+{"id": "GG-turn-throughput", "event": "touch", "ts": "2026-09-27T00:53:01Z", "by": "opus-gg"}
+{"id": null, "event": "definition", "hash": "137ed716258c", "count": 77, "ts": "2026-09-27T01:00:33Z", "by": "fable"}
+{"id": "CI-wheel-pytest", "event": "claim", "ts": "2026-09-27T01:00:33Z", "by": "fable"}
+{"id": "CI-wheel-pytest", "event": "done", "ts": "2026-09-27T01:00:46Z", "duration": 13, "by": "fable"}
+{"id": "CI-wheel-pytest", "event": "note", "text": "c9fc1a7; unverified (no remote)", "ts": "2026-09-27T01:00:46Z", "by": "fable"}
+{"id": "FF-parity-harness", "event": "note", "text": "sweep ~600/729: 3 mismatches (Perish Song vs Good as Gold; Champions Encore changeAction priority x2) both fixed locally with ff fixtures; waiting for sweep end", "ts": "2026-09-27T01:23:30Z", "by": "opus-ff"}
+{"id": "FF-parity-harness", "event": "touch", "ts": "2026-09-27T01:23:31Z", "by": "opus-ff"}
+{"id": "GG-turn-throughput", "event": "touch", "ts": "2026-09-27T01:27:22Z", "by": "opus-gg"}
+{"id": "EE1-transform-imposter", "event": "done", "ts": "2026-09-27T01:29:59Z", "duration": 6123, "by": "opus-ee"}
+{"id": "EE1-transform-imposter", "event": "note", "text": "5046950", "ts": "2026-09-27T01:29:59Z", "by": "opus-ee"}
+{"id": "EE2-illusion", "event": "claim", "ts": "2026-09-27T01:30:00Z", "by": "opus-ee"}
+{"id": "EE2-illusion", "event": "touch", "ts": "2026-09-27T01:43:42Z", "by": "opus-ee"}
+{"id": "EE2-illusion", "event": "done", "ts": "2026-09-27T01:58:49Z", "duration": 1729, "by": "opus-ee"}
+{"id": "EE2-illusion", "event": "note", "text": "b1623e7", "ts": "2026-09-27T01:58:49Z", "by": "opus-ee"}
+{"id": "GG-turn-throughput", "event": "touch", "ts": "2026-09-27T02:07:39Z", "by": "opus-gg"}
+{"id": "FF-parity-harness", "event": "note", "text": "sweep done: 729 pos, 691 compared, 687 exact, 4 mismatch (0.58%), 38 oracle failed; 3 engine bugs fixed in 47cbbfd with ff fixtures; post-fix validation running", "ts": "2026-09-27T02:16:35Z", "by": "opus-ff"}
+{"id": "FF-parity-harness", "event": "touch", "ts": "2026-09-27T02:16:36Z", "by": "opus-ff"}
+{"id": null, "event": "definition", "hash": "f6b330b44248", "count": 78, "ts": "2026-09-27T02:26:25Z", "by": "opus-ff"}
+{"id": "FF-parity-harness", "event": "done", "ts": "2026-09-27T02:26:25Z", "duration": 10063, "by": "opus-ff"}
+{"id": "FF-parity-harness", "event": "note", "text": "5fb726f harness + 47cbbfd fixes; 729 pos, 687/691 exact pre-fix (4 mismatches -> 3 engine bugs fixed, ff fixtures), post-fix 175/175 compared exact; gate 988", "ts": "2026-09-27T02:26:25Z", "by": "opus-ff"}
+{"id": null, "event": "definition", "hash": "8f33482bc06b", "count": 80, "ts": "2026-09-27T02:48:03Z", "by": "fable"}
+{"id": "B30-switch-in-action-speed", "event": "claim", "ts": "2026-09-27T02:48:03Z", "by": "fable"}
+{"id": "B30-switch-in-action-speed", "event": "done", "ts": "2026-09-27T03:04:31Z", "duration": 988, "by": "fable"}
+{"id": "B30-switch-in-action-speed", "event": "note", "text": "718177d", "ts": "2026-09-27T03:04:31Z", "by": "fable"}
+{"id": "B29-setup-suspension-drop", "event": "claim", "ts": "2026-09-27T03:09:35Z", "by": "fable"}
+{"id": "B31-loader-level-default", "event": "claim", "ts": "2026-09-27T03:09:35Z", "by": "fable"}
+{"id": "GG-turn-throughput", "event": "touch", "ts": "2026-09-27T03:16:09Z", "by": "opus-gg"}
+{"id": "B29-setup-suspension-drop", "event": "done", "ts": "2026-09-27T03:22:34Z", "duration": 779, "by": "fable"}
+{"id": "B29-setup-suspension-drop", "event": "note", "text": "b04d9fb", "ts": "2026-09-27T03:22:34Z", "by": "fable"}
+{"id": "B31-loader-level-default", "event": "done", "ts": "2026-09-27T03:22:34Z", "duration": 779, "by": "fable"}
+{"id": "B31-loader-level-default", "event": "note", "text": "b04d9fb", "ts": "2026-09-27T03:22:34Z", "by": "fable"}
+{"id": "GG-turn-throughput", "event": "done", "ts": "2026-09-27T03:36:34Z", "duration": 14233, "by": "opus-gg"}
+{"id": "GG-turn-throughput", "event": "note", "text": "2eab6ef", "ts": "2026-09-27T03:36:34Z", "by": "opus-gg"}
+{"id": null, "event": "definition", "hash": "5d2d2b50da97", "count": 81, "ts": "2026-09-27T04:09:16Z", "by": "fable"}
+{"id": "B32-cache-key-collision", "event": "claim", "ts": "2026-09-27T04:09:16Z", "by": "fable"}
+{"id": "B32-cache-key-collision", "event": "done", "ts": "2026-09-27T04:09:19Z", "duration": 3, "by": "fable"}
+{"id": "B32-cache-key-collision", "event": "note", "text": "b412cdf", "ts": "2026-09-27T04:09:19Z", "by": "fable"}
+{"id": "O105-canonical-recheck", "event": "claim", "ts": "2026-09-27T04:09:47Z", "by": "fable"}
+{"id": "O105-canonical-recheck", "event": "done", "ts": "2026-09-27T04:09:47Z", "duration": 0, "by": "fable"}
+{"id": "O105-canonical-recheck", "event": "note", "text": "superseded: every gate compares canonical states byte-for-byte on all fixtures (1023 tests), GG digest over 925 scenarios, FF parity on 691 real positions", "ts": "2026-09-27T04:09:47Z", "by": "fable"}
+{"id": null, "event": "definition", "hash": "b91ea2ece174", "count": 82, "ts": "2026-09-27T04:11:50Z", "by": "opus-jj"}
+{"id": "JJ-heavy-turn-parity", "event": "claim", "ts": "2026-09-27T04:11:50Z", "by": "opus-jj"}
+{"id": "JJ-heavy-turn-parity", "event": "note", "text": "fixed-roll mode wired (RollMode::Fixed, enumerate.cjs --mode fixed --roll k, lab-check, sweep); fixed alone leaves most heavy turns over 60k branches (speed-tie shuffles), adding staged oracle enumeration (merge between actions), validating vs all fixtures", "ts": "2026-09-27T04:37:30Z", "by": "opus-jj"}
+{"id": null, "event": "definition", "hash": "8cb93fb18be8", "count": 126, "ts": "2026-09-27T04:40:22Z", "by": "fable"}
+{"id": "V2a-sweep-more-matchups", "event": "claim", "ts": "2026-09-27T04:40:22Z", "by": "fable"}
+{"id": "V2-parity-heavy-turns", "event": "skip", "reason": "split into V2a/V2b/V2c/V3 and JJ-heavy-turn-parity", "ts": "2026-09-27T04:40:24Z", "by": "fable"}
+{"id": null, "event": "definition", "hash": "1ce838ed0ae9", "count": 126, "ts": "2026-09-27T04:40:40Z", "by": "fable"}
+{"id": "V7-ci-first-run", "event": "block", "reason": "원격 저장소·인증 필요(사용자 결정)", "ts": "2026-09-27T04:40:40Z", "by": "fable"}
+{"id": "OPS1-worktree-cleanup", "event": "block", "reason": "삭제: 사용자 승인 필요", "ts": "2026-09-27T04:40:40Z", "by": "fable"}
+{"id": "OPS2-target-dir-cleanup", "event": "block", "reason": "삭제: 사용자 승인 필요", "ts": "2026-09-27T04:40:41Z", "by": "fable"}
+{"id": "R0-refusal-audit", "event": "claim", "ts": "2026-09-27T04:42:27Z", "by": "opus-rr"}
+{"id": "V2a-sweep-more-matchups", "event": "done", "ts": "2026-09-27T05:20:20Z", "duration": 2398, "by": "fable"}
+{"id": "V2a-sweep-more-matchups", "event": "note", "text": "1000 positions: 902 exact (683 full, 251 extremes), 0 mismatch, 66 oracle-overflow, 32 engine-error (B29 first version; rerun = V2b)", "ts": "2026-09-27T05:20:20Z", "by": "fable"}
+{"id": "V2b-rerun-after-b29", "event": "claim", "ts": "2026-09-27T05:20:21Z", "by": "fable"}
+{"id": "JJ-heavy-turn-parity", "event": "note", "text": "7a787fc: Fixed(k) + oracle --mode fixed + --staged (851/851 fixtures identical) + sweep fallback/MC. FF overflow set: 27/27 exact match (fixed 7,0,15 staged; 25 also staged extremes). V2 set running.", "ts": "2026-09-27T05:21:21Z", "by": "opus-jj"}
+{"id": "JJ-heavy-turn-parity", "event": "touch", "ts": "2026-09-27T05:21:23Z", "by": "opus-jj"}
+{"id": "R0-refusal-audit", "event": "touch", "ts": "2026-09-27T05:25:28Z", "by": "opus-rr"}
+{"id": null, "event": "definition", "hash": "6b57d8cfb50c", "count": 127, "ts": "2026-09-27T05:30:21Z", "by": "fable"}
+{"id": "V2b-rerun-after-b29", "event": "done", "ts": "2026-09-27T05:30:21Z", "duration": 600, "by": "fable"}
+{"id": "V2b-rerun-after-b29", "event": "note", "text": "32/32 match; total 934 exact, 0 mismatch, 66 overflow", "ts": "2026-09-27T05:30:21Z", "by": "fable"}
+{"id": "JJ-heavy-turn-parity", "event": "note", "text": "b9258ca: engine bug found by V2 heavy positions - confusion self-hit roll ignored the roll mode (uniform(16)); fixed + jj-confusion-self-hit-roll fixtures. V2 overflow set (66) running.", "ts": "2026-09-27T05:34:25Z", "by": "opus-jj"}
+{"id": "R0-refusal-audit", "event": "note", "text": "73 call sites / 115 keys extracted (engine/scripts/refusals.py); 34 reachable, 81 unreachable (12 evidence checks); 30+ rr- repros with oracle fixtures; fixed 4 refusals (Instruct Struggle, no-PP, Synchronize+Toxic Spikes, Eject Button+future move) and a Fling guard that never fired", "ts": "2026-09-27T05:45:54Z", "by": "opus-rr"}
+{"id": "V6-trick-room-speed-wrap", "event": "claim", "ts": "2026-09-27T05:48:59Z", "by": "fable"}
+{"id": "V6-trick-room-speed-wrap", "event": "done", "ts": "2026-09-27T05:48:59Z", "duration": 0, "by": "fable"}
+{"id": "V6-trick-room-speed-wrap", "event": "note", "text": "aaf3165: B30 representation was wrong for Champions; reverted to negation", "ts": "2026-09-27T05:48:59Z", "by": "fable"}
+{"id": "V4-mental-herb-priority", "event": "claim", "ts": "2026-09-27T05:52:16Z", "by": "fable"}
+{"id": "V4-mental-herb-priority", "event": "done", "ts": "2026-09-27T05:52:17Z", "duration": 1, "by": "fable"}
+{"id": "V4-mental-herb-priority", "event": "note", "text": "ed76047: engine matches the oracle; OverrideAction branch unreachable in Champions", "ts": "2026-09-27T05:52:17Z", "by": "fable"}
+{"id": "V5-drag-in-raw-speed", "event": "skip", "reason": "unobservable: no same-priority order-sensitive handler pair in the standard range (WORKPLAN V5)", "ts": "2026-09-27T05:52:17Z", "by": "fable"}
+{"id": null, "event": "definition", "hash": "4c00cc58aec2", "count": 130, "ts": "2026-09-27T05:54:24Z", "by": "fable"}
+{"id": "A2-speed-refresh-skip", "event": "skip", "reason": "unobservable in the standard range (WORKPLAN A2); comment updated", "ts": "2026-09-27T05:54:24Z", "by": "fable"}
+{"id": "A3-ruin-holder-flip", "event": "skip", "reason": "unreachable: no standard holder of a Ruin ability", "ts": "2026-09-27T05:54:25Z", "by": "fable"}
+{"id": "JJ-heavy-turn-parity", "event": "done", "ts": "2026-09-27T05:59:33Z", "duration": 6463, "by": "opus-jj"}
+{"id": "JJ-heavy-turn-parity", "event": "note", "text": "b9258ca (7a787fc tooling): 93/93 overflow positions compared exactly (staged fixed 7,0,15; 85 also staged extremes), 1 engine bug (confusion self-hit roll mode) fixed; MC not needed", "ts": "2026-09-27T05:59:33Z", "by": "opus-jj"}
+{"id": null, "event": "definition", "hash": "572b9bd24374", "count": 133, "ts": "2026-09-27T06:12:15Z", "by": "opus-kk"}
+{"id": "V8-parity-regression-corpus", "event": "claim", "ts": "2026-09-27T06:12:15Z", "by": "opus-kk"}
+{"id": "V10-staged-serializer-faithful", "event": "claim", "ts": "2026-09-27T06:18:51Z", "by": "opus-ll"}
+{"id": "R0-refusal-audit", "event": "done", "ts": "2026-09-27T06:30:15Z", "duration": 6468, "by": "opus-rr"}
+{"id": "R0-refusal-audit", "event": "note", "text": "6646772 44175bf 9abac6f", "ts": "2026-09-27T06:30:15Z", "by": "opus-rr"}
+{"id": null, "event": "definition", "hash": "4fdc44be78f0", "count": 140, "ts": "2026-09-27T06:32:32Z", "by": "fable"}
+{"id": "R12-syrup-bomb-source", "event": "skip", "reason": "unreachable: the engine never produces the state (REFUSALS.md)", "ts": "2026-09-27T06:32:32Z", "by": "fable"}
+{"id": "R18-baton-pass-volatiles", "event": "skip", "reason": "unreachable: no refused volatile can be passed (REFUSALS.md)", "ts": "2026-09-27T06:32:34Z", "by": "fable"}
+{"id": "R19-transformed-off-field", "event": "skip", "reason": "unreachable: the engine never produces the state (REFUSALS.md)", "ts": "2026-09-27T06:32:35Z", "by": "fable"}
+{"id": "R20-generic-guards", "event": "skip", "reason": "proven unreachable by refusals.py checks E1-E12; forced eat moved to R22, Fling guard to R16", "ts": "2026-09-27T06:32:36Z", "by": "fable"}
+{"id": "V8-parity-regression-corpus", "event": "touch", "ts": "2026-09-27T06:32:37Z", "by": "opus-kk"}
+{"id": "R15-no-pp-when-used", "event": "claim", "ts": "2026-09-27T06:32:37Z", "by": "fable"}
+{"id": "R15-no-pp-when-used", "event": "done", "ts": "2026-09-27T06:32:38Z", "duration": 1, "by": "fable"}
+{"id": "R15-no-pp-when-used", "event": "note", "text": "fixed by Opus RR 6646772 (rr-spite-no-pp)", "ts": "2026-09-27T06:32:38Z", "by": "fable"}
+{"id": "R1-trace-seeking", "event": "claim", "ts": "2026-09-27T06:47:22Z", "by": "opus-mm"}
+{"id": "R21-copycat-called-moves", "event": "claim", "ts": "2026-09-27T06:48:31Z", "by": "opus-nn"}
+{"id": "R4-redirection-tie", "event": "claim", "ts": "2026-09-27T06:49:55Z", "by": "opus-oo"}
+{"id": "V8-parity-regression-corpus", "event": "note", "text": "465c15b: parity_corpus.py build/check + setup-replay hash merge (144 s -> 3.4 s on the slowest position); build of 1,776 positions running, partial check 237/237 match", "ts": "2026-09-27T06:53:30Z", "by": "opus-kk"}
+{"id": "V10-staged-serializer-faithful", "event": "touch", "ts": "2026-09-27T07:02:46Z", "by": "opus-ll"}
+{"id": null, "event": "definition", "hash": "64d14da21b57", "count": 141, "ts": "2026-09-27T07:16:03Z", "by": "opus-ll"}
+{"id": "V10-staged-serializer-faithful", "event": "done", "ts": "2026-09-27T07:16:03Z", "duration": 3432, "by": "opus-ll"}
+{"id": "V10-staged-serializer-faithful", "event": "note", "text": "8963f4b", "ts": "2026-09-27T07:16:03Z", "by": "opus-ll"}
+{"id": "V3-lead-turn-trace", "event": "claim", "ts": "2026-09-27T07:16:05Z", "by": "opus-ll"}
+{"id": "V8-parity-regression-corpus", "event": "touch", "ts": "2026-09-27T07:26:13Z", "by": "opus-kk"}
+{"id": "R4-redirection-tie", "event": "done", "ts": "2026-09-27T07:54:17Z", "duration": 3862, "by": "opus-oo"}
+{"id": "R4-redirection-tie", "event": "note", "text": "684f59f", "ts": "2026-09-27T07:54:17Z", "by": "opus-oo"}
+{"id": "R1-trace-seeking", "event": "note", "text": "Volatile::TraceSeek (hidden, VOLATILE_COUNT 112) + switching::trace_update in update_event; Trace supported on field; 3 rr repros pass + 9 mm-trace-* oracle fixtures pass; full gate running", "ts": "2026-09-27T07:54:17Z", "by": "opus-mm"}
+{"id": "R7-ally-switch-target", "event": "claim", "ts": "2026-09-27T07:54:18Z", "by": "opus-oo"}
+{"id": "R21-copycat-called-moves", "event": "done", "ts": "2026-09-27T08:06:27Z", "duration": 4676, "by": "opus-nn"}
+{"id": "R21-copycat-called-moves", "event": "note", "text": "5daa793", "ts": "2026-09-27T08:06:27Z", "by": "opus-nn"}
+{"id": "R14-called-multi-hit", "event": "claim", "ts": "2026-09-27T08:06:29Z", "by": "opus-nn"}
+{"id": "V8-parity-regression-corpus", "event": "touch", "ts": "2026-09-27T08:07:12Z", "by": "opus-kk"}
+{"id": "R7-ally-switch-target", "event": "done", "ts": "2026-09-27T08:26:19Z", "duration": 1921, "by": "opus-oo"}
+{"id": "R7-ally-switch-target", "event": "note", "text": "7c368df", "ts": "2026-09-27T08:26:19Z", "by": "opus-oo"}
+{"id": "R11-item-restart", "event": "claim", "ts": "2026-09-27T08:26:21Z", "by": "opus-oo"}
+{"id": "R1-trace-seeking", "event": "touch", "ts": "2026-09-27T08:33:19Z", "by": "opus-mm"}
+{"id": "R11-item-restart", "event": "touch", "ts": "2026-09-27T08:35:24Z", "by": "opus-oo"}
+{"id": "R1-trace-seeking", "event": "done", "ts": "2026-09-27T08:40:59Z", "duration": 6817, "by": "opus-mm"}
+{"id": "R1-trace-seeking", "event": "note", "text": "16c7411", "ts": "2026-09-27T08:40:59Z", "by": "opus-mm"}
+{"id": "V3-lead-turn-trace", "event": "done", "ts": "2026-09-27T08:41:55Z", "duration": 5150, "by": "opus-ll"}
+{"id": "V3-lead-turn-trace", "event": "note", "text": "c1dc6ad", "ts": "2026-09-27T08:41:55Z", "by": "opus-ll"}
+{"id": "V9-heavy-turn-full-rolls", "event": "claim", "ts": "2026-09-27T08:41:56Z", "by": "opus-ll"}
+{"id": "R14-called-multi-hit", "event": "done", "ts": "2026-09-27T08:46:08Z", "duration": 2379, "by": "opus-nn"}
+{"id": "R14-called-multi-hit", "event": "note", "text": "478f323", "ts": "2026-09-27T08:46:08Z", "by": "opus-nn"}
+{"id": "R8-encore-edges", "event": "claim", "ts": "2026-09-27T08:46:09Z", "by": "opus-nn"}
+{"id": "R11-item-restart", "event": "done", "ts": "2026-09-27T08:46:47Z", "duration": 1226, "by": "opus-oo"}
+{"id": "R11-item-restart", "event": "note", "text": "7b7a24d", "ts": "2026-09-27T08:46:47Z", "by": "opus-oo"}
+{"id": "R16-fling-user-fainted", "event": "claim", "ts": "2026-09-27T08:46:48Z", "by": "opus-oo"}
+{"id": "V9-heavy-turn-full-rolls", "event": "touch", "ts": "2026-09-27T08:46:59Z", "by": "opus-ll"}
+{"id": "R16-fling-user-fainted", "event": "touch", "ts": "2026-09-27T08:59:43Z", "by": "opus-oo"}
+{"id": "R8-encore-edges", "event": "touch", "ts": "2026-09-27T09:00:08Z", "by": "opus-nn"}
+{"id": "V9-heavy-turn-full-rolls", "event": "release", "ts": "2026-09-27T09:12:16Z", "by": "opus-ll"}
+{"id": "R16-fling-user-fainted", "event": "done", "ts": "2026-09-27T09:12:54Z", "duration": 1566, "by": "opus-oo"}
+{"id": "R16-fling-user-fainted", "event": "note", "text": "2a3a38c", "ts": "2026-09-27T09:12:54Z", "by": "opus-oo"}
+{"id": "R17-trick-or-treat-curse", "event": "claim", "ts": "2026-09-27T09:12:54Z", "by": "opus-oo"}
+{"id": "R8-encore-edges", "event": "done", "ts": "2026-09-27T09:12:55Z", "duration": 1606, "by": "opus-nn"}
+{"id": "R8-encore-edges", "event": "note", "text": "fd4564f", "ts": "2026-09-27T09:12:55Z", "by": "opus-nn"}
+{"id": "R6-instruct", "event": "claim", "ts": "2026-09-27T09:12:55Z", "by": "opus-nn"}
+{"id": "V8-parity-regression-corpus", "event": "done", "ts": "2026-09-27T09:33:17Z", "duration": 12062, "by": "opus-kk"}
+{"id": "V8-parity-regression-corpus", "event": "note", "text": "465c15b 7c6b5cb: corpus runs/parity-corpus-20260927 (1,776 positions, 2,047 reports, 16.2 MB gz); check at 7c6b5cb 1776/1776 match, 582 s wall 2 jobs", "ts": "2026-09-27T09:33:17Z", "by": "opus-kk"}
+{"id": "V2c-feature-coverage-report", "event": "claim", "ts": "2026-09-27T09:33:22Z", "by": "opus-kk"}
+{"id": "R17-trick-or-treat-curse", "event": "done", "ts": "2026-09-27T09:36:10Z", "duration": 1396, "by": "opus-oo"}
+{"id": "R17-trick-or-treat-curse", "event": "note", "text": "09869fa", "ts": "2026-09-27T09:36:10Z", "by": "opus-oo"}
+{"id": "R22-forced-eat-ignored-item", "event": "claim", "ts": "2026-09-27T09:36:10Z", "by": "opus-oo"}
+{"id": "R6-instruct", "event": "done", "ts": "2026-09-27T09:37:33Z", "duration": 1478, "by": "opus-nn"}
+{"id": "R6-instruct", "event": "note", "text": "ddb411f", "ts": "2026-09-27T09:37:33Z", "by": "opus-nn"}
+{"id": "B33-instruct-counter", "event": "claim", "ts": "2026-09-27T09:37:33Z", "by": "opus-nn"}
+{"id": "V2c-feature-coverage-report", "event": "done", "ts": "2026-09-27T09:52:20Z", "duration": 1138, "by": "opus-kk"}
+{"id": "V2c-feature-coverage-report", "event": "note", "text": "d767b0a: runs/parity-corpus-20260927/features.md+json; moves 184/515 seen, abilities 71/316, items 57/166, volatiles 25/100 (11 not observable), side conditions 7/15, statuses 6/6, weathers 4/4, terrains 4/4", "ts": "2026-09-27T09:52:20Z", "by": "opus-kk"}
+{"id": "B33-instruct-counter", "event": "done", "ts": "2026-09-27T09:55:39Z", "duration": 1086, "by": "opus-nn"}
+{"id": "B33-instruct-counter", "event": "note", "text": "bfe513a", "ts": "2026-09-27T09:55:39Z", "by": "opus-nn"}
+{"id": "B34-instruct-during-charge", "event": "claim", "ts": "2026-09-27T09:55:40Z", "by": "opus-nn"}
+{"id": "R22-forced-eat-ignored-item", "event": "done", "ts": "2026-09-27T09:58:14Z", "duration": 1324, "by": "opus-oo"}
+{"id": "R22-forced-eat-ignored-item", "event": "note", "text": "5e9a286", "ts": "2026-09-27T09:58:14Z", "by": "opus-oo"}
+{"id": "B35-forced-eat-eatitem", "event": "claim", "ts": "2026-09-27T09:58:14Z", "by": "opus-oo"}
+{"id": null, "event": "definition", "hash": "5f950b930118", "count": 142, "ts": "2026-09-27T10:06:04Z", "by": "opus-nn"}
+{"id": "B34-instruct-during-charge", "event": "done", "ts": "2026-09-27T10:06:04Z", "duration": 624, "by": "opus-nn"}
+{"id": "B34-instruct-during-charge", "event": "note", "text": "fcbce4c", "ts": "2026-09-27T10:06:04Z", "by": "opus-nn"}
+{"id": "B35-forced-eat-eatitem", "event": "done", "ts": "2026-09-27T10:15:20Z", "duration": 1026, "by": "opus-oo"}
+{"id": "B35-forced-eat-eatitem", "event": "note", "text": "83f7662", "ts": "2026-09-27T10:15:20Z", "by": "opus-oo"}
+{"id": "B36-refusal-messages", "event": "claim", "ts": "2026-09-27T10:15:20Z", "by": "opus-oo"}
+{"id": null, "event": "definition", "hash": "58bd2281089d", "count": 145, "ts": "2026-09-27T10:26:09Z", "by": "opus-oo"}
+{"id": "B36-refusal-messages", "event": "done", "ts": "2026-09-27T10:26:09Z", "duration": 649, "by": "opus-oo"}
+{"id": "B36-refusal-messages", "event": "note", "text": "af927a9", "ts": "2026-09-27T10:26:09Z", "by": "opus-oo"}
+{"id": null, "event": "definition", "hash": "507cbae48d76", "count": 197, "ts": "2026-09-27T10:54:03Z", "by": "admin"}
+{"id": "PLAN1-traffic-control", "event": "claim", "ts": "2026-09-27T10:54:03Z", "by": "admin"}
+{"id": "PLAN1-traffic-control", "event": "note", "text": "engine/PLAN-20260927.md: 11그룹·원자 44개 추가, 부모는 마무리(w1), 의존 수정(PLAN1←V9 제거, DOC3←A1, S24a/b←P3a·PY3a). 사용자 결정 4건 대기", "ts": "2026-09-27T10:54:03Z", "by": "admin"}
+{"id": "PLAN1-traffic-control", "event": "done", "ts": "2026-09-27T10:54:04Z", "duration": 1, "by": "admin"}
+{"id": null, "event": "definition", "hash": "3091fbf1bee1", "count": 200, "ts": "2026-09-27T13:54:57Z", "by": "XX"}
+{"id": "S24-baseline-timing", "event": "claim", "ts": "2026-09-27T13:54:57Z", "by": "XX"}
+{"id": "R9a-party-order-state", "event": "claim", "ts": "2026-09-27T13:55:19Z", "by": "SS"}
+{"id": "R3a-emergency-exit-replacement-hazards", "event": "claim", "ts": "2026-09-27T13:56:18Z", "by": "UU"}
+{"id": "T1-scenario-typed-errors", "event": "claim", "ts": "2026-09-27T13:56:54Z", "by": "VV"}
+{"id": "R2a-hazard-effectorder", "event": "claim", "ts": "2026-09-27T13:56:56Z", "by": "TT"}
+{"id": "A1a-events-action-target", "event": "claim", "ts": "2026-09-27T13:57:20Z", "by": "WW"}
+{"id": "R2a-hazard-effectorder", "event": "done", "ts": "2026-09-27T14:15:10Z", "duration": 1094, "by": "TT"}
+{"id": "R2-hazard-effect-order", "event": "done", "ts": "2026-09-27T14:15:15Z", "duration": 5, "by": "TT"}
+{"id": "B42a-instruct-callback-immediate", "event": "claim", "ts": "2026-09-27T14:15:25Z", "by": "TT"}
+{"id": "T1-scenario-typed-errors", "event": "done", "ts": "2026-09-27T14:19:13Z", "duration": 1339, "by": "VV"}
+{"id": "A4-loader-refusal-audit", "event": "claim", "ts": "2026-09-27T14:19:14Z", "by": "VV"}
+{"id": "B42a-instruct-callback-immediate", "event": "skip", "reason": "Showdown 9e317a6 코드 독해: Instruct는 resolveAction(...)[0](콜백)을 prioritizeAction으로 list 맨 앞에 둔다. runAction 끝 재정렬은 queue.peek()이 'move'일 때만이라 콜백이 바로 실행된다. 엔진(action_key: 콜백 우선도 0, order 3)과 달라지려면 그 순간 우선도>=0인 order-3 move 행동이 이미 대기 중이어야 한다. 그런데 prioritizeAction된 행동은 바로 다음에 실행되므로 동시에 대기하려면 한 행동 안에서 두 번 올려야 한다. 그런 원천(물리 광역기에 맞은 셸트랩 보유자 2마리)에서 대기 행동은 셸트랩(-3)뿐이고, 앙코르로 바꾸려면 더블에서 행동 수가 모자란다. 더블에서 도달 불가라 차이를 보이는 오라클 시나리오를 만들 수 없음(TT)", "ts": "2026-09-27T14:22:51Z", "by": "TT"}
+{"id": "R3a-emergency-exit-replacement-hazards", "event": "done", "ts": "2026-09-27T14:22:56Z", "duration": 1598, "by": "UU"}
+{"id": "R3-emergency-exit-replacement", "event": "done", "ts": "2026-09-27T14:22:57Z", "duration": 1, "by": "UU"}
+{"id": "R5a-future-move-user-left", "event": "claim", "ts": "2026-09-27T14:22:57Z", "by": "UU"}
+{"id": "B43a-after-you-encore-callback", "event": "skip", "reason": "코드 독해(Showdown 9e317a6): 애프터유가 대상 T의 행동을 order 3으로 올리면 T가 바로 다음에 실행된다(peek 'move' → 재정렬에서도 order 3이 맨 앞). 앙코르가 그 사이에 끼려면 앙코르 사용자의 행동도 order 3이면서 T보다 앞서야 한다. 그런 원천은 애프터유·지휘·론도처럼 곧바로 실행되는 것이거나, 셸트랩 onHit인데 셸트랩 보유자의 행동을 앙코르로 바꾸려면 앙코르가 한 번 더 필요하다. 더블 4마리로는 도달 불가라 재현 시나리오를 만들 수 없음. 반대 순서(앙코르 뒤 애프터유)는 콜백이 앙코르 직후에 실행돼 영향 없음. battle.rs encore_change_action 주석의 '미모델'은 실전에서 나오지 않는 경우(TT)", "ts": "2026-09-27T14:23:07Z", "by": "TT"}
+{"id": "B46a-rebuilt-original-target", "event": "skip", "reason": "코드 독해(Showdown 9e317a6): originalTarget은 getTarget에서 추적 기술(tracksTarget, 불굴의마음/스크루지느러미)에만 쓰이고, 결과가 달라지는 것은 재구성과 실행 사이에 원래 대상의 위치가 바뀔 때(사이드체인지 swapPosition)뿐이다. 지휘가 만든 행동은 order 3으로 곧바로 실행되어 그 사이에 행동이 없다. 앙코르가 만든 행동과 실행 사이에 사이드체인지(+2)가 오려면 사이드체인지가 앙코르 뒤여야 하는데, 퀘시로 201로 밀면 대상의 행동(200)이 먼저 실행된다. 흉내내기로 사이드체인지를 부르는 경로도 앙코르가 battle.lastMove를 덮어써 막힌다. 재구성 전에 위치가 바뀐 경우에는 Showdown의 새 originalTarget이 그 자리의 포켓몬이라 엔진의 None(자리 기준)과 같다. 더블에서 차이를 만드는 시나리오를 찾지 못함(TT)", "ts": "2026-09-27T14:23:08Z", "by": "TT"}
+{"id": "B42-instructed-callback-order", "event": "done", "ts": "2026-09-27T14:23:18Z", "duration": 21, "by": "TT"}
+{"id": "B43-encore-after-you-callback", "event": "done", "ts": "2026-09-27T14:23:19Z", "duration": 1, "by": "TT"}
+{"id": "B46-original-target-rebuilt-actions", "event": "done", "ts": "2026-09-27T14:23:19Z", "duration": 0, "by": "TT"}
+{"id": "B44a-fling-pickup-repro", "event": "claim", "ts": "2026-09-27T14:23:19Z", "by": "TT"}
+{"id": "B44a-fling-pickup-repro", "event": "done", "ts": "2026-09-27T14:27:38Z", "duration": 259, "by": "TT"}
+{"id": "B44-fling-used-item-pickup", "event": "done", "ts": "2026-09-27T14:27:42Z", "duration": 4, "by": "TT"}
+{"id": "B25a-mega-sol-window-repro", "event": "claim", "ts": "2026-09-27T14:27:48Z", "by": "TT"}
+{"id": "A1a-events-action-target", "event": "done", "ts": "2026-09-27T14:28:29Z", "duration": 1869, "by": "WW"}
+{"id": "A1b-events-hit-loop", "event": "claim", "ts": "2026-09-27T14:28:30Z", "by": "WW"}
+{"id": "A1b-events-hit-loop", "event": "done", "ts": "2026-09-27T14:28:30Z", "duration": 0, "by": "WW"}
+{"id": "A1c-events-switch-residual-field", "event": "claim", "ts": "2026-09-27T14:28:32Z", "by": "WW"}
+{"id": "A1c-events-switch-residual-field", "event": "done", "ts": "2026-09-27T14:28:34Z", "duration": 2, "by": "WW"}
+{"id": "A1d-pokemon-fields", "event": "claim", "ts": "2026-09-27T14:28:36Z", "by": "WW"}
+{"id": "A1d-pokemon-fields", "event": "done", "ts": "2026-09-27T14:28:37Z", "duration": 1, "by": "WW"}
+{"id": "A1e-callback-universe", "event": "claim", "ts": "2026-09-27T14:28:39Z", "by": "WW"}
+{"id": "A1e-callback-universe", "event": "done", "ts": "2026-09-27T14:28:40Z", "duration": 1, "by": "WW"}
+{"id": "A1-ignored-events-audit", "event": "note", "text": "WW b5d0dc3: engine/reports/events-audit-2026-09-27.{md,json}. events 124 (implemented 102, unnecessary 22, missing 0); mechanisms 18 (missing 1: turn>1000 tie); pokemon.ts fields 44 groups (refused 2 = R9 party order, R10 syrup flag); Champions overrides 30 all mirrored. Proposed todos: A1-t1-turn-limit-tie, A1-t2-fixture-gaps (Upper Hand, Illuminate, Rattled, Gluttony, Leppa, Misty Explosion, Skill Link, Axe Kick/Supercell Slam, Temper Flare, Dragonize, 2-turn/power-callback siblings), A1-t3-support-stale-comments (Baton Pass onCopy called refused), A1-t4-refusals-dead-pattern.", "ts": "2026-09-27T14:28:50Z", "by": "WW"}
+{"id": "A1-ignored-events-audit", "event": "claim", "ts": "2026-09-27T14:28:50Z", "by": "WW"}
+{"id": "A1-ignored-events-audit", "event": "done", "ts": "2026-09-27T14:28:51Z", "duration": 1, "by": "WW"}
+{"id": "B40-refusals-stale-text", "event": "claim", "ts": "2026-09-27T14:29:05Z", "by": "WW"}
+{"id": "B40-refusals-stale-text", "event": "done", "ts": "2026-09-27T14:29:26Z", "duration": 21, "by": "WW"}
+{"id": "DOC3-showdown-gaps-events", "event": "claim", "ts": "2026-09-27T14:29:26Z", "by": "WW"}
+{"id": "S24-baseline-timing", "event": "done", "ts": "2026-09-27T14:29:29Z", "duration": 2072, "by": "XX"}
+{"id": "PY3a-search-bin-to-lib", "event": "claim", "ts": "2026-09-27T14:29:29Z", "by": "XX"}
+{"id": "PY3a-search-bin-to-lib", "event": "done", "ts": "2026-09-27T14:29:40Z", "duration": 11, "by": "XX"}
+{"id": "DOC3-showdown-gaps-events", "event": "done", "ts": "2026-09-27T14:29:59Z", "duration": 33, "by": "WW"}
+{"id": "A4-loader-refusal-audit", "event": "note", "text": "VV: loader 83 keys (input 58 / unsupported 4 / unreachable 18 / forward 3). Remaining unsupported (tests in scenario/tests/loader_refusals.rs): UnsupportedFormat singles (II), UnsupportedLevel != 50 in custom game, TemporaryForme as species in custom game, DuplicateName on a side. Bracketed team preview now loads (vv-bracketed-preview). Loader stricter than Showdown on garbage: unknown gender, '2x' preview positions.", "ts": "2026-09-27T14:35:12Z", "by": "VV"}
+{"id": null, "event": "definition", "hash": "c061f92e23a5", "count": 205, "ts": "2026-09-27T14:35:16Z", "by": "VV"}
+{"id": "A4-loader-refusal-audit", "event": "done", "ts": "2026-09-27T14:35:16Z", "duration": 962, "by": "VV"}
+{"id": "B37-quash-fixture", "event": "claim", "ts": "2026-09-27T14:35:20Z", "by": "VV"}
+{"id": "B25a-mega-sol-window-repro", "event": "skip", "reason": "재현 결과 일치(버그 아님). 엔진의 active_move는 이미 runAction의 clearActiveMove 시점(drag_outs, DD B26)까지 유지되고, 댄서 복사는 댄서를 활성 포켓몬으로 바꾼다. Showdown과 같다. 창 안에서 Move/Weather 효과로 날씨를 읽는 것은 기술 자신의 핸들러뿐이다. 도구·특성 핸들러는 effectType이 Item/Ability라 메가 솔이 적용되지 않는다. 오라클 tt-mega-sol-dancer(full, --collapse-secondaries, 45결과) 정확 일치: 메가 메가니움의 아쿠아스텝은 쾌청, 춤추새(댄서)의 복사는 비. 회귀 fixture로 커밋 f2fd0c7(TT)", "ts": "2026-09-27T14:35:45Z", "by": "TT"}
+{"id": "B25-mega-sol-duration", "event": "done", "ts": "2026-09-27T14:35:46Z", "duration": 26, "by": "TT"}
+{"id": "R9a-party-order-state", "event": "done", "ts": "2026-09-27T14:36:00Z", "duration": 2441, "by": "SS"}
+{"id": "R9b-beat-up-uses-order", "event": "claim", "ts": "2026-09-27T14:36:05Z", "by": "SS"}
+{"id": "R9b-beat-up-uses-order", "event": "done", "ts": "2026-09-27T14:36:09Z", "duration": 4, "by": "SS"}
+{"id": "R9-beat-up-order", "event": "claim", "ts": "2026-09-27T14:36:13Z", "by": "SS"}
+{"id": "R9-beat-up-order", "event": "done", "ts": "2026-09-27T14:36:15Z", "duration": 2, "by": "SS"}
+{"id": "R10a-supersweet-syrup-flag", "event": "claim", "ts": "2026-09-27T14:36:17Z", "by": "SS"}
+{"id": "R10a-supersweet-syrup-flag", "event": "done", "ts": "2026-09-27T14:41:33Z", "duration": 316, "by": "SS"}
+{"id": "R10-once-per-battle-flags", "event": "claim", "ts": "2026-09-27T14:41:35Z", "by": "SS"}
+{"id": "R10-once-per-battle-flags", "event": "done", "ts": "2026-09-27T14:41:38Z", "duration": 3, "by": "SS"}
+{"id": "R13a-loader-gender", "event": "claim", "ts": "2026-09-27T14:41:40Z", "by": "SS"}
+{"id": "B37-quash-fixture", "event": "note", "text": "VV: Showdown log confirms Grassy Glide (+1, Spe 94) moves before Prankster Quash (+1, Spe 70) -> Quash fails (willMove null). Kept the fixture as the 'Quash fails on a target that already moved' case; description/test doc corrected; the success case is ll-staged-quash-order (no duplication).", "ts": "2026-09-27T14:43:21Z", "by": "VV"}
+{"id": "B37-quash-fixture", "event": "done", "ts": "2026-09-27T14:43:24Z", "duration": 484, "by": "VV"}
+{"id": "B38-recharge-legal-choice", "event": "claim", "ts": "2026-09-27T14:43:29Z", "by": "VV"}
+{"id": "S24a-transposition-table", "event": "claim", "ts": "2026-09-27T14:45:07Z", "by": "XX"}
+{"id": "R5a-future-move-user-left", "event": "done", "ts": "2026-09-27T14:46:31Z", "duration": 1414, "by": "UU"}
+{"id": "R5a-future-move-user-left", "event": "note", "text": "new reachable refusal '{} of {} hitting after its user left the field, {}' (displaced occupant with onAny/onAlly/onFoe handlers or target Innards Out/Cotton Down/Gulp Missile/Rowap Berry) -> proposed board R5c-future-move-absent-user-occupant, repro uu-future-sight-absent-user-unnerve (full 6)", "ts": "2026-09-27T14:46:32Z", "by": "UU"}
+{"id": "R5b-future-move-red-card", "event": "claim", "ts": "2026-09-27T14:46:32Z", "by": "UU"}
+{"id": "R13a-loader-gender", "event": "note", "text": "이미 구현돼 있었음(Opus S unit 8, scenario/src/team.rs: set gender M/F/N → Pokemon.gender, 없으면 종 고정 성별, 둘 다 없으면 Gender::Random; 잘못된 값은 SetProblem::UnknownGender). 테스트 abilities_rivalry::the_loader_resolves_gender. 성별 미정 거부 문구는 core에 그대로(손으로 만든 상태용).", "ts": "2026-09-27T14:46:44Z", "by": "SS"}
+{"id": "R13a-loader-gender", "event": "done", "ts": "2026-09-27T14:46:45Z", "duration": 305, "by": "SS"}
+{"id": "R13b-initial-gender-roll", "event": "claim", "ts": "2026-09-27T14:46:45Z", "by": "SS"}
+{"id": "R2a-hazard-effectorder", "event": "note", "text": "TT: SideHistory::hazard_order(field::HazardOrder, 숨은 상태, canonical 미출력)을 추가해 state.rs를 한 줄 고쳤다(L1과 인접하므로 병합 시 확인). 시나리오 patch의 압정은 id 순으로 깔고, enumerate.cjs applyPatch도 id 순으로 정렬했다(기존 fixture 중 두 압정 patch는 mortal-spin 하나이고 이미 id 순). 핀 시나리오(startState/setupStates)는 설정 턴 재생을 거르므로 순서가 유지되지만, canonical JSON만으로 국면을 만드는 경로(PY2 손으로 만든 국면 등)에서는 순서 정보가 없어 기본값(HAZARDS 인덱스 순)이 된다", "ts": "2026-09-27T14:56:17Z", "by": "TT"}
+{"id": "V7-ci-first-run", "event": "note", "text": "2026-09-28 원격 https://github.com/andrew0416/pokemon-ai-lab (공개, 기본 lab-engine). engine 워크플로 run 36327145759 success(commit e274d12). search 워크플로(#1 run 36328150745) 크롬으로 수동 실행", "ts": "2026-09-27T15:04:19Z", "by": "fable"}
+{"id": "V7-ci-first-run", "event": "done", "ts": "2026-09-27T15:04:22Z", "duration": 1057, "by": "fable"}
+{"id": "R5b-future-move-red-card", "event": "done", "ts": "2026-09-27T15:09:01Z", "duration": 1349, "by": "UU"}
+{"id": "R5-future-move-edges", "event": "done", "ts": "2026-09-27T15:09:05Z", "duration": 4, "by": "UU"}
+{"id": "B41a-copycat-uturn-flag-repro", "event": "claim", "ts": "2026-09-27T15:09:10Z", "by": "UU"}
+{"id": "B38-recharge-legal-choice", "event": "done", "ts": "2026-09-27T15:14:45Z", "duration": 1876, "by": "VV"}
+{"id": "B39-plan-locked-own-choice", "event": "claim", "ts": "2026-09-27T15:14:49Z", "by": "VV"}
+{"id": "B39-plan-locked-own-choice", "event": "done", "ts": "2026-09-27T15:14:53Z", "duration": 4, "by": "VV"}
+{"id": "P5-corpus-check-speed", "event": "claim", "ts": "2026-09-27T15:14:57Z", "by": "VV"}
+{"id": "B45a-ability-order-pin-limit", "event": "claim", "ts": "2026-09-27T15:15:11Z", "by": "SS"}
+{"id": "B45a-ability-order-pin-limit", "event": "note", "text": "OO 보고의 전제(핀 국면은 ability_order 기본값)는 틀림: 핀 시나리오도 setupTurns를 재생하고 canonical로 걸러낼 뿐이라 숨은 필드는 재생으로 복원됨. 실제 한계는 다름: 한 설정 턴 안에서 숨은 상태만 다른 결과(동속 교체 행동 → effectOrder)가 canonical이 같아 재생·핀 어느 쪽도 오라클 시드가 고른 가지를 모름 → 엔진은 1/2 혼합, lab-check는 ambiguous. 재현 ss-redirect-tie-hidden-order(6c7370b, tests/ss_ability_order_pin.rs). 해결하려면 핀에 숨은 필드(abilityOrder 순위)를 canonical과 별도 키로 기록하고 enumerate.cjs 핀 탐색·lab-parity 기록·pinned() 필터가 함께 비교해야 함(canonical 자체에 넣으면 기존 fixture 전부 재생성) — L1 밖(oracle·search)이라 미구현.", "ts": "2026-09-27T15:15:19Z", "by": "SS"}
+{"id": "B45a-ability-order-pin-limit", "event": "done", "ts": "2026-09-27T15:15:20Z", "duration": 9, "by": "SS"}
+{"id": "B45-pinned-ability-order", "event": "escalate", "reason": "B45a 결과: 핀은 재생하므로 기본값 문제는 없음. 남은 한계는 canonical이 같은 숨은 상태 분기(동속 교체의 effectOrder)의 모호성 — 해결책(핀의 숨은 필드: enumerate.cjs 핀 탐색·lab-parity·pinned 필터 동시 변경)은 오라클·search 차선을 건드리므로 조정자/사용자 결정 필요. 그대로 한계로 닫을지 새 todo로 만들지 결정.", "level": 1, "ts": "2026-09-27T15:15:22Z", "by": "SS"}
+{"id": "S24a-transposition-table", "event": "note", "text": "XX ba6e128: 기존 nash_cache를 lab_search::tt(정확 국면 키, 용량 제한, Config::transposition on/off)로 정리. 벤치 적중: sand-owen deep-nash 4/45, psy-cona deep-nash 0/53, psy-cona plan 6/12 — 깊이 2에서 자식은 PP 차이만으로도 서로 달라 정확 키 적중이 드묾. 효과는 P3a/P3b(PP 등 무관 필드를 뺀 병합 키) 뒤에 다시 측정할 것", "ts": "2026-09-27T15:16:50Z", "by": "XX"}
+{"id": "S24a-transposition-table", "event": "done", "ts": "2026-09-27T15:16:51Z", "duration": 1904, "by": "XX"}
+{"id": "S24p-parallel-root", "event": "claim", "ts": "2026-09-27T15:16:53Z", "by": "XX"}
+{"id": "P5-corpus-check-speed", "event": "note", "text": "VV: before 626 s wall / engine sum 855 s (per-report, 97435e3); after 418 s / 833 s (lab-check --batch --jobs 2 reading .gz). Same heavy machine load (engine part 2.7x KK's 315 s). Overhead ~400 -> ~3 CPU s; the rest is engine time. Results: worktree runs/parity-corpus-20260927/p5-batch + P5-README.md; baseline dir D:/pokemon-ai-lab/runs/parity-corpus-20260927/p5-base-97435e3. Batch runner has no per-report timeout (--per-report has).", "ts": "2026-09-27T15:26:16Z", "by": "VV"}
+{"id": null, "event": "definition", "hash": "55d89ae5cc2f", "count": 207, "ts": "2026-09-27T15:26:21Z", "by": "VV"}
+{"id": "P5-corpus-check-speed", "event": "done", "ts": "2026-09-27T15:26:21Z", "duration": 684, "by": "VV"}
+{"id": "V9a-resume-12-queue", "event": "claim", "ts": "2026-09-27T15:26:24Z", "by": "VV"}
+{"id": "S24d-dominated-joint-actions", "event": "claim", "ts": "2026-09-27T15:28:04Z", "by": "XX"}
+{"id": "B41a-copycat-uturn-flag-repro", "event": "done", "ts": "2026-09-27T15:28:21Z", "duration": 1151, "by": "UU"}
+{"id": "B41-copycat-uturn-switch-flag", "event": "done", "ts": "2026-09-27T15:28:22Z", "duration": 1, "by": "UU"}
+{"id": "R3-emergency-exit-replacement", "event": "note", "text": "UU: Showdown runs runSwitch's Emergency Exit only for the first queued runSwitch action's Pokemon (fastest newcomer, ties random); engine now matches for replacements and mid-turn batches (uu-emergency-exit-two-replacements-*). Battle start ('start' action) Eject Pack switch request still refused (R20 guard, non-standard).", "ts": "2026-09-27T15:28:23Z", "by": "UU"}
+{"id": "S24b-incremental-eval", "event": "skip", "reason": "프로파일 근거 skip(XX, 2026-09-28): sand-owen 실국면 결과 11,473개에서 Heuristic 평가 36 ns/결과, apply+reverse 1,351 ns/결과, 열거 1회 1,703 us(결과 31개) — 평가는 열거 비용의 약 0.07%. 증분 평가로 줄일 수 있는 시간이 측정 오차 이하. 대신 apply/reverse(열거의 약 2.5%)와 열거 자체가 비용의 거의 전부(P1·P2·P4 차선).", "ts": "2026-09-27T15:29:31Z", "by": "XX"}
+{"id": "R13b-initial-gender-roll", "event": "note", "text": "Showdown은 genderRatio가 아니라 sample(['M','F'])(동전)을 씀 — 보드 설명의 '비율'은 틀림. decide_genders는 성별을 읽는 것(공격/유혹, 헤롱헤롱바디·투쟁심, 메가 포함)이 있을 때만 2^k로 나눔. enumerate.cjs는 시드의 한 추첨을 유지하므로 새 oracle/gender-mix.cjs로 혼합 fixture 4개 재생성. 한계: 실전 말뭉치(lab-parity→enumerate.cjs, 시드 성별 하나)에서 성별 미정+읽는 것이 있는 국면은 lab-check가 ambiguous로 봄; 위치 수 최대 2^k(더블 12마리면 4096).", "ts": "2026-09-27T15:38:53Z", "by": "SS"}
+{"id": null, "event": "definition", "hash": "16a143c9690a", "count": 210, "ts": "2026-09-27T15:38:55Z", "by": "SS"}
+{"id": "R13b-initial-gender-roll", "event": "done", "ts": "2026-09-27T15:38:55Z", "duration": 3130, "by": "SS"}
+{"id": "R13-attract-gender", "event": "claim", "ts": "2026-09-27T15:39:03Z", "by": "SS"}
+{"id": "R13-attract-gender", "event": "done", "ts": "2026-09-27T15:39:09Z", "duration": 6, "by": "SS"}
+{"id": "V12-corpus-excluded-positions", "event": "claim", "ts": "2026-09-27T15:48:03Z", "by": "VV"}
+{"id": "V12-corpus-excluded-positions", "event": "note", "text": "VV: updated corpus copy in VV worktree runs/parity-corpus-20260927 (sources via junctions to D:/pokemon-ai-lab/runs): 5 psy-cona nash.g000 s01-s05 built from LL V3 re-sweep; 6 crown-cecil9 perish s04-s09 discarded (sources.json 'discarded', reason in corpus.json). 1,781 positions / 2,052 reports, check 1,781/1,781 match. The main-tree corpus is unchanged: merger should copy corpus.json, sources.json, README.md, positions/, build/ over it.", "ts": "2026-09-27T15:48:14Z", "by": "VV"}
+{"id": "S24p-parallel-root", "event": "note", "text": "XX f40a099: rayon 풀(Config::threads), 행렬 셀·깊이 2 자식 일괄(모든 자식 셀을 한 풀에서, 자식 RM+ 병렬), RM+ 내부 루프 비트 동일 최적화. 스레드 수와 무관하게 값·카운터 동일(tests/parallel.rs). 배속 측정은 기기 포화(다른 차선 빌드, CPU 100%) 속에서만 가능했음: sand-owen deep-nash t1 204.7 s -> t6 108.5 s(1.9x), 기준 9ff1081 t6 185.1 s. 부하 없는 재측정 필요(search_bench.py --compare로 교차 실행).", "ts": "2026-09-27T15:48:14Z", "by": "XX"}
+{"id": "V12-corpus-excluded-positions", "event": "done", "ts": "2026-09-27T15:48:16Z", "duration": 13, "by": "VV"}
+{"id": "S24p-parallel-root", "event": "done", "ts": "2026-09-27T15:48:18Z", "duration": 1885, "by": "XX"}
+{"id": "S24d-dominated-joint-actions", "event": "note", "text": "XX 5531aba/546fdb3/11dc2a5: (a) 대칭: 코어의 legal_joint_actions에는 슬롯 순서만 다른 동일 조합이 없음(각 슬롯 행동은 그 슬롯 포켓몬 것) — 정확히 같은 행/열은 지배 축소의 동점으로 처리. (b) 반복 약지배 제거(nash::undominated/solve_reduced)는 자식 행렬에만 기본 적용(루트 전략·deep-nash 빔 불변). 추가: 자식 행렬을 double oracle(지연 셀 평가, 정확한 전체 게임 exploitability<=0.05)로 풀어 deep-nash 열거 2.1-2.7배, child-nash 4.2-5.5배 감소, 값 차이 0.1 이하. 루트는 opt-in(--lazy, lab-rollout --lazy): 순수 maximin은 전부 평가된 행만(하한 표기). sand-owen deep-nash 6스레드 60.7 s -> 15.7 s. 표: runs/search-bench-20260927/README.md(워크트리, gitignored)", "ts": "2026-09-27T16:22:26Z", "by": "XX"}
+{"id": "S24d-dominated-joint-actions", "event": "done", "ts": "2026-09-27T16:22:26Z", "duration": 3262, "by": "XX"}
+{"id": null, "event": "definition", "hash": "78e0a2834eca", "count": 215, "ts": "2026-09-27T16:26:07Z", "by": "admin"}
+{"id": "S24-t3-rollout-lazy-default", "event": "block", "reason": "사용자 결정", "ts": "2026-09-27T16:26:07Z", "by": "admin"}
+{"id": "V9a-resume-12-queue", "event": "note", "text": "VV: 12/12 run (staged full cap 600k, 900 s): 5 match, 7 oracle timeout, 0 mismatch. Results VV worktree runs/parity-20260927d/v9/probe + README.md/summary.md (runs/ is gitignored; merger copies to main runs/parity-20260927d/v9).", "ts": "2026-09-27T18:42:25Z", "by": "VV"}
+{"id": "V9a-resume-12-queue", "event": "done", "ts": "2026-09-27T18:42:26Z", "duration": 11762, "by": "VV"}
+{"id": "V9b-full-staged-patch", "event": "claim", "ts": "2026-09-27T18:42:26Z", "by": "VV"}
+{"id": "V9b-full-staged-patch", "event": "note", "text": "VV: patch merged (40667c4), trial match. Remaining 81 heavy positions: 29 done so far (20 match, 9 timeout, 0 mismatch), detached queue-rest.sh still running (probe-rest/, probe-rest.alldone). Unestablished range written in v9/README.md (timeouts; internal roll vectors: equal-value boundaries, recoil/drain/Counter rounding).", "ts": "2026-09-27T18:42:26Z", "by": "VV"}
+{"id": "V9b-full-staged-patch", "event": "done", "ts": "2026-09-27T18:42:26Z", "duration": 0, "by": "VV"}
+{"id": "V9-heavy-turn-full-rolls", "event": "note", "text": "VV: V9a/V9b closed; full-roll comparison still partial (25 match + 16 oracle timeouts of 41 run so far, 52 still queued in the background). Left open: close when probe-rest finishes and timeouts are accepted as limits or retried longer.", "ts": "2026-09-27T18:42:27Z", "by": "VV"}
+{"id": null, "event": "definition", "hash": "f7f6f8979a35", "count": 220, "ts": "2026-09-27T18:44:39Z", "by": "admin"}
+{"id": "V9c-timeout-positions", "event": "block", "reason": "사용자 결정: 재시도(액션) 또는 한계 확정", "ts": "2026-09-27T18:44:39Z", "by": "admin"}
+{"id": "merge-wave-15", "event": "claim", "ts": "2026-09-27T18:50:17Z", "by": "fable"}
+{"id": "merge-wave-15", "event": "note", "text": "2026-09-28 WW 5debf7b·TT 113f8e0·UU a008ecd·SS b7ea98a·XX bde1ec9·VV 34dbe23 병합. 게이트 1153 통과. 말뭉치 1,776 일치(b7ea98a); VV 갱신본 1,781은 다음 재대조", "ts": "2026-09-27T18:50:17Z", "by": "fable"}
+{"id": "merge-wave-15", "event": "done", "ts": "2026-09-27T18:50:18Z", "duration": 1, "by": "fable"}
+{"id": "V11a-seed-lock-web", "event": "claim", "ts": "2026-09-27T22:12:44Z", "by": "ZZ"}
+{"id": "P3a-incremental-hash", "event": "claim", "ts": "2026-09-27T22:14:55Z", "by": "YY"}
+{"id": "V11b-future-rooms-pseudoweather", "event": "claim", "ts": "2026-09-27T22:18:08Z", "by": "ZZ"}
+{"id": "V11c-side-slot-conditions", "event": "claim", "ts": "2026-09-27T22:19:10Z", "by": "ZZ"}
+{"id": "V11a-seed-lock-web", "event": "note", "text": "2026-09-28 사용자 지시로 ZZ 중단(구현 우선). 부분 결과는 워크트리 agent-aab1b8283c1eb05bd 브랜치 커밋 2개·runs/parity-v11-20260928", "ts": "2026-09-27T23:01:03Z", "by": "fable"}
+{"id": "R5c-future-move-absent-user-occupant", "event": "claim", "ts": "2026-09-27T23:05:21Z", "by": "AB"}
+{"id": null, "event": "definition", "hash": "e7bcaca5a413", "count": 220, "ts": "2026-09-27T23:11:48Z", "by": "AD"}
+{"id": "S24c-depth3-measure", "event": "start", "ts": "2026-09-27T23:12:22Z", "by": "AD"}
+{"id": "PY2-hand-built-positions", "event": "claim", "ts": "2026-09-27T23:12:25Z", "by": "AE"}
+{"id": "S24-t2-replacement-child-balance", "event": "claim", "ts": "2026-09-27T23:12:27Z", "by": "AD"}
+{"id": "PY3b-python-search-expose", "event": "claim", "ts": "2026-09-27T23:12:30Z", "by": "AD"}
+{"id": "P2a-check-side-early", "event": "claim", "ts": "2026-09-27T23:17:06Z", "by": "YY"}
+{"id": "P3a-incremental-hash", "event": "done", "ts": "2026-09-27T23:34:38Z", "duration": 4783, "by": "YY"}
+{"id": null, "event": "definition", "hash": "222abf075c6e", "count": 224, "ts": "2026-09-27T23:36:40Z", "by": "AC"}
+{"id": "P1a-full-repr-design", "event": "claim", "ts": "2026-09-27T23:36:40Z", "by": "AC"}
+{"id": "P1a-full-repr-design", "event": "done", "ts": "2026-09-27T23:39:53Z", "duration": 193, "by": "AC"}
+{"id": "P1b-frontier-compress", "event": "claim", "ts": "2026-09-27T23:39:59Z", "by": "AC"}
+{"id": "R5c-future-move-absent-user-occupant", "event": "note", "text": "AB: narrowed, not removed. Still refused when every user-side position not holding the target holds an occupant whose onAny/onAlly/onFoe handler can run in the hit (or suppressor), or target Cotton Down with a displaced occupant. Full removal needs an attacker outside any slot (State<N> structural). Repros ab-future-sight-absent-user-two-occupants, -cotton-down-displaced.", "ts": "2026-09-27T23:41:13Z", "by": "AB"}
+{"id": "R5c-future-move-absent-user-occupant", "event": "done", "ts": "2026-09-27T23:41:16Z", "duration": 2155, "by": "AB"}
+{"id": "A1-t1-turn-limit-tie", "event": "claim", "ts": "2026-09-27T23:41:29Z", "by": "AB"}
+{"id": "PY2-hand-built-positions", "event": "done", "ts": "2026-09-27T23:46:51Z", "duration": 2066, "by": "AE"}
+{"id": "R2-t1-hazard-order-canonical", "event": "claim", "ts": "2026-09-27T23:46:55Z", "by": "AE"}
+{"id": "R2-t1-hazard-order-canonical", "event": "note", "text": "결정: canonical 바이트열은 그대로, 엔진 출력에만 선택적 최상위 멤버 \"x-hidden\"(canonical_json_hidden / Position.state_json(hidden=True)) — 기본값과 다른 숨은 값만 기록(압정 순서·파티 순서·기절 카운터·1회성 플래그·슬롯 이력·휘발 payload·엔진 전용 휘발·능력치·변신 등). 읽으면 State 완전 복원(엔진 상태 10,851개 동일). tt-hazard-order-toxic-first: x-hidden 있으면 오라클 분포 일치, 없으면 기본(id 순)으로 다름. B14 바이트 일치 유지(canonical 부분 동일).", "ts": "2026-09-27T23:47:02Z", "by": "AE"}
+{"id": "R2-t1-hazard-order-canonical", "event": "done", "ts": "2026-09-27T23:47:08Z", "duration": 13, "by": "AE"}
+{"id": "A4-t1-loader-unsupported-3", "event": "claim", "ts": "2026-09-27T23:47:29Z", "by": "admin"}
+{"id": "A1-t1-turn-limit-tie", "event": "done", "ts": "2026-09-27T23:53:40Z", "duration": 731, "by": "AB"}
+{"id": "A4-t3-switchin-error-classification", "event": "claim", "ts": "2026-09-27T23:53:47Z", "by": "AB"}
+{"id": "A4-t3-switchin-error-classification", "event": "done", "ts": "2026-09-28T00:00:03Z", "duration": 376, "by": "AB"}
+{"id": "R5-t1-absent-user-attackedby-slot", "event": "claim", "ts": "2026-09-28T00:00:06Z", "by": "AB"}
+{"id": "A4-t1-loader-unsupported-3", "event": "done", "ts": "2026-09-28T00:01:37Z", "duration": 848, "by": "AE"}
+{"id": "A4-t1-loader-unsupported-3", "event": "note", "text": "레벨: 커스텀 게임은 세트 레벨 그대로(없으면 100, 0도 100) — 오라클 ae-levels 정확 일치. Schooling level<20 추가. 임시 폼 종·같은 이름은 명시적 한계로 확정(battleOnly는 validator가 거부; canonical.cjs 동명 정렬 미정의). 한계: 레벨 >255는 u8 JSON 오류(Showdown은 9999까지).", "ts": "2026-09-28T00:01:44Z", "by": "AE"}
+{"id": "A4-t2-loader-stricter-than-showdown", "event": "claim", "ts": "2026-09-28T00:01:46Z", "by": "AE"}
+{"id": "R5-t1-absent-user-attackedby-slot", "event": "note", "text": "AB: matches Showdown, no change. Showdown's entry for an inactive source is spliced at endTurn; no reader between the residual hit and endTurn; a returned source's entry has thisTurn=false. Fixture ab-future-sight-absent-user-metal-burst (full 1).", "ts": "2026-09-28T00:04:01Z", "by": "AB"}
+{"id": "R5-t1-absent-user-attackedby-slot", "event": "done", "ts": "2026-09-28T00:04:12Z", "duration": 246, "by": "AB"}
+{"id": "R5-t2-residual-early-return-dragout", "event": "claim", "ts": "2026-09-28T00:04:24Z", "by": "AB"}
+{"id": "A4-t2-loader-stricter-than-showdown", "event": "done", "ts": "2026-09-28T00:09:20Z", "duration": 454, "by": "AE"}
+{"id": "P5-t1-batch-timeout", "event": "claim", "ts": "2026-09-28T00:09:24Z", "by": "AE"}
+{"id": "P2a-check-side-early", "event": "done", "ts": "2026-09-28T00:12:08Z", "duration": 3302, "by": "YY"}
+{"id": "P2b-dedup-removal", "event": "claim", "ts": "2026-09-28T00:12:12Z", "by": "YY"}
+{"id": "P5-t1-batch-timeout", "event": "done", "ts": "2026-09-28T00:12:14Z", "duration": 170, "by": "AE"}
+{"id": "P5-t1-batch-timeout", "event": "note", "text": "한계: 엔진 열거는 중단 불가라 시간 초과된 검사는 스레드(코어 하나)를 끝날 때까지 점유(배치 종료 시 프로세스와 함께 사라짐) — 한 배치에 시간 초과가 많으면 나머지가 느려짐.", "ts": "2026-09-28T00:12:16Z", "by": "AE"}
+{"id": "R5-t2-residual-early-return-dragout", "event": "done", "ts": "2026-09-28T00:12:48Z", "duration": 504, "by": "AB"}
+{"id": "S24-t4-exact-lines-thread-nodes", "event": "claim", "ts": "2026-09-28T00:12:51Z", "by": "AB"}
+{"id": "P5-t1-batch-timeout", "event": "note", "text": "한계: 엔진 열거는 중단 불가라 시간 초과된 검사는 스레드(코어 하나)를 끝날 때까지 점유(배치 종료 시 프로세스와 함께 사라짐) — 한 배치에 시간 초과가 많으면 나머지가 느려짐.", "ts": "2026-09-28T00:12:53Z", "by": "AE"}
+{"id": "II-singles-loader", "event": "claim", "ts": "2026-09-28T00:13:17Z", "by": "AE"}
+{"id": "S24-t4-exact-lines-thread-nodes", "event": "note", "text": "AB: exact_lines now always uses the full matrix with a fresh solver per cell: 1-thread exact runs lose in-row beta cuts and TT reuse across rows (slower than before), and --max-turns is checked after the whole root matrix (not mid-row).", "ts": "2026-09-28T00:21:20Z", "by": "AB"}
+{"id": "S24-t4-exact-lines-thread-nodes", "event": "done", "ts": "2026-09-28T00:21:28Z", "duration": 517, "by": "AB"}
+{"id": "A1-t3-support-stale-comments", "event": "claim", "ts": "2026-09-28T00:21:36Z", "by": "AB"}
+{"id": "A1-t3-support-stale-comments", "event": "done", "ts": "2026-09-28T00:22:46Z", "duration": 70, "by": "AB"}
+{"id": "A1-t4-refusals-dead-pattern", "event": "claim", "ts": "2026-09-28T00:22:49Z", "by": "AB"}
+{"id": "A1-t4-refusals-dead-pattern", "event": "done", "ts": "2026-09-28T00:26:03Z", "duration": 194, "by": "AB"}
+{"id": "S24c-depth3-measure", "event": "note", "text": "claim 거부: 의존 S24b-incremental-eval이 skip 상태인데 open_deps로 계산됨(prog가 skip을 닫힌 의존으로 보지 않음) — start만 기록하고 진행. 구현: Solver::analyse_deep_mixed_levels(levels), lab-plan --solve deep-nash --beam 4,3 --outcomes 4,2, 커밋 524f125/8f5833a/cf94e0b. 한계: 루트가 교체/미드턴 결정이면 루트는 레벨을 소비(기존 analyse_deep_mixed 의미 유지), 트리 내부에서는 소비하지 않음 — 루트 교체 결정의 깊이가 한 턴 얕음(롤아웃 deep-nash의 교체 결정에 해당).", "ts": "2026-09-28T00:30:10Z", "by": "AD"}
+{"id": "P1b-frontier-compress", "event": "done", "ts": "2026-09-28T01:03:52Z", "duration": 5033, "by": "AC"}
+{"id": "P1c-result-cap-approx", "event": "claim", "ts": "2026-09-28T01:03:53Z", "by": "AC"}
+{"id": null, "event": "definition", "hash": "d073fd6e76e3", "count": 227, "ts": "2026-09-28T01:05:43Z", "by": "YY"}
+{"id": "P2b-dedup-removal", "event": "done", "ts": "2026-09-28T01:05:43Z", "duration": 3211, "by": "YY"}
+{"id": "P2-legal-joint-actions", "event": "done", "ts": "2026-09-28T01:05:46Z", "duration": 3, "by": "YY"}
+{"id": "P3b-merge-key", "event": "claim", "ts": "2026-09-28T01:05:49Z", "by": "YY"}
+{"id": "P1c-result-cap-approx", "event": "done", "ts": "2026-09-28T01:11:15Z", "duration": 442, "by": "AC"}
+{"id": "P1d-spread-damage-full", "event": "claim", "ts": "2026-09-28T01:11:23Z", "by": "AC"}
+{"id": "II-singles-loader", "event": "done", "ts": "2026-09-28T01:22:14Z", "duration": 4137, "by": "AE"}
+{"id": "PY1-python-singles", "event": "claim", "ts": "2026-09-28T01:22:16Z", "by": "AE"}
+{"id": "PY1-python-singles", "event": "done", "ts": "2026-09-28T01:25:36Z", "duration": 200, "by": "AE"}
+{"id": "PY2-hand-built-positions", "event": "note", "text": "범위 밖: from_canonical.rs의 거부(Unsupported: lossy 휘발·변신·미래기술·턴 중 교체)는 refusals.py LOADER_FILES 감사 대상 밖 — 분류할지 결정 필요. 기본값이 엔진 상태와 자주 다른 숨은 필드(10,851 엔진 상태 기준): moveThisTurnResult 316, newlySwitched 142, switchOrder 136, timesAttacked 128, movesUsed 107 — x-hidden 없이 만든 손 국면은 이 필드들이 기본값.", "ts": "2026-09-28T01:27:12Z", "by": "AE"}
+{"id": "PY2-hand-built-positions", "event": "note", "text": "미확인/한계: canonical(오라클 포함)에 얼음 남은 턴(frz statusState.time)이 없음 — 얼음 턴 수만 다른 상태를 오라클 대조가 구별 못함(기존 검증 공백 가능성). from_canonical은 기본 3.", "ts": "2026-09-28T01:27:14Z", "by": "AE"}
+{"id": "II-singles-loader", "event": "note", "text": "한계: 싱글 오라클 fixture 2개(단일 타격·교체)만 — N=1에서 더블 전제 코드 경로(대상·광역·교체 결정·특성) 검증 부족; 싱글 말뭉치 대조(lab-parity 싱글) 미실시.", "ts": "2026-09-28T01:27:15Z", "by": "AE"}
+{"id": "P3b-merge-key", "event": "done", "ts": "2026-09-28T01:33:22Z", "duration": 1653, "by": "YY"}
+{"id": "P3-state-hash-incremental", "event": "done", "ts": "2026-09-28T01:33:24Z", "duration": 2, "by": "YY"}
+{"id": "S24-t1-tt-key-after-p3", "event": "note", "text": "YY P3b(54c3c1b): TT가 position_hash 색인(PositionMap)으로 바뀜. 키는 여전히 정확 키라 적중 수는 같음(PP 차이 국면은 정확 키로는 겹치지 않음) — 적중을 늘리려면 근사 키(평가 무관 필드 제외) 결정이 필요", "ts": "2026-09-28T01:33:27Z", "by": "YY"}
+{"id": "P4a-move-smallvec", "event": "claim", "ts": "2026-09-28T01:33:29Z", "by": "YY"}
+{"id": "PY3b-python-search-expose", "event": "note", "text": "2e5e29b: lab_search::api(JSON 보고) + Position.maximin/nash/deep/deep_nash/plan, Scenario.believed/rollout(dict, json.dumps 가능, NaN→None). 테스트: search/tests/api.rs 3, py/tests/test_search.py 6(전체 pytest 25 통과, wheel은 공유 venv에 설치하지 않고 압축 해제+PYTHONPATH로 시험). 미노출: --dump-children, --before, eval 이름(material/file:)은 weights로만. believed는 파일에서 읽은 시나리오만.", "ts": "2026-09-28T01:53:17Z", "by": "AD"}
+{"id": "PY3b-python-search-expose", "event": "done", "ts": "2026-09-28T01:53:18Z", "duration": 9648, "by": "AD"}
+{"id": "PY3-deep-search-api", "event": "done", "ts": "2026-09-28T01:53:20Z", "duration": 2, "by": "AD"}
+{"id": "P4a-move-smallvec", "event": "done", "ts": "2026-09-28T02:03:51Z", "duration": 1822, "by": "YY"}
+{"id": "P4b-state-copy", "event": "claim", "ts": "2026-09-28T02:03:51Z", "by": "YY"}
+{"id": null, "event": "definition", "hash": "b78dcecf09d9", "count": 233, "ts": "2026-09-28T02:25:27Z", "by": "YY"}
+{"id": "P4b-state-copy", "event": "done", "ts": "2026-09-28T02:25:27Z", "duration": 1296, "by": "YY"}
+{"id": "P1d-spread-damage-full", "event": "done", "ts": "2026-09-28T04:42:16Z", "duration": 12653, "by": "AC"}
+{"id": "P1-full-mode-hp-explosion", "event": "done", "ts": "2026-09-28T04:42:16Z", "duration": 0, "by": "AC"}
+{"id": "P1-full-mode-hp-explosion", "event": "note", "text": "AC: remaining limits - (1) damage rolls still fork runs (compaction merges at stage end); two 2-target spread moves = (crit x roll)^2 runs, 11 s on dbl-kickoff nash.g000.s01; absorbing rolls into lazy units needs recoil/drain/history lazified. (2) 2 of 16 oracle-timeout positions verified by nothing (flat engine path also fails). (3) spread-damage Full has no oracle truth; checked vs same-roll-mode flat + 40k-sample marginals. (4) lab-turn --factored does not resume mid-turn suspensions. (5) max_support TV bound is a cumulative sum, loose.", "ts": "2026-09-28T04:42:17Z", "by": "AC"}
+{"id": "P1-full-mode-hp-explosion", "event": "note", "text": "AC limits: roll forks remain (11 s worst heavy turn); 2/16 oracle-timeout turns unverified; spread-damage Full vs samples only; lab-turn --factored no mid-turn resume; max_support TV bound loose", "ts": "2026-09-28T04:42:21Z", "by": "AC"}
+{"id": "S24c-depth3-measure", "event": "note", "text": "측정(runs/search-bench-20260927/README.md, CPU 포화): 4,3/4,2는 sand-owen 1,970 s·1.73M 열거 −91.8, psy-cona 2,145 s·1.79M +55.9, coaching-panda 61분에 중단 → 30분 초과로 3,2/3,1 기준: sand-owen 326 s 962k −87.9, psy-cona 168 s 408k +54.2, coaching-panda 1,081 s 3.87M −102.9. 깊이 2 회귀 없음(88,648/−67.2, 69,751/+46.2). 정확성 tests/depth3.rs(브루트포스 1e-3).", "ts": "2026-09-28T04:58:24Z", "by": "AD"}
+{"id": null, "event": "definition", "hash": "719c0f3f7732", "count": 237, "ts": "2026-09-28T04:58:32Z", "by": "AD"}
+{"id": "S24c-depth3-measure", "event": "done", "ts": "2026-09-28T04:58:32Z", "duration": 20770, "by": "AD"}
+{"id": "S24-t2-replacement-child-balance", "event": "note", "text": "계측: sand-owen deep-nash 첫 자식 배치 교체 셀 42/3,937이 CPU 88%(최대 16.5 s). 행 단위 분할(Config::split_heavy_cells, 값 비트 동일·스레드 무관 카운터) 구현·측정: 열거 +9–16%, 1/2/4/6스레드 벽시계 이득 없음(포화 상태) → 기본 끔, lab-plan --split으로 opt-in. 남은 레버: 교체 셀(깊이 1 maximin)의 총량 자체 — 1턴 균형/DO로 바꾸는 것은 값이 바뀌는 결정.", "ts": "2026-09-28T04:58:37Z", "by": "AD"}
+{"id": "S24-t2-replacement-child-balance", "event": "done", "ts": "2026-09-28T04:58:42Z", "duration": 20775, "by": "AD"}
+{"id": "S24-depth3", "event": "done", "ts": "2026-09-28T04:58:54Z", "duration": 12, "by": "AD"}
+{"id": null, "event": "definition", "hash": "6cf9219cf38a", "count": 241, "ts": "2026-09-28T05:48:49Z", "by": "admin"}
+{"id": "S24-t7-replacement-cell-solver", "event": "block", "reason": "사용자 결정(값이 바뀜)", "ts": "2026-09-28T05:48:49Z", "by": "admin"}
+{"id": "P4-move-code-allocations", "event": "done", "ts": "2026-09-28T05:49:14Z", "by": "YY"}
+{"id": "P4-move-code-allocations", "event": "note", "text": "YY 남은 비용(최종 프로파일): 힙 할당 ~12%(Vec<Instruction> 로그·결과 diff), Merger::add Eq 확인·복제 ~13%, diff::instructions ~9%, HistoryReaders::of 국면마다 ~5% — 다음 성능 후보", "ts": "2026-09-28T05:49:15Z", "by": "YY"}
+{"id": "V13-replay-parity", "event": "claim", "ts": "2026-09-28T06:34:38Z", "by": "VC"}
+{"id": "A1-t2-fixture-gaps", "event": "claim", "ts": "2026-09-28T06:35:09Z", "by": "VD"}
+{"id": "V11a-seed-lock-web", "event": "claim", "ts": "2026-09-28T06:36:21Z", "by": "VA"}
+{"id": "V11b-future-rooms-pseudoweather", "event": "claim", "ts": "2026-09-28T06:36:22Z", "by": "VA"}
+{"id": "V11c-side-slot-conditions", "event": "claim", "ts": "2026-09-28T06:36:24Z", "by": "VA"}
+{"id": "V9c-timeout-positions", "event": "release", "ts": "2026-09-28T06:36:34Z", "by": "VB"}
+{"id": "V9c-timeout-positions", "event": "claim", "ts": "2026-09-28T06:36:37Z", "by": "VB"}
+{"id": "A1-t2-fixture-gaps", "event": "done", "ts": "2026-09-28T07:50:13Z", "duration": 4504, "by": "VD"}
+{"id": "A1-t2-fixture-gaps", "event": "note", "text": "VD d5b3d21: 19 scenarios vd-* (18 full + skill-link extremes) all exact. Bug found+fixed: Axe Kick confusion time random(3,6) (secondary volatiles now get the move as source effect); was random(2,6).", "ts": "2026-09-28T07:50:14Z", "by": "VD"}
+{"id": "V15-frozen-turns-canonical", "event": "claim", "ts": "2026-09-28T07:50:20Z", "by": "VD"}
+{"id": "A4-t4-from-canonical-audit", "event": "claim", "ts": "2026-09-28T07:58:18Z", "by": "VD"}
+{"id": "A4-t4-from-canonical-audit", "event": "done", "ts": "2026-09-28T07:58:19Z", "duration": 1, "by": "VD"}
+{"id": "V14-diverge-lift", "event": "claim", "ts": "2026-09-28T08:02:01Z", "by": "VD"}
+{"id": "V14-diverge-lift", "event": "done", "ts": "2026-09-28T08:02:01Z", "duration": 0, "by": "VD"}
+{"id": "V15-frozen-turns-canonical", "event": "done", "ts": "2026-09-28T08:05:06Z", "duration": 886, "by": "VD"}
+{"id": "V15-frozen-turns-canonical", "event": "note", "text": "VD: gap confirmed (vd-frozen-time-merge: 20 vs 30 outcomes); engine status_turns matches Showdown there. Proposed todo: write statusTime for frz in canonical.cjs+canonical.rs (+from_canonical reads it instead of default 3; regenerate 4 fixtures with frz: burn-up-frozen, o12-tri-attack, o5-blizzard-snow, o60-sheer-force; pinned corpus states with frz would need re-pinning) - schema-visible, do it between waves.", "ts": "2026-09-28T08:05:07Z", "by": "VD"}
+{"id": "II-t1-singles-parity", "event": "claim", "ts": "2026-09-28T09:52:40Z", "by": "VD"}
+{"id": "II-t1-singles-parity", "event": "note", "text": "VD: (a) 6 singles fixtures vd-singles-* exact (Follow Me/Quash/After You fail, Helping Hand/Aromatic Mist/Coaching/Ally Switch without ally, spread on one target, Reflect 1/2, Dragon Darts, Beat Up); no N=1 code bug found. (b) lab-check + lab-parity accept singles (999098b); 315 positions from 8 BSS matchups, 200 packed as engine/jobs/singles-20260928 (runner run 36398501678); local spot check s08 of masagon-vs-tororo-raichu matched (68 outcomes).", "ts": "2026-09-28T09:52:40Z", "by": "VD"}
+{"id": "V13-replay-parity", "event": "note", "text": "수집 200(OTS 4, SP는 OTS도 비공개 → 정확 복원 0) → 199경기 1,777결정 → lab-replay 핀 국면 1,649(구조 관측 일치 1,596). 오라클 잡 replays-20260928(250국면) Actions run 36400574774 queued; 결과는 replay_summary.py ingest로 rows/·sources.json. 로컬 점검 5국면 전부 match. 기록 opus-vc runs/parity-replays-20260928/README.md", "ts": "2026-09-28T09:57:30Z", "by": "VC"}
+{"id": "V13-replay-parity", "event": "note", "text": "남은 일: 잡 결과 ingest·불일치 재현, pack/list-2(250) 이후 ~1,150국면 미대조, 관측 불일치 후보 30건 미분류(가정 원인 추정), 무인증 GitHub API 한도(60/h IP 공유)로 결과 조회 막힘 — 토큰 필요 여부 사용자 결정", "ts": "2026-09-28T09:57:30Z", "by": "VC"}
+{"id": "V11a-seed-lock-web", "event": "note", "text": "VA: 181국면(10게임) 177 일치·불일치 0, 초과 4는 러너 잡 v11-heavy(full staged). 덮음: leechseed·lockedmove·uproar·stickyweb·confusion. 기록 .claude/worktrees/opus-va/runs/parity-v11-20260928/README.md", "ts": "2026-09-28T09:59:42Z", "by": "VA"}
+{"id": "V11a-seed-lock-web", "event": "done", "ts": "2026-09-28T09:59:43Z", "duration": 12202, "by": "VA"}
+{"id": "V11b-future-rooms-pseudoweather", "event": "note", "text": "VA: 124국면 123 일치·불일치 0, 초과 1 → v11-heavy. 덮음: futuremove·magicroom·wonderroom·fairylock·trickroom/gravity 겹침. Doom Desire(Past)는 V11f.", "ts": "2026-09-28T09:59:43Z", "by": "VA"}
+{"id": "V11b-future-rooms-pseudoweather", "event": "done", "ts": "2026-09-28T09:59:43Z", "duration": 12201, "by": "VA"}
+{"id": "V11c-side-slot-conditions", "event": "note", "text": "VA: 161국면 159 일치·불일치 0, 초과 2 → v11-heavy. 덮음: safeguard·healingwish(상태)·quickguard·wideguard·revivalblessing(선택) + fixture va-revival-blessing-guards-pause. craftyshield·luckychant·matblock·mist는 Past 전용 → V11f.", "ts": "2026-09-28T09:59:44Z", "by": "VA"}
+{"id": "V11c-side-slot-conditions", "event": "done", "ts": "2026-09-28T09:59:44Z", "duration": 12200, "by": "VA"}
+{"id": "V11d-remaining-volatiles", "event": "claim", "ts": "2026-09-28T09:59:44Z", "by": "VA"}
+{"id": null, "event": "definition", "hash": "2ef1680092cf", "count": 247, "ts": "2026-09-28T10:01:13Z", "by": "admin"}
+{"id": "OPS3-github-token", "event": "block", "reason": "사용자 결정(토큰)", "ts": "2026-09-28T10:01:13Z", "by": "admin"}
+{"id": "OPS3-github-token", "event": "release", "ts": "2026-09-28T10:10:22Z", "by": "fable"}
+{"id": "OPS3-github-token", "event": "claim", "ts": "2026-09-28T10:10:23Z", "by": "fable"}
+{"id": "OPS3-github-token", "event": "note", "text": "2026-09-28 사용자가 fine-grained 토큰(actions:read, 이 저장소만) 생성 → D:/tools/gh-token.txt (저장소 밖). 에이전트는 GITHUB_TOKEN 환경변수로 읽음", "ts": "2026-09-28T10:10:23Z", "by": "fable"}
+{"id": "OPS3-github-token", "event": "done", "ts": "2026-09-28T10:10:24Z", "duration": 1, "by": "fable"}
+{"id": "V13c-observation-mismatches", "event": "claim", "ts": "2026-09-28T10:18:04Z", "by": "VC"}
+{"id": "V13a-ingest-run", "event": "claim", "ts": "2026-09-28T10:18:04Z", "by": "VC"}
+{"id": "V13c-observation-mismatches", "event": "note", "text": "30건 중 엔진 버그 근거 0. 23건은 가정/파서 수정으로 해소(비공개 특성 7: 적합이 abilityOptions 시도, 숨은 수면 턴 4: 깨어난 시점으로 statusTime 역산, 도구 4+, 파서 3), 남은 7건은 SP·성격·도구 미상인 KO 문턱. 재생 v2: 1,749/1,777결정, 구조 일치 1,742, 끝까지 일치 192/199. 기록 teams/replays-20260928/RUN-README.md (a084d2b)", "ts": "2026-09-28T10:52:08Z", "by": "VC"}
+{"id": null, "event": "definition", "hash": "695d29caf95c", "count": 249, "ts": "2026-09-28T10:52:08Z", "by": "VC"}
+{"id": "V13c-observation-mismatches", "event": "done", "ts": "2026-09-28T10:52:08Z", "duration": 2044, "by": "VC"}
+{"id": "V13a-ingest-run", "event": "note", "text": "run 36400574774은 20:0x 기준으로 아직 queued. 저장소 oracle 런은 약 07:00 UTC 이후 하나도 시작되지 않아 모두 queued(러너 배정 정지로 보임). ingest 준비 완료: GITHUB_TOKEN=... python engine/scripts/replay_summary.py ingest runs/parity-replays-20260928 36400574774. 잡 1 국면은 v1 positions/, 후속 V13b는 positions-v2/ 기반 pack/list-2.txt(250)", "ts": "2026-09-28T10:52:15Z", "by": "VC"}
+{"id": "V11d-remaining-volatiles", "event": "note", "text": "VA: ZZ 3쌍 682국면 682 일치(성별 미정 핀 1개는 성별 4변형 full로 해소) + VA gap(v11e) 170국면 150 일치·0 불일치, 19 초과/오류 → 러너 v11-heavy, 1 제외(비교 턴 midTurn 모양이 분기마다 다름). Past 전용 V11f 488국면 430 일치·0 불일치, 58 초과 → 러너 v11-f1/f2/f3. 엔진 수정 2: 13caa2e(핀 setup 턴 midTurn 불일치 분기 버림), f6ed481(2턴 잠금 target 1). fixture 4. 기록 .claude/worktrees/opus-va/runs/parity-v11-20260928/README.md", "ts": "2026-09-28T10:53:34Z", "by": "VA"}
+{"id": "V11d-remaining-volatiles", "event": "done", "ts": "2026-09-28T10:53:34Z", "duration": 3230, "by": "VA"}
+{"id": "V11-unseen-feature-scenarios", "event": "note", "text": "VA: 원자 4개 완료. 불일치 0. 남은 것: 러너 잡 v11-heavy(26, 완료 6 전부 일치)·v11-f1/f2(488, v11-f1/f2의 charge-vs-eye는 f6ed481 이전 핀이라 오류 예상)·v11-f3(1) 결과 수집 → rows 변환·말뭉치 편입. sources: .claude/worktrees/opus-va/runs/parity-v11-20260928/sources.v11.json", "ts": "2026-09-28T10:53:35Z", "by": "VA"}
+{"id": "V11-unseen-feature-scenarios", "event": "done", "ts": "2026-09-28T10:53:35Z", "duration": 1, "by": "VA"}
+{"id": "II-t1-singles-parity", "event": "note", "text": "2026-09-28 로컬(VE) 싱글 200: 199 match(factored+flat), 불일치 0, timeout 1(kurotama-baxcalibur-vs-tororo-goodra-grassy.random.g001.s01, staged stage1 20분 초과 → 러너 작은 잡 후보). 러너 #8은 취소", "ts": "2026-09-28T11:32:21Z", "by": "fable"}
+{"id": "SIMD1-damage-rolls-feasibility", "event": "note", "text": "사용자 요청의 독립 실험 완료: runs/simd-20260928-astra/README.md. 본 엔진 변경 없음. 기본 MSVC 릴리스에서 16롤 전체 소비, 7회 교차 측정. AVX2 직접/자동선택/강제 기존 경로: DamageInput 1,458,756건 및 원시연산 2,428,677건 불일치 0. 기존 구현은 SSE2 자동벡터화, AVX2 자동선택 함수 배속 1.50~1.91x. 대표 3국면 호출수와 무계측 1/6스레드 기준측정에서 전체 절감 거친 외삽 0.07~0.11%; 통합 실측 아님. 생산 채택 보류. AVX2 미지원 실제 하드웨어 실행 및 통합 오라클 게이트는 미수행. 기존 방식 폴백 유지 요구 반영.", "ts": "2026-09-28T12:06:50Z", "by": "codex-simd-experiment"}
+{"id": "P6-pgo", "event": "note", "text": "사용자 우선순위 변경으로 PGO 보류. runs/pgo-20260928-astra 에 고정 소스/기본 generic MSVC 빌드만 완료, generate/train/profile-use 미실행. 대신 S24-t10 계측 완료 후 구조 병목부터 조사. 재개 전 기존 PAUSED_BY_USER 및 workload/HEAD를 확인.", "ts": "2026-09-28T12:41:07Z", "by": "parallel-profiler"}
+{"id": null, "event": "definition", "hash": "8e26528399bc", "count": 260, "ts": "2026-09-28T12:41:07Z", "by": "parallel-profiler"}
+{"id": "S24-t10-parallel-cost-profile", "event": "claim", "ts": "2026-09-28T12:41:07Z", "by": "parallel-profiler"}
+{"id": "S24-t10-parallel-cost-profile", "event": "done", "ts": "2026-09-28T12:41:08Z", "duration": 1, "by": "parallel-profiler"}
+{"id": "S24-t10-parallel-cost-profile", "event": "note", "text": "원본 소스 불변. 40회 baseline/observer 완주, 1/6스레드 노드·열거·timing 제외 CLI 동일. 깊이2 표본의 heavy 셀10/7732가 process cycle63%, 최대하나29%; serial pair9회0.02%. full regression/실제 병렬화 구현 미실행. 상세 runs/parallel-profile-20260928/README.md. 후속은 S24-t11/t12.", "ts": "2026-09-28T12:41:08Z", "by": "parallel-profiler"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "note", "text": "새 계측은 작업 ID/시작종료 timeline이 없어 장벽으로 인한 idle 인과 미확인. CPU포화90~100%, timing정밀배속판정 불가. 기존 --split의9~16%열거증가를 반복하지 않고 컷오프 유지 필요. core stage폭1 약59~69%, 무조건 내부병렬화 후순위. Full/factored 및 깊이3는 코드검토만, 미측정.", "ts": "2026-09-28T12:41:08Z", "by": "parallel-profiler"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "claim", "ts": "2026-09-28T12:46:40Z", "by": "parallel-profiler"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "touch", "ts": "2026-09-28T13:02:31Z", "by": "parallel-profiler"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "note", "text": "추적2국면 완료: coaching heavy10/7732 CPUcycles64%, sand32/16493 약49%. 행가지치기로응수87.69%/78.32%생략. coaching첫batch 한스레드가heavy6개순차; 미시작작업남은채active1 4.216초. child_cells에만with_max_len(1) 후보빌드, 1t실전deep/shallow f32비트·카운터동일 확인. 6t5반복과전체회귀진행중. runs/heavy-cell-20260928.", "ts": "2026-09-28T13:02:34Z", "by": "parallel-profiler"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "touch", "ts": "2026-09-28T13:21:48Z", "by": "parallel-profiler"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "note", "text": "현 요청의 2국면 heavy-cell trace 및 단일 with_max_len(1) 후보 비교 완료: runs/heavy-cell-20260928/README.md. 28회 raw f32 비트·카운터 동일, release 검색 테스트 51/51, core/scenario/search all-targets Clippy 통과. 전체 release 회귀는 scenario 175개 최초 빌드 중 범위 조정으로 중단(기록 보존), 전체 통과 아님. 6t 5반복 wall 중앙값 coaching 6.301→5.666s(-10.1%), sand20.493→20.664s(+0.8%); CPU+3.9/+2.0%, busy98.1–100%. 범용 통합 보류, 원본 bb94a1 clean. 남은 무부하/2·4t/깊이3/Full/스케줄러 범위 때문에 부모 작업은 미완료. DP 가능성 질문 후 S24-t13에 재사용 계측 과제 기록, 구현은 안 함.", "ts": "2026-09-28T13:25:57Z", "by": "parallel-profiler"}
+{"id": null, "event": "definition", "hash": "a8926ff92508", "count": 261, "ts": "2026-09-28T13:25:57Z", "by": "parallel-profiler"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "release", "reason": "이번 2국면 실험·검증·보고 완료, 넓은 후속 범위는 todo로 유지", "ts": "2026-09-28T13:25:57Z", "by": "parallel-profiler"}
+{"id": "S24-t13-memo-reuse-profile", "event": "note", "text": "2026-09-28 코드 읽기 완료. 기존 TT 조회 hit/miss: coaching5/11, sand2/29(이번 depth2 측정). 일반 value/leaf는 캐시 없음. 최우선은 반복률×비용 측정이며 턴 전이 결과 재사용과 정확값 TT를 별도 비교. DP가 실제 작업을 생략하므로 출력 의미·비트/선택/오류를 검증하고 실행 노드·열거 감소는 별도 지표로 기록.", "ts": "2026-09-28T13:25:58Z", "by": "parallel-profiler"}
+{"id": "S24-t13-memo-reuse-profile", "event": "claim", "ts": "2026-09-28T13:32:39Z", "by": "dp-profiler"}
+{"id": "S24-t13-memo-reuse-profile", "event": "note", "text": "DP 1차 실험 완료: runs/dp-memo-20260928/README.md. pinned bb94a1, generic x86-64, Rayon후보 미적용. 1t 프로브: chance전이19242/74549 모두 중복0, nonleaf10/32 중복0, leafcoaching63492/153253 반복후보; sand는100k key cap에1002905calls미추적되어 전체중복률판정불가. exact-State Eq bounded1MiB/thread Heuristic leaf memo 구현·비교. 6t3반복 실평가감소 coaching20.3–20.4%,sand12.8–12.9%; CPU중앙값+2.0/+4.4%, wall+6.3/+9.9%라 미채택. 30run rawbits·기존카운터·State복원 일치, lib+신규검증26pass,fmt/clippy통과. 본엔진clean. 깊이3/다른국면/재사용거리/더작은평가전용키/턴내부분계산은미측정으로 후속범위유지.", "ts": "2026-09-28T13:56:31Z", "by": "dp-profiler"}
+{"id": "S24-t13-memo-reuse-profile", "event": "release", "reason": "승인된 depth2 DP 프로브·후보비교·검증·보고 완료; 남은 더넓은계측범위는todo 유지", "ts": "2026-09-28T13:56:32Z", "by": "dp-profiler"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "note", "text": "사용자 모래 도트 가설 코드검토: sand maxHP/16 피해량 고정, 잔여효과 동속정렬에는난수가능. 도트KO→Replacement→next_depth1 heavycell 간접경로는있으나 기존trace는KO원인미기록하여 공격KO/도트KO 기여분미분리. 새날씨ablation은실행안함. DP on/off는동일도트를처리하므로DP회귀의직접원인으로단정불가.", "ts": "2026-09-28T13:56:32Z", "by": "dp-profiler"}
+{"id": "S24-t13-memo-reuse-profile", "event": "claim", "ts": "2026-09-28T14:03:57Z", "by": "dp-depth3-profiler"}
+{"id": "S24-t13-memo-reuse-profile", "event": "touch", "ts": "2026-09-28T14:15:49Z", "by": "dp-depth3-profiler"}
+{"id": "S24-t13-memo-reuse-profile", "event": "note", "text": "좁은 depth3 비교 완료: runs/dp-depth3-small-20260928/README.md. levels beam2,2/outcomes1,1; Median/setup Median,6t,split=false,factored=0,generic x86-64. 직접 Heuristic vs 이전 bounded full-State leaf memo. pilot 포함/no warmup; 각 실행600초 제한; 양 pilot<=120초만 BA/AB추가. coaching 3쌍 CPU중앙61.234->62.875s(+2.7%),wall37.235->39.674s(+6.5%),hit23.7%;sand1쌍 CPU204.781->225.297s(+10.0%),wall126.806->141.313s(+11.4%),hit15.6%. 기기busy97.9~99.8%이며 sand는단일쌍. 8회 모두raw f32결과/기존카운터 일치,State복원;실패/timeout없음;cache상한확인. fmt/264소스해시/생산git clean확인. 후보미채택;PGO보류유지. 더넓은깊이/다른국면/작은평가전용키/재사용거리/도트원인분리는미측정.", "ts": "2026-09-28T14:20:51Z", "by": "dp-depth3-profiler"}
+{"id": "S24-t13-memo-reuse-profile", "event": "release", "reason": "승인된 좁은 depth3 실험 완료. 현재 leaf 후보는 미채택; 상위 작업의 넓은 반복률/재사용거리 및 대체 DP 범위는 남아 있으므로 TODO로 반환.", "ts": "2026-09-28T14:20:51Z", "by": "dp-depth3-profiler"}
+{"id": "V13a-ingest-run", "event": "note", "text": "2026-09-29 로컬(VE oracle_local.py) 리플레이 250: 212 match(factored+flat), 불일치 0, timeout 27(러너 후보, runs/parity-local-20260928/replays-20260928/summary.md), 오류 11(V13f 재충전 선택 문자열 2 + V13g 설정 턴 탐색 한도 5 + 기타 4)", "ts": "2026-09-28T15:36:24Z", "by": "fable"}
+{"id": null, "event": "definition", "hash": "e075554a0735", "count": 263, "ts": "2026-09-28T15:36:25Z", "by": "fable"}
+{"id": "V13a-ingest-run", "event": "claim", "ts": "2026-09-28T15:36:25Z", "by": "fable"}
+{"id": "V13a-ingest-run", "event": "done", "ts": "2026-09-28T15:36:25Z", "duration": 0, "by": "fable"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "note", "text": "2026-09-29 기존trace 오프라인 재분석 완료: runs/parallel-analysis-20260929/README.md 및 agent-trace/*. 첫batch coaching11게임중6/sand29중14가후속work. heavy5/15게임은모두후속0; 후속셀6734/13771은전체childcycles24.04/24.35%. 실제첫batch뒤셀배치span0.913/3.049초로 최대ready대기5.936/9.478초를절감예측으로사용불가. 후속game ready+동시셀<6일때 현재batch 미시작셀없는구간coaching0.00028/sand1.10552초; 미시작셀있는구간5.82008/0.76727초. coaching은coarse배분과barrier효과겹침. game별drive는독립State/셀내alpha순서유지가능; parent반영 round-game-cell/오류순서보존과공유pool 필요. 최초범위무예산,split=false,factored0;그외원경로복귀. depth3전체child병렬은TT순서/Budget의존; 제한shallow선계산은후속설계후보. 새엔진실행/벤치/생산수정없음. 구현/정확성/비계측성능확인은기존TODO유지.", "ts": "2026-09-28T15:55:04Z", "by": "parallel-analysis-review"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "claim", "ts": "2026-09-28T16:22:41Z", "by": "independent-games-experiment"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "touch", "ts": "2026-09-28T17:20:11Z", "by": "independent-games-experiment"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "note", "text": "Initial isolated scheduler experiment: 22 process comparisons exact, 30 tests pass. User authorized longer confirmation. Preparing 100 process runs (5 pairs per depth/thread/case plus warmups and 1-thread fallback); extending tests. Production source/default unchanged. Artifacts runs/independent-games-20260929.", "ts": "2026-09-28T17:20:11Z", "by": "independent-games-experiment"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "touch", "ts": "2026-09-28T17:32:50Z", "by": "independent-games-experiment"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "note", "text": "Independent-game experiment complete: initial 22 plus separate confirmation 100 process runs, all raw outputs/fingerprints exact. Confirmation 40 measured pairs, 36 faster; 7/8 group wall medians improve. 6t d2 coaching 4.208->2.768s (-34.2%), sand 9.186->8.563s (-6.8%); d3 coaching 22.472->16.194s (-27.9%), sand 82.671->64.281s (-22.2%). CPU medians +2.1 to +6.8%; 2t sand +1.7% wall regression. 34 tests pass including actual cell NoChoice rollback/2t/6t. Production HEAD9451282 clean, defaults unchanged; generic x86-64 and old path preserved. Report runs/independent-games-20260929/CONFIRMATION.md. Remaining before adoption: broader positions/operating settings, factored/large Full/memory, mixed error ordering and known-update edge coverage, non-AVX2 hardware execution. PGO/other heavy-cell work remains outside this experiment.", "ts": "2026-09-28T17:55:33Z", "by": "independent-games-experiment"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "release", "reason": "Isolated implementation and long confirmation completed; experimental opt-in retained, broader S24 task remains todo.", "ts": "2026-09-28T17:55:33Z", "by": "independent-games-experiment"}
+{"id": "P7-fork-at-chance", "event": "note", "text": "2026-09-29 read-only review: continuation needs Battle temporary context and Rust function-local execution state, not only State clone. Existing hit-by-hit stage and RunStart reuse already apply. Mean replay1.64-2.09 is not expected speedup. Smaller guarded action-key reuse split into P8d. Review runs/optimization-directions-20260929/replay-review.md; P1e dependency unchanged.", "ts": "2026-09-28T18:27:08Z", "by": "optimization-directions-review"}
+{"id": "S24-t13-memo-reuse-profile", "event": "note", "text": "Other-direction review: borrowed TT lookup keys/seen PositionMap/hash reuse and bounded shallow-to-deep outcome reuse are lower-priority options. Known shallow-to-beam duplicate cost0.018% in coaching d2, so structural duplication alone does not justify caching. Separate same-parent per-cell validation profiling is P8c. Report runs/optimization-directions-20260929/search-review.md.", "ts": "2026-09-28T18:27:08Z", "by": "optimization-directions-review"}
+{"id": null, "event": "definition", "hash": "070922458e99", "count": 269, "ts": "2026-09-28T18:35:20Z", "by": "lazy-merger-experiment"}
+{"id": "P8a-merger-lazy-index", "event": "claim", "ts": "2026-09-28T18:35:20Z", "by": "lazy-merger-experiment"}
+{"id": "SIMD1-damage-rolls-feasibility", "event": "note", "text": "2026-09-29 사용자 지시: Astra(외부) 전용 영역 — Claude 에이전트 배정 금지. 파일 core/src/damage.rs·benches/damage.rs·core/tests/damage_simd.rs·engine/gpu/·astra-* 브랜치는 건드리지 않음", "ts": "2026-09-28T18:38:53Z", "by": "fable"}
+{"id": "SIMD2-rmplus-row-block", "event": "note", "text": "2026-09-29 사용자 지시: Astra(외부) 전용 영역 — Claude 에이전트 배정 금지. 파일 core/src/damage.rs·benches/damage.rs·core/tests/damage_simd.rs·engine/gpu/·astra-* 브랜치는 건드리지 않음", "ts": "2026-09-28T18:38:53Z", "by": "fable"}
+{"id": "CUDA1-batched-matrix-eval", "event": "note", "text": "2026-09-29 사용자 지시: Astra(외부) 전용 영역 — Claude 에이전트 배정 금지. 파일 core/src/damage.rs·benches/damage.rs·core/tests/damage_simd.rs·engine/gpu/·astra-* 브랜치는 건드리지 않음", "ts": "2026-09-28T18:38:53Z", "by": "fable"}
+{"id": "SIMD3-hp-distribution-batch", "event": "note", "text": "2026-09-29 사용자 지시: Astra(외부) 전용 영역 — Claude 에이전트 배정 금지. 파일 core/src/damage.rs·benches/damage.rs·core/tests/damage_simd.rs·engine/gpu/·astra-* 브랜치는 건드리지 않음", "ts": "2026-09-28T18:38:54Z", "by": "fable"}
+{"id": "V9c-timeout-positions", "event": "claim", "ts": "2026-09-28T18:43:49Z", "by": "fable"}
+{"id": "V9c-timeout-positions", "event": "note", "text": "2026-09-29 러너 66국면: 54 match(factored+flat), 불일치 0, 310분 초과 11, 진행 1. 표 runs/parity-actions-20260928/README.md", "ts": "2026-09-28T18:43:50Z", "by": "fable"}
+{"id": "V16-factored-unverified", "event": "note", "text": "2026-09-29 v16b spread-damage 32샤드 전부 러너 메모리 실패 → 러너 확정 불가(로컬 인수분해+표본만). v16c psy-lello 진행 중", "ts": "2026-09-28T18:43:50Z", "by": "fable"}
+{"id": "V11e-runner-rows-ingest", "event": "note", "text": "2026-09-29 v11-heavy 26: 23 match, 3 timeout(310분), 불일치 0. rows: runs/parity-actions-20260928/ingest/36394300683.rows.json", "ts": "2026-09-28T18:43:50Z", "by": "fable"}
+{"id": "P8a-merger-lazy-index", "event": "touch", "ts": "2026-09-28T18:44:01Z", "by": "lazy-merger-experiment"}
+{"id": "P8a-merger-lazy-index", "event": "note", "text": "격리 snapshot 9451282에서 구현+리뷰 완료. 34records 79317282bytes exact differential parity; core90x2/scenario43/factoredHP63fixtures/search8/fmt/clippy 통과. 원본 병렬스케줄러 유지한 d2 1/6t 총48회 측정 시작. runs/lazy-merger-20260929. 생산코드 변경없음.", "ts": "2026-09-28T18:51:05Z", "by": "lazy-merger-experiment"}
+{"id": "P8a-merger-lazy-index", "event": "touch", "ts": "2026-09-28T19:00:27Z", "by": "lazy-merger-experiment"}
+{"id": "P8a-merger-lazy-index", "event": "done", "ts": "2026-09-28T19:02:20Z", "duration": 1620, "by": "lazy-merger-experiment"}
+{"id": "P8a-merger-lazy-index", "event": "note", "text": "격리 구현/검증/48회 A-B 실험 완료. 34통합결과79317282bytes일치, core90x2/scenario43/factoredHP63/search8/fmt/clippy통과. 4조건 wall median +1.87~2.89%, CPU +0.93~2.60%로 현재후보미채택. 원본엔진유지. 독립raw/summary재계산PASS. runs/lazy-merger-20260929/README.md 및전체원자료보존. 후속P8b는별도미착수.", "ts": "2026-09-28T19:02:20Z", "by": "lazy-merger-experiment"}
+{"id": "V9c-timeout-positions", "event": "note", "text": "최종: 54 match, 초과 12(확정 불가), 불일치 0", "ts": "2026-09-28T21:36:36Z", "by": "fable"}
+{"id": "V9c-timeout-positions", "event": "done", "ts": "2026-09-28T21:36:36Z", "duration": 10367, "by": "fable"}
+{"id": "V9-heavy-turn-full-rolls", "event": "claim", "ts": "2026-09-28T21:36:36Z", "by": "fable"}
+{"id": "V9-heavy-turn-full-rolls", "event": "note", "text": "2026-09-29 마감: 무거운 턴 full 비교 — 로컬 24 + 러너 54 일치, 불일치 0; 오라클 상한 초과 12+로컬 초과분은 확정 불가로 기록(runs/parity-actions-20260928/README.md)", "ts": "2026-09-28T21:36:37Z", "by": "fable"}
+{"id": "V9-heavy-turn-full-rolls", "event": "done", "ts": "2026-09-28T21:36:37Z", "duration": 1, "by": "fable"}
+{"id": "V16-factored-unverified", "event": "claim", "ts": "2026-09-28T21:36:37Z", "by": "fable"}
+{"id": "V16-factored-unverified", "event": "note", "text": "2026-09-29: v16b 전부 실패, v16c 24/32 fit·8 메모리 실패 → merge incomplete. 두 국면 모두 러너로 확정 불가. 64샤드 재실행은 사용자 결정 → 한계로 닫음", "ts": "2026-09-28T21:36:38Z", "by": "fable"}
+{"id": "V16-factored-unverified", "event": "skip", "reason": "러너 메모리 한계로 확정 불가(64샤드 재실행은 사용자 결정)", "ts": "2026-09-28T21:36:38Z", "by": "fable"}
+{"id": "S24-t11-heavy-cell-critical-path", "event": "note", "text": "2026-09-29 사용자 확인: Astra(외부) 항목 — Claude 에이전트 배정 금지", "ts": "2026-09-28T22:55:10Z", "by": "fable"}
+{"id": "S24-t12-stats-time-label", "event": "note", "text": "2026-09-29 사용자 확인: Astra(외부) 항목 — Claude 에이전트 배정 금지", "ts": "2026-09-28T22:55:11Z", "by": "fable"}
+{"id": "S24-t13-memo-reuse-profile", "event": "note", "text": "2026-09-29 사용자 확인: Astra(외부) 항목 — Claude 에이전트 배정 금지", "ts": "2026-09-28T22:55:11Z", "by": "fable"}
+{"id": "P8a-merger-lazy-index", "event": "note", "text": "2026-09-29 사용자 확인: Astra(외부) 항목 — Claude 에이전트 배정 금지", "ts": "2026-09-28T22:55:11Z", "by": "fable"}
+{"id": "P8b-replay-scratch", "event": "note", "text": "2026-09-29 사용자 확인: Astra(외부) 항목 — Claude 에이전트 배정 금지", "ts": "2026-09-28T22:55:12Z", "by": "fable"}
+{"id": "P8c-turn-validation", "event": "note", "text": "2026-09-29 사용자 확인: Astra(외부) 항목 — Claude 에이전트 배정 금지", "ts": "2026-09-28T22:55:12Z", "by": "fable"}
+{"id": "P8d-replay-action-keys", "event": "note", "text": "2026-09-29 사용자 확인: Astra(외부) 항목 — Claude 에이전트 배정 금지", "ts": "2026-09-28T22:55:12Z", "by": "fable"}
+{"id": "P8e-slot-diff", "event": "note", "text": "2026-09-29 사용자 확인: Astra(외부) 항목 — Claude 에이전트 배정 금지", "ts": "2026-09-28T22:55:13Z", "by": "fable"}
+{"id": "P8f-stats-off-cost", "event": "note", "text": "2026-09-29 사용자 확인: Astra(외부) 항목 — Claude 에이전트 배정 금지", "ts": "2026-09-28T22:55:13Z", "by": "fable"}
+{"id": "P8b-replay-scratch", "event": "claim", "ts": "2026-09-28T22:55:30Z", "by": "replay-scratch-experiment"}
+{"id": "P8b-replay-scratch", "event": "release", "reason": "테스트 요청의 범위 확인 중. claim 직전 show 출력에서 Astra(외부) 전용/Claude배정금지 사용자 메모 확인하여 구현agent중단. 코드수정/빌드/벤치미실행. 담당 지정 보존.", "ts": "2026-09-28T22:56:41Z", "by": "replay-scratch-experiment"}
+{"id": "P8b-replay-scratch", "event": "claim", "ts": "2026-09-28T22:59:33Z", "by": "p8b-astra-experiment"}
+{"id": "P8b-replay-scratch", "event": "done", "ts": "2026-09-28T23:36:08Z", "duration": 2195, "by": "p8b-astra-experiment"}
+{"id": "P8b-replay-scratch", "event": "note", "text": "Astra 실험 완료: runs/replay-scratch-20260929/README.md. feature-off/on core88, scenario43, factored63fixtures, search8 및 통합38records 완전동일. 48회 A/B+별도 allocator8회, 두 독립검증 PASS. alloc+realloc -92.99%/-91.79%, end-to-end coaching 개선/sand 소폭악화로 기본채택보류. production clean/불변. 실험완료는채택아님.", "ts": "2026-09-28T23:36:08Z", "by": "p8b-astra-experiment"}
+{"id": null, "event": "definition", "hash": "d899aff21891", "count": 270, "ts": "2026-09-29T03:11:31Z", "by": "p7a-astra-experiment"}
+{"id": "P7a-accuracy-continuation-experiment", "event": "claim", "ttl": "14400", "ts": "2026-09-29T03:11:31Z", "by": "p7a-astra-experiment"}
+{"id": "P7a-accuracy-continuation-experiment", "event": "done", "ts": "2026-09-29T03:54:08Z", "duration": 2557, "by": "p7a-astra-experiment"}
+{"id": "P7a-accuracy-continuation-experiment", "event": "note", "text": "격리 실험 완료: runs/chance-continuation-20260929/README.md. 13 correctness gates, 48 fresh-process A/B, 8 별도 observer와 양쪽 독립 검증 PASS. use_move 진입 coaching 48.95%, sand 26.37% 감소를 실제 확인했으나 CPU/wall 일관 개선 없어 생산 채택 보류. 생산 HEAD 929e6298 clean, feature 기본off/generic x86-64 유지. P7/P1e 전체는 미완료 유지.", "ts": "2026-09-29T03:54:08Z", "by": "p7a-astra-experiment"}
+{"id": null, "event": "definition", "hash": "361c9ff674ad", "count": 271, "ts": "2026-09-29T04:02:47Z", "by": "p7b-astra-experiment"}
+{"id": "P7b-retained-suffix-experiment", "event": "claim", "ttl": "14400", "ts": "2026-09-29T04:02:47Z", "by": "p7b-astra-experiment"}
+{"id": "P7b-retained-suffix-experiment", "event": "done", "ts": "2026-09-29T04:37:02Z", "duration": 2055, "by": "p7b-astra-experiment"}
+{"id": "P7b-retained-suffix-experiment", "event": "note", "text": "격리 P7b 전체 실험 완료. 13 gate, 8 fixture/38 record exact, 48 fresh-process timing 및 8 observer 독립 검증 통과. 원점 초기화와 역적용 감소 확인, 네 조건 wall/CPU 중앙값 증가로 기본 미채택. runs/chance-continuation-suffix-20260929/README.md 및 completion-audit.json. 생산 불변, 부모 P7/P1e 미완료 유지.", "ts": "2026-09-29T04:37:02Z", "by": "p7b-astra-experiment"}
+{"id": null, "event": "definition", "hash": "93392763b8e3", "count": 272, "ts": "2026-09-29T04:43:10Z", "by": "p7c-astra-cost"}
+{"id": "P7c-continuation-cost-diagnostic", "event": "claim", "ttl": "14400", "ts": "2026-09-29T04:43:10Z", "by": "p7c-astra-cost"}
+{"id": "P7c-continuation-cost-diagnostic", "event": "done", "ts": "2026-09-29T05:52:14Z", "duration": 4144, "by": "p7c-astra-cost"}
+{"id": "P7c-continuation-cost-diagnostic", "event": "note", "text": "Astra P7c 비용 진단 완료. 사용자 승인 WPT 10.0.26100.9457 CPU sampling: 보존 원본/P7b 2사례 1t AB/BA 총8회·191312 target samples, 출력 동일, lost0, PDB/분모/집계/스택깊이 독립검증 PASS. Battle::recycle subtree23~30%와 hurt_readers 임시Vec/반복조회가 다음 우선후보; 1~2% 회귀 단일원인 확정불가. 보조20회 cycle은 별도제한진단. README·native-summary-v2·completion-audit 보존: runs/continuation-cost-profile-20260929. 생산clean, 기존P7a/P7b/소스269개 보존, 새최적화·채택·커밋없음. 부모P7/P1e 미완료 유지.", "ts": "2026-09-29T05:52:14Z", "by": "p7c-astra-cost"}
+{"id": null, "event": "definition", "hash": "b263b8780f63", "count": 273, "ts": "2026-09-29T06:02:49Z", "by": "p8g-astra-hurt-readers"}
+{"id": "P8g-hurt-readers-experiment", "event": "claim", "ttl": "14400", "ts": "2026-09-29T06:02:49Z", "by": "p8g-astra-hurt-readers"}
+{"id": "P8g-hurt-readers-experiment", "event": "done", "ts": "2026-09-29T06:37:59Z", "duration": 2110, "by": "p8g-astra-hurt-readers"}
+{"id": "P8g-hurt-readers-experiment", "event": "note", "text": "Astra 격리실험 완료. hurt_readers 단독후보: 공식13gate, core85/90·scenario60·HP63fixtures·search8·38설정records exact; 직접differential5그룹. 48process(8warmup제외/20쌍) CPU13.96~21.77% wall14.47~22.31% 중앙값감소, 모든20쌍 CPU/wall감소. 메모리 일관개선 미확정. 독립집계/리뷰/완료audit PASS, production929e6298 clean 및 기존실험 보존, 생산미반영. runs/hurt-readers-20260929/README.md", "ts": "2026-09-29T06:37:59Z", "by": "p8g-astra-hurt-readers"}
+{"id": null, "event": "definition", "hash": "d41bf2f5db25", "count": 275, "ts": "2026-09-29T06:54:41Z", "by": "p8ha-astra-registration"}
+{"id": "P8ha-move-history-registration", "event": "claim", "ttl": "14400", "ts": "2026-09-29T06:54:41Z", "by": "p8ha-astra-registration"}
+{"id": "P8ha-move-history-registration", "event": "done", "ts": "2026-09-29T07:30:26Z", "duration": 2145, "by": "p8ha-astra-registration"}
+{"id": "P8ha-move-history-registration", "event": "note", "text": "격리 history-registration-20260929 구현/로직검증 완료. 생산929e6298 및 P8g보존, 기술callback+selectivehistory+source필수공동등록/data-only명시등록/누락Unknown보수기록+Unsupported/O(1)조회. core92, scenario90, factoredHP63fixtures, search8, fmt/clippy/REFUSALS PASS; 지원938ID중789지원 원본동일, 필수history누락·중복ID compile-fail2, pinned integration38항목(8상황)138229960bytes동일. candidate.patch 적용후텍스트동일/보존audit PASS. 성능평가미실시. 부모P8h Ruleset·특성·도구·기믹정책전파는미완료, 생산미반영.", "ts": "2026-09-29T07:30:26Z", "by": "p8ha-astra-registration"}
+{"id": null, "event": "definition", "hash": "20258daebf70", "count": 276, "ts": "2026-09-29T07:52:57Z", "by": "admin"}
+{"id": "CI1-paired-benchmark", "event": "start", "ts": "2026-09-29T07:52:57Z", "by": "admin"}
+{"id": "CI1-paired-benchmark", "event": "done", "ts": "2026-09-29T08:13:20Z", "duration": 1223, "by": "admin"}
+{"id": null, "event": "definition", "hash": "45c090d9a401", "count": 277, "ts": "2026-09-29T08:19:02Z", "by": "admin"}
+{"id": "CI2-p8g-github-measurement", "event": "start", "ts": "2026-09-29T08:19:02Z", "by": "admin"}
+{"id": "CI2-p8g-github-measurement", "event": "done", "ts": "2026-09-29T09:59:06Z", "duration": 6004, "by": "admin"}
+{"id": null, "event": "definition", "hash": "05fe2c9d299c", "count": 280, "ts": "2026-09-29T10:26:59Z", "by": "admin"}
+{"id": "DOC1-local-obsidian-vault", "event": "start", "ts": "2026-09-29T10:26:59Z", "by": "admin"}
+{"id": "P9-leaf-ending-state", "event": "start", "ts": "2026-09-29T10:34:54Z", "by": "admin"}
+{"id": "P8c-turn-validation", "event": "start", "ts": "2026-09-29T10:47:47Z", "by": "admin"}
+{"id": "DOC1-local-obsidian-vault", "event": "done", "ts": "2026-09-29T10:51:05Z", "duration": 1446, "by": "admin"}
+{"id": "P9-leaf-ending-state", "event": "done", "ts": "2026-09-29T11:06:44Z", "duration": 1910, "by": "admin"}
+{"id": null, "event": "definition", "hash": "a39ebb41a6e4", "count": 286, "ts": "2026-09-29T11:18:35Z", "by": "admin"}
+{"id": "P8c-turn-validation", "event": "done", "ts": "2026-09-29T11:18:35Z", "duration": 1848, "by": "admin"}
+{"id": "P8c-turn-validation", "event": "note", "text": "P8c 로직구현 완료: 후보124/원본113 통과; 20행21330bytes 독립binary 출력 SHA bb2fbb2058df874054bed8f09b47b51ed45bf9e5d95de0201494cbf9ed162816 일치; 8파일 patch f50a4ba37339fa24da1fc6c6d86ba7afb80a0ead987fe8c10fa858fd6bf14a48; 16 receipts와원본3994파일 재감사통과. 성능미측정/생산미채택. 별도 perf·release-validation·조건부 scope-expansion 등록. 보고서 C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/experiments/p8c-prepared-turn-20260929/README.md", "ts": "2026-09-29T11:18:35Z", "by": "admin"}
+{"id": "P9-leaf-ending-perf", "event": "start", "ts": "2026-09-29T11:21:52Z", "by": "admin"}
+{"id": "P9-leaf-ending-perf", "event": "note", "text": "GitHub Actions run 36561223990 dispatched 2026-09-29 20:21 KST: narrow, 1t, 6 pairs; baseline ea0b552259225c627268f3a444d1b60c9eaa3c3e; candidate 1edbf061c38b2c07326679ad3139491c3c15d83c; controller 1b14e1c94fd039f839942796883719047961c5c2. Both P8g on, candidate-only P9, observers off. Full Linux regression before paired timing; 28 controller tests passed. Peak RSS not collected. No engine adoption. Receipts: C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/experiments/p9-github-20260929/launch.json.", "ts": "2026-09-29T11:21:53Z", "by": "admin"}
+{"id": null, "event": "definition", "hash": "eeaf51b0740d", "count": 287, "ts": "2026-09-29T11:33:44Z", "by": "admin"}
+{"id": "DOC2-vault-contract-deepening", "event": "start", "ts": "2026-09-29T11:33:44Z", "by": "admin"}
+{"id": null, "event": "definition", "hash": "4a15f746b654", "count": 289, "ts": "2026-09-29T11:47:49Z", "by": "admin"}
+{"id": "DOC2-vault-contract-deepening", "event": "done", "ts": "2026-09-29T11:47:49Z", "duration": 845, "by": "admin"}
+{"id": "DOC2-vault-contract-deepening", "event": "note", "text": "계약 원자 문서 19개 추가(검색8/규칙8/측정3), 검토 개념49개. typed relation과 source anchor/메타데이터 검증, 영향조회 및 관계 보존 수정. 도구 테스트6개, staging 문서3560개·링크17580개 검사 통과 후 설치. 기존 이력99개 원자료 보존. 정적 max_turns 범위 차이는 S24-budget-scope-reproduce/resolution으로 분리. 완료 이벤트 반영 snapshot을 재생성하여 최종 재검증한다.", "ts": "2026-09-29T11:47:49Z", "by": "admin"}
+{"id": "S24-budget-scope-reproduce", "event": "start", "ts": "2026-09-29T12:12:48Z", "by": "admin"}
+{"id": null, "event": "definition", "hash": "e0d9c911d544", "count": 291, "ts": "2026-09-29T12:31:53Z", "by": "admin"}
+{"id": "S24-budget-scope-reproduce", "event": "done", "ts": "2026-09-29T12:31:53Z", "duration": 1145, "by": "admin"}
+{"id": "P9-leaf-ending-perf", "event": "done", "ts": "2026-09-29T12:31:58Z", "duration": 4206, "by": "admin"}
+{"id": "P8c-turn-validation-perf", "event": "start", "ts": "2026-09-29T12:44:54Z", "by": "admin"}
+{"id": null, "event": "definition", "hash": "1dce123a41c5", "count": 297, "ts": "2026-09-29T13:17:44Z", "by": "admin"}
+{"id": "DOC3-field-change-ledger", "event": "start", "ts": "2026-09-29T13:17:44Z", "by": "admin"}
+{"id": "DOC3-contract-test-trace", "event": "start", "ts": "2026-09-29T13:17:44Z", "by": "admin"}
+{"id": "DOC3-feature-baseline-map", "event": "start", "ts": "2026-09-29T13:17:44Z", "by": "admin"}
+{"id": "DOC3-execution-trace", "event": "start", "ts": "2026-09-29T13:17:45Z", "by": "admin"}
+{"id": "DOC3-experiment-reopen-conditions", "event": "start", "ts": "2026-09-29T13:17:45Z", "by": "admin"}
+{"id": "DOC3-field-change-ledger", "event": "note", "text": "중요 필드 계약9개 완료: Transform/Mega/기절점유자/이력/Wish/특성순서/턴경계/LazyTag. 정의·쓰기·리셋·복원·Eq/hash·hidden 경로를 source anchor로 연결. Pending 기존 계약 재사용. 전수 감사 아님.", "ts": "2026-09-29T13:33:55Z", "by": "admin"}
+{"id": "DOC3-field-change-ledger", "event": "done", "ts": "2026-09-29T13:33:56Z", "duration": 972, "by": "admin"}
+{"id": "DOC3-contract-test-trace", "event": "note", "text": "실제 테스트 추적9개 완료: 함수명·fixture·feature·assertion·허용오차·skip·미검증 범위 연결. diff 왕복과 필드 계약 교차링크 포함. 엔진 테스트 재실행 없음; 문서 도구7테스트와 조회 smoke 통과.", "ts": "2026-09-29T13:33:56Z", "by": "admin"}
+{"id": "DOC3-contract-test-trace", "event": "done", "ts": "2026-09-29T13:33:57Z", "duration": 973, "by": "admin"}
+{"id": "DOC3-feature-baseline-map", "event": "note", "text": "기준선/기능 계약5개 완료: production/P8g/P9/P8c SHA, core/search/runtime/Full/factored/worker 적용과 검증범위. P9+P8c 미통합, P8c는 불변 dispatch 근거까지만 기록.", "ts": "2026-09-29T13:33:57Z", "by": "admin"}
+{"id": "DOC3-feature-baseline-map", "event": "done", "ts": "2026-09-29T13:33:57Z", "duration": 973, "by": "admin"}
+{"id": "DOC3-execution-trace", "event": "note", "text": "대표 실행추적3개 완료: 직렬maximin 정상턴, MidTurn continuation, Result 오류복원. parent State·Pending 소유권, 중단상태 기준diff, terminal/depth/budget/error 순서 연결. panic 복원 보장·전수callgraph 주장 없음.", "ts": "2026-09-29T13:33:58Z", "by": "admin"}
+{"id": "DOC3-execution-trace", "event": "done", "ts": "2026-09-29T13:33:58Z", "duration": 973, "by": "admin"}
+{"id": "DOC3-experiment-reopen-conditions", "event": "note", "text": "재개조건4개 완료: P8a/P8b/P7/DP의 새 근거·변경 가설·동등성/실측 범위를 제안으로 명시. SIMD/PGO 기존조건 링크, 원본 최적화99개 SHA256 보존. 원인 실측 없이 단정하지 않음.", "ts": "2026-09-29T13:33:59Z", "by": "admin"}
+{"id": "DOC3-experiment-reopen-conditions", "event": "done", "ts": "2026-09-29T13:33:59Z", "duration": 974, "by": "admin"}

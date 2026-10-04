@@ -1,0 +1,1157 @@
+[
+  {
+    "bundle": "history/s1-budgeted-20261002/completion-receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s1-budgeted-20261002/completion-receipt.json",
+    "sha256": "66f4a2b91d543bc54f3076f63dac335088dc07404ebf97335713da5fe40b5a73"
+  },
+  {
+    "bundle": "history/s1-budgeted-20261002/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s1-budgeted-20261002/README.md",
+    "sha256": "6d318c778a262af37d786ac09a484807133583cdf6502b84d56cddd36a1ae96b"
+  },
+  {
+    "bundle": "history/s1-budgeted-20261002/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s1-budgeted-20261002/RESULTS.md",
+    "sha256": "22c3f42182ca432c8d5e126789148a77e5f3e580bfdd0c1177bc68a8500ee594"
+  },
+  {
+    "bundle": "history/s1-budgeted-20261002/SEARCH-LITERATURE.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s1-budgeted-20261002/SEARCH-LITERATURE.md",
+    "sha256": "7efb475041f88de55b8f04b958797a1664f81a12c0c8051ca15d877db46c2e0b"
+  },
+  {
+    "bundle": "history/s10-static-backup-20261003/AUDIT-37032057405.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s10-static-backup-20261003/AUDIT-37032057405.json",
+    "sha256": "bcc9ea8056a33b417b23ac9d687e47dbb7b93aa05687febadb70e66ee4119ddc"
+  },
+  {
+    "bundle": "history/s10-static-backup-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s10-static-backup-20261003/README.md",
+    "sha256": "2a84f518ab40015eb8e5ff64287ddd96e3e73f7e88359b39b0489c407af74c13"
+  },
+  {
+    "bundle": "history/s10-static-backup-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s10-static-backup-20261003/RESULTS.md",
+    "sha256": "faef0ce0c60b9caaf71862a88294a4f323cf28e2a7f13cc46544f9efd62f15e7"
+  },
+  {
+    "bundle": "history/s10-static-backup-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s10-static-backup-20261003/publication/push.json",
+    "sha256": "3f564ada7c1bd74328033d539328bc4902694a8cfe14ef57c6c1aa046913d0fd"
+  },
+  {
+    "bundle": "history/s10-static-backup-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s10-static-backup-20261003/publication/receipt.json",
+    "sha256": "8efa4379c1a2c636837b2e989e628a89d42b19a5c6b853b3cbb440cac8eb10f3"
+  },
+  {
+    "bundle": "history/s10-static-backup-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s10-static-backup-20261003/publication/source.patch",
+    "sha256": "5527ea6925ab078b92635382b62e667e4dda45e6d8b0a83d5fa9bb7896832e04"
+  },
+  {
+    "bundle": "history/s10-static-backup-20261003/publication/status-20261002T161715197867Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s10-static-backup-20261003/publication/status-20261002T161715197867Z.json",
+    "sha256": "709827b2a580ed1253ac262b2f45729a73e6d46106f7e0af423bd38ba146e572"
+  },
+  {
+    "bundle": "history/s11-night-confirm-20261003/AUDIT-37033041022.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s11-night-confirm-20261003/AUDIT-37033041022.json",
+    "sha256": "4072756840a8350a889bd07e219afbfccde846dfb9f399e8956ece88e3595ece"
+  },
+  {
+    "bundle": "history/s11-night-confirm-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s11-night-confirm-20261003/README.md",
+    "sha256": "c6ee3466bf3c04d9c7391c8bddda56bbb67b28eb17007906d6c2df231d17c30b"
+  },
+  {
+    "bundle": "history/s11-night-confirm-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s11-night-confirm-20261003/RESULTS.md",
+    "sha256": "764c78660e1613e06d16d1549a0b588d2a5fc4e402fd2c18f471a755abafaf92"
+  },
+  {
+    "bundle": "history/s11-night-confirm-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s11-night-confirm-20261003/publication/push.json",
+    "sha256": "a8a0f1ac9b05eda56b9228fef978af71f3a90f8edb03be3d8bd1124ef57f8fed"
+  },
+  {
+    "bundle": "history/s11-night-confirm-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s11-night-confirm-20261003/publication/receipt.json",
+    "sha256": "600caf662858183876e2b8e58ad683fc93f5d86f7d1504aba8caf3b94577eeff"
+  },
+  {
+    "bundle": "history/s11-night-confirm-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s11-night-confirm-20261003/publication/source.patch",
+    "sha256": "c29a075816d5d5849fc290b8f6915def3679694e7f601915d7bbd0f1736eebd4"
+  },
+  {
+    "bundle": "history/s11-night-confirm-20261003/publication/status-20261002T162507925924Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s11-night-confirm-20261003/publication/status-20261002T162507925924Z.json",
+    "sha256": "0d92cc9948f10187d52a58289430d106b758ecf84b1636d7327d396c79299cbd"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/AUDIT-37034440983.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/AUDIT-37034440983.json",
+    "sha256": "221ed4d0c08260525df8e0b4053dc5207bd87e11c03dcdeeb5f2cace72a217dd"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/completion-receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/completion-receipt.json",
+    "sha256": "49576a72474f32f47dfb5689b8045bc9f6ee7b5a765c2bd47c6a140324b4c093"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/NIGHT-MANIFEST.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/NIGHT-MANIFEST.json",
+    "sha256": "a84ecb6213888e9dcf46dfb6531ce056fcba52cfb0a6288d7c960b453f45ec86"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/NIGHT-RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/NIGHT-RESULTS.md",
+    "sha256": "3a83ed3884ccc97c490afe738c18ff7144f268430bc229811cd12207e9100539"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/README.md",
+    "sha256": "e3f2654154a74898fff9fcf19d42d18180327e6328059a25bd88cbee75a87853"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/RESULTS.md",
+    "sha256": "e860bb58f00932c380fefdc61d83b7adb9987eaf203a64997045d0c39d3bd1c7"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/SOURCE-PARITY.json",
+    "sha256": "e1d893f2fb78d7764acf8a713adb6de8ffdef31b297517b2c6237788aa17e8c5"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/publication/push.json",
+    "sha256": "61a2d14de78f0504d2089cd914a358e5dbecf0258d211ccee627f443211d8ac9"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/publication/receipt.json",
+    "sha256": "66319ed1253677f3714207cd40c6741c3bab97a27d934fc198fedda6de1c025a"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/publication/source.patch",
+    "sha256": "1536d9037f41d45c69d637433504fd3846c17d183a20cae5675c24abffad0aa3"
+  },
+  {
+    "bundle": "history/s12-observation-writer-20261003/publication/status-20261002T163758823945Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s12-observation-writer-20261003/publication/status-20261002T163758823945Z.json",
+    "sha256": "49c6a75ea2c7558e11a481532404623a4e367185d3dc815da680180b0ab19689"
+  },
+  {
+    "bundle": "history/s13-performance-candidates-20261003/findings.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s13-performance-candidates-20261003/findings.json",
+    "sha256": "08b238d7e8c57eca2d6112b328e1614d7bad1c9b4b657af298c5bdcd92104d46"
+  },
+  {
+    "bundle": "history/s14-owned-transitions-20261003/AUDIT-37083242086.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s14-owned-transitions-20261003/AUDIT-37083242086.json",
+    "sha256": "7a8e32084d606b514a9b64f7a7900f9014c9a018234e2b678011f2d35e243471"
+  },
+  {
+    "bundle": "history/s14-owned-transitions-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s14-owned-transitions-20261003/COMPLETION.json",
+    "sha256": "589fe5906fc623d74ad9919b8b6f5191cd89ff440b52a2be0af9e7aebddc21f4"
+  },
+  {
+    "bundle": "history/s14-owned-transitions-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s14-owned-transitions-20261003/README.md",
+    "sha256": "18bf9f129254f225827f62d4cbdeed34bdcd56f147791fb4e12f446c437a6193"
+  },
+  {
+    "bundle": "history/s14-owned-transitions-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s14-owned-transitions-20261003/RESULTS.md",
+    "sha256": "22b28bbd32bb62f680a1d8c3cc6c89d1410ea7222df287e2a133114161042e7f"
+  },
+  {
+    "bundle": "history/s14-owned-transitions-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s14-owned-transitions-20261003/SOURCE-PARITY.json",
+    "sha256": "a3cca8a2ca45dce0b534c4f8d799624c33be2fcb984c8f14427a5ae83f590ef0"
+  },
+  {
+    "bundle": "history/s14-owned-transitions-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s14-owned-transitions-20261003/publication/push.json",
+    "sha256": "66d581407fe56cde7fe992a637acf4432f9a7c06333bfe98d1459e5f1f202286"
+  },
+  {
+    "bundle": "history/s14-owned-transitions-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s14-owned-transitions-20261003/publication/receipt.json",
+    "sha256": "adc574501486594362e3de09b6979c01919f151973babdfd2891a42638f0baf2"
+  },
+  {
+    "bundle": "history/s14-owned-transitions-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s14-owned-transitions-20261003/publication/source.patch",
+    "sha256": "1461dd03e68e8b2b51e8dc682cfb2d796803b5fc61420f5eda276bbe2e6fea50"
+  },
+  {
+    "bundle": "history/s14-owned-transitions-20261003/publication/status-20261003T004802195840Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s14-owned-transitions-20261003/publication/status-20261003T004802195840Z.json",
+    "sha256": "c1f6e9f79c473b41c59ca670f9834581f60b2d8fc5736de638ab1b2947524d2f"
+  },
+  {
+    "bundle": "history/s15-interned-history-20261003/AUDIT-37085660921.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s15-interned-history-20261003/AUDIT-37085660921.json",
+    "sha256": "2c6d8e02b74c896f95bad67b8b356eee8e5307f5dd2e295b4058859bde076ba1"
+  },
+  {
+    "bundle": "history/s15-interned-history-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s15-interned-history-20261003/COMPLETION.json",
+    "sha256": "4f25fcb723fc2ea0f9b2b61549c070df971052b8ab6a7d13685b28794e2a8439"
+  },
+  {
+    "bundle": "history/s15-interned-history-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s15-interned-history-20261003/README.md",
+    "sha256": "633aad9600a59a505f908b01a663bb6b03b24783ab7130556c8cd614b0be4111"
+  },
+  {
+    "bundle": "history/s15-interned-history-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s15-interned-history-20261003/RESULTS.md",
+    "sha256": "4cead834c6ab6b2991e773169674ffa3f7b9cab3d86128cd75356f0a4dd17301"
+  },
+  {
+    "bundle": "history/s15-interned-history-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s15-interned-history-20261003/SOURCE-PARITY.json",
+    "sha256": "f86eb91a945a6a7a566cb033962c27db056e6a789947a7c973f90a561f5ea01e"
+  },
+  {
+    "bundle": "history/s15-interned-history-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s15-interned-history-20261003/publication/push.json",
+    "sha256": "f339f4287a8bdaad59edd3673dba6c3f87c13b1bdea769ecae2b008b079e235f"
+  },
+  {
+    "bundle": "history/s15-interned-history-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s15-interned-history-20261003/publication/receipt.json",
+    "sha256": "899b748d1d4c42900c99ce8ccb8b2338303825981f94a8ab2fa7a8eec52cbad0"
+  },
+  {
+    "bundle": "history/s15-interned-history-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s15-interned-history-20261003/publication/source.patch",
+    "sha256": "a6cb334929eddd90bd2322f68c998a9d8de563d41ad904511c8277da1e608c24"
+  },
+  {
+    "bundle": "history/s15-interned-history-20261003/publication/status-20261003T012441107753Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s15-interned-history-20261003/publication/status-20261003T012441107753Z.json",
+    "sha256": "fea06db6ec35ff1f5efaed3ee037dd91a4a6333c80451fd53a56dcf83da15bca"
+  },
+  {
+    "bundle": "history/s16-shared-final-passes-20261003/AUDIT-37087415542.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s16-shared-final-passes-20261003/AUDIT-37087415542.json",
+    "sha256": "f1a432de014752851b874c7a447a88ba92800be24561836b275b7d2817de3292"
+  },
+  {
+    "bundle": "history/s16-shared-final-passes-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s16-shared-final-passes-20261003/COMPLETION.json",
+    "sha256": "6b564c3d97e6f462b75a464297c918cf760781e218b5aeeaf9c03f1a19a54b20"
+  },
+  {
+    "bundle": "history/s16-shared-final-passes-20261003/decision.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s16-shared-final-passes-20261003/decision.json",
+    "sha256": "5da240a59aecf24e8518011d2d437242a23fd44e3d91af6336e805af5c22ee67"
+  },
+  {
+    "bundle": "history/s16-shared-final-passes-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s16-shared-final-passes-20261003/RESULTS.md",
+    "sha256": "ea23f76fb26d42d44dc90a915596e35e9504145ac9ff7191f4136e6d09e35ef5"
+  },
+  {
+    "bundle": "history/s16-shared-final-passes-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s16-shared-final-passes-20261003/SOURCE-PARITY.json",
+    "sha256": "e57039f9d7c42e216ca580c01418e231044bed577050eae7798d00b3300b79de"
+  },
+  {
+    "bundle": "history/s16-shared-final-passes-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s16-shared-final-passes-20261003/publication/push.json",
+    "sha256": "f192ba0395b1b2e58988a4630dd99f4a7085ef4740e6640dab2da9d956e76d01"
+  },
+  {
+    "bundle": "history/s16-shared-final-passes-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s16-shared-final-passes-20261003/publication/receipt.json",
+    "sha256": "b3be3a5d97423026bb091511b49b58f2f6b75b63e4ee1e7a93413881760fbae2"
+  },
+  {
+    "bundle": "history/s16-shared-final-passes-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s16-shared-final-passes-20261003/publication/source.patch",
+    "sha256": "e29ae807e9a1f2302a1faaabdcffe3cceffb7e73e084c10f5f8444a8f4b84cdc"
+  },
+  {
+    "bundle": "history/s16-shared-final-passes-20261003/publication/status-20261003T015122404367Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s16-shared-final-passes-20261003/publication/status-20261003T015122404367Z.json",
+    "sha256": "e077483abf2d56d7ec8f175d96382670b36544fb98142d3de0808aab4548ad83"
+  },
+  {
+    "bundle": "history/s17-incremental-compiler-20261003/AUDIT-37088113085.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s17-incremental-compiler-20261003/AUDIT-37088113085.json",
+    "sha256": "6e22c941fdcd1af7da7010fd4511d7ab28e10736830871872d2fc56b058e10ee"
+  },
+  {
+    "bundle": "history/s17-incremental-compiler-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s17-incremental-compiler-20261003/COMPLETION.json",
+    "sha256": "992042d3196b6ce7596cdf8059e49fccfd384239eb150c8bf5930c5e826cb963"
+  },
+  {
+    "bundle": "history/s17-incremental-compiler-20261003/decision.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s17-incremental-compiler-20261003/decision.json",
+    "sha256": "3195adc257507e5a235665606d82b998be3fea4f8c4253e85267f3dd5403ed62"
+  },
+  {
+    "bundle": "history/s17-incremental-compiler-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s17-incremental-compiler-20261003/RESULTS.md",
+    "sha256": "aac8bfbe13692c0d6e8d9532553142f16fe51ddc1eba95b47090a342e0a6c306"
+  },
+  {
+    "bundle": "history/s17-incremental-compiler-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s17-incremental-compiler-20261003/SOURCE-PARITY.json",
+    "sha256": "93be1e22a5830efa4d8266cac44889e59edae0036b084252b94cfe4775ba770f"
+  },
+  {
+    "bundle": "history/s17-incremental-compiler-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s17-incremental-compiler-20261003/publication/push.json",
+    "sha256": "2b8fd93486d0dfa480a8318d58e928db6d201bf3c660c749e87d4922a6572c04"
+  },
+  {
+    "bundle": "history/s17-incremental-compiler-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s17-incremental-compiler-20261003/publication/receipt.json",
+    "sha256": "41d83f98d803bee9fd0e090506dc86f2a4e8a46e634524aa4b8ef1f2c0684b8d"
+  },
+  {
+    "bundle": "history/s17-incremental-compiler-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s17-incremental-compiler-20261003/publication/source.patch",
+    "sha256": "162c721552d8d4b6f39e886ca14246afa1a23089b8acdc753f8864a746b69b42"
+  },
+  {
+    "bundle": "history/s17-incremental-compiler-20261003/publication/status-20261003T020228393171Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s17-incremental-compiler-20261003/publication/status-20261003T020228393171Z.json",
+    "sha256": "3fdd8e1967a34f51e5b26d5d4949be070e77c43b758ce65f356aac7d7fe0316f"
+  },
+  {
+    "bundle": "history/s18-parallel-transitions-20261003/AUDIT-37088881275.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s18-parallel-transitions-20261003/AUDIT-37088881275.json",
+    "sha256": "1248311bd750921ae5bc8162d93add4f659ac983e39488a874b41ae68022e07c"
+  },
+  {
+    "bundle": "history/s18-parallel-transitions-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s18-parallel-transitions-20261003/COMPLETION.json",
+    "sha256": "833df2274fc3e56cf71279448afa30f7605d5f6dfe3b25c8c0475491f521e174"
+  },
+  {
+    "bundle": "history/s18-parallel-transitions-20261003/decision.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s18-parallel-transitions-20261003/decision.json",
+    "sha256": "efd1eab442133d66785528b4a9298ae248cb103471c2b064f2db6a8cd7f93143"
+  },
+  {
+    "bundle": "history/s18-parallel-transitions-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s18-parallel-transitions-20261003/RESULTS.md",
+    "sha256": "aaaf9a56da51de7e8f631e25e9c22cb362c35ed82b1a18af9e661a950a190ae1"
+  },
+  {
+    "bundle": "history/s18-parallel-transitions-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s18-parallel-transitions-20261003/SOURCE-PARITY.json",
+    "sha256": "bace0670b9df755489c0210ea32d85f26dd78623fdaa12f7caa3a1fc2eb71286"
+  },
+  {
+    "bundle": "history/s18-parallel-transitions-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s18-parallel-transitions-20261003/publication/push.json",
+    "sha256": "0b994d9f83510935cfe0b1b8ccdb972249f8c45195097696c384d9ff3eef2ea4"
+  },
+  {
+    "bundle": "history/s18-parallel-transitions-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s18-parallel-transitions-20261003/publication/receipt.json",
+    "sha256": "a7298a3664495cd62e4e475ae358af07b369c83ab4e1f4c15b8de51a1e876497"
+  },
+  {
+    "bundle": "history/s18-parallel-transitions-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s18-parallel-transitions-20261003/publication/source.patch",
+    "sha256": "f31f27be5cb2b9529068c8c4abb273646b4a79eba5f3c1145174f96793e87f84"
+  },
+  {
+    "bundle": "history/s18-parallel-transitions-20261003/publication/status-20261003T021702689375Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s18-parallel-transitions-20261003/publication/status-20261003T021702689375Z.json",
+    "sha256": "18dfaaaaf5977ff19be08f133b59568757ae8550eb94aef15bd5374e62c59c41"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/ADDITIONAL-EVIDENCE.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/ADDITIONAL-EVIDENCE.json",
+    "sha256": "80139a055f0133b0e857e194a380c4abebed5263d2db7ceb913f1522b6361ad7"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/AUDIT-37089670577.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/AUDIT-37089670577.json",
+    "sha256": "4f5a890aa07e8770a66d3ed6b0077c81b7111235b89b7917002d88b11314904c"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/COMPLETION.json",
+    "sha256": "9739fd77ba91ae48c99ad735ef025fada54ae8b274da6fd1eb5b92f1a4d6cd14"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/decision.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/decision.json",
+    "sha256": "e42db26c61e0697af9be982d7d726f2921c1a1a53f619fce0a5bd99ad9b11abc"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/RESULTS.md",
+    "sha256": "a4e36b0b324394440234f1a142b4953912f50db25945d941590d764a2f566491"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/SOURCE-PARITY.json",
+    "sha256": "7cc365d09cbe381e5d59c469bbca6ca7710e908de24fcaa09a4bee3d3ed48d43"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/publication/push.json",
+    "sha256": "4ae70b462c2fe87d748d6dc9237e9931eeac5a089fd8ac87a5116e47c3989465"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/publication/receipt.json",
+    "sha256": "5ac46a8d07e591e8f3f2173ba49567a2e0e80b41588fe6f3bd0b2b13e15daaab"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/publication/source.patch",
+    "sha256": "202f24bd516976d1646b48c4ddfe30094d75d21310af001dd5906eb4bf668ca3"
+  },
+  {
+    "bundle": "history/s19-growth-cadence-20261003/publication/status-20261003T022737561901Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/publication/status-20261003T022737561901Z.json",
+    "sha256": "7798c1201dba5e41f391a6550be7a1532e1b9d20dc00e5f8160deb60d38b5114"
+  },
+  {
+    "bundle": "history/s2-search-quality-20261002/AUDIT-36995572342.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s2-search-quality-20261002/AUDIT-36995572342.json",
+    "sha256": "099e7c2ab078b3fc2a7da1580a98c701281d5563095c74444056e87e724bbfd9"
+  },
+  {
+    "bundle": "history/s2-search-quality-20261002/completion-receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s2-search-quality-20261002/completion-receipt.json",
+    "sha256": "a7b8cb17c11b946ef370db4b1e4a19fea6499c2cfbeeccf7076c9d9ec3e904d1"
+  },
+  {
+    "bundle": "history/s2-search-quality-20261002/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s2-search-quality-20261002/README.md",
+    "sha256": "2304b37b74f1a06b3500561e9f5ad4969b427868f30015ce279a4909a67f20c5"
+  },
+  {
+    "bundle": "history/s2-search-quality-20261002/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s2-search-quality-20261002/RESULTS.md",
+    "sha256": "7020cdedd35079f9a5a9341b577fd8dae275dee08f38d56bcf8159ac283116be"
+  },
+  {
+    "bundle": "history/s2-search-quality-20261002/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s2-search-quality-20261002/publication/push.json",
+    "sha256": "1f2006f298705b6bd2fea88cd6344cf4ab89ed6cb63c77de3c6c95330d3ad14e"
+  },
+  {
+    "bundle": "history/s2-search-quality-20261002/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s2-search-quality-20261002/publication/receipt.json",
+    "sha256": "fffe076923cb64a87f1f80112c8318fd54964b4dea5d25a2241bfd26856c9fe5"
+  },
+  {
+    "bundle": "history/s2-search-quality-20261002/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s2-search-quality-20261002/publication/source.patch",
+    "sha256": "ab67a98573ac33b8c44e37f34a49865899eb8c8e4c354eec6de225979d9fe595"
+  },
+  {
+    "bundle": "history/s2-search-quality-20261002/publication/status-20261002T103149006884Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s2-search-quality-20261002/publication/status-20261002T103149006884Z.json",
+    "sha256": "08a6e076bb1b01bb912173eaf28f52e361bef62c3f97585a665547ce40c1d024"
+  },
+  {
+    "bundle": "history/s20-literature-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s20-literature-20261003/COMPLETION.json",
+    "sha256": "e90602d9c54cecb1af1163411f9d7090732aa572c606eff536c869200f5aecc8"
+  },
+  {
+    "bundle": "history/s20-literature-20261003/NEXT-OPTIMIZATIONS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s20-literature-20261003/NEXT-OPTIMIZATIONS.md",
+    "sha256": "6cc0de5f5fcab83438ab5cabb8ef0385c2e73d6c8d506bb2c9027737e9ee16f0"
+  },
+  {
+    "bundle": "history/s20-literature-20261003/research.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s20-literature-20261003/research.json",
+    "sha256": "aad9d1383df82b08b3dcd1f169b5dd7fdfa5674a335a8f0745c729866424a9a8"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/COMPLETION.json",
+    "sha256": "2f2a9f759033ca01d4fe91dab4db13e0caed9ff646aaee7a9d15f6b94124e19d"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/DECISION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/DECISION.json",
+    "sha256": "c88461dfd74318e157a73bc3719edba5e2ccb0d190ef157980c4f36185425307"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/README.md",
+    "sha256": "101db5f17364594b04ddf0e4fd4c5447a8e3d014fc1b477278f264dd421970ab"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/RESULTS.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/RESULTS.json",
+    "sha256": "efa44a56aa79a206b13189b023209ade0deb78e6791975ab88f260a6bb629de7"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/RESULTS.md",
+    "sha256": "56a9a381d731a05a5e7eeafe841f145e8b7320b1e0160495b8017e69346c478d"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/SOURCE-PARITY.json",
+    "sha256": "14e363b86b50a308e21466233994b621891294303c5d045627b72d73d6ab93ca"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/publication/push.json",
+    "sha256": "f450f1134ec22cbba332f9331e6e3a49a2d68323f0be05807ff1bb01d7d5986f"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/publication/receipt.json",
+    "sha256": "7a0bb581af4eb2597859df2a18d7f58cd9f0734f9e01f9a41c8641b17246a597"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/publication/source.patch",
+    "sha256": "15d1d3c76696c6101ecbc789037ffc04bca39e228e8886488893e56d5f4ec61e"
+  },
+  {
+    "bundle": "history/s21-paper-solvers-20261003/publication/status-20261003T113435599007Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s21-paper-solvers-20261003/publication/status-20261003T113435599007Z.json",
+    "sha256": "b2d38fceea7a38ba6828cbc1e8b89584374f8c07288bf06be60b517802f73ea3"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/COMPLETION.json",
+    "sha256": "b2e6cb13660115a33c6d37131b73513f08a45140255242aa382cb462a08468b6"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/DECISION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/DECISION.json",
+    "sha256": "6c19ec7ebd3b996b259aed292c2b91107bfa71182f95c80e9d9f51e94bddde2b"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/README.md",
+    "sha256": "fd32f32c825d007c4568cde7d7fe923d05af1dce9e959b3d71fd29b466dd93b6"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/RESULTS.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/RESULTS.json",
+    "sha256": "8ad5557d00ca1f9fc6eb96b2ada27d5ca04310cb2d3f44ca57ea0dc89868c32b"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/RESULTS.md",
+    "sha256": "8a6257d88ed304afcb1ff6c7805bc7b200275011a3ab96cbe8157eb4169d94b3"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/SOURCE-PARITY.json",
+    "sha256": "b29a8919acda231c1bb49ecf108b1acc8c9809955227b5953e558f4d27c4b9c5"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/publication/push.json",
+    "sha256": "b14c07853d22b40f138c9774981ef7ed9203c38e30245aaf7c77508ad5818db6"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/publication/receipt.json",
+    "sha256": "10c75c6d688e969b6a733adf8376169435a7ecbc468aecf4d79c64f38c73b59a"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/publication/source.patch",
+    "sha256": "e0c2517bf52aab0a694be192d127f7008a444d7a66ae60c69d9678d92a94cc35"
+  },
+  {
+    "bundle": "history/s22-growth-pipeline-20261003/publication/status-20261003T125530489761Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s22-growth-pipeline-20261003/publication/status-20261003T125530489761Z.json",
+    "sha256": "c8debeb2b450baf68f8eacba763ab5496978320254796a1b7b6b40e54f0f2f9f"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/COMPLETION.json",
+    "sha256": "58d6604285ca894dc2697119bf1c0166f458bbd22e0df742727db5bf68ce6b39"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/DECISION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/DECISION.json",
+    "sha256": "e14d518f9c57b5ea0470ef013a934e11216ab4e3f1a96f548b8910316560668f"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/README.md",
+    "sha256": "aefe1a63a2dff6cbb04efdbd9d58991063b97dca84cdb95eb23cbb7f294ea51a"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/RESULTS.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/RESULTS.json",
+    "sha256": "0e2d119e19d46b121878c7b86b03464b6670a4fc072bf4b9ddd544e85fcfbc55"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/RESULTS.md",
+    "sha256": "70fad9461b4fabc77ba9dc7c19cbf7fbb315bc1477b47de5a44a4a2e57c52bbc"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/SOURCE-PARITY.json",
+    "sha256": "2c1260938aaac5765796371d6a3d57559e9e85bc748643ccf05f458fff8b9905"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/publication/push.json",
+    "sha256": "f239f84ab8dedfc50de88f525a839fcb97c27c046c54a8613eaa4a3981a0d96b"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/publication/receipt.json",
+    "sha256": "648c3627405c77f78e07528a1e8d8e5aaf4a7484c1bfd919b10cea20b2735f2c"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/publication/source.patch",
+    "sha256": "763ce97251b1bc2d7faa4601bd87276e3fc3854150e63048a4bec46e8922316a"
+  },
+  {
+    "bundle": "history/s23-phase-cost-20261003/publication/status-20261003T135011925241Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s23-phase-cost-20261003/publication/status-20261003T135011925241Z.json",
+    "sha256": "a048849761b742062745f881516306b64ee8d8bd587f46788528aa4a78638a6f"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/COMPLETION.json",
+    "sha256": "3fd3ba2c6cfa6757a97a6a90e35275fa3b5bb9ae40b376f532564203d172a14f"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/DECISION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/DECISION.json",
+    "sha256": "085fd9d4ee8ac9a57da0b574558499d348cc701620bab88ddd05df7e6ac346ae"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/README.md",
+    "sha256": "515e80b37b7667ad540c789d69c414307f80066718026cae69a04c66e18114da"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/RESULTS.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/RESULTS.json",
+    "sha256": "1c3854c96bb1f64bed70ccdfb479df04039d9cb77597bc7e7c50fbad140242a2"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/RESULTS.md",
+    "sha256": "dd53fa3cb40367db3e8ce6ff0186ce65bbd04d996e4783d43d5a002b36a6539a"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/SOURCE-PARITY.json",
+    "sha256": "093519c158fb60a9049e9900713baae446e70fa3f689f5c92ea161d2463777b7"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/publication/push.json",
+    "sha256": "4f32f4aff33ef2f6d86196dba2cf1ba8c3595122c807c13d12bf485bd4a8e7c1"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/publication/receipt.json",
+    "sha256": "2b62e89ab66eea1cc1f20169113041eebbd261c88ed5f52dfb6bd7f91357fe7b"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/publication/source.patch",
+    "sha256": "10097255e51cb3a17fb2de0a577f138ad1921b2122dc8f4563bb3f3c30fc56f0"
+  },
+  {
+    "bundle": "history/s24-admission-audit-20261003/publication/status-20261003T144128305579Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s24-admission-audit-20261003/publication/status-20261003T144128305579Z.json",
+    "sha256": "c7381c905a8e2af92e9f55392f5c6ec2d0efa7c03107b771c4888531dff0ccf9"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/COMPLETION.json",
+    "sha256": "e4886dff6daedd411c307f8c5dd57e7fcbd1c2a292324320be7adecd1ac738e0"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/DECISION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/DECISION.json",
+    "sha256": "8d8ac476348209269dc4e36bfbb121864e73a139953ebc953fb2ddaf5f4d6fa6"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/DECISION.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/DECISION.md",
+    "sha256": "8eec8a3e8fe32da94e5c6339ecc69664ebb408414a121af0415b9387f7ab517a"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/README.md",
+    "sha256": "80d1e4a5a5b511ea5cd844db505c84548f1862918bada8e6eb4810467ba062b3"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/RESULTS.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/RESULTS.json",
+    "sha256": "fab1b25341c0ef9cec34eb8dde85d57a851e8a75feb54b22e63044ed9656065a"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/RESULTS.md",
+    "sha256": "5e0f7f8a0e0424c30451b042b4bbc3a25ea7de6f34029f0913ecb16d11676d42"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/SOURCE-PARITY.json",
+    "sha256": "303c2d606a54c001cb9f18be06e496df1e624d9edc9fb9c833abd565e572e009"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/publication/push.json",
+    "sha256": "bb9771e4b42288b01051265b8de867c4d175ac9dd91e779d46ef797afaa9d7c1"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/publication/receipt.json",
+    "sha256": "116925f047653b35959482219c9253e68794884f8efe0532cd51dc0959744be3"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/publication/source.patch",
+    "sha256": "26a19071238ed42de6620aa67d394024abc3f20b55fc47d1408cde27ab2e7813"
+  },
+  {
+    "bundle": "history/s25-history-keys-20261003/publication/status-20261003T145936059988Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s25-history-keys-20261003/publication/status-20261003T145936059988Z.json",
+    "sha256": "4b3f3714e5139d9672a81221843fb4994cf4baa0707b9737702241f9df48db05"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-20261004/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-20261004/README.md",
+    "sha256": "0e642acd1ed5541055578cf78bd1dae0ac83825c54dc91fa86e00502183c89ce"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-20261004/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-20261004/SOURCE-PARITY.json",
+    "sha256": "0aa95701fd90abcf538d4e824acf8e42ed1ec22b5d614240c515afe0db834d66"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-20261004/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-20261004/publication/push.json",
+    "sha256": "9b432a16a20beef78044c1eb9241a833a19ab6518c4162e1b6760ed698448f92"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-20261004/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-20261004/publication/receipt.json",
+    "sha256": "42b0e701fb6761fe51e0fba9ebfb70a0f9f7bf43fe0311935f53b402373ba29c"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-20261004/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-20261004/publication/source.patch",
+    "sha256": "fa54a3a0b97c0bc8f945b3ff08cd43fd82277008341c6745a71812ed9ce30e9d"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-20261004/publication/status-20261003T235339995076Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-20261004/publication/status-20261003T235339995076Z.json",
+    "sha256": "d5c4df620e3098b9208dd71c43e0a3507e1c72deab29fa3c336d7817178475b3"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/COMPLETION.json",
+    "sha256": "554295b1c84e7ca4834a90e41f8c9a0e062bf558f0074fdad99c1969db7a585b"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/DECISION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/DECISION.json",
+    "sha256": "058b9e921b20bed08003a18b349a8f97cd9aa0a19816436cb7258d2d5a50334d"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/DECISION.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/DECISION.md",
+    "sha256": "735f4b17073c2ba50c1870dca548b3447da0138b0d6ae5d34d55f42c7f18ebaa"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/README.md",
+    "sha256": "76b39a0559ffc222ffecc1575c36bbcfcd78581257322329c42325638d770cdc"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/REPAIR.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/REPAIR.json",
+    "sha256": "6acf77895149137ee398d66c60026ad1d7eefb08e823cb0c01b10f9ef2c2acc6"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/RESULTS.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/RESULTS.json",
+    "sha256": "b047ce1a20abc0554253954c4f44827b66b3b913da601b12634726a6f1b6860c"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/RESULTS.md",
+    "sha256": "d8732f22eb088d0b95f551add66fd8857707e7dce51ce3eaeb5e301f9efbebcc"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/SOURCE-PARITY.json",
+    "sha256": "ba99d6852924f2f4cc426f457c8b1acb8a3665da2fbe0c5660b5b686bae661a3"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/publication/push.json",
+    "sha256": "d5e599088df9a0026dc87524f0b921e61a3c0326ff2940f815c3d7922bd32d82"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/publication/receipt.json",
+    "sha256": "d3115522c9f1c88cac7159d631877adfe0696fe4f7993dcf317bdd9f05d6d94b"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/publication/source.patch",
+    "sha256": "f34cea03bc4b66792b179e351f11905b725be3dc341f92c5b05a2885ec1a6338"
+  },
+  {
+    "bundle": "history/s26-borrowed-boundary-r2-20261004/publication/status-20261004T002221181810Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s26-borrowed-boundary-r2-20261004/publication/status-20261004T002221181810Z.json",
+    "sha256": "8a7726dd32a323780b1c135bc5d3e0d2cbf3996c1094d01deacdceef2c5c431f"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/COMPLETION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/COMPLETION.json",
+    "sha256": "780672eab2cb82ff14211d2d2ad0f85708f1b2772ef11c0b7caa00b3a2c2c95f"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/DECISION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/DECISION.json",
+    "sha256": "49c8ed35665acc3f3e9c31a751085ad0978eaf7141b663e4938b71a193cc55bb"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/DECISION.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/DECISION.md",
+    "sha256": "a24827cea18464e92de96a712f6c3260f81a77def060cfb73dda7e619e0a7d3b"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/INPUT-SELECTION.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/INPUT-SELECTION.json",
+    "sha256": "16415d7f2511662104f4618e703d976f2995a3bbab34b8611fd089e621a04e29"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/README.md",
+    "sha256": "0aacddc62f9636e4d2631971ff3a192c7557bcb4dd76735151f191d460c13436"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/RESULTS.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/RESULTS.json",
+    "sha256": "039a115072a3a4fc86a82abef383ff22791bc826774f09e4507f99b352939794"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/RESULTS.md",
+    "sha256": "113590daac2606e44dda569ffe7daa39c6f440492945efdd44a5ce15f767fa97"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/SOURCE-PARITY.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/SOURCE-PARITY.json",
+    "sha256": "43ef00aa544b24b603dbe5e61af16b1a0d159ce6635b03842c0fe3a2ab5f63b7"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/publication/push.json",
+    "sha256": "78d3291089e4ee1302765df60403bb80fc7af43b0ce300f4c9248a2251ce624a"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/publication/receipt.json",
+    "sha256": "3b0b4da444abe13cb9a4d9ffd503aba433fe6b1cc1681440db30c6003f9bc2db"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/publication/source.patch",
+    "sha256": "fd60af2c44b5b0fe8984924814db5834ba57744339ed8ce463530d7fd70546c6"
+  },
+  {
+    "bundle": "history/s27-selected-stack-20261004/publication/status-20261004T033005807836Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/publication/status-20261004T033005807836Z.json",
+    "sha256": "0b699cee6135a45f8ae1a4ef3cb7bf4136d15540981da198d815c7bbab3a1290"
+  },
+  {
+    "bundle": "history/s3-response-sweeps-20261002/AUDIT-36999721226.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s3-response-sweeps-20261002/AUDIT-36999721226.json",
+    "sha256": "992b87bd95053f6f9efe7e57b29e6f49b4e0fb0af3e5329d09571ce2c3574029"
+  },
+  {
+    "bundle": "history/s3-response-sweeps-20261002/completion-receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s3-response-sweeps-20261002/completion-receipt.json",
+    "sha256": "5d228eb6aa14c7b5bd76cce1ccf94e6731228348fa2035acd60e7a0f3420e308"
+  },
+  {
+    "bundle": "history/s3-response-sweeps-20261002/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s3-response-sweeps-20261002/README.md",
+    "sha256": "9b0289c483871a4e7829d864dd456631f3b8cd44fbe2a399ca20f0de9c8443b9"
+  },
+  {
+    "bundle": "history/s3-response-sweeps-20261002/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s3-response-sweeps-20261002/RESULTS.md",
+    "sha256": "c216a49a749f91ef81a9f7e363b006883aa8d431c760c7c97f48bd6b2f080020"
+  },
+  {
+    "bundle": "history/s3-response-sweeps-20261002/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s3-response-sweeps-20261002/publication/push.json",
+    "sha256": "564ba868b04054b51acc0972f1577b5ccb5715af9916ddaab26f15e89c6b5371"
+  },
+  {
+    "bundle": "history/s3-response-sweeps-20261002/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s3-response-sweeps-20261002/publication/receipt.json",
+    "sha256": "1f7b02ab5bfaf28faeef60d9f4e090ac7633d531a7ae3ad82b1e1ac034439cb5"
+  },
+  {
+    "bundle": "history/s3-response-sweeps-20261002/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s3-response-sweeps-20261002/publication/source.patch",
+    "sha256": "52acd5a396617e4b5f834158a093823426ee1909cc0c10e7fbadb1d4e8cdd775"
+  },
+  {
+    "bundle": "history/s3-response-sweeps-20261002/publication/status-20261002T111725708733Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s3-response-sweeps-20261002/publication/status-20261002T111725708733Z.json",
+    "sha256": "85042cc16a414d21b9662fdd5b0e915010a95891b4794ed2457a6fb535cdd663"
+  },
+  {
+    "bundle": "history/s4-bayesian-cfr-20261002/AUDIT-37008543602.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s4-bayesian-cfr-20261002/AUDIT-37008543602.json",
+    "sha256": "e8c495a285db0553ad59c1196c0d7981ac5b9b2653d9b3851ad91d68c5847b69"
+  },
+  {
+    "bundle": "history/s4-bayesian-cfr-20261002/completion-receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s4-bayesian-cfr-20261002/completion-receipt.json",
+    "sha256": "4e4af489fc05ef83250f5291b2b16e24a7a026e87bf7400a12ac40e05a2fd894"
+  },
+  {
+    "bundle": "history/s4-bayesian-cfr-20261002/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s4-bayesian-cfr-20261002/README.md",
+    "sha256": "125a885a3dbfc275acb61d29b247d04956e81653c307f3b96a5fd9e8a2cad617"
+  },
+  {
+    "bundle": "history/s4-bayesian-cfr-20261002/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s4-bayesian-cfr-20261002/RESULTS.md",
+    "sha256": "ac74d2f03bffddcffdbf095554804ee8c208cc286501f64011d67fb9cbdf8d07"
+  },
+  {
+    "bundle": "history/s4-bayesian-cfr-20261002/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s4-bayesian-cfr-20261002/publication/push.json",
+    "sha256": "99429f52f74a3cb778aebfdd3486fd0f0378e56bfa0bc8623b047209e6c107fb"
+  },
+  {
+    "bundle": "history/s4-bayesian-cfr-20261002/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s4-bayesian-cfr-20261002/publication/receipt.json",
+    "sha256": "58456d1c38d7bbd9e98bbbf946a2245061ea4b233b1831c74454e5b3e3a5ea07"
+  },
+  {
+    "bundle": "history/s4-bayesian-cfr-20261002/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s4-bayesian-cfr-20261002/publication/source.patch",
+    "sha256": "9e073bd81f22b6bca6d046939e9c0ba3d4be2516a873add5735eb1e06ca2eb63"
+  },
+  {
+    "bundle": "history/s4-bayesian-cfr-20261002/publication/status-20261002T124702123962Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s4-bayesian-cfr-20261002/publication/status-20261002T124702123962Z.json",
+    "sha256": "1a817020ac5dc6ef96031679d8f2c6234e9c017a3547e5401582dabc889d6f17"
+  },
+  {
+    "bundle": "history/s5-public-belief-20261002/AUDIT-37014537106.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s5-public-belief-20261002/AUDIT-37014537106.json",
+    "sha256": "21a5147898d40acd20290569a9c4cc5127b5d9b67c1050a88fb732528293aa4c"
+  },
+  {
+    "bundle": "history/s5-public-belief-20261002/completion-receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s5-public-belief-20261002/completion-receipt.json",
+    "sha256": "bf5b89a3805da359c2e632f46da4e1d8cf51c88f838d75213b9978286902d599"
+  },
+  {
+    "bundle": "history/s5-public-belief-20261002/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s5-public-belief-20261002/README.md",
+    "sha256": "5d80ced78f6ad2e4f19bcb7cfedb28e2922aaa3a858265d101d09634b39c06ff"
+  },
+  {
+    "bundle": "history/s5-public-belief-20261002/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s5-public-belief-20261002/RESULTS.md",
+    "sha256": "ba6b48e69b2dbd55de985d88c427a73b327bc722de03030da847afcada38b665"
+  },
+  {
+    "bundle": "history/s5-public-belief-20261002/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s5-public-belief-20261002/publication/push.json",
+    "sha256": "98cd993d6e97a137a9ff18054724c34e86916d9389c030f20613075a46211928"
+  },
+  {
+    "bundle": "history/s5-public-belief-20261002/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s5-public-belief-20261002/publication/receipt.json",
+    "sha256": "af521ef03a34d9bc7042d6848df3df5c0c45540d9c2e59099ab739353d3efa2b"
+  },
+  {
+    "bundle": "history/s5-public-belief-20261002/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s5-public-belief-20261002/publication/source.patch",
+    "sha256": "f957e6e6aed2778c9f8488000ff35b9a943495dee078e7cd95971680192c5ca3"
+  },
+  {
+    "bundle": "history/s5-public-belief-20261002/publication/status-20261002T134209845386Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s5-public-belief-20261002/publication/status-20261002T134209845386Z.json",
+    "sha256": "633f31043d6712ab9eb6e3b36fa4483f09e306f7c0c00bf2b05172534f302993"
+  },
+  {
+    "bundle": "history/s6-growing-belief-20261002/AUDIT-37020601917.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s6-growing-belief-20261002/AUDIT-37020601917.json",
+    "sha256": "c6892f0f1443b6582181fbfdc713cc172b55ef398d3fddd1691e3a2bb99ae6d0"
+  },
+  {
+    "bundle": "history/s6-growing-belief-20261002/completion-receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s6-growing-belief-20261002/completion-receipt.json",
+    "sha256": "b57507099576716b9fd50f3bdf7083c24f7ca61841c34d13726308b6d08096da"
+  },
+  {
+    "bundle": "history/s6-growing-belief-20261002/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s6-growing-belief-20261002/README.md",
+    "sha256": "72ca48105359794edacd619da4a7c0dd66bfb49e6534dd0c8ec8fded5918aa3b"
+  },
+  {
+    "bundle": "history/s6-growing-belief-20261002/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s6-growing-belief-20261002/RESULTS.md",
+    "sha256": "d4534aafbd65aebddd2f8cb62cb39afb7399ef22b66e8ea3038e672e8ffbb45c"
+  },
+  {
+    "bundle": "history/s6-growing-belief-20261002/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s6-growing-belief-20261002/publication/push.json",
+    "sha256": "e48ff354526e3cc8141a2699c5dd68211b1370780a8d7533f0b92cfc19f1c3fc"
+  },
+  {
+    "bundle": "history/s6-growing-belief-20261002/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s6-growing-belief-20261002/publication/receipt.json",
+    "sha256": "dfc4f09479c17876ebfbbb868500ad4c1cb2cd8fd7c88243f63df6d66da30fca"
+  },
+  {
+    "bundle": "history/s6-growing-belief-20261002/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s6-growing-belief-20261002/publication/source.patch",
+    "sha256": "e2a730b3418b2983fe206a2bf37d4a098b3cbe2844cfc10f0fb6d7b03d85eb19"
+  },
+  {
+    "bundle": "history/s6-growing-belief-20261002/publication/status-20261002T143412006100Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s6-growing-belief-20261002/publication/status-20261002T143412006100Z.json",
+    "sha256": "7bd64e1fcf11b00028ea51219081b2d80a520ac017c5ac3d701170f7611497a2"
+  },
+  {
+    "bundle": "history/s7-belief-speed-20261002/AUDIT-37025196260.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s7-belief-speed-20261002/AUDIT-37025196260.json",
+    "sha256": "c11b54cc03a00e433d6a8a6f9b68b05ffc7fc4f1c33c302e938df681e440ab29"
+  },
+  {
+    "bundle": "history/s7-belief-speed-20261002/completion-receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s7-belief-speed-20261002/completion-receipt.json",
+    "sha256": "3968bdbcbaaf41b717366057494cc4cb7f4f8b6bb31f1a9d0fe3e2a23152b7e0"
+  },
+  {
+    "bundle": "history/s7-belief-speed-20261002/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s7-belief-speed-20261002/README.md",
+    "sha256": "676b07144113c8180d821ff60ffd9a66ad85dedad32fa0adba9088d441fbebd3"
+  },
+  {
+    "bundle": "history/s7-belief-speed-20261002/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s7-belief-speed-20261002/RESULTS.md",
+    "sha256": "4209bc8f6b74801cf60199100d0e6fcd0e69a38b77e6c68bb6d6c94fd442e33f"
+  },
+  {
+    "bundle": "history/s7-belief-speed-20261002/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s7-belief-speed-20261002/publication/push.json",
+    "sha256": "3f9237a56f34bd60e266023e9f7e72c93b70286f4fc146568ddf9f5497dbf76a"
+  },
+  {
+    "bundle": "history/s7-belief-speed-20261002/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s7-belief-speed-20261002/publication/receipt.json",
+    "sha256": "6dd6abdeebbca2c88fbe28cc39e5bce80b04988065bcd8716aac972626c62c62"
+  },
+  {
+    "bundle": "history/s7-belief-speed-20261002/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s7-belief-speed-20261002/publication/source.patch",
+    "sha256": "c2ed57c4c1305e0ef4529eeaa103a14f0ec3c67709a0a06d7c2786d10d1cc798"
+  },
+  {
+    "bundle": "history/s7-belief-speed-20261002/publication/status-20261002T151520245193Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s7-belief-speed-20261002/publication/status-20261002T151520245193Z.json",
+    "sha256": "f06ed99acc74ab2392eea5a6b722dbca1469173e8b9ddec1adac14f8025434fd"
+  },
+  {
+    "bundle": "history/s8-belief-workspace-20261003/AUDIT-37029881806.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s8-belief-workspace-20261003/AUDIT-37029881806.json",
+    "sha256": "2f2d8b3900d37574d1601ee690ef5f47acb03c947c85cd2bde895449d7a1a85a"
+  },
+  {
+    "bundle": "history/s8-belief-workspace-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s8-belief-workspace-20261003/README.md",
+    "sha256": "b7de41b1b66dc710a61d70f715392987424495470b0ea62b3b8192046f8da01d"
+  },
+  {
+    "bundle": "history/s8-belief-workspace-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s8-belief-workspace-20261003/RESULTS.md",
+    "sha256": "8d00c034721eac48b997a3ad56895862637caa124efecf0e52c625e1549900f6"
+  },
+  {
+    "bundle": "history/s8-belief-workspace-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s8-belief-workspace-20261003/publication/push.json",
+    "sha256": "d9df98c9ce5e7c0aa22f5851071eec041f81a2a6b7d8bda518455d042966ad8f"
+  },
+  {
+    "bundle": "history/s8-belief-workspace-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s8-belief-workspace-20261003/publication/receipt.json",
+    "sha256": "226ce5f26d6486237f2b95355205c57d681b64172bb0edcb52d30f5a7ff4fa28"
+  },
+  {
+    "bundle": "history/s8-belief-workspace-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s8-belief-workspace-20261003/publication/source.patch",
+    "sha256": "1ccc77d2ae7a7e43f4bb41fedd8d3c118894af6653ed4d36a8d01a725f3faeac"
+  },
+  {
+    "bundle": "history/s8-belief-workspace-20261003/publication/status-20261002T155712354322Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s8-belief-workspace-20261003/publication/status-20261002T155712354322Z.json",
+    "sha256": "229202679bc20d59d345ba38321367fe047423f9a10cd7024f1b2d52b4ad7281"
+  },
+  {
+    "bundle": "history/s9-belief-compiler-20261003/AUDIT-37030978967.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s9-belief-compiler-20261003/AUDIT-37030978967.json",
+    "sha256": "4c6028c68863114e4bc1071eee1549e79fbd828a882f4f25abf149fc5223a71b"
+  },
+  {
+    "bundle": "history/s9-belief-compiler-20261003/README.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s9-belief-compiler-20261003/README.md",
+    "sha256": "58c44caf9b342047783053a43123a2c4ecacc90c8e65fba05263dbfcdc241174"
+  },
+  {
+    "bundle": "history/s9-belief-compiler-20261003/RESULTS.md",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s9-belief-compiler-20261003/RESULTS.md",
+    "sha256": "ba69f9df0a52ad4bb80b68c32a00b813490721bdbcbfb9d7ccfdabbebec8fec9"
+  },
+  {
+    "bundle": "history/s9-belief-compiler-20261003/publication/push.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s9-belief-compiler-20261003/publication/push.json",
+    "sha256": "38cbe204d50e899eb4ce88da57aae4d297fe097171ed346203a9ab321da30d69"
+  },
+  {
+    "bundle": "history/s9-belief-compiler-20261003/publication/receipt.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s9-belief-compiler-20261003/publication/receipt.json",
+    "sha256": "16c15208202d93049f91e0708ba5e4e005f1cf8500a35105ef16d3e604777c02"
+  },
+  {
+    "bundle": "history/s9-belief-compiler-20261003/publication/source.patch",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s9-belief-compiler-20261003/publication/source.patch",
+    "sha256": "7d05a8ca2b17d69b974d6922d1aaf0fba93c34666f904fe53d8ffada609768cd"
+  },
+  {
+    "bundle": "history/s9-belief-compiler-20261003/publication/status-20261002T160548375459Z.json",
+    "origin": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s9-belief-compiler-20261003/publication/status-20261002T160548375459Z.json",
+    "sha256": "b4cc67955d5c68ea9168416410755de8888ea3bc32635925c68741f93cd6160d"
+  }
+]

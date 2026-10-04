@@ -1,0 +1,24 @@
+{
+  "experimental_head": "8c1bd43c0589ea74b99de439f38ae6f24cf87fd5",
+  "selected_library": "2bb9cf595f675d269406bbe783e88154ed517cb4",
+  "direct_baseline": "d90c80b4001e43807d404454280f1511329ef952",
+  "last_successful_run": 37173941021,
+  "production_adopted": false,
+  "default_off": true,
+  "selected_flags": [
+    "frontier_index",
+    "owned_compiler",
+    "incremental_sequence",
+    "compressed_checks",
+    "encoded_history"
+  ],
+  "excluded_candidate": "borrowed_boundary",
+  "next_candidate": "S26m-engine-observation-batch",
+  "next_candidate_implemented": false,
+  "open_regressions": [
+    "S26k-history-off-regression",
+    "S26l-tiny-stack-regression"
+  ],
+  "evidence_scope": "S1-S27 local search experiment records; core changes inherited through source tree; production dirty WIP separately captured",
+  "vault_uploaded": false
+}

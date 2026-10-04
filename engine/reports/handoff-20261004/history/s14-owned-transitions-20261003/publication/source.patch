@@ -1,0 +1,1461 @@
+diff --git a/.github/workflows/engine-s26e-owned.yml b/.github/workflows/engine-s26e-owned.yml
+new file mode 100644
+index 0000000..0ee83de
+--- /dev/null
++++ b/.github/workflows/engine-s26e-owned.yml
+@@ -0,0 +1,78 @@
++name: S26e owned transition parity and speed
++on:
++  push:
++    branches: [codex/s26e-owned-20261003]
++permissions:
++  contents: read
++concurrency:
++  group: s26e-owned
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  CARGO_PROFILE_RELEASE_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  RAYON_NUM_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++jobs:
++  compare:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 25
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Independent oracle dependencies
++        run: python -m pip install numpy==2.2.6 scipy==1.15.3
++      - name: Correctness and portable release binary
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26e-owned-results
++          cd engine
++          cargo test --locked -p lab-engine --lib --features experiment-owned-endings 2>&1 | tee ../s26e-owned-results/core.log
++          cargo test --locked -p lab-search --test owned_transitions --features experiment-owned-transitions-observer -- --nocapture 2>&1 | tee ../s26e-owned-results/owned.log
++          cargo test --locked -p lab-search --lib --features experiment-owned-transitions,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26e-owned-results/on.log
++          cargo test --locked -p lab-search --bin lab-belief-workspace --features experiment-owned-transitions 2>&1 | tee ../s26e-owned-results/cli.log
++          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26e-owned-results/off.log
++          cargo check --locked -p lab-search --bin lab-belief-workspace --bin lab-belief-workspace-speed --features experiment-belief-workspace 2>&1 | tee ../s26e-owned-results/fallback-build.log
++          cargo check --locked -p lab-search --lib --no-default-features --features experiment-owned-transitions 2>&1 | tee ../s26e-owned-results/library.log
++          cargo clippy --locked -p lab-search --lib --bin lab-belief-workspace --bin lab-belief-workspace-speed --test owned_transitions --features experiment-owned-transitions-observer -- -D warnings 2>&1 | tee ../s26e-owned-results/clippy.log
++          cargo build --locked -p lab-search --bin lab-belief-workspace --features experiment-owned-transitions 2>&1 | tee ../s26e-owned-results/debug-build.log
++          cargo build --locked --release -p lab-search --bin lab-belief-workspace-speed --features experiment-owned-transitions 2>&1 | tee ../s26e-owned-results/release-build.log
++          git rev-parse HEAD > ../s26e-owned-results/source-sha.txt
++          rustc --version > ../s26e-owned-results/rustc.txt
++      - name: Independent full-tree LP certificates
++        run: python -B engine/benchmarks/s26_tree/check.py --binary target-s25/debug/lab-belief-workspace --out s26e-owned-results/tree-lp
++      - name: Independent growing-tree LP certificates and rollback
++        run: python -B engine/benchmarks/s26_tree/growing_check.py --binary target-s25/debug/lab-belief-workspace --out s26e-owned-results/growing-lp
++      - name: Exact same-work paired comparison
++        run: python -B engine/benchmarks/s26_owned/run.py --binary target-s25/release/lab-belief-workspace-speed --out s26e-owned-results/paired
++      - name: Preserve evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26e-owned-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26e-owned-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_owned/plan.json b/engine/benchmarks/s26_owned/plan.json
+new file mode 100644
+index 0000000..87b4fc5
+--- /dev/null
++++ b/engine/benchmarks/s26_owned/plan.json
+@@ -0,0 +1,466 @@
++{
++  "rounds": 9,
++  "sample_ms": 100,
++  "cases": [
++    {
++      "id": "stats-w1-d2-owned-growing",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "all-writer",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-owned",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-owned-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive-writing"
++      },
++      "variants": [
++        {
++          "kind": "exhaustive-owned",
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-owned-growing",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "all-writer",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-owned",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-owned-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive-writing"
++      },
++      "variants": [
++        {
++          "kind": "exhaustive-owned",
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1-owned-growing",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "all-writer",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-owned",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1-owned-exhaustive",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive-writing"
++      },
++      "variants": [
++        {
++          "kind": "exhaustive-owned",
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1-owned-growing",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "all-writer",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-owned",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1-owned-exhaustive",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive-writing"
++      },
++      "variants": [
++        {
++          "kind": "exhaustive-owned",
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w4-d2-owned-growing",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "all-writer",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-owned",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "stats-w4-d2-owned-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive-writing"
++      },
++      "variants": [
++        {
++          "kind": "exhaustive-owned",
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "narrow-w1-d3-owned-growing",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "all-writer",
++        "max_expansions": 10000,
++        "max_walks": 100000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "all-owned",
++          "max_expansions": 10000,
++          "max_walks": 100000,
++          "seed": 1,
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    },
++    {
++      "id": "narrow-w1-d3-owned-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive-writing"
++      },
++      "variants": [
++        {
++          "kind": "exhaustive-owned",
++          "id": "owned",
++          "comparison": "exact-same-work"
++        }
++      ]
++    }
++  ]
++}
+diff --git a/engine/benchmarks/s26_owned/run.py b/engine/benchmarks/s26_owned/run.py
+new file mode 100644
+index 0000000..7624342
+--- /dev/null
++++ b/engine/benchmarks/s26_owned/run.py
+@@ -0,0 +1,76 @@
++"""Bounded single-runner speed-only comparison; paired blocks, one release binary."""
++from pathlib import Path
++import argparse,copy,hashlib,json,math,os,platform,random,statistics,subprocess,sys,time
++
++def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8')
++def summarize(rows):
++    base=next(r['diagnostics'] for r in rows if r['type']=='baseline');results=[]
++    for validation in [r for r in rows if r['type']=='validation']:
++        variant=validation['variant'];pairs=[]
++        for r in rows:
++            if r['type']!='paired' or r['variant']!=variant['id']:continue
++            b=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='baseline')
++            c=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='candidate')
++            assert min(b,c)>0 and math.isfinite(b+c)
++            pairs.append(dict(block=r['block'],baseline_ms=b/1e6,candidate_ms=c/1e6,ratio=c/b))
++        rng=random.Random(261003);ratios=[p['ratio'] for p in pairs]
++        bootstrap=sorted(statistics.median(rng.choices(ratios,k=len(ratios))) for _ in range(4000))
++        ratio=statistics.median(ratios)
++        results.append(dict(variant=variant,diagnostics=validation['diagnostics'],pairs=pairs,
++            baseline_ms=statistics.median(p['baseline_ms'] for p in pairs),candidate_ms=statistics.median(p['candidate_ms'] for p in pairs),
++            ratio_median=ratio,time_reduction_percent=100*(1-ratio),speedup=1/ratio,
++            ratio_bootstrap95=[bootstrap[100],bootstrap[3899]],baseline_diagnostics=base,
++            comparison=variant.get('comparison','exact-same-work')))
++    return results
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
++    if not a.check and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Timing is restricted to the authorized GitHub runner; use --check locally.')
++    here=Path(__file__).resolve().parent;repo=here.parents[2];plan=json.loads((here/'plan.json').read_bytes());binary=a.binary.resolve()
++    a.out.mkdir(parents=True,exist_ok=False)
++    env=dict(os.environ,LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
++    metadata=dict(platform=platform.platform(),python=sys.version,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
++        source_sha=os.environ.get('GITHUB_SHA'),runner_os=os.environ.get('RUNNER_OS'),timing=not a.check,
++        mode='generic x86-64 release; one binary runtime selection',enumeration='flat; LAB_ENGINE_FACTORED=0',plan_sha256=hashlib.sha256((here/'plan.json').read_bytes()).hexdigest())
++    if not a.check:
++        allowed=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,{allowed[0]})
++        metadata.update(available_cpus=allowed,pinned_cpu=allowed[0],load_before=os.getloadavg(),
++            cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0],sample_scope='build + CFR to result; excludes loading/JSON/final result destruction')
++    write(a.out/'environment.json',metadata);all_results=[];statuses=[]
++    for case in plan['cases']:
++        request=copy.deepcopy(case)
++        for world in request['worlds']:world['scenario']=(repo/world['scenario']).as_posix()
++        request['rounds']=plan['rounds'];request['sample_ms']=plan['sample_ms']
++        path=a.out/(case['id']+'-request.json');write(path,request)
++        log=a.out/(case['id']+'-raw.jsonl');error=a.out/(case['id']+'-stderr.txt')
++        with log.open('wb') as stdout,error.open('wb') as stderr:
++            try:
++                run=subprocess.run([str(binary),'--check' if a.check else '--measure',str(path.resolve())],stdout=stdout,stderr=stderr,env=env,timeout=300)
++                code=run.returncode
++            except subprocess.TimeoutExpired:code=-999
++        status=dict(case=case['id'],exit_code=code)
++        if code==0:
++            rows=[json.loads(s) for s in log.read_text().splitlines()]
++            assert rows[-1]['type']==('checked' if a.check else 'completed')
++            if not a.check:
++                results=summarize(rows)
++                assert all(len(r['pairs'])==plan['rounds'] for r in results)
++                all_results.extend(dict(case=case['id'],**r) for r in results)
++        else:status['error']=error.read_text(errors='replace')[-3000:]
++        statuses.append(status);print(json.dumps(status),flush=True)
++    passed=all(s['exit_code']==0 for s in statuses)
++    summary=dict(passed=passed,timing=not a.check,paired_rounds=plan['rounds'],cases=statuses,results=all_results,
++        wins_evaluated=False,engine_unchanged=False,search_workspace_candidate=True,owned_transition_candidate=True,source_sha=os.environ.get('GITHUB_SHA'))
++    if not a.check:summary['load_after']=os.getloadavg()
++    write(a.out/'summary.json',summary)
++    if not a.check:
++        lines=['# S26e owned-transition speed-only benchmark','',
++            'One generic x86-64 release binary; serial execution pinned to one runner CPU. Nine ABBA/BAAB blocks; fixed identical selection seed.',
++            'Intervals describe paired block variability on this runner, not variability between machines. Same-work pairs preserve all counters; finite-game pairs preserve the entire canonical tree and policy but growing performs intermediate solves.','',
++            '| Case | Variant | Baseline ms | Candidate ms | Time reduction | Complete horizon |',
++            '|---|---|---:|---:|---:|---|']
++        for r in all_results:
++            lines.append(f"| {r['case']} | {r['variant']['id']} | {r['baseline_ms']:.3f} | {r['candidate_ms']:.3f} | {r['time_reduction_percent']:+.2f}% | {r['diagnostics']['horizon_complete']} |")
++        (a.out/'RESULTS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
++    raise SystemExit(0 if passed else 1)
++if __name__=='__main__':main()
+diff --git a/engine/core/Cargo.toml b/engine/core/Cargo.toml
+index 5ffcfc6..f19a2ea 100644
+--- a/engine/core/Cargo.toml
++++ b/engine/core/Cargo.toml
+@@ -1,45 +1,47 @@
+-[package]
+-name = "lab-engine"
+-version.workspace = true
+-edition.workspace = true
+-license.workspace = true
+-description = "Slot-generic Pokémon battle engine for search (N = 1 singles, N = 2 doubles)."
+-
+-[lib]
+-name = "lab_engine"
+-path = "src/lib.rs"
+-
+-[dependencies]
+-smallvec = { version = "1.13", features = ["const_generics"] }
+-
+-[[bench]]
+-name = "damage"
+-harness = false
+-
+-[features]
+-experiment-hurt-readers = []
+-experiment-prepared-turn = []
+-experiment-prepared-turn-observe = ["experiment-prepared-turn"]
+-# P9 isolated experiment. Neither feature is enabled by default.
+-experiment-leaf-ending-states = []
+-experiment-leaf-ending-observer = ["experiment-leaf-ending-states"]
+-# P10: opt-in sparse storage; dense Volatiles remains the default representation.
+-experiment-compact-volatiles = []
+-
+-# Independent P8d/e/f experiments; every runtime and observer feature is opt-in.
+-experiment-replay-action-keys = []
+-experiment-replay-action-keys-observer = ["experiment-replay-action-keys"]
+-experiment-slot-diff = []
+-experiment-slot-diff-observer = ["experiment-slot-diff"]
+-experiment-stats-off-cost = []
+-experiment-stats-off-cost-observer = ["experiment-stats-off-cost"]
+-# P13: borrowed position lookup only; no state identity or storage changes.
+-experiment-borrowed-child-keys = []
+-# P1e: collapse universally fainted HP only while dealt damage remains unobserved.
+-experiment-lazy-ko-damage = []
+-
+-# P7d: exact Full factored first-hit stage; no default, sampler, or SIMD changes.
+-experiment-factored-first-hit = []
+-
+-# P7h: intra-group suffix retention, never a new public suspension.
+-experiment-factored-hit-suffix = ["experiment-factored-first-hit"]
++[package]
++name = "lab-engine"
++version.workspace = true
++edition.workspace = true
++license.workspace = true
++description = "Slot-generic Pokémon battle engine for search (N = 1 singles, N = 2 doubles)."
++
++[lib]
++name = "lab_engine"
++path = "src/lib.rs"
++
++[dependencies]
++smallvec = { version = "1.13", features = ["const_generics"] }
++
++[[bench]]
++name = "damage"
++harness = false
++
++[features]
++# S26e: move fully merged flat ending states to an opt-in search adapter.
++experiment-owned-endings = ["experiment-leaf-ending-states"]
++experiment-hurt-readers = []
++experiment-prepared-turn = []
++experiment-prepared-turn-observe = ["experiment-prepared-turn"]
++# P9 isolated experiment. Neither feature is enabled by default.
++experiment-leaf-ending-states = []
++experiment-leaf-ending-observer = ["experiment-leaf-ending-states"]
++# P10: opt-in sparse storage; dense Volatiles remains the default representation.
++experiment-compact-volatiles = []
++
++# Independent P8d/e/f experiments; every runtime and observer feature is opt-in.
++experiment-replay-action-keys = []
++experiment-replay-action-keys-observer = ["experiment-replay-action-keys"]
++experiment-slot-diff = []
++experiment-slot-diff-observer = ["experiment-slot-diff"]
++experiment-stats-off-cost = []
++experiment-stats-off-cost-observer = ["experiment-stats-off-cost"]
++# P13: borrowed position lookup only; no state identity or storage changes.
++experiment-borrowed-child-keys = []
++# P1e: collapse universally fainted HP only while dealt damage remains unobserved.
++experiment-lazy-ko-damage = []
++
++# P7d: exact Full factored first-hit stage; no default, sampler, or SIMD changes.
++experiment-factored-first-hit = []
++
++# P7h: intra-group suffix retention, never a new public suspension.
++experiment-factored-hit-suffix = ["experiment-factored-first-hit"]
+diff --git a/engine/core/src/turn/final_states.rs b/engine/core/src/turn/final_states.rs
+index a3ad448..130ed0b 100644
+--- a/engine/core/src/turn/final_states.rs
++++ b/engine/core/src/turn/final_states.rs
+@@ -13,6 +13,27 @@ pub struct FinalStates<const N: usize> {
+ }
+ 
+ impl<const N: usize> FinalStates<N> {
++    /// Exact number of merged states, allowing an owning consumer to reserve once.
++    #[cfg(feature = "experiment-owned-endings")]
++    pub fn state_count(&self) -> usize {
++        self.endings.iter().map(Vec::len).sum()
++    }
++
++    /// Move already merged end states to an owning consumer in the same order as `visit`.
++    /// No diff, instruction replay, State clone, or pending-queue clone is needed. The
++    /// batch can only exist after every branch has succeeded and the input is restored.
++    #[cfg(feature = "experiment-owned-endings")]
++    pub fn into_owned(self) -> impl Iterator<Item = (State<N>, f64, Option<Suspension>)> {
++        self.endings
++            .into_iter()
++            .flatten()
++            .map(|(state, pending, probability, _)| {
++                #[cfg(feature = "experiment-leaf-ending-observer")]
++                observer::visited();
++                (state, probability, pending.map(Suspension))
++            })
++    }
++
+     /// Consume the batch while borrowing its states in place. Moving each pending queue
+     /// into its suspension wrapper copies neither State nor queue. Visitors may stop early;
+     /// all unvisited endings are dropped. The caller cannot mutate or retain these borrows.
+diff --git a/engine/search/Cargo.toml b/engine/search/Cargo.toml
+index ca2b588..e344c1e 100644
+--- a/engine/search/Cargo.toml
++++ b/engine/search/Cargo.toml
+@@ -14,6 +14,8 @@ path = "src/lib.rs"
+ # (serde); it sits behind the default `cli` feature so hot-path users can turn it off with
+ # `default-features = false`.
+ [features]
++experiment-owned-transitions = ["experiment-belief-workspace", "lab-engine/experiment-owned-endings"]
++experiment-owned-transitions-observer = ["experiment-owned-transitions", "lab-engine/experiment-leaf-ending-observer"]
+ default = ["cli"]
+ experiment-bayesian-cfr = ["experiment-budgeted-search"]
+ experiment-public-belief = ["experiment-bayesian-cfr"]
+@@ -118,3 +120,8 @@ required-features = ["cli", "experiment-belief-workspace"]
+ name = "lab-belief-workspace"
+ path = "src/bin/lab-belief-workspace.rs"
+ required-features = ["cli", "experiment-belief-workspace"]
++
++[[test]]
++name = "owned_transitions"
++path = "tests/owned_transitions.rs"
++required-features = ["experiment-owned-transitions-observer"]
+diff --git a/engine/search/src/bayesian/tree/engine.rs b/engine/search/src/bayesian/tree/engine.rs
+index 1669455..9770d79 100644
+--- a/engine/search/src/bayesian/tree/engine.rs
++++ b/engine/search/src/bayesian/tree/engine.rs
+@@ -182,12 +182,14 @@ pub fn build<const N: usize, E: Evaluator<N> + ?Sized>(
+ }
+ 
+ #[cfg(feature = "experiment-belief-workspace")]
+-struct WritingDomain<'a, const N: usize, E: Evaluator<N> + ?Sized> {
++struct WritingDomain<'a, const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> {
+     inner: SnapshotDomain<'a, N, E>,
+     direct: bool,
+ }
+ #[cfg(feature = "experiment-belief-workspace")]
+-impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for WritingDomain<'_, N, E> {
++impl<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> Domain
++    for WritingDomain<'_, N, E, OWNED>
++{
+     type Position = Position<N>;
+     type Action = Choice<N>;
+     fn phase(&self, p: &Self::Position) -> Result<Phase, String> {
+@@ -204,11 +206,17 @@ impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for WritingDomain<'_, N, E
+         p: &Self::Position,
+         a: [&Self::Action; 2],
+     ) -> Result<Vec<(f64, Self::Position)>, String> {
++        #[cfg(feature = "experiment-owned-transitions")]
++        if OWNED {
++            return self.inner.inner.transitions_owned(p, a);
++        }
+         self.inner.transitions(p, a)
+     }
+ }
+ #[cfg(feature = "experiment-belief-workspace")]
+-impl<const N: usize, E: Evaluator<N> + ?Sized> ObservedDomain for WritingDomain<'_, N, E> {
++impl<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool> ObservedDomain
++    for WritingDomain<'_, N, E, OWNED>
++{
+     fn observation(&self, p: &Position<N>) -> Result<Observation, String> {
+         if !self.direct {
+             return self.inner.observation(p);
+@@ -274,6 +282,32 @@ pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
+     knowledge: &Knowledge,
+     limits: Limits,
+     settings: builder::growing::reuse::Settings,
++) -> Result<builder::growing::ResultTree, Error> {
++    growing_storage::<N, E, false>(worlds, us, ruleset, evaluator, knowledge, limits, settings)
++}
++
++#[cfg(feature = "experiment-owned-transitions")]
++pub fn growing_owned<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: builder::growing::reuse::Settings,
++) -> Result<builder::growing::ResultTree, Error> {
++    growing_storage::<N, E, true>(worlds, us, ruleset, evaluator, knowledge, limits, settings)
++}
++
++#[cfg(feature = "experiment-belief-workspace")]
++fn growing_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++    settings: builder::growing::reuse::Settings,
+ ) -> Result<builder::growing::ResultTree, Error> {
+     let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+     let reference = visible(&first.position.state, us, knowledge)?;
+@@ -304,7 +338,7 @@ pub fn growing_reusing<const N: usize, E: Evaluator<N> + ?Sized>(
+             position: w.position.clone(),
+         })
+         .collect();
+-    let domain = WritingDomain {
++    let domain = WritingDomain::<N, E, OWNED> {
+         inner: domain,
+         direct: settings.storage.direct_write,
+     };
+@@ -379,6 +413,30 @@ pub fn build_writing<const N: usize, E: Evaluator<N> + ?Sized>(
+     evaluator: &E,
+     knowledge: &Knowledge,
+     limits: Limits,
++) -> Result<Built, Error> {
++    build_storage::<N, E, false>(worlds, us, ruleset, evaluator, knowledge, limits)
++}
++
++#[cfg(feature = "experiment-owned-transitions")]
++pub fn build_owned<const N: usize, E: Evaluator<N> + ?Sized>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
++) -> Result<Built, Error> {
++    build_storage::<N, E, true>(worlds, us, ruleset, evaluator, knowledge, limits)
++}
++
++#[cfg(feature = "experiment-belief-workspace")]
++fn build_storage<const N: usize, E: Evaluator<N> + ?Sized, const OWNED: bool>(
++    worlds: &[EngineWorld<N>],
++    us: SideId,
++    ruleset: Ruleset,
++    evaluator: &E,
++    knowledge: &Knowledge,
++    limits: Limits,
+ ) -> Result<Built, Error> {
+     let first = worlds.first().ok_or_else(|| Error("empty worlds".into()))?;
+     let reference = visible(&first.position.state, us, knowledge)?;
+@@ -407,7 +465,7 @@ pub fn build_writing<const N: usize, E: Evaluator<N> + ?Sized>(
+             position: w.position.clone(),
+         })
+         .collect();
+-    let domain = WritingDomain {
++    let domain = WritingDomain::<N, E, OWNED> {
+         inner: domain,
+         direct: true,
+     };
+diff --git a/engine/search/src/bin/lab-belief-workspace-speed.rs b/engine/search/src/bin/lab-belief-workspace-speed.rs
+index e511437..8e9a4f9 100644
+--- a/engine/search/src/bin/lab-belief-workspace-speed.rs
++++ b/engine/search/src/bin/lab-belief-workspace-speed.rs
+@@ -34,6 +34,10 @@ enum Method {
+     ExhaustiveWorkspace,
+     ExhaustiveCached,
+     ExhaustiveWriting,
++    #[cfg(feature = "experiment-owned-transitions")]
++    ExhaustiveOwned,
++    #[cfg(feature = "experiment-owned-transitions")]
++    Owned(growing::Config),
+ }
+ fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
+     match v.get(k) {
+@@ -92,6 +96,26 @@ fn load(v: &Value, base: &Path) -> Result<Input, String> {
+ }
+ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, String> {
+     let i = black_box(i);
++    #[cfg(feature = "experiment-owned-transitions")]
++    if matches!(variant, Method::ExhaustiveOwned) {
++        let built = tree::engine::build_owned(
++            &i.worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            e,
++            &i.knowledge,
++            i.limits,
++        )
++        .map_err(|e| e.to_string())?;
++        let solved =
++            tree::workspace::cached::solve(&built.tree, i.solver).map_err(|e| e.to_string())?;
++        return Ok(Output {
++            built,
++            solved,
++            growth: None,
++            complete: true,
++        });
++    }
+     if matches!(
+         variant,
+         Method::Exhaustive
+@@ -153,6 +177,25 @@ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output,
+                     storage: *options,
+                 },
+             ),
++            #[cfg(feature = "experiment-owned-transitions")]
++            Method::Owned(g) => tree::engine::growing_owned(
++                &i.worlds,
++                SideId::One,
++                Ruleset::CHAMPIONS_MC,
++                e,
++                &i.knowledge,
++                i.limits,
++                growing::reuse::Settings {
++                    growth: *g,
++                    storage: growing::reuse::Options {
++                        in_place: true,
++                        workspace: true,
++                        compiler: true,
++                        static_values: true,
++                        direct_write: true,
++                    },
++                },
++            ),
+             _ => unreachable!(),
+         }
+         .map_err(|e| e.to_string())?;
+@@ -273,6 +316,10 @@ fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
+         "exhaustive-workspace" => Method::ExhaustiveWorkspace,
+         "exhaustive-cached" => Method::ExhaustiveCached,
+         "exhaustive-writing" => Method::ExhaustiveWriting,
++        #[cfg(feature = "experiment-owned-transitions")]
++        "exhaustive-owned" => Method::ExhaustiveOwned,
++        #[cfg(feature = "experiment-owned-transitions")]
++        "all-owned" => Method::Owned(config),
+         "growing" => Method::Growing(config),
+         "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all"
+         | "cached" | "all-cached" | "writer" | "all-writer" => Method::Reusing(
+diff --git a/engine/search/src/bin/lab-belief-workspace.rs b/engine/search/src/bin/lab-belief-workspace.rs
+index b959f33..4518620 100644
+--- a/engine/search/src/bin/lab-belief-workspace.rs
++++ b/engine/search/src/bin/lab-belief-workspace.rs
+@@ -1,4 +1,13 @@
+ //! Experimental finite information-tree CLI. See benchmarks/s26_tree/CONTRACT.md.
++#[cfg(not(feature = "experiment-owned-transitions"))]
++use lab_search::bayesian::tree::engine::{
++    build as build_backend, growing_reusing as growing_backend,
++};
++#[cfg(feature = "experiment-owned-transitions")]
++use lab_search::bayesian::tree::engine::{
++    build_owned as build_backend, growing_owned as growing_backend,
++};
++
+ use lab_engine::{rules::Ruleset, state::SideId, turn::EnumerateOptions};
+ use lab_search::bayesian::{
+     engine::{EngineWorld, Knowledge},
+@@ -215,7 +224,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
+             #[cfg(feature = "experiment-growing-belief")]
+             let grown = if let Some(c) = growing_config {
+                 Some(
+-                    tree::engine::growing_reusing(
++                    growing_backend(
+                         &worlds,
+                         side,
+                         Ruleset::CHAMPIONS_MC,
+@@ -242,7 +251,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
+             let grown: Option<()> = None;
+             let (built, growth_metadata, solution) = match grown {
+                 None => (
+-                    tree::engine::build(
++                    build_backend(
+                         &worlds,
+                         side,
+                         Ruleset::CHAMPIONS_MC,
+diff --git a/engine/search/src/budgeted/engine.rs b/engine/search/src/budgeted/engine.rs
+index 33f1362..1ea443d 100644
+--- a/engine/search/src/budgeted/engine.rs
++++ b/engine/search/src/budgeted/engine.rs
+@@ -117,3 +117,6 @@ impl<const N: usize, E: Evaluator<N> + ?Sized> Domain for EngineDomain<'_, N, E>
+         Ok(children)
+     }
+ }
++
++#[cfg(feature = "experiment-owned-transitions")]
++mod owned;
+diff --git a/engine/search/src/budgeted/engine/owned.rs b/engine/search/src/budgeted/engine/owned.rs
+new file mode 100644
+index 0000000..96f11c6
+--- /dev/null
++++ b/engine/search/src/budgeted/engine/owned.rs
+@@ -0,0 +1,50 @@
++//! Opt-in representation change; the original Domain transition method is the fallback.
++use super::*;
++
++impl<const N: usize, E: Evaluator<N> + ?Sized> EngineDomain<'_, N, E> {
++    /// Return fully merged flat turn endings by ownership. All other phases and factored
++    /// enumeration retain the existing instruction-based adapter. An invalid choice is
++    /// rejected by the same validator, in the same order; errors publish no partial batch.
++    pub fn transitions_owned(
++        &self,
++        position: &Position<N>,
++        actions: [&Choice<N>; 2],
++    ) -> Result<Vec<(f64, Position<N>)>, String> {
++        let d =
++            decision(&position.state, position.suspension.as_ref()).map_err(|e| e.to_string())?;
++        let pair = if self.us == SideId::One {
++            [*actions[0], *actions[1]]
++        } else {
++            [*actions[1], *actions[0]]
++        };
++        let [Choice::Turn(a), Choice::Turn(b)] = pair else {
++            return self.transitions(position, actions);
++        };
++        if d != Decision::Turn {
++            return self.transitions(position, actions);
++        }
++        let mut state = position.state.clone();
++        let batch = lab_engine::turn::try_enumerate_turn_final_states(
++            &mut state,
++            self.ruleset,
++            [a, b],
++            self.options,
++        )
++        .map_err(|e| e.to_string())?;
++        let Some(batch) = batch else {
++            return self.transitions(position, actions);
++        };
++        if state != position.state {
++            return Err("engine transition failed to restore input".into());
++        }
++        // Flatten's size hint is not the total ending count. Reserve explicitly so the
++        // vector never repeatedly reallocates and moves its large Position elements.
++        let mut children = Vec::with_capacity(batch.state_count());
++        children.extend(
++            batch.into_owned().map(|(state, probability, suspension)| {
++                (probability, Position { state, suspension })
++            }),
++        );
++        Ok(children)
++    }
++}
+diff --git a/engine/search/tests/owned_transitions.rs b/engine/search/tests/owned_transitions.rs
+new file mode 100644
+index 0000000..5ea50cc
+--- /dev/null
++++ b/engine/search/tests/owned_transitions.rs
+@@ -0,0 +1,362 @@
++use lab_engine::{
++    action::SlotAction,
++    eval::Heuristic,
++    field::{Effect, FieldEffect},
++    rules::Ruleset,
++    state::{BattleResult, SideId},
++    turn::{final_state_observer as observer, EnumerateOptions, FactoredScope, RollMode},
++};
++use lab_search::{
++    bayesian::{self, engine::EngineWorld, tree},
++    budgeted::{Domain, EngineDomain, Phase, Position},
++    Choice, Pruning,
++};
++
++fn fixture(name: &str, rolls: RollMode) -> (Position<2>, [Choice<2>; 2]) {
++    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
++        .join("../oracle/scenarios")
++        .join(format!("{name}.json"));
++    let loaded = lab_scenario::load_scenario_file(path).unwrap();
++    let positions =
++        lab_scenario::scenario_positions_with(&loaded, EnumerateOptions { rolls }).unwrap();
++    // The setup can also miss Hyper Beam, which makes the recorded recharge choice illegal.
++    // Select the successful-hit setup branch for this explicit recharge coverage case.
++    let p = positions
++        .into_iter()
++        .find(|p| {
++            name != "hyper-beam-recharge"
++                || p.state.sides[0].slots[0]
++                    .volatiles
++                    .get(lab_engine::volatile::Volatile::MustRecharge)
++                    .active
++        })
++        .expect("fixture must provide the intended setup branch");
++    let lab_scenario::Decision::Turn(pair) = lab_scenario::scenario_decision(&loaded, &p).unwrap()
++    else {
++        panic!("normal turn fixture required: {name}")
++    };
++    (
++        Position {
++            state: p.state,
++            suspension: None,
++        },
++        pair.map(Choice::Turn),
++    )
++}
++
++fn domain(us: SideId, rolls: RollMode) -> EngineDomain<'static, 2, Heuristic> {
++    EngineDomain {
++        ruleset: Ruleset::CHAMPIONS_MC,
++        options: EnumerateOptions { rolls },
++        pruning: Pruning::All,
++        us,
++        evaluator: &Heuristic,
++    }
++}
++
++fn compare(
++    d: &EngineDomain<'_, 2, Heuristic>,
++    p: &Position<2>,
++    pair: [Choice<2>; 2],
++) -> Vec<(f64, Position<2>)> {
++    let before = p.clone();
++    let actions = [&pair[0], &pair[1]];
++    let expected = d.transitions(p, actions);
++    let actual = d.transitions_owned(p, actions);
++    assert_eq!(p.state, before.state);
++    assert_eq!(p.suspension, before.suspension);
++    match (expected, actual) {
++        (Err(a), Err(b)) => {
++            assert_eq!(a, b);
++            Vec::new()
++        }
++        (Ok(a), Ok(b)) => {
++            assert_eq!(a.len(), b.len());
++            for ((pa, a), (pb, b)) in a.iter().zip(&b) {
++                assert_eq!(pa.to_bits(), pb.to_bits());
++                assert_eq!(a.state, b.state);
++                assert_eq!(a.state.position_hash(), b.state.position_hash());
++                assert_eq!(a.suspension, b.suspension);
++            }
++            b
++        }
++        (a, b) => panic!("different result/error kinds: {a:?} / {b:?}"),
++    }
++}
++
++#[test]
++fn complete_hidden_state_order_and_probability_match_across_mechanics_and_seats() {
++    let _flat = FactoredScope::new(false);
++    let fixtures = [
++        "single-hit",
++        "hypnosis-gravity",
++        "psych-up-speed-swap",
++        "mega-tyranitar",
++        "ee-transform-mega",
++        "hyper-beam-recharge",
++        "o28-struggle",
++        "substitute-status",
++    ];
++    let mut pairs = 0;
++    let mut endings = 0;
++    for name in fixtures {
++        for rolls in [RollMode::Median, RollMode::Extremes, RollMode::Full] {
++            let (p, physical) = fixture(name, rolls);
++            for us in [SideId::One, SideId::Two] {
++                let pair = if us == SideId::One {
++                    physical
++                } else {
++                    [physical[1], physical[0]]
++                };
++                let children = compare(&domain(us, rolls), &p, pair);
++                assert!(
++                    !children.is_empty(),
++                    "fixture unexpectedly rejected: {name}"
++                );
++                pairs += 1;
++                endings += children.len();
++            }
++        }
++    }
++    println!(
++        "S26E_EXACT mechanics={} pairs={pairs} endings={endings}",
++        fixtures.len()
++    );
++}
++
++#[test]
++fn owned_path_removes_instruction_materialization_and_factored_path_falls_back() {
++    for factored in [false, true] {
++        let _scope = FactoredScope::new(factored);
++        let (p, pair) = fixture("single-hit", RollMode::Full);
++        let d = domain(SideId::One, RollMode::Full);
++        observer::reset();
++        let reference = d.transitions(&p, [&pair[0], &pair[1]]).unwrap();
++        let before = observer::counts();
++        assert_eq!(before.materialized_outcomes, reference.len());
++        assert!(before.emitted_instructions > 0);
++        observer::reset();
++        let candidate = d.transitions_owned(&p, [&pair[0], &pair[1]]).unwrap();
++        let after = observer::counts();
++        assert_eq!(candidate.len(), reference.len());
++        if factored {
++            assert_eq!(after, before);
++        } else {
++            assert_eq!(after.materialized_outcomes, 0);
++            assert_eq!(after.emitted_instructions, 0);
++            assert_eq!(after.batches, 1);
++            assert_eq!(after.visits, candidate.len());
++        }
++        compare(&d, &p, pair);
++        println!("S26E_ACTIVATION factored={factored} reference={before:?} candidate={after:?}");
++    }
++}
++
++#[test]
++fn suspended_and_fainted_endings_continue_via_the_original_adapter() {
++    let _flat = FactoredScope::new(false);
++    let mut mid_turns = 0;
++    let mut replacements = 0;
++    for name in ["eject-button-uturn", "memento-final-gambit"] {
++        let (p, physical) = fixture(name, RollMode::Full);
++        for us in [SideId::One, SideId::Two] {
++            let d = domain(us, RollMode::Full);
++            let pair = if us == SideId::One {
++                physical
++            } else {
++                [physical[1], physical[0]]
++            };
++            let children = compare(&d, &p, pair);
++            let (_, child) = children
++                .iter()
++                .find(|(_, p)| d.phase(p).unwrap() == Phase::Switch)
++                .expect("fixture must reach a switch boundary");
++            if child.suspension.is_some() {
++                mid_turns += 1;
++            } else {
++                replacements += 1;
++            }
++            let choices = [d.actions(child, 0).unwrap(), d.actions(child, 1).unwrap()];
++            for left in choices[0].iter().take(2) {
++                for right in choices[1].iter().take(2) {
++                    observer::reset();
++                    let actual = d.transitions_owned(child, [left, right]).unwrap();
++                    assert_eq!(observer::counts().batches, 0);
++                    assert_eq!(observer::counts().visits, 0);
++                    assert!(!actual.is_empty());
++                    compare(&d, child, [*left, *right]);
++                }
++            }
++        }
++    }
++    assert!(mid_turns > 0 && replacements > 0);
++    println!("S26E_CONTINUATIONS mid_turns={mid_turns} replacements={replacements}");
++}
++
++#[test]
++fn invalid_choices_rules_and_state_errors_preserve_error_order_and_inputs() {
++    for factored in [false, true] {
++        let _scope = FactoredScope::new(factored);
++        let (mut p, pair) = fixture("mega-tyranitar", RollMode::Median);
++        let mut d = domain(SideId::One, RollMode::Median);
++        d.ruleset = Ruleset::NO_GIMMICKS;
++        assert!(d.transitions_owned(&p, [&pair[0], &pair[1]]).is_err());
++        compare(&d, &p, pair);
++        d.ruleset = Ruleset::CHAMPIONS_MC;
++        let mut invalid = pair;
++        for choice in &mut invalid {
++            let Choice::Turn(actions) = choice else {
++                unreachable!()
++            };
++            actions[0] = SlotAction::Pass;
++        }
++        p.state.field[FieldEffect::Gravity as usize] = Effect {
++            turns: Effect::PERMANENT,
++            value: 0,
++        };
++        for choices in [
++            pair,
++            invalid,
++            [invalid[0], pair[1]],
++            [pair[0], invalid[1]],
++            [Choice::Switches([None; 2]), pair[1]],
++        ] {
++            assert!(d.transitions_owned(&p, [&choices[0], &choices[1]]).is_err());
++            compare(&d, &p, choices);
++        }
++        p.state.result = BattleResult::Tie;
++        compare(&d, &p, pair);
++    }
++}
++
++#[test]
++fn exhaustive_tree_backend_activates_ownership_without_changing_the_tree() {
++    let _flat = FactoredScope::new(false);
++    let (p, _) = fixture("psych-up-speed-swap", RollMode::Full);
++    let worlds = [EngineWorld {
++        id: "normal".into(),
++        weight: 1.,
++        position: p,
++    }];
++    let limits = tree::builder::Limits {
++        turns: 1,
++        ..Default::default()
++    };
++    observer::reset();
++    let a = tree::engine::build_writing(
++        &worlds,
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Default::default(),
++        limits,
++    )
++    .unwrap();
++    assert!(observer::counts().materialized_outcomes > 0);
++    observer::reset();
++    let b = tree::engine::build_owned(
++        &worlds,
++        SideId::One,
++        Ruleset::CHAMPIONS_MC,
++        &Heuristic,
++        &Default::default(),
++        limits,
++    )
++    .unwrap();
++    let counts = observer::counts();
++    assert_eq!(counts.batches, b.stats.transitions);
++    assert!(counts.batches > 0);
++    assert_eq!(counts.visits, b.stats.chance_outcomes);
++    assert_eq!(counts.materialized_outcomes, 0);
++    assert_eq!(format!("{:?}", a.tree), format!("{:?}", b.tree));
++    println!("S26E_FULL_BACKEND {counts:?}");
++}
++
++#[test]
++fn partial_growth_limits_return_the_identical_committed_tree_and_solution() {
++    let _flat = FactoredScope::new(false);
++    let (p, _) = fixture("psych-up-speed-swap", RollMode::Full);
++    let worlds = [EngineWorld {
++        id: "normal".into(),
++        weight: 1.,
++        position: p.clone(),
++    }];
++    for (expansions, nodes, transitions) in [
++        (1, 5000, 5000),
++        (2, 5000, 5000),
++        (50, 400, 5000),
++        (50, 5000, 64),
++        (50, 8, 5000),
++        (50, 5000, 1),
++    ] {
++        let limits = tree::builder::Limits {
++            turns: 2,
++            max_nodes: nodes,
++            max_transitions: transitions,
++            max_decisions: 16,
++        };
++        let settings = tree::builder::growing::reuse::Settings {
++            growth: tree::builder::growing::Config {
++                max_expansions: expansions,
++                max_walks: 1000,
++                solver: bayesian::Config {
++                    iterations: 32,
++                    check_every: 16,
++                    tolerance: 0.1,
++                },
++                ..Default::default()
++            },
++            storage: tree::builder::growing::reuse::Options {
++                in_place: true,
++                workspace: true,
++                compiler: true,
++                static_values: true,
++                direct_write: true,
++            },
++        };
++        let args = (
++            &worlds,
++            SideId::One,
++            Ruleset::CHAMPIONS_MC,
++            &Heuristic,
++            &Default::default(),
++        );
++        let a =
++            tree::engine::growing_reusing(args.0, args.1, args.2, args.3, args.4, limits, settings);
++        observer::reset();
++        let b =
++            tree::engine::growing_owned(args.0, args.1, args.2, args.3, args.4, limits, settings);
++        if nodes == 5000 && transitions == 5000 {
++            let counts = observer::counts();
++            assert!(counts.batches > 0 && counts.visits > 0);
++            assert_eq!(counts.materialized_outcomes, 0);
++        }
++        match (a, b) {
++            (Err(a), Err(b)) => assert_eq!(a, b),
++            (Ok(a), Ok(b)) => {
++                assert_eq!(format!("{:?}", a.built.tree), format!("{:?}", b.built.tree));
++                assert_eq!(
++                    format!("{:?}", a.built.stats),
++                    format!("{:?}", b.built.stats)
++                );
++                assert_eq!(format!("{:?}", a.solution), format!("{:?}", b.solution));
++                assert_eq!(format!("{:?}", a.work), format!("{:?}", b.work));
++                assert_eq!(a.stop, b.stop);
++                assert_eq!(
++                    (
++                        a.frontier_histories,
++                        a.frontier_public_groups,
++                        a.horizon_complete
++                    ),
++                    (
++                        b.frontier_histories,
++                        b.frontier_public_groups,
++                        b.horizon_complete
++                    )
++                );
++            }
++            _ => panic!("different growth success/error result"),
++        }
++        assert_eq!(worlds[0].position.state, p.state);
++    }
++}

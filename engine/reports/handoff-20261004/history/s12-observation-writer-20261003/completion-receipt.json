@@ -1,0 +1,71 @@
+{
+  "completed_at_utc": "2026-10-02T16:48:59.176692+00:00",
+  "deadline_utc": "2026-10-02T17:00:00Z",
+  "source_sha": "081124aaae5e0fe5aa1d8c5b9117803abd866875",
+  "runs": [
+    {
+      "folder": "s8-belief-workspace-20261003",
+      "run": 37029881806,
+      "source_sha": "bc7ae14351430b2f1cc485ed937bc690aaa5cfa3",
+      "paired_blocks": 238,
+      "timing_samples": 952
+    },
+    {
+      "folder": "s9-belief-compiler-20261003",
+      "run": 37030978967,
+      "source_sha": "ab57e82bd923666891ad31b3c563b6414080f27e",
+      "paired_blocks": 280,
+      "timing_samples": 1120
+    },
+    {
+      "folder": "s10-static-backup-20261003",
+      "run": 37032057405,
+      "source_sha": "673e9720882aaad4173743282202ea1217eee598",
+      "paired_blocks": 336,
+      "timing_samples": 1344
+    },
+    {
+      "folder": "s11-night-confirm-20261003",
+      "run": 37033041022,
+      "source_sha": "c830e52dd104743a2f0cc55f07e6b4018bc9591a",
+      "paired_blocks": 198,
+      "timing_samples": 792
+    },
+    {
+      "folder": "s12-observation-writer-20261003",
+      "run": 37034440983,
+      "source_sha": "081124aaae5e0fe5aa1d8c5b9117803abd866875",
+      "paired_blocks": 210,
+      "timing_samples": 840
+    }
+  ],
+  "all_five_runs_succeeded": true,
+  "same_work_growing_reduction_percent": [
+    10.411475583831676,
+    24.477526444429344
+  ],
+  "same_work_exhaustive_reduction_percent": [
+    7.447952752238063,
+    13.318820535176545
+  ],
+  "full_game_and_policy_parity": true,
+  "lp_unique_cases": 145,
+  "final_rust_test_executions": {
+    "on": 88,
+    "off": 17,
+    "cli": 1
+  },
+  "performance_local": false,
+  "wins_evaluated": false,
+  "default_off": true,
+  "avx2_required": false,
+  "production_modified": false,
+  "shared_checkout_unchanged": true,
+  "vault_new_notes": 12,
+  "vault_total_notes": 3718,
+  "vault_new_errors": 0,
+  "vault_new_stale_references": 0,
+  "vault_tracked_files": 0,
+  "report": "C:\\Users\\admin\\Documents\\ChatGPT\\pokemon-ai-lab\\search-experiments\\s12-observation-writer-20261003\\NIGHT-RESULTS.md",
+  "next_step": "Production adoption/backend consolidation remains conditional; no scheduled follow-up created."
+}

@@ -1,0 +1,41 @@
+{
+  "source_sha": "fc5bf999b9415bc18eacc9d6fff303c920209e13",
+  "evidence_sha256": "0e2d119e19d46b121878c7b86b03464b6670a4fc072bf4b9ddd544e85fcfbc55",
+  "original_six_construction_share_percent": [
+    90.468555280359,
+    96.44011574072702
+  ],
+  "all_eight_construction_share_percent": [
+    77.24893723803254,
+    96.44011574072702
+  ],
+  "cfr_iteration_share_percent": [
+    0.035358397921309424,
+    3.5406466745547522
+  ],
+  "original_six_all_four": "unresolved-within-run-paired-intervals",
+  "high_snapshot_signal": [
+    {
+      "variant": "owned",
+      "reduction_percent": 3.078218139115585,
+      "ratio95": [
+        0.9649173158486752,
+        0.9811693333733574
+      ],
+      "outside_descriptive_aa_envelope": false
+    },
+    {
+      "variant": "all-four",
+      "reduction_percent": 3.519509058197834,
+      "ratio95": [
+        0.9578832534494258,
+        0.9793872565861897
+      ],
+      "outside_descriptive_aa_envelope": false
+    }
+  ],
+  "disposition": "all default OFF; owned/all-four promising at 25 snapshots, confirm in another runner session before adoption",
+  "next_priority": "decompose admission observation/history/string/tree allocation and transition work; do not assume observation formatting alone caused the whole admission cost",
+  "production_adopted": false,
+  "universal_speedup": false
+}

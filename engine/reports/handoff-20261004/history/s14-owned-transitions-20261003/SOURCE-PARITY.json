@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "reference_adapter_unchanged": true,
+  "p9_validation_and_borrowed_visitor_unchanged": true,
+  "root_checks_and_seed_construction_unchanged": true,
+  "observation_allowlist_unchanged": true,
+  "defaults_unchanged": true,
+  "solver_enumeration_and_replay_hashes": {
+    "engine/core/src/turn/mod.rs": "f0d554b19f383cabe37c47abaf84562320c454590436aee2312318e3592da535",
+    "engine/core/src/turn/diff.rs": "3244151cf87579553fcc3c44bfad9bb3a0329103127cbf6f62a3b51ecda7c429",
+    "engine/core/src/turn/frontier.rs": "200777ee324d372cf80dc1c653449db85807e61e247b4608c1ac0c7c478cde4e",
+    "engine/search/src/bayesian/tree.rs": "dba4b93667ed86c6105a0826a6d5517d97db69f8d49e7a48b1203c17efc78442",
+    "engine/search/src/bayesian/tree/builder.rs": "56b4d59c7c34d1d808840106585b47a6a8430e6aced5957c266fcccb32ddee59",
+    "engine/search/src/bayesian/tree/builder/growing.rs": "57297e8f746e18399968e5d9c20b11371734ed8027b53dca69f83f44ac52cef7",
+    "engine/search/src/bayesian/tree/builder/growing/reuse.rs": "e86dbe8ac1a90e3546b54b11cb114d85ffd13c7288b312059603b307ecab654c",
+    "engine/search/src/bayesian/tree/workspace.rs": "0dfa89d2ccc8479eec42392223210a2f7ab7925b3757006b8fce24981edd26a1",
+    "engine/search/src/bayesian/tree/workspace/cached.rs": "d9872fd12aa31608f6cf4aa2572398ad94f4fba26735113d48cc172dc85d647c"
+  },
+  "scope": "Only transition ownership/representation changes; neither the game nor the CFR algorithm changes."
+}

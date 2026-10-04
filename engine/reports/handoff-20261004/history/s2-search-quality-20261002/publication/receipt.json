@@ -1,0 +1,59 @@
+{
+  "parent": "c54becc9fb7bb9101cac363f389d4a84792016ab",
+  "branch": "codex/s25b-search-quality-20261002",
+  "workflow": ".github/workflows/engine-s25b-search-quality.yml",
+  "inherited_unchanged": 4080,
+  "changed_sha256": {
+    ".github/workflows/engine-s25b-search-quality.yml": "8a4f8d386934da06eb88fddaa4274810b4ed1bb294a71a1c1575603eb35f2bd2",
+    "engine/benchmarks/s25_quality/CONTRACT.md": "a0edc788d532d03581041a8440bab1caa96b60128a1b440831c9c1af55357496",
+    "engine/benchmarks/s25_quality/plan.json": "0f85249d5aa738a1107b09dbd9aaff3e6e1289d4a4126ab8ff93c28232791c0b",
+    "engine/benchmarks/s25_quality/protocol.py": "0a0635a75aa718116d5df07ba5ef700495a8b04944b5bc568b1d8378b9068bf1",
+    "engine/benchmarks/s25_quality/run.py": "bf7f7b5a79150750139fb08c309938877a5486c951e115a3df182b6b48944a04",
+    "engine/benchmarks/s25_quality/test_protocol.py": "3866db4aa5761f4e6f26d591d4e3f395d445f769d4cf27b15841493d8b9e87a1",
+    "engine/search/Cargo.toml": "a693dbbb9f0c4b2139ca4fac66aef690acb9849f5d11db4be5f2dc9f9b303221",
+    "engine/search/src/bin/lab-budget.rs": "c09daab63d94c5910ea0512283c822c30e16d14bf6bf2ea73bfed2cfc416f041",
+    "engine/search/src/bin/lab-search-quality.rs": "e6733c553e42918b6188c46e57fc476abcfea5cbef09427b59b7becfd0f751c2",
+    "engine/search/src/budgeted.rs": "ce930a1f60fc0ef7d68a8ae8fdd3db3b32389e70d1d5dfd2de4a2c375b9fa9d3",
+    "engine/search/src/budgeted/engine.rs": "f98ed927c956cce196523777306dd86ee506ceb9599cc9ea03ab5b9aa4bbc742",
+    "engine/search/src/budgeted/matrix.rs": "fac4ba215c9d5e5599db195089c7ed19cdb3b489383875894a8f72435ca433f3",
+    "engine/search/src/budgeted/tests.rs": "509e868ce1aca776d38af8e05e303bdfac1e46f816c6b2b2ebf352cf417a510e",
+    "engine/search/src/lib.rs": "a652ae71f5ce24c42aca71e297117ecbbfcb7eb34e61f603a52f551b2384ab5e",
+    "engine/search/src/solve.rs": "78aef256c7879f5f0718296e430e71c16d0a64c1048b3b09bcf08b09ed57b016"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "retained_registry_modified": false,
+  "production_modified": false,
+  "correctness_scope": "36 ON + 1 independent reference + 17 OFF; clippy; 5 protocol tests",
+  "limitations": "Pilot only; original baseline switch horizon retained; partial references explicit",
+  "source_sha": "a0f7b556e30095e85ce56013c0e7d1f08206f03d",
+  "tree": "27591c0585c1fb91bc95429b921da1720dabdecb",
+  "patch_sha256": "ab67a98573ac33b8c44e37f34a49865899eb8c8e4c354eec6de225979d9fe595",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

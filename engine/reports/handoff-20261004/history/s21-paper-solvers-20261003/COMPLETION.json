@@ -1,0 +1,35 @@
+{
+  "completed": true,
+  "source_sha": "b10b08477f196ce0b9b361fa7878e311fdf1d4c8",
+  "branch": "codex/s26f-papers-20261003",
+  "run_id": 37119405706,
+  "run_url": "https://github.com/andrew0416/pokemon-ai-lab/actions/runs/37119405706",
+  "directions_completed": [
+    "CFR rule variants",
+    "certified policy reuse and strategy warm initialization",
+    "matrix and multi-turn sequence-form payoff contraction"
+  ],
+  "new_paper_certificates": 787,
+  "total_lp_certificates": 1100,
+  "equal_gap_speed_pairs": 150,
+  "production_adopted": false,
+  "default_off": true,
+  "portable_cpu": "x86-64",
+  "shared_git_unchanged": true,
+  "vault_new_notes": 8,
+  "vault_changed_existing_notes": 6,
+  "vault_new_errors": 0,
+  "vault_new_stale": 0,
+  "inherited_vault_errors": 14,
+  "inherited_vault_stale": 1069,
+  "strict_vault_pass": false,
+  "artifact_sha256": {
+    "RESULTS.json": "efa44a56aa79a206b13189b023209ade0deb78e6791975ab88f260a6bb629de7",
+    "RESULTS.md": "56a9a381d731a05a5e7eeafe841f145e8b7320b1e0160495b8017e69346c478d",
+    "DECISION.json": "c88461dfd74318e157a73bc3719edba5e2ccb0d190ef157980c4f36185425307",
+    "publication/receipt.json": "7a0bb581af4eb2597859df2a18d7f58cd9f0734f9e01f9a41c8641b17246a597",
+    "publication/push.json": "f450f1134ec22cbba332f9331e6e3a49a2d68323f0be05807ff1bb01d7d5986f",
+    "vault/install-receipt.json": "1f3691347c633d93bd9cb713e48b32b45ba6777563e2822bfbd3520befac4e24",
+    "followup-board-receipt.json": "0c404d0893cfba66f2f70929308e36e1f053b874045443e934af884fdbe21ab3"
+  }
+}

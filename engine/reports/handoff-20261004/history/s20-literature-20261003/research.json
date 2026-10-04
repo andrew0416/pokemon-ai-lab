@@ -1,0 +1,413 @@
+{
+  "schema_version": 1,
+  "retrieved_on": "2026-10-03",
+  "status": "research-only",
+  "baseline_source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+  "papers": [
+    {
+      "id": "DCFR-2019",
+      "title": "Solving Imperfect-Information Games via Discounted Regret Minimization",
+      "authors": [
+        "Noam Brown",
+        "Tuomas Sandholm"
+      ],
+      "year": 2019,
+      "venue": "AAAI / arXiv v3",
+      "published_date": null,
+      "version_date": "2019-02-21",
+      "url": "https://arxiv.org/abs/1809.04040",
+      "fulltext": "https://arxiv.org/pdf/1809.04040",
+      "read_scope": "초록, 할인 갱신식, DCFR 변형 비교와 pruning 관련 절",
+      "claim": "양·음 누적 후회와 평균정책을 서로 다른 비율로 할인하여 초기 반복의 영향을 줄인다.",
+      "caveat": "논문 권장 DCFR(1.5,0,2)을 첫 기준으로 삼는다. RM+처럼 음수 후회를 무조건 0으로 만드는 방법과 다르며, pruning에 적합한 설정도 별도다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    },
+    {
+      "id": "PCFR-2021",
+      "title": "Faster Game Solving via Predictive Blackwell Approachability: Connecting Regret Matching and Mirror Descent",
+      "authors": [
+        "Gabriele Farina",
+        "Christian Kroer",
+        "Tuomas Sandholm"
+      ],
+      "year": 2021,
+      "venue": "AAAI",
+      "published_date": "2021-05-18",
+      "version_date": null,
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/16676",
+      "fulltext": "https://ojs.aaai.org/index.php/AAAI/article/view/16676/16483",
+      "read_scope": "공식 서지, 초록, predictive RM/RM+ 정의와 이론·실험 설명",
+      "claim": "다음 손실/후회 방향의 예측을 지역 regret minimizer에 반영한다.",
+      "caveat": "논문에서도 모든 포커 표본에서 우월하지 않았다. 현재 signed LCFR에 직전 regret을 한 번 더 더하는 것만으로 PCFR+ 구현이라고 부를 수 없다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    },
+    {
+      "id": "HS-2026",
+      "title": "Faster Game Solving via Hyperparameter Schedules",
+      "authors": [
+        "Naifeng Zhang",
+        "Stephen Marcus McAleer",
+        "Tuomas Sandholm"
+      ],
+      "year": 2026,
+      "venue": "AAAI",
+      "published_date": "2026-03-14",
+      "version_date": null,
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/38784",
+      "fulltext": "https://ojs.aaai.org/index.php/AAAI/article/view/38784/42746",
+      "read_scope": "공식 서지, 3.2 식4, 3.3 정리 전제, 실험·ablation",
+      "claim": "학습 없이 반복 진행도에 따라 DCFR/PCFR+ 할인 강도를 조정한다.",
+      "caveat": "식4는 사전에 정한 총 반복수 n을 사용한다. 정리의 동시 갱신 전제를 현재 교대 갱신에 그대로 옮기지 않는다. 매 스냅샷의 짧은 풀이에서도 빠를지는 미측정이다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    },
+    {
+      "id": "SAPCFR-2026",
+      "title": "Faster Game Solving via Asymmetry of Step Sizes",
+      "authors": [
+        "Linjian Meng",
+        "Tianpei Yang",
+        "Youzhi Zhang",
+        "Zhenxing Ge",
+        "Yang Gao"
+      ],
+      "year": 2026,
+      "venue": "AAAI",
+      "published_date": "2026-03-14",
+      "version_date": null,
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/38766",
+      "fulltext": "https://ojs.aaai.org/index.php/AAAI/article/view/38766/42728",
+      "read_scope": "공식 서지, 4.2 SAPCFR+ 갱신식, 실험 설정 및 DCFR 비교",
+      "claim": "예측과 실제 누적 후회 갱신의 보폭을 다르게 하여 잘못된 예측의 영향을 줄인다.",
+      "caveat": "SAPCFR+는 예측 항에 1/3을 쓰는 고정 비대칭 변형이다. PCFR+가 먼저 필요하며 모든 시험 게임에서 DCFR보다 우세한 것은 아니다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    },
+    {
+      "id": "WARM-2016",
+      "title": "Strategy-Based Warm Starting for Regret Minimization in Games",
+      "authors": [
+        "Noam Brown",
+        "Tuomas Sandholm"
+      ],
+      "year": 2016,
+      "venue": "AAAI",
+      "published_date": null,
+      "version_date": null,
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/10056",
+      "fulltext": "https://www.cs.cmu.edu/~sandholm/warmStart.aaai16.withAppendixAndTypoFix.pdf",
+      "read_scope": "공식 서지, 저자 수정본 초록, 정리2와 warm-start 반복수 선택 절",
+      "claim": "주어진 양측 전략으로부터 조건을 만족하는 대체 후회를 구성하여 CFR을 초기화한다.",
+      "caveat": "가상 반복수와 대체 counterfactual value의 조건을 만족해야 한다. 다른 게임의 regret 복사와 다르다. 현재 LCFR/DCFR에의 확장은 별도 정당화가 필요하다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    },
+    {
+      "id": "SEQUENCE-1996",
+      "title": "Efficient Computation of Equilibria for Extensive Two-Person Games",
+      "authors": [
+        "Daphne Koller",
+        "Nimrod Megiddo",
+        "Bernhard von Stengel"
+      ],
+      "year": 1996,
+      "venue": "Games and Economic Behavior",
+      "published_date": null,
+      "version_date": null,
+      "url": "https://ai.stanford.edu/~koller/Papers/Koller%2Bal%3AGEB96.pdf",
+      "fulltext": "https://ai.stanford.edu/~koller/Papers/Koller%2Bal%3AGEB96.pdf",
+      "read_scope": "저자 공개본, sequence form의 realization 제약과 보상행렬 구성 절",
+      "claim": "완전 회상 게임에서 행동열의 실현확률과 희소 보상행렬로 전략을 표현한다. 동일한 양측 행동열에 해당하는 말단 보상은 chance 가중으로 합산할 수 있다.",
+      "caveat": "상태만 같은 이력을 병합하는 근거가 아니다. 자기 행동 이력과 정보집합 제약을 유지해야 한다. 수학적 동등성과 부동소수점 비트 동등성은 다르다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    },
+    {
+      "id": "LITEEFG-2024",
+      "title": "LiteEFG: An Efficient Python Library for Solving Extensive-form Games",
+      "authors": [
+        "Mingyang Liu",
+        "Gabriele Farina",
+        "Asuman Ozdaglar"
+      ],
+      "year": 2024,
+      "venue": "arXiv preprint v1",
+      "published_date": "2024-07-29",
+      "version_date": "2024-07-29",
+      "url": "https://arxiv.org/abs/2407.20351",
+      "fulltext": "https://arxiv.org/html/2407.20351v1",
+      "read_scope": "초록, computation graph, static/dynamic forward/backward, benchmark 설명",
+      "claim": "정보집합의 지역 갱신식을 계산 그래프로 정의하고 정적 계산과 반복 계산을 분리한다.",
+      "caveat": "기존 S10 CachedValues가 정적 가치 계산을 이미 분리한다. 라이브러리 교체나 논문의 비교 배수를 현재 Rust 코드의 예상 가속률로 제시하지 않는다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    },
+    {
+      "id": "LAZY-2018",
+      "title": "Lazy-CFR: fast and near-optimal regret minimization for extensive games with imperfect information",
+      "authors": [
+        "Yichi Zhou",
+        "Tongzheng Ren",
+        "Dong Yan",
+        "Jialian Li",
+        "Jun Zhu"
+      ],
+      "year": 2018,
+      "venue": "arXiv preprint v3",
+      "published_date": "2018-10-10",
+      "version_date": "2018-12-25",
+      "url": "https://arxiv.org/abs/1810.04433",
+      "fulltext": "https://arxiv.org/pdf/1810.04433",
+      "read_scope": "초록, lazy update 설명, Assumptions 1/2 및 Algorithm 1 복잡도 절",
+      "claim": "정보집합별 누적 도달질량에 따라 갱신 시점을 다르게 하여 매 반복 전체 갱신을 피한다.",
+      "caveat": "O(sqrt(|I|)) 형태의 단순 비용 결과는 정보집합 트리 구조·이력 수에 관한 가정을 사용한다. 불규칙 교체/연속 의사결정이 있는 포켓몬 트리에 그대로 보장할 수 없다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    },
+    {
+      "id": "RBP-2015",
+      "title": "Regret-Based Pruning in Extensive-Form Games",
+      "authors": [
+        "Noam Brown",
+        "Tuomas Sandholm"
+      ],
+      "year": 2015,
+      "venue": "NIPS",
+      "published_date": null,
+      "version_date": null,
+      "url": "https://proceedings.neurips.cc/paper/2015/hash/c54e7837e0cd0ced286cb5995327d1ab-Abstract.html",
+      "fulltext": "https://proceedings.neurips.cc/paper/2015/file/c54e7837e0cd0ced286cb5995327d1ab-Paper.pdf",
+      "read_scope": "공식 초록, 4절 RBP 및 재방문/overhead 설명",
+      "claim": "음수 후회가 다시 양수가 될 수 있는 가장 이른 시점을 경계로 특정 행동 이하의 순회를 잠시 미룬다.",
+      "caveat": "음수이면 영구 삭제하거나 낮은 chance 확률을 잘라내는 방법이 아니다. 할인/선형 가중을 쓰면 원래의 스킵 경계를 재유도해야 한다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    },
+    {
+      "id": "GPUCFR-2024",
+      "title": "GPU-Accelerated Counterfactual Regret Minimization",
+      "authors": [
+        "Juho Kim"
+      ],
+      "year": 2024,
+      "venue": "arXiv preprint (reviewed HTML v3)",
+      "published_date": "2024-08-27",
+      "version_date": null,
+      "url": "https://arxiv.org/abs/2408.14778",
+      "fulltext": "https://arxiv.org/html/2408.14778v3",
+      "read_scope": "초록, 행렬·벡터 구성, 4.1 작은/중간/큰 게임 및 메모리 비교",
+      "claim": "CFR 순회를 희소·밀집 행렬/벡터 연산으로 재구성해 GPU 병렬 처리가 가능하게 한다.",
+      "caveat": "논문 자체에서도 작은 게임은 GPU/Python 비용 때문에 불리하다. 현재 수천 노드·짧은 반복에 이득을 보장할 수 없으며 GPU 준비/전송/메모리 비용까지 측정해야 한다.",
+      "retrieved_on": "2026-10-03",
+      "source_type": "primary-paper",
+      "measured_in_this_engine": false
+    }
+  ],
+  "candidates": [
+    {
+      "id": "S26f-regret-rules",
+      "rank": 1,
+      "title": "CFR 지역 갱신 규칙 교체",
+      "papers": [
+        "DCFR-2019",
+        "PCFR-2021",
+        "SAPCFR-2026",
+        "HS-2026"
+      ],
+      "status": "proposed",
+      "depends_on": [
+        "S26e-growth-solve-cadence"
+      ],
+      "motivation": "현 코드는 signed regret에 t/T를 곱하는 교대 LCFR이다. DCFR, PCFR+, SAPCFR+, HS는 아직 구현되어 있지 않다.",
+      "experiment": "고정된 완성 트리에서 LCFR 대 DCFR(1.5,0,2), 이어 PCFR+/SAPCFR+, 마지막 HS15/HS30을 독립 비교한다. tree walk·평가기는 공통으로 유지하고 지역 상태/갱신/평균 규칙을 모듈로 분리한다.",
+      "success": "같은 원본 Tree::assess gap 허용치에 도달하는 총시간, 노드방문 수, 반복 수, 비수렴 수를 비교한다. 그 후 S19 전체 성장 시간으로 재평가한다.",
+      "risk": "최종 정책 비트 일치를 요구하면 서로 다른 균형점도 버리게 된다. 게임·관측·평가·허용치는 고정한다. HS의 반복 horizon 및 교대/동시 갱신을 구분한다."
+    },
+    {
+      "id": "S26f-policy-reuse-gate",
+      "rank": 2,
+      "title": "이전 전략의 새 트리 인증 후 풀이 생략",
+      "papers": [
+        "WARM-2016"
+      ],
+      "status": "proposed",
+      "depends_on": [
+        "S26e-growth-solve-cadence"
+      ],
+      "motivation": "S19 cadence4에서도 다중 턴 탐색은 5~7번 다시 풀고, 매 풀이를 uniform/zero regret으로 시작한다.",
+      "experiment": "이전 평균정책을 정보집합 의미키와 action label로 새 트리에 사상한다. 새 정보집합은 명시한 기본정책으로 채우고 새 트리에서 원래의 전체 BR 인증을 수행한다. 통과하면 CFR 없이 반환하고 실패하면 기존 초기화를 사용한다.",
+      "success": "인증 성공 빈도와 절약한 풀이 시간에서 추가 인증·매핑 비용을 뺀 전체 시간. 부분 예산/실패 시 마지막으로 풀이된 snapshot만 반환한다.",
+      "risk": "논문의 warm start 그 자체가 아니라 보수적인 별도 제안이다. 기존 정보집합의 정수 ID는 바뀔 수 있다. 부분 게임 인증을 미확장 게임의 인증으로 해석하지 않는다."
+    },
+    {
+      "id": "S26f-warm-start",
+      "rank": 3,
+      "title": "전략 기반 대체 후회 초기화",
+      "papers": [
+        "WARM-2016"
+      ],
+      "status": "proposed",
+      "depends_on": [
+        "S26f-policy-reuse-gate"
+      ],
+      "motivation": "이전 전략이 새 트리에서 허용 gap을 못 넘더라도 uniform보다 유용한 초기점일 가능성이 있다.",
+      "experiment": "변경된 게임과 utility scale에서 논문 정리2의 대체 counterfactual values/후회 및 가상 반복 가중을 다시 구성한다. 먼저 논문의 CFR 설정을 재현하고 LCFR/DCFR 결합은 따로 검토한다.",
+      "success": "초기화 비용을 포함한 같은 gap까지의 시간. 나쁜 seed, 완전히 바뀐 leaf 평가, scale 감소, 신규 정보집합에 대한 독립 LP/BR 검증.",
+      "risk": "단순 regret 복사, 지역 행동확률의 무가중 평균, 새 행동의 임의 regret=0 삽입을 논문 보장으로 포장하지 않는다. 모든 스냅샷에서 이득이 난다는 근거는 없다."
+    },
+    {
+      "id": "S26f-sequence-kernel",
+      "rank": 4,
+      "title": "행동열·결정 구조 기반 CPU 풀이 커널",
+      "papers": [
+        "SEQUENCE-1996",
+        "LITEEFG-2024",
+        "GPUCFR-2024"
+      ],
+      "status": "proposed",
+      "depends_on": [
+        "S26e-growth-solve-cadence"
+      ],
+      "motivation": "sand는 8087노드/2정보집합/64공동행동이다. CachedValues는 이미 chance-only 가치를 캐시하지만 reach와 최종 BR은 물리 트리를 순회한다.",
+      "experiment": "먼저 한 세계·양측 각각 한 정보집합·후속 결정 없음이 확인된 트리만 기존 행렬 표현으로 내린다. 일반형은 양측 행동열과 realization 제약을 유지하는 희소 CPU 커널로 분리한다. 원본 트리는 관측·성장·최종 인증에 보존한다.",
+      "success": "압축/행렬 준비를 포함한 시간과 RSS를 측정한다. 최종 인증은 압축 전 원본에서 수행한다. 정보집합 공유, zero prior, 숨은 약속, switch closure는 자동 fallback 조건을 갖춘다.",
+      "risk": "8087/64는 가속 배수가 아니다. 기존 Bayesian 행렬 solver는 공통 우리 행동×상대 world 구조로 제한되어 임의의 다중 턴 게임을 바로 넣을 수 없다. 합산순서/scale/양의 확률 underflow 오류 계약도 보존해야 한다."
+    },
+    {
+      "id": "S26f-lazy-cfr",
+      "rank": 5,
+      "title": "정보집합별 지연 갱신",
+      "papers": [
+        "LAZY-2018"
+      ],
+      "status": "reserve-proposal",
+      "depends_on": [
+        "S26e-growth-solve-cadence"
+      ],
+      "motivation": "더 큰 다중 턴 트리에서는 낮은 도달질량 정보집합의 반복 갱신을 줄일 여지가 있다.",
+      "experiment": "누적 counterfactual reach와 지연 구간의 후회/평균 전략 기여를 관리한다. 중간 갱신만 미루고 전체 원본 BR로 인증한다.",
+      "success": "정보집합 갱신 감소량뿐 아니라 같은 gap까지의 총시간. 현재 짧은32회 풀이와 정보집합2개 sand는 낮은 우선순위다.",
+      "risk": "누적 기여를 버리면 알고리즘이 달라진다. 논문의 균형적인 트리 가정을 현재 트리가 만족한다는 주장은 하지 않는다."
+    },
+    {
+      "id": "S26f-regret-pruning",
+      "rank": 6,
+      "title": "복귀 시점이 정해진 후회 기반 가지치기",
+      "papers": [
+        "RBP-2015",
+        "DCFR-2019"
+      ],
+      "status": "reserve-proposal",
+      "depends_on": [
+        "S26f-regret-rules"
+      ],
+      "motivation": "장시간 풀이에서 확실히 불리한 행동 아래의 반복 순회를 줄일 수 있다.",
+      "experiment": "채택할 후회 갱신 규칙을 먼저 고정하고 보상범위·상대 도달질량으로 안전한 skip 기간을 유도한다. 만료·후회 복원·평균전략·독립 BR을 검증한다.",
+      "success": "실제로 건너뛴 방문 수와 재검사 비용, 동일 gap까지의 시간. 고정32회 풀이보다 큰 게임에서 먼저 계측한다.",
+      "risk": "LCFR/DCFR/PCFR+에 vanilla RBP 경계를 그대로 적용하지 않는다. 작은 chance 결과의 영구 삭제나 휴리스틱 빔 축소는 이 후보가 아니다."
+    },
+    {
+      "id": "S26f-gpu-cfr",
+      "rank": 7,
+      "title": "배치·대형 고정 게임의 GPU CFR",
+      "papers": [
+        "GPUCFR-2024"
+      ],
+      "status": "deferred-proposal",
+      "depends_on": [
+        "S26f-sequence-kernel"
+      ],
+      "motivation": "많은 독립 고정 게임 또는 더 큰 트리를 오래 풀 때 행렬 연산을 장치에 상주시킬 수 있다.",
+      "experiment": "CPU 희소 커널이 준비된 뒤 GPU가 있는 별도 러너에서 준비/전송/동기화/최종 인증을 포함해 비교한다.",
+      "success": "전체시간 및 메모리와 CPU fallback 검증. GPU 없는 장치와 AVX2 없는 CPU도 기존 경로로 실행 가능해야 한다.",
+      "risk": "현재6표본만으로 착수 우선순위를 높일 근거는 부족하다. 일반 GitHub CPU 러너에서 CUDA 속도를 검증했다고 하지 않는다."
+    }
+  ],
+  "code_evidence": [
+    {
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/source/engine/search/src/bayesian/tree/workspace/cached.rs",
+      "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "anchor": "let mut policy = tree.uniform();",
+      "line": 62,
+      "sha256": "0c227887a67eed2f529a0fc2aa4a42774f3e05983f8e024cea2dfde5a0a4d787",
+      "claim": "새 풀이마다 uniform/zero regret 초기화"
+    },
+    {
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/source/engine/search/src/bayesian/tree/workspace/cached.rs",
+      "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "anchor": "let weight = t as f64 / config.iterations as f64;",
+      "line": 69,
+      "sha256": "0c227887a67eed2f529a0fc2aa4a42774f3e05983f8e024cea2dfde5a0a4d787",
+      "claim": "교대 signed linear CFR; 매 반복 전체 information 순회"
+    },
+    {
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/source/engine/search/src/bayesian/tree/workspace/cached.rs",
+      "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "anchor": "fn new(tree: &Tree)",
+      "line": 12,
+      "sha256": "0c227887a67eed2f529a0fc2aa4a42774f3e05983f8e024cea2dfde5a0a4d787",
+      "claim": "정책 독립 chance-only value 캐시가 이미 존재"
+    },
+    {
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/source/engine/search/src/bayesian/tree/workspace.rs",
+      "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "anchor": "fn reach_into(",
+      "line": 20,
+      "sha256": "0dfa89d2ccc8479eec42392223210a2f7ab7925b3757006b8fce24981edd26a1",
+      "claim": "reach는 물리 노드·간선을 전체 순회"
+    },
+    {
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/source/engine/search/src/bayesian/tree.rs",
+      "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "anchor": "pub fn assess(",
+      "line": 285,
+      "sha256": "4afbb52891ff2ec19075a854ff32c33b9dc80e340a17ca5ca04170b61ed4a3f5",
+      "claim": "원본 전체 트리의 정보제약 best response 기반 인증"
+    },
+    {
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/source/engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs",
+      "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "anchor": "let (solution, next_q) = solve_scored",
+      "line": 229,
+      "sha256": "9d5c42fa52f6f1f52fe0eba089f60573895f8f337b73b613b3dee75bff3fdc11",
+      "claim": "새 게임 컴파일 후 새 풀이; 기존 regret 전달 없음"
+    },
+    {
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/source/engine/search/src/bayesian.rs",
+      "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "anchor": "fn strategy(",
+      "line": 249,
+      "sha256": "e188f10d17e3fe421fe363b018648ae70c1306833d0d6d77c7633f6ab8d7af42",
+      "claim": "양의 regret으로 정책을 정하되 누적 음수 자체는 보존"
+    },
+    {
+      "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/source/engine/search/src/bayesian.rs",
+      "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "anchor": "pub struct World",
+      "line": 31,
+      "sha256": "e188f10d17e3fe421fe363b018648ae70c1306833d0d6d77c7633f6ab8d7af42",
+      "claim": "기존 별도 Bayesian 행렬 계층"
+    }
+  ],
+  "previous_artifact_sha256": {
+    "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/ADDITIONAL-EVIDENCE.json": "80139a055f0133b0e857e194a380c4abebed5263d2db7ceb913f1522b6361ad7",
+    "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/COMPLETION.json": "9739fd77ba91ae48c99ad735ef025fada54ae8b274da6fd1eb5b92f1a4d6cd14",
+    "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s13-performance-candidates-20261003/findings.json": "08b238d7e8c57eca2d6112b328e1614d7bad1c9b4b657af298c5bdcd92104d46"
+  },
+  "engine_executions": 0,
+  "new_performance_measurements": 0,
+  "ci_dispatches": 0,
+  "production_changed": false,
+  "distinction": "논문에서 확인한 사실과 코드에 적용하기 위한 제안을 구분한다. 순위는 구현 대비 검증 가능성에 대한 판단이며 예상 속도 순위가 아니다."
+}

@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "default_off": true,
+  "core_change": "read-only feature-gated factored_mode getter; battle/enumeration implementations identical",
+  "baseline": "S17 incremental for turns > 1, S14 owned otherwise; shared final passes OFF",
+  "cfr_and_selection_unchanged": true,
+  "ordered_batch_max": 4,
+  "original_generic_domain_api_unchanged": true,
+  "attempted_work": "charge all submitted jobs, including results discarded by earlier failure; never exceed transition cap",
+  "memory": "at most four outstanding result vectors; CI rejects cumulative child peak RSS > 512 MiB, not a universal engine byte cap",
+  "context": "propagate caller FactoredScope; evaluator and observations remain serial; stateful non-Sync evaluator checked",
+  "oracle_scope": "LP tables remain sequential (generic Domain); exact engine tree/policy comparisons exercise actual 1/2/4 pools"
+}

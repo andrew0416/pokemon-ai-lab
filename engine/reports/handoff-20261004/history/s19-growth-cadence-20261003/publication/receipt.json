@@ -1,0 +1,133 @@
+{
+  "parent": "19061c2c08b3d5c25f2a696eb12b2b2c8b943435",
+  "branch": "codex/s26e-cadence-20261003",
+  "workflow": ".github/workflows/engine-s26e-cadence.yml",
+  "inherited_unchanged": 4164,
+  "changed_sha256": {
+    ".github/workflows/engine-s26e-cadence.yml": "eaccd60f242692abac61a96bebd96aa778c374f204f4cc02f7ba208029371ca9",
+    "engine/benchmarks/s26_cadence/check.py": "6356f78758297e338802897acae7d135d98b22a0d51d54daa0b8d772fad6bc23",
+    "engine/benchmarks/s26_cadence/plan.json": "529c6c09f320593d4789288b41d7e6be15c7ac415c1793aa6a10907be02c3e56",
+    "engine/benchmarks/s26_cadence/run.py": "c2893f94c9852476c44d7bd1fb4f6b9a2e7f68d081feb5f041c63839cf16364a",
+    "engine/search/Cargo.toml": "d06da5384c03695f75a69d8deff73ad24b11c0fd654a62dad7bdf522a6940fd5",
+    "engine/search/src/bayesian/tree/builder/growing/reuse.rs": "6efb7d33b2fe309ef3422fe3bb03fb5e31c66ceeb4a6d2192cb998545cb8e713",
+    "engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs": "9d5c42fa52f6f1f52fe0eba089f60573895f8f337b73b613b3dee75bff3fdc11",
+    "engine/search/src/bayesian/tree/builder/growing/tests.rs": "31c4c0002e68740d982a2879da6a28c8451d7469fc64e078c56e22b6924542c6",
+    "engine/search/src/bayesian/tree/engine.rs": "3e888bdeeae7a48f6e854146e9d70384c45d1f035fc76be8b7a00a2653e0f010",
+    "engine/search/src/bayesian/tree/engine/cadence.rs": "f3505c3e50dc75c48940f3eb32e6659172928d3bb3bfe1bdfb8ed9e866fff7cb",
+    "engine/search/src/bayesian/tree/engine/parallel.rs": "c61139a9e0c9abce21abe89bc8a781b40a8c3dab0aea82626d27b3b3b3c45e57",
+    "engine/search/src/bin/lab-belief-workspace-speed.rs": "8f847e8c8d2bc663d6b6340fba1b91082ffb2fc1e6826e56a2de0681c9d6842d",
+    "engine/search/src/bin/lab-belief-workspace.rs": "33c3e3a4d9f5c44e9907a9c9deffc5f4ca4d6373c6454de81bc8bc8329196b08",
+    "engine/search/src/bin/lab-belief-workspace/observed.rs": "75d060a13248b509d91004a7e839dfb5dbbfa333690ea3fa7d6f89899b03e718"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-compiler.yml": {
+      "branches": [
+        "codex/s26c-compiler-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-confirm.yml": {
+      "branches": [
+        "codex/s26c-confirm-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-growing-belief.yml": {
+      "branches": [
+        "codex/s26c-growing-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-speed.yml": {
+      "branches": [
+        "codex/s26c-speed-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-static.yml": {
+      "branches": [
+        "codex/s26c-static-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-workspace.yml": {
+      "branches": [
+        "codex/s26c-workspace-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-writer.yml": {
+      "branches": [
+        "codex/s26c-writer-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-incremental.yml": {
+      "branches": [
+        "codex/s26e-incremental-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-owned.yml": {
+      "branches": [
+        "codex/s26e-owned-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-parallel.yml": {
+      "branches": [
+        "codex/s26e-parallel-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-shared.yml": {
+      "branches": [
+        "codex/s26e-shared-20261003"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": true,
+  "correctness_scope": "cadence1 same-work; cadence2/4 same finite game; independent LP and unsolved batch rollback",
+  "limitations": "single-runner bounded fixtures; explicit same-work or same-finite-game per pair; no wins/strength evaluation",
+  "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+  "tree": "44522fb6500eb94c853bd3b243af648c7ae80b43",
+  "patch_sha256": "202f24bd516976d1646b48c4ddfe30094d75d21310af001dd5906eb4bf668ca3",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

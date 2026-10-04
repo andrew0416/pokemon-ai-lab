@@ -1,0 +1,121 @@
+{
+  "parent": "8143386044d9690bb195cda7702887df7038a41d",
+  "branch": "codex/s26e-incremental-20261003",
+  "workflow": ".github/workflows/engine-s26e-incremental.yml",
+  "inherited_unchanged": 4156,
+  "changed_sha256": {
+    ".github/workflows/engine-s26e-incremental.yml": "51e2fa99d48a8a3ae6ac61447c460babc267fdec270d814dabae92d4fb059a8a",
+    "engine/benchmarks/s26_incremental/plan.json": "97386f0af6eb0633afb070e0d3738be94dd225d341b6817cec424c96ca28ae13",
+    "engine/benchmarks/s26_incremental/run.py": "367c3ddaee36bfb708bcdd04653c0dc8a1b351e78715e7c3adb6f260ec628ee2",
+    "engine/search/Cargo.toml": "f5f69a85b48f12bfd2570392d01b7a50410705f9f16f82dc3a1002296eda35d2",
+    "engine/search/src/bayesian/tree/builder/growing/reuse.rs": "a274dec7ac16f943d9a2ec40c573491ecc5e1c7a5ca2e5b062422a416963c9d7",
+    "engine/search/src/bayesian/tree/builder/growing/tests.rs": "c275f2a84e9180a98e93381d4b524e01e7d0408938c5b7c19e431f9e89c74681",
+    "engine/search/src/bayesian/tree/compiler.rs": "62071b7ec58bcece534a22b84c7e4d85f72dc6af585826281839fe3f93c8a0d8",
+    "engine/search/src/bayesian/tree/compiler/incremental.rs": "8d2595a8bb5ac22ca0cf35305bc909250f2f32af0c0843cd59257b531b0a472b",
+    "engine/search/src/bayesian/tree/engine.rs": "4fc1c03d2cb7642ee09917213cf4569df1c4bf4677d56d8d17075834d127f413",
+    "engine/search/src/bin/lab-belief-workspace-speed.rs": "a28c64ab768fdd81e76d3a9edfc07454ac65613c11a70358769d19db20e838b3",
+    "engine/search/src/bin/lab-belief-workspace.rs": "b98737566e708842e4b4f55217e5792a4028cc79b52c40ef0946b454cc70975e",
+    "engine/search/src/bin/lab-belief-workspace/observed.rs": "61c6300254f3a28b812362060a0a5f4fe300fa2583a042d9bc4abc7af9ab1485"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-compiler.yml": {
+      "branches": [
+        "codex/s26c-compiler-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-confirm.yml": {
+      "branches": [
+        "codex/s26c-confirm-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-growing-belief.yml": {
+      "branches": [
+        "codex/s26c-growing-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-speed.yml": {
+      "branches": [
+        "codex/s26c-speed-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-static.yml": {
+      "branches": [
+        "codex/s26c-static-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-workspace.yml": {
+      "branches": [
+        "codex/s26c-workspace-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-writer.yml": {
+      "branches": [
+        "codex/s26c-writer-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-owned.yml": {
+      "branches": [
+        "codex/s26e-owned-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-shared.yml": {
+      "branches": [
+        "codex/s26e-shared-20261003"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": true,
+  "correctness_scope": "shared average-policy passes; exact tree, policy, budgets and independent LP",
+  "limitations": "single-runner bounded fixtures; exact same work per pair; no wins/strength evaluation",
+  "source_sha": "d32fd5ae016e6fc23465b6e63de209919469e7ed",
+  "tree": "7da1c2cd9c001c591f44fa29244e177cf7f60324",
+  "patch_sha256": "162c721552d8d4b6f39e886ca14246afa1a23089b8acdc753f8864a746b69b42",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "source_sha": "90901a6bd430a560b240379d985ba3b1c8e2df09",
+  "run": 37008543602,
+  "conclusion": "success",
+  "run_wall_seconds": 77,
+  "rust_tests": 71,
+  "test_groups": {
+    "on.log": 53,
+    "cli.log": 1,
+    "off.log": 17
+  },
+  "expanded_normal_form_cases": 24,
+  "independent_lp_cases": 72,
+  "lp_converged": 72,
+  "max_lp_gap": 0.01968748357698491,
+  "raw_certificate_audits": 72,
+  "engine_cli_rows": 16,
+  "engine_cli_world_columns": [
+    16,
+    16
+  ],
+  "engine_cli_gap": 0.05927568162955765,
+  "no_default_features_passed": true,
+  "clippy_passed": true,
+  "default_off": true,
+  "production_changed": false,
+  "performance_measured": false,
+  "artifact_sha256": "519c44d125584651a148d04500ccb8e4483b54faa7be948cdd2c0ae622712e56",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

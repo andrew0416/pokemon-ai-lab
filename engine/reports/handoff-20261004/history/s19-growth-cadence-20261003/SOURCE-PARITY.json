@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "default_off": true,
+  "core_and_solver_unchanged": true,
+  "reference_growth_unchanged": true,
+  "algorithm": "preselect up to 1/2/4 distinct existing public groups using one solved snapshot; atomically commit after full restarted CFR",
+  "fallback": "cadence1 exact same-work differential; no naive regret warm start",
+  "limits": "pending batch budget failure returns previous compiled tree/policy/counters; attempted work remains charged",
+  "comparison": "cadence1 same work; cadence2/4 complete same finite game and semantic policy, NOT same work or same partial tree",
+  "oracle": "24 existing generated games x full/cadence2/4/partial budgets = 168 LP certificates plus pending-batch rollback",
+  "baseline": "frozen S18 4 threads for five measured fixture families; pivot sequential. Both sides use identical storage/thread settings. Explicit experimental settings, not a production classifier.",
+  "no_win_rate_claim": true
+}

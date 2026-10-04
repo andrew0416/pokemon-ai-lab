@@ -1,0 +1,126 @@
+{
+  "parent": "d32fd5ae016e6fc23465b6e63de209919469e7ed",
+  "branch": "codex/s26e-parallel-20261003",
+  "workflow": ".github/workflows/engine-s26e-parallel.yml",
+  "inherited_unchanged": 4160,
+  "changed_sha256": {
+    ".github/workflows/engine-s26e-parallel.yml": "2dc3986b8b9e9b45cf55e5a5fffcc9a061210140a80099a539dc792ce1437d4d",
+    "engine/benchmarks/s26_parallel/plan.json": "aaf4d9b7bfbe554b8fbbae8d354a24abf7bcca992bca71dda9e975af03d9e3e1",
+    "engine/benchmarks/s26_parallel/run.py": "39461fd728f35e2260ae581316f5fa9d5913338f612663678328fae87ff4c475",
+    "engine/core/src/turn/mod.rs": "842df75c238ce284f209b4ef82f39ac2a87597672af26f4c7cc5cfc047f34562",
+    "engine/search/Cargo.toml": "a2fe708c845bbef61680e0ce5e6d8bed50b5078f31b12ba200156eb196ce6320",
+    "engine/search/src/bayesian/tree/builder/growing.rs": "77290d6aeff85863623d8a39054c1beceabec9c70368571c1826a968b697d8e5",
+    "engine/search/src/bayesian/tree/builder/growing/reuse.rs": "2842452755451dc7835ad22aa20e69f6264da3f33fcdbd66d20af9d111ece72e",
+    "engine/search/src/bayesian/tree/builder/growing/tests.rs": "14c01725ff2de14f598f436e28d6f570e02ad381e9fd326435a03dd7a96cf5b0",
+    "engine/search/src/bayesian/tree/engine.rs": "31e56d1e11d57d3faf363fa5327d013e045b3b986fe1cbbddafdf8c736a2274f",
+    "engine/search/src/bayesian/tree/engine/parallel.rs": "03972f395b6f5e10ee20704ef5d962b50f10f21f4080644fcb970bb5355f787e",
+    "engine/search/src/bin/lab-belief-workspace-speed.rs": "a3ed2feb7f61f4cc48bbf80fd5a08006f390c56c8c094b32dbd70f8fce0a75f7",
+    "engine/search/tests/owned_transitions.rs": "88c4b6b64dad06f3e526134a6c7cd8869e8988deab834c91f4f90d8b5a6665f6"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-compiler.yml": {
+      "branches": [
+        "codex/s26c-compiler-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-confirm.yml": {
+      "branches": [
+        "codex/s26c-confirm-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-growing-belief.yml": {
+      "branches": [
+        "codex/s26c-growing-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-speed.yml": {
+      "branches": [
+        "codex/s26c-speed-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-static.yml": {
+      "branches": [
+        "codex/s26c-static-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-workspace.yml": {
+      "branches": [
+        "codex/s26c-workspace-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-writer.yml": {
+      "branches": [
+        "codex/s26c-writer-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-incremental.yml": {
+      "branches": [
+        "codex/s26e-incremental-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-owned.yml": {
+      "branches": [
+        "codex/s26e-owned-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-shared.yml": {
+      "branches": [
+        "codex/s26e-shared-20261003"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": true,
+  "correctness_scope": "ordered bounded engine batches; real attempted work; same successful tree and independent LP",
+  "limitations": "single-runner bounded fixtures; exact same work per pair; no wins/strength evaluation",
+  "source_sha": "19061c2c08b3d5c25f2a696eb12b2b2c8b943435",
+  "tree": "57be72b10de4b97a132a5aa1e3bc4bdc8e699182",
+  "patch_sha256": "f31f27be5cb2b9529068c8c4abb273646b4a79eba5f3c1145174f96793e87f84",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

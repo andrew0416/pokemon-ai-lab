@@ -1,0 +1,20 @@
+{
+  "completed": true,
+  "candidate": 5,
+  "task": "S26e-parallel-transition-batches",
+  "source_sha": "19061c2c08b3d5c25f2a696eb12b2b2c8b943435",
+  "run": 37088881275,
+  "decision": "조건부 4스레드 옵션으로 보관한다. 5국면에서 3.22~13.00% 감소했지만 교체는57.20% 회귀했다. 2스레드는 모래를 제외하고17.28~51.76% 회귀했다. 자동 기본값으로 적용하지 않는다. 다음 실험의 동일 국면 비교 설정은 교체순차/나머지4스레드로 명시한다. 4논리CPU는2물리코어인 러너였으며 최대 자식 RSS는253312KiB(약247.38MiB); 이는 후보 단독 메모리나 일반적인 엔진 메모리 상한은 아니다. 추가 LP는 일반 Domain 순차 회귀검사이며 병렬 경로는 실제 엔진 전체 트리·정책 및 상태기록 evaluator 대조로 검증했다.",
+  "default_off": true,
+  "production_adopted": false,
+  "vault_notes_added": 4,
+  "vault_install_receipt": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s19-growth-cadence-20261003/vault/install-receipt.json",
+  "new_vault_errors": 0,
+  "new_stale_references": 0,
+  "evidence_sha256": {
+    "RESULTS.md": "aaaf9a56da51de7e8f631e25e9c22cb362c35ed82b1a18af9e661a950a190ae1",
+    "AUDIT-37088881275.json": "1248311bd750921ae5bc8162d93add4f659ac983e39488a874b41ae68022e07c",
+    "SOURCE-PARITY.json": "bace0670b9df755489c0210ea32d85f26dd78623fdaa12f7caa3a1fc2eb71286",
+    "decision.json": "efd1eab442133d66785528b4a9298ae248cb103471c2b064f2db6a8cd7f93143"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "parent": "90901a6bd430a560b240379d985ba3b1c8e2df09",
+  "branch": "codex/s26b-public-belief-20261002",
+  "workflow": ".github/workflows/engine-s26b-public-belief.yml",
+  "inherited_unchanged": 4106,
+  "changed_sha256": {
+    ".github/workflows/engine-s26b-public-belief.yml": "912635236c473980e325e8d65ce07ee3a96083f6674f3b8e1eee44a27bfb6c83",
+    "engine/benchmarks/s26_tree/CONTRACT.md": "42a7657a092c8252b3c0c36fe6379b65e5fc2023e5023ba692e61296fb447af8",
+    "engine/benchmarks/s26_tree/check.py": "0a0f6492d8582c1c445830fa4239c51452c1f54b93655f3ac2c2b5afd222796c",
+    "engine/search/Cargo.toml": "e1babc9024eb0d3869dbb75da3d99d136755bcf32a61a50eab13b810e5bfb034",
+    "engine/search/src/bayesian.rs": "e188f10d17e3fe421fe363b018648ae70c1306833d0d6d77c7633f6ab8d7af42",
+    "engine/search/src/bayesian/engine.rs": "d975d81ddb268c3349139b174757cdfba98a224190021891c36a71ba49ad9773",
+    "engine/search/src/bayesian/tree.rs": "5e3798eae0b8fdfdaeeb7db5840cbee858a148912d023cc46e4e216a90406814",
+    "engine/search/src/bayesian/tree/builder.rs": "0eea8e2ab3e6c1707b1366751cdb351a57b7ede9bf97c1a9f277602b0f70171f",
+    "engine/search/src/bayesian/tree/engine.rs": "1261798e2f70c17d2bc18c9d24c9ba40a2b6a8cfe452f793570252828bcc73f3",
+    "engine/search/src/bayesian/tree/tests.rs": "9da73c43fafab08ee48a533d9aec63c54d14ae50a8b08c1d6c229d52b9866317",
+    "engine/search/src/bin/lab-belief.rs": "e01364a1d586ab1af1b88ee909995082e267d4c8f013848307d5101f8d4e9b99"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": false,
+  "correctness_scope": "perfect-recall finite-tree CFR; public and private belief/cursor; engine turns and switches; independent normal-form LP",
+  "limitations": "Explicit boundary snapshot information abstraction, not complete battle-log information; fixed heuristic leaves; no selective GT-CFR or performance/strength claim",
+  "source_sha": "12a28a527d6b67856f77b2de4f077b9cf4b41d90",
+  "tree": "c6b0dacc1799f2b62e871a71866c99bf8e809ae5",
+  "patch_sha256": "f957e6e6aed2778c9f8488000ff35b9a943495dee078e7cd95971680192c5ca3",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

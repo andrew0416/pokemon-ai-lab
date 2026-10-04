@@ -1,0 +1,473 @@
+{
+  "current": "8c1bd43c0589ea74b99de439f38ae6f24cf87fd5",
+  "library": "2bb9cf595f675d269406bbe783e88154ed517cb4",
+  "experiments": [
+    {
+      "experiment": "s1-budgeted-20261002",
+      "source_sha": null,
+      "parent_sha": null,
+      "branch": null,
+      "ancestor_of_current": null,
+      "documents": [
+        "completion-receipt.json",
+        "README.md",
+        "RESULTS.md",
+        "SEARCH-LITERATURE.md"
+      ],
+      "report_dir": "history/s1-budgeted-20261002",
+      "source_url": null,
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s10-static-backup-20261003",
+      "source_sha": "673e9720882aaad4173743282202ea1217eee598",
+      "parent_sha": "ab57e82bd923666891ad31b3c563b6414080f27e",
+      "branch": "codex/s26c-static-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37032057405.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s10-static-backup-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/673e9720882aaad4173743282202ea1217eee598",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s11-night-confirm-20261003",
+      "source_sha": "c830e52dd104743a2f0cc55f07e6b4018bc9591a",
+      "parent_sha": "673e9720882aaad4173743282202ea1217eee598",
+      "branch": "codex/s26c-confirm-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37033041022.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s11-night-confirm-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/c830e52dd104743a2f0cc55f07e6b4018bc9591a",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s12-observation-writer-20261003",
+      "source_sha": "081124aaae5e0fe5aa1d8c5b9117803abd866875",
+      "parent_sha": "c830e52dd104743a2f0cc55f07e6b4018bc9591a",
+      "branch": "codex/s26c-writer-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37034440983.json",
+        "completion-receipt.json",
+        "NIGHT-MANIFEST.json",
+        "NIGHT-RESULTS.md",
+        "README.md",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s12-observation-writer-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/081124aaae5e0fe5aa1d8c5b9117803abd866875",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s13-performance-candidates-20261003",
+      "source_sha": null,
+      "parent_sha": null,
+      "branch": null,
+      "ancestor_of_current": null,
+      "documents": [
+        "findings.json"
+      ],
+      "report_dir": "history/s13-performance-candidates-20261003",
+      "source_url": null,
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s14-owned-transitions-20261003",
+      "source_sha": "ec9b72e149b9d72e762e4023a84365e3f72a2ff5",
+      "parent_sha": "081124aaae5e0fe5aa1d8c5b9117803abd866875",
+      "branch": "codex/s26e-owned-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37083242086.json",
+        "COMPLETION.json",
+        "README.md",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s14-owned-transitions-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/ec9b72e149b9d72e762e4023a84365e3f72a2ff5",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s15-interned-history-20261003",
+      "source_sha": "cab569eec64dc3213bedf934f69e7c4a78ef38c4",
+      "parent_sha": "ec9b72e149b9d72e762e4023a84365e3f72a2ff5",
+      "branch": "codex/s26e-history-20261003",
+      "ancestor_of_current": false,
+      "documents": [
+        "AUDIT-37085660921.json",
+        "COMPLETION.json",
+        "README.md",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s15-interned-history-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/cab569eec64dc3213bedf934f69e7c4a78ef38c4",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s16-shared-final-passes-20261003",
+      "source_sha": "8143386044d9690bb195cda7702887df7038a41d",
+      "parent_sha": "ec9b72e149b9d72e762e4023a84365e3f72a2ff5",
+      "branch": "codex/s26e-shared-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37087415542.json",
+        "COMPLETION.json",
+        "decision.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s16-shared-final-passes-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/8143386044d9690bb195cda7702887df7038a41d",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s17-incremental-compiler-20261003",
+      "source_sha": "d32fd5ae016e6fc23465b6e63de209919469e7ed",
+      "parent_sha": "8143386044d9690bb195cda7702887df7038a41d",
+      "branch": "codex/s26e-incremental-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37088113085.json",
+        "COMPLETION.json",
+        "decision.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s17-incremental-compiler-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/d32fd5ae016e6fc23465b6e63de209919469e7ed",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s18-parallel-transitions-20261003",
+      "source_sha": "19061c2c08b3d5c25f2a696eb12b2b2c8b943435",
+      "parent_sha": "d32fd5ae016e6fc23465b6e63de209919469e7ed",
+      "branch": "codex/s26e-parallel-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37088881275.json",
+        "COMPLETION.json",
+        "decision.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s18-parallel-transitions-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/19061c2c08b3d5c25f2a696eb12b2b2c8b943435",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s19-growth-cadence-20261003",
+      "source_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "parent_sha": "19061c2c08b3d5c25f2a696eb12b2b2c8b943435",
+      "branch": "codex/s26e-cadence-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "ADDITIONAL-EVIDENCE.json",
+        "AUDIT-37089670577.json",
+        "COMPLETION.json",
+        "decision.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s19-growth-cadence-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s2-search-quality-20261002",
+      "source_sha": "a0f7b556e30095e85ce56013c0e7d1f08206f03d",
+      "parent_sha": "c54becc9fb7bb9101cac363f389d4a84792016ab",
+      "branch": "codex/s25b-search-quality-20261002",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-36995572342.json",
+        "completion-receipt.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s2-search-quality-20261002",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/a0f7b556e30095e85ce56013c0e7d1f08206f03d",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s20-literature-20261003",
+      "source_sha": null,
+      "parent_sha": null,
+      "branch": null,
+      "ancestor_of_current": null,
+      "documents": [
+        "COMPLETION.json",
+        "NEXT-OPTIMIZATIONS.md",
+        "research.json"
+      ],
+      "report_dir": "history/s20-literature-20261003",
+      "source_url": null,
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s21-paper-solvers-20261003",
+      "source_sha": "b10b08477f196ce0b9b361fa7878e311fdf1d4c8",
+      "parent_sha": "7f4ca4397e098d7877ba4f25b79e1164d21a080a",
+      "branch": "codex/s26f-papers-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "COMPLETION.json",
+        "DECISION.json",
+        "README.md",
+        "RESULTS.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s21-paper-solvers-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/b10b08477f196ce0b9b361fa7878e311fdf1d4c8",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s22-growth-pipeline-20261003",
+      "source_sha": "70d5b0b463dc2cab2deb365c67ffcb2e2e7f95b8",
+      "parent_sha": "b10b08477f196ce0b9b361fa7878e311fdf1d4c8",
+      "branch": "codex/s26g-pipeline-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "COMPLETION.json",
+        "DECISION.json",
+        "README.md",
+        "RESULTS.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s22-growth-pipeline-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/70d5b0b463dc2cab2deb365c67ffcb2e2e7f95b8",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s23-phase-cost-20261003",
+      "source_sha": "fc5bf999b9415bc18eacc9d6fff303c920209e13",
+      "parent_sha": "70d5b0b463dc2cab2deb365c67ffcb2e2e7f95b8",
+      "branch": "codex/s26h-phases-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "COMPLETION.json",
+        "DECISION.json",
+        "README.md",
+        "RESULTS.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s23-phase-cost-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/fc5bf999b9415bc18eacc9d6fff303c920209e13",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s24-admission-audit-20261003",
+      "source_sha": "d90c80b4001e43807d404454280f1511329ef952",
+      "parent_sha": "fc5bf999b9415bc18eacc9d6fff303c920209e13",
+      "branch": "codex/s26i-audit-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "COMPLETION.json",
+        "DECISION.json",
+        "README.md",
+        "RESULTS.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s24-admission-audit-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/d90c80b4001e43807d404454280f1511329ef952",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s25-history-keys-20261003",
+      "source_sha": "2bb9cf595f675d269406bbe783e88154ed517cb4",
+      "parent_sha": "d90c80b4001e43807d404454280f1511329ef952",
+      "branch": "codex/s26j-history-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "COMPLETION.json",
+        "DECISION.json",
+        "DECISION.md",
+        "README.md",
+        "RESULTS.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s25-history-keys-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/2bb9cf595f675d269406bbe783e88154ed517cb4",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s26-borrowed-boundary-20261004",
+      "source_sha": "b6e1e284a67ace9bde7ceffbc9da4dfaf73e9f75",
+      "parent_sha": "2bb9cf595f675d269406bbe783e88154ed517cb4",
+      "branch": "codex/s26k-boundary-20261004",
+      "ancestor_of_current": false,
+      "documents": [
+        "README.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s26-borrowed-boundary-20261004",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/b6e1e284a67ace9bde7ceffbc9da4dfaf73e9f75",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s26-borrowed-boundary-r2-20261004",
+      "source_sha": "3f0b28e7f317c84acffa21a1354351cfb8dcbe3d",
+      "parent_sha": "b6e1e284a67ace9bde7ceffbc9da4dfaf73e9f75",
+      "branch": "codex/s26k-boundary-fix-20261004",
+      "ancestor_of_current": false,
+      "documents": [
+        "COMPLETION.json",
+        "DECISION.json",
+        "DECISION.md",
+        "README.md",
+        "REPAIR.json",
+        "RESULTS.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s26-borrowed-boundary-r2-20261004",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/3f0b28e7f317c84acffa21a1354351cfb8dcbe3d",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s27-selected-stack-20261004",
+      "source_sha": "8c1bd43c0589ea74b99de439f38ae6f24cf87fd5",
+      "parent_sha": "2bb9cf595f675d269406bbe783e88154ed517cb4",
+      "branch": "codex/s26l-stack-20261004",
+      "ancestor_of_current": true,
+      "documents": [
+        "COMPLETION.json",
+        "DECISION.json",
+        "DECISION.md",
+        "INPUT-SELECTION.json",
+        "README.md",
+        "RESULTS.json",
+        "RESULTS.md",
+        "SOURCE-PARITY.json"
+      ],
+      "report_dir": "history/s27-selected-stack-20261004",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/8c1bd43c0589ea74b99de439f38ae6f24cf87fd5",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s3-response-sweeps-20261002",
+      "source_sha": "0501eeb7220bcc3f5e2f00145c970fa350666031",
+      "parent_sha": "a0f7b556e30095e85ce56013c0e7d1f08206f03d",
+      "branch": "codex/s25d-response-sweeps-20261002",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-36999721226.json",
+        "completion-receipt.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s3-response-sweeps-20261002",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/0501eeb7220bcc3f5e2f00145c970fa350666031",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s4-bayesian-cfr-20261002",
+      "source_sha": "90901a6bd430a560b240379d985ba3b1c8e2df09",
+      "parent_sha": "0501eeb7220bcc3f5e2f00145c970fa350666031",
+      "branch": "codex/s26a-bayesian-cfr-20261002",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37008543602.json",
+        "completion-receipt.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s4-bayesian-cfr-20261002",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/90901a6bd430a560b240379d985ba3b1c8e2df09",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s5-public-belief-20261002",
+      "source_sha": "12a28a527d6b67856f77b2de4f077b9cf4b41d90",
+      "parent_sha": "90901a6bd430a560b240379d985ba3b1c8e2df09",
+      "branch": "codex/s26b-public-belief-20261002",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37014537106.json",
+        "completion-receipt.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s5-public-belief-20261002",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/12a28a527d6b67856f77b2de4f077b9cf4b41d90",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s6-growing-belief-20261002",
+      "source_sha": "26999d068dd541ac0f2cfcdafc8a091ce4427e12",
+      "parent_sha": "12a28a527d6b67856f77b2de4f077b9cf4b41d90",
+      "branch": "codex/s26c-growing-belief-20261002",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37020601917.json",
+        "completion-receipt.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s6-growing-belief-20261002",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/26999d068dd541ac0f2cfcdafc8a091ce4427e12",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s7-belief-speed-20261002",
+      "source_sha": "5b79d6e30b1fc0c39da227700ca3b169b60691b2",
+      "parent_sha": "26999d068dd541ac0f2cfcdafc8a091ce4427e12",
+      "branch": "codex/s26c-speed-20261002",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37025196260.json",
+        "completion-receipt.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s7-belief-speed-20261002",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/5b79d6e30b1fc0c39da227700ca3b169b60691b2",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s8-belief-workspace-20261003",
+      "source_sha": "bc7ae14351430b2f1cc485ed937bc690aaa5cfa3",
+      "parent_sha": "5b79d6e30b1fc0c39da227700ca3b169b60691b2",
+      "branch": "codex/s26c-workspace-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37029881806.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s8-belief-workspace-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/bc7ae14351430b2f1cc485ed937bc690aaa5cfa3",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    },
+    {
+      "experiment": "s9-belief-compiler-20261003",
+      "source_sha": "ab57e82bd923666891ad31b3c563b6414080f27e",
+      "parent_sha": "bc7ae14351430b2f1cc485ed937bc690aaa5cfa3",
+      "branch": "codex/s26c-compiler-20261003",
+      "ancestor_of_current": true,
+      "documents": [
+        "AUDIT-37030978967.json",
+        "README.md",
+        "RESULTS.md"
+      ],
+      "report_dir": "history/s9-belief-compiler-20261003",
+      "source_url": "https://github.com/andrew0416/pokemon-ai-lab/tree/ab57e82bd923666891ad31b3c563b6414080f27e",
+      "historical_status": "historical independent experiment, not automatically enabled or production-adopted"
+    }
+  ]
+}

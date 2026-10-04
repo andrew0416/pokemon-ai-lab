@@ -1,0 +1,1921 @@
+diff --git a/.github/workflows/engine-s26c-static.yml b/.github/workflows/engine-s26c-static.yml
+new file mode 100644
+index 0000000..867800c
+--- /dev/null
++++ b/.github/workflows/engine-s26c-static.yml
+@@ -0,0 +1,75 @@
++name: S26c static backups exact parity and speed
++on:
++  push:
++    branches: [codex/s26c-static-20261003]
++permissions:
++  contents: read
++concurrency:
++  group: s26c-static
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  CARGO_PROFILE_RELEASE_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  RAYON_NUM_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++jobs:
++  compare:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 25
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Independent oracle dependencies
++        run: python -m pip install numpy==2.2.6 scipy==1.15.3
++      - name: Correctness and portable release binary
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26c-static-results
++          cd engine
++          cargo test --locked -p lab-search --lib --features experiment-belief-workspace,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26c-static-results/on.log
++          cargo test --locked -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26c-static-results/cli.log
++          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26c-static-results/off.log
++          cargo check --locked -p lab-search --lib --no-default-features --features experiment-belief-workspace 2>&1 | tee ../s26c-static-results/library.log
++          cargo clippy --locked -p lab-search --lib --bin lab-belief-workspace --bin lab-belief-workspace-speed --features experiment-belief-workspace -- -D warnings 2>&1 | tee ../s26c-static-results/clippy.log
++          cargo build --locked -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26c-static-results/debug-build.log
++          cargo build --locked --release -p lab-search --bin lab-belief-workspace-speed --features experiment-belief-workspace 2>&1 | tee ../s26c-static-results/release-build.log
++          git rev-parse HEAD > ../s26c-static-results/source-sha.txt
++          rustc --version > ../s26c-static-results/rustc.txt
++      - name: Independent full-tree LP certificates
++        run: python -B engine/benchmarks/s26_tree/check.py --binary target-s25/debug/lab-belief-workspace --out s26c-static-results/tree-lp
++      - name: Independent growing-tree LP certificates and rollback
++        run: python -B engine/benchmarks/s26_tree/growing_check.py --binary target-s25/debug/lab-belief-workspace --out s26c-static-results/growing-lp
++      - name: Exact same-work paired comparison
++        run: python -B engine/benchmarks/s26_static/run.py --binary target-s25/release/lab-belief-workspace-speed --out s26c-static-results/paired
++      - name: Preserve evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26c-static-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26c-static-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_static/plan.json b/engine/benchmarks/s26_static/plan.json
+new file mode 100644
+index 0000000..25df9ec
+--- /dev/null
++++ b/engine/benchmarks/s26_static/plan.json
+@@ -0,0 +1,751 @@
++{
++  "rounds": 7,
++  "sample_ms": 80,
++  "cases": [
++    {
++      "id": "stats-w1-d2-b4-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 4,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-b10000-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-b10000-seed7",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 7
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-b10000-seed31",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 31
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-b4-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 4,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 4,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-b10000-seed1",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-b10000-seed7",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 7
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 7,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-b10000-seed31",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 31
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 31,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1-b10000-seed1",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1-b10000-seed1",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "growing",
++        "max_expansions": 10000,
++        "max_walks": 20000,
++        "seed": 1
++      },
++      "variants": [
++        {
++          "kind": "in-place-compiler",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "in-place-compiler"
++        },
++        {
++          "kind": "all",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all"
++        },
++        {
++          "kind": "cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "cached"
++        },
++        {
++          "kind": "all-cached",
++          "max_expansions": 10000,
++          "max_walks": 20000,
++          "seed": 1,
++          "id": "all-cached"
++        }
++      ]
++    },
++    {
++      "id": "stats-w1-d2-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "id": "workspace",
++          "kind": "exhaustive-workspace"
++        },
++        {
++          "id": "cached",
++          "kind": "exhaustive-cached"
++        }
++      ]
++    },
++    {
++      "id": "stats-w2-d2-exhaustive",
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "id": "workspace",
++          "kind": "exhaustive-workspace"
++        },
++        {
++          "id": "cached",
++          "kind": "exhaustive-cached"
++        }
++      ]
++    },
++    {
++      "id": "pivot-w1-d1-exhaustive",
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "id": "workspace",
++          "kind": "exhaustive-workspace"
++        },
++        {
++          "id": "cached",
++          "kind": "exhaustive-cached"
++        }
++      ]
++    },
++    {
++      "id": "sand-damage-w1-d1-exhaustive",
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "baseline": {
++        "kind": "exhaustive"
++      },
++      "variants": [
++        {
++          "id": "workspace",
++          "kind": "exhaustive-workspace"
++        },
++        {
++          "id": "cached",
++          "kind": "exhaustive-cached"
++        }
++      ]
++    }
++  ]
++}
+diff --git a/engine/benchmarks/s26_static/run.py b/engine/benchmarks/s26_static/run.py
+new file mode 100644
+index 0000000..068fbfd
+--- /dev/null
++++ b/engine/benchmarks/s26_static/run.py
+@@ -0,0 +1,76 @@
++"""Bounded single-runner speed-only comparison; paired blocks, one release binary."""
++from pathlib import Path
++import argparse,copy,hashlib,json,math,os,platform,random,statistics,subprocess,sys,time
++
++def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8')
++def summarize(rows):
++    base=next(r['diagnostics'] for r in rows if r['type']=='baseline');results=[]
++    for validation in [r for r in rows if r['type']=='validation']:
++        variant=validation['variant'];pairs=[]
++        for r in rows:
++            if r['type']!='paired' or r['variant']!=variant['id']:continue
++            b=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='baseline')
++            c=statistics.mean(s['ns_per_solve'] for s in r['samples'] if s['treatment']=='candidate')
++            assert min(b,c)>0 and math.isfinite(b+c)
++            pairs.append(dict(block=r['block'],baseline_ms=b/1e6,candidate_ms=c/1e6,ratio=c/b))
++        rng=random.Random(261003);ratios=[p['ratio'] for p in pairs]
++        bootstrap=sorted(statistics.median(rng.choices(ratios,k=len(ratios))) for _ in range(4000))
++        ratio=statistics.median(ratios)
++        results.append(dict(variant=variant,diagnostics=validation['diagnostics'],pairs=pairs,
++            baseline_ms=statistics.median(p['baseline_ms'] for p in pairs),candidate_ms=statistics.median(p['candidate_ms'] for p in pairs),
++            ratio_median=ratio,time_reduction_percent=100*(1-ratio),speedup=1/ratio,
++            ratio_bootstrap95=[bootstrap[100],bootstrap[3899]],baseline_diagnostics=base,
++            comparison='exact-same-work'))
++    return results
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--check',action='store_true');a=p.parse_args()
++    if not a.check and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Timing is restricted to the authorized GitHub runner; use --check locally.')
++    here=Path(__file__).resolve().parent;repo=here.parents[2];plan=json.loads((here/'plan.json').read_bytes());binary=a.binary.resolve()
++    a.out.mkdir(parents=True,exist_ok=False)
++    env=dict(os.environ,RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
++    metadata=dict(platform=platform.platform(),python=sys.version,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
++        source_sha=os.environ.get('GITHUB_SHA'),runner_os=os.environ.get('RUNNER_OS'),timing=not a.check,
++        mode='generic x86-64 release; one binary runtime selection',plan_sha256=hashlib.sha256((here/'plan.json').read_bytes()).hexdigest())
++    if not a.check:
++        allowed=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,{allowed[0]})
++        metadata.update(available_cpus=allowed,pinned_cpu=allowed[0],load_before=os.getloadavg(),
++            cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0],sample_scope='build + CFR to result; excludes loading/JSON/final result destruction')
++    write(a.out/'environment.json',metadata);all_results=[];statuses=[]
++    for case in plan['cases']:
++        request=copy.deepcopy(case)
++        for world in request['worlds']:world['scenario']=(repo/world['scenario']).as_posix()
++        request['rounds']=plan['rounds'];request['sample_ms']=plan['sample_ms']
++        path=a.out/(case['id']+'-request.json');write(path,request)
++        log=a.out/(case['id']+'-raw.jsonl');error=a.out/(case['id']+'-stderr.txt')
++        with log.open('wb') as stdout,error.open('wb') as stderr:
++            try:
++                run=subprocess.run([str(binary),'--check' if a.check else '--measure',str(path.resolve())],stdout=stdout,stderr=stderr,env=env,timeout=300)
++                code=run.returncode
++            except subprocess.TimeoutExpired:code=-999
++        status=dict(case=case['id'],exit_code=code)
++        if code==0:
++            rows=[json.loads(s) for s in log.read_text().splitlines()]
++            assert rows[-1]['type']==('checked' if a.check else 'completed')
++            if not a.check:
++                results=summarize(rows)
++                assert all(len(r['pairs'])==plan['rounds'] for r in results)
++                all_results.extend(dict(case=case['id'],**r) for r in results)
++        else:status['error']=error.read_text(errors='replace')[-3000:]
++        statuses.append(status);print(json.dumps(status),flush=True)
++    passed=all(s['exit_code']==0 for s in statuses)
++    summary=dict(passed=passed,timing=not a.check,paired_rounds=plan['rounds'],cases=statuses,results=all_results,
++        wins_evaluated=False,engine_unchanged=True,search_workspace_candidate=True,source_sha=os.environ.get('GITHUB_SHA'))
++    if not a.check:summary['load_after']=os.getloadavg()
++    write(a.out/'summary.json',summary)
++    if not a.check:
++        lines=['# S26c speed-only benchmark','',
++            'One generic x86-64 release binary; serial execution pinned to one runner CPU. Seven ABBA/BAAB blocks; three selection seeds where applicable.',
++            'Intervals describe paired block variability on this runner, not variability between machines. Every candidate matches its reference tree, entire policy, certificate and work exactly.','',
++            '| Case | Variant | Baseline ms | Candidate ms | Time reduction | Complete horizon |',
++            '|---|---|---:|---:|---:|---|']
++        for r in all_results:
++            lines.append(f"| {r['case']} | {r['variant']['id']} | {r['baseline_ms']:.3f} | {r['candidate_ms']:.3f} | {r['time_reduction_percent']:+.2f}% | {r['diagnostics']['horizon_complete']} |")
++        (a.out/'RESULTS.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
++    raise SystemExit(0 if passed else 1)
++if __name__=='__main__':main()
+diff --git a/engine/search/src/bayesian/tree/builder/growing/reuse.rs b/engine/search/src/bayesian/tree/builder/growing/reuse.rs
+index e2f4148..ee5791b 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/reuse.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/reuse.rs
+@@ -1,206 +1,209 @@
+-//! Same growing-tree algorithm with optional owned-builder reuse and CFR scratch reuse.
+-//! A failed admission terminates this call. Its mutable builder is never published;
+-//! the last compiled tree, policy and committed counters are returned atomically.
+-use super::*;
+-
+-#[derive(Clone, Copy, Debug, Default)]
+-pub struct Options {
+-    pub in_place: bool,
+-    pub workspace: bool,
+-    pub compiler: bool,
+-}
+-#[derive(Clone, Copy, Debug)]
+-pub struct Settings {
+-    pub growth: Config,
+-    pub storage: Options,
+-}
+-fn compile<D: ObservedDomain>(g: &Growing<'_, D>, borrowed: bool) -> Result<Tree, Error> {
+-    if !borrowed {
+-        return g.compile();
+-    }
+-    let mut t = tree::compiler::compile(&g.b.nodes, g.root)?;
+-    t.worlds = g.worlds.clone();
+-    t.public_keys = g.b.public_keys.clone();
+-    t.private_keys = g.b.private_keys.clone();
+-    t.boundaries = g.b.boundaries.clone();
+-    Ok(t)
+-}
+-fn summary<D: ObservedDomain>(g: &Growing<'_, D>) -> (Stats, usize, usize) {
+-    (
+-        g.b.stats.clone(),
+-        g.frontier.values().map(Vec::len).sum(),
+-        g.frontier.len(),
+-    )
+-}
+-fn solve(t: &Tree, config: CfrConfig, workspace: bool) -> Result<Solution, Error> {
+-    if workspace {
+-        tree::workspace::solve(t, config)
+-    } else {
+-        tree::solve(t, config)
+-    }
+-}
+-
+-pub fn search<D: ObservedDomain, P: Prior>(
+-    domain: &D,
+-    seeds: &[Seed<D::Position>],
+-    limits: Limits,
+-    cfg: Config,
+-    prior: &P,
+-    options: Options,
+-) -> Result<ResultTree, Error> {
+-    if cfg.max_expansions == 0
+-        || cfg.max_walks == 0
+-        || !cfg.exploration.is_finite()
+-        || cfg.exploration < 0.
+-        || limits.turns == 0
+-        || limits.turns > 32
+-        || limits.max_decisions == 0
+-        || limits.max_decisions > 128
+-        || limits.max_nodes == 0
+-        || limits.max_transitions == 0
+-    {
+-        return Err(Error("invalid growing-tree configuration".into()));
+-    }
+-    // Validate solver configuration before any domain calls or transition work.
+-    if cfg.solver.iterations == 0
+-        || cfg.solver.iterations > 10_000_000
+-        || cfg.solver.check_every == 0
+-        || !cfg.solver.tolerance.is_finite()
+-        || cfg.solver.tolerance < 0.
+-    {
+-        return Err(Error("invalid CFR configuration".into()));
+-    }
+-    labels(seeds.iter().map(|s| s.id.as_str()), "world ID")?;
+-    let mut weights: Vec<_> = seeds.iter().map(|s| s.weight).collect();
+-    normalize(&mut weights)?;
+-    let first = domain.observation(&seeds[0].position)?;
+-    let mut growing = Growing {
+-        b: Builder {
+-            domain,
+-            limits,
+-            nodes: Vec::new(),
+-            stats: Stats::default(),
+-            menus: HashMap::new(),
+-            public: HashMap::new(),
+-            public_keys: Vec::new(),
+-            private: HashMap::new(),
+-            private_keys: Vec::new(),
+-            boundaries: Vec::new(),
+-        },
+-        root: 0,
+-        worlds: seeds.iter().map(|s| s.id.clone()).collect(),
+-        frontier: BTreeMap::new(),
+-    };
+-    let initial = (|| -> Attempt<()> {
+-        growing.root = growing.push(Node::Terminal(0.))?;
+-        let mut edges = Vec::new();
+-        for (world, (s, weight)) in seeds.iter().zip(weights).enumerate() {
+-            let obs = domain.observation(&s.position)?;
+-            if obs.public != first.public
+-                || obs.private[0] != first.private[0]
+-                || domain.phase(&s.position)? != Phase::Turn
+-            {
+-                return Err(Error(
+-                    "root worlds must share our initial information at a normal turn".into(),
+-                )
+-                .into());
+-            }
+-            let memory = [
+-                Cursor::new(0, None, &obs)?.memory,
+-                Cursor::new(1, Some(&s.id), &obs)?.memory,
+-            ];
+-            let n = growing.leaf(Frontier {
+-                node: 0,
+-                position: s.position.clone(),
+-                world,
+-                memory,
+-                public: vec![obs.public],
+-                turns: limits.turns,
+-                decisions: 0,
+-                phase: Phase::Turn,
+-            })?;
+-            edges.push((weight, n));
+-        }
+-        growing.b.nodes[growing.root] = Node::Chance(edges);
+-        Ok(())
+-    })();
+-    let fatal = |e: Failure| match e {
+-        Failure::Invalid(e) => e,
+-        Failure::Limit(s) => Error(format!("root incomplete: {s:?}; no strategy returned")),
+-    };
+-    initial.map_err(fatal)?;
+-    let mut work = Work::default();
+-    growing
+-        .admit(&[first.public], &mut work, cfg)
+-        .map_err(fatal)?;
+-    work.committed_expansions = work.attempted_expansions;
+-    let mut t = compile(&growing, options.compiler)?;
+-    let mut solved = solve(&t, cfg.solver, options.workspace)?;
+-    work.solves += 1;
+-    work.cfr_iterations += solved.iterations;
+-    // Only this compact committed summary is externally observable if admission fails.
+-    // The working builder is private to this call and is discarded on any failed attempt.
+-    let mut committed = summary(&growing);
+-    let mut q = scores(&t, &solved.policy)?;
+-    let mut random = Random(cfg.seed);
+-    let mut visits = Visits::new();
+-    let stop = loop {
+-        if growing.frontier.is_empty() {
+-            break Stop::HorizonComplete;
+-        }
+-        if work.attempted_expansions >= cfg.max_expansions {
+-            break Stop::ExpansionLimit;
+-        }
+-        if work.walks >= cfg.max_walks {
+-            break Stop::WalkLimit;
+-        }
+-        work.walks += 1;
+-        let selected = select(
+-            &t,
+-            &solved.policy,
+-            &q,
+-            prior,
+-            &mut visits,
+-            &mut random,
+-            cfg.exploration,
+-        )?;
+-        let key = growing
+-            .frontier
+-            .iter()
+-            .find(|(_, g)| g.iter().any(|h| h.node == selected))
+-            .map(|(k, _)| k.clone());
+-        let Some(key) = key else { continue };
+-        let mut fork = (!options.in_place).then(|| growing.fork());
+-        let candidate = fork.as_mut().unwrap_or(&mut growing);
+-        let before = work.attempted_expansions;
+-        match candidate.admit(&key, &mut work, cfg) {
+-            Err(Failure::Limit(s)) => break s,
+-            Err(Failure::Invalid(e)) => return Err(e),
+-            Ok(()) => {}
+-        }
+-        let next = compile(candidate, options.compiler)?;
+-        let solution = solve(&next, cfg.solver, options.workspace)?;
+-        q = scores(&next, &solution.policy)?;
+-        work.committed_expansions += work.attempted_expansions - before;
+-        work.solves += 1;
+-        work.cfr_iterations += solution.iterations;
+-        committed = summary(candidate);
+-        if let Some(candidate) = fork {
+-            growing = candidate;
+-        }
+-        t = next;
+-        solved = solution;
+-    };
+-    Ok(ResultTree {
+-        built: Built {
+-            tree: t,
+-            stats: committed.0,
+-        },
+-        solution: solved,
+-        stop,
+-        frontier_histories: committed.1,
+-        frontier_public_groups: committed.2,
+-        horizon_complete: committed.2 == 0,
+-        work,
+-    })
+-}
++//! Same growing-tree algorithm with optional owned-builder reuse and CFR scratch reuse.
++//! A failed admission terminates this call. Its mutable builder is never published;
++//! the last compiled tree, policy and committed counters are returned atomically.
++use super::*;
++
++#[derive(Clone, Copy, Debug, Default)]
++pub struct Options {
++    pub in_place: bool,
++    pub workspace: bool,
++    pub compiler: bool,
++    pub static_values: bool,
++}
++#[derive(Clone, Copy, Debug)]
++pub struct Settings {
++    pub growth: Config,
++    pub storage: Options,
++}
++fn compile<D: ObservedDomain>(g: &Growing<'_, D>, borrowed: bool) -> Result<Tree, Error> {
++    if !borrowed {
++        return g.compile();
++    }
++    let mut t = tree::compiler::compile(&g.b.nodes, g.root)?;
++    t.worlds = g.worlds.clone();
++    t.public_keys = g.b.public_keys.clone();
++    t.private_keys = g.b.private_keys.clone();
++    t.boundaries = g.b.boundaries.clone();
++    Ok(t)
++}
++fn summary<D: ObservedDomain>(g: &Growing<'_, D>) -> (Stats, usize, usize) {
++    (
++        g.b.stats.clone(),
++        g.frontier.values().map(Vec::len).sum(),
++        g.frontier.len(),
++    )
++}
++fn solve(t: &Tree, config: CfrConfig, options: Options) -> Result<Solution, Error> {
++    if options.static_values {
++        tree::workspace::cached::solve(t, config)
++    } else if options.workspace {
++        tree::workspace::solve(t, config)
++    } else {
++        tree::solve(t, config)
++    }
++}
++
++pub fn search<D: ObservedDomain, P: Prior>(
++    domain: &D,
++    seeds: &[Seed<D::Position>],
++    limits: Limits,
++    cfg: Config,
++    prior: &P,
++    options: Options,
++) -> Result<ResultTree, Error> {
++    if cfg.max_expansions == 0
++        || cfg.max_walks == 0
++        || !cfg.exploration.is_finite()
++        || cfg.exploration < 0.
++        || limits.turns == 0
++        || limits.turns > 32
++        || limits.max_decisions == 0
++        || limits.max_decisions > 128
++        || limits.max_nodes == 0
++        || limits.max_transitions == 0
++    {
++        return Err(Error("invalid growing-tree configuration".into()));
++    }
++    // Validate solver configuration before any domain calls or transition work.
++    if cfg.solver.iterations == 0
++        || cfg.solver.iterations > 10_000_000
++        || cfg.solver.check_every == 0
++        || !cfg.solver.tolerance.is_finite()
++        || cfg.solver.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    labels(seeds.iter().map(|s| s.id.as_str()), "world ID")?;
++    let mut weights: Vec<_> = seeds.iter().map(|s| s.weight).collect();
++    normalize(&mut weights)?;
++    let first = domain.observation(&seeds[0].position)?;
++    let mut growing = Growing {
++        b: Builder {
++            domain,
++            limits,
++            nodes: Vec::new(),
++            stats: Stats::default(),
++            menus: HashMap::new(),
++            public: HashMap::new(),
++            public_keys: Vec::new(),
++            private: HashMap::new(),
++            private_keys: Vec::new(),
++            boundaries: Vec::new(),
++        },
++        root: 0,
++        worlds: seeds.iter().map(|s| s.id.clone()).collect(),
++        frontier: BTreeMap::new(),
++    };
++    let initial = (|| -> Attempt<()> {
++        growing.root = growing.push(Node::Terminal(0.))?;
++        let mut edges = Vec::new();
++        for (world, (s, weight)) in seeds.iter().zip(weights).enumerate() {
++            let obs = domain.observation(&s.position)?;
++            if obs.public != first.public
++                || obs.private[0] != first.private[0]
++                || domain.phase(&s.position)? != Phase::Turn
++            {
++                return Err(Error(
++                    "root worlds must share our initial information at a normal turn".into(),
++                )
++                .into());
++            }
++            let memory = [
++                Cursor::new(0, None, &obs)?.memory,
++                Cursor::new(1, Some(&s.id), &obs)?.memory,
++            ];
++            let n = growing.leaf(Frontier {
++                node: 0,
++                position: s.position.clone(),
++                world,
++                memory,
++                public: vec![obs.public],
++                turns: limits.turns,
++                decisions: 0,
++                phase: Phase::Turn,
++            })?;
++            edges.push((weight, n));
++        }
++        growing.b.nodes[growing.root] = Node::Chance(edges);
++        Ok(())
++    })();
++    let fatal = |e: Failure| match e {
++        Failure::Invalid(e) => e,
++        Failure::Limit(s) => Error(format!("root incomplete: {s:?}; no strategy returned")),
++    };
++    initial.map_err(fatal)?;
++    let mut work = Work::default();
++    growing
++        .admit(&[first.public], &mut work, cfg)
++        .map_err(fatal)?;
++    work.committed_expansions = work.attempted_expansions;
++    let mut t = compile(&growing, options.compiler)?;
++    let mut solved = solve(&t, cfg.solver, options)?;
++    work.solves += 1;
++    work.cfr_iterations += solved.iterations;
++    // Only this compact committed summary is externally observable if admission fails.
++    // The working builder is private to this call and is discarded on any failed attempt.
++    let mut committed = summary(&growing);
++    let mut q = scores(&t, &solved.policy)?;
++    let mut random = Random(cfg.seed);
++    let mut visits = Visits::new();
++    let stop = loop {
++        if growing.frontier.is_empty() {
++            break Stop::HorizonComplete;
++        }
++        if work.attempted_expansions >= cfg.max_expansions {
++            break Stop::ExpansionLimit;
++        }
++        if work.walks >= cfg.max_walks {
++            break Stop::WalkLimit;
++        }
++        work.walks += 1;
++        let selected = select(
++            &t,
++            &solved.policy,
++            &q,
++            prior,
++            &mut visits,
++            &mut random,
++            cfg.exploration,
++        )?;
++        let key = growing
++            .frontier
++            .iter()
++            .find(|(_, g)| g.iter().any(|h| h.node == selected))
++            .map(|(k, _)| k.clone());
++        let Some(key) = key else { continue };
++        let mut fork = (!options.in_place).then(|| growing.fork());
++        let candidate = fork.as_mut().unwrap_or(&mut growing);
++        let before = work.attempted_expansions;
++        match candidate.admit(&key, &mut work, cfg) {
++            Err(Failure::Limit(s)) => break s,
++            Err(Failure::Invalid(e)) => return Err(e),
++            Ok(()) => {}
++        }
++        let next = compile(candidate, options.compiler)?;
++        let solution = solve(&next, cfg.solver, options)?;
++        q = scores(&next, &solution.policy)?;
++        work.committed_expansions += work.attempted_expansions - before;
++        work.solves += 1;
++        work.cfr_iterations += solution.iterations;
++        committed = summary(candidate);
++        if let Some(candidate) = fork {
++            growing = candidate;
++        }
++        t = next;
++        solved = solution;
++    };
++    Ok(ResultTree {
++        built: Built {
++            tree: t,
++            stats: committed.0,
++        },
++        solution: solved,
++        stop,
++        frontier_histories: committed.1,
++        frontier_public_groups: committed.2,
++        horizon_complete: committed.2 == 0,
++        work,
++    })
++}
+diff --git a/engine/search/src/bayesian/tree/builder/growing/tests.rs b/engine/search/src/bayesian/tree/builder/growing/tests.rs
+index e203188..bf84b07 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/tests.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/tests.rs
+@@ -435,35 +435,53 @@ fn allocation_candidates_match_all_admission_failure_boundaries() {
+             let expected = exact_result(search(&g, &seeds(), *limits, *cfg, &Uniform));
+             let expected_calls = g.calls.get();
+             for options in [
++                reuse::Options {
++                    in_place: false,
++                    workspace: true,
++                    compiler: false,
++                    static_values: true,
++                },
++                reuse::Options {
++                    in_place: true,
++                    workspace: true,
++                    compiler: true,
++                    static_values: true,
++                },
+                 reuse::Options {
+                     in_place: false,
+                     workspace: false,
+                     compiler: true,
++                    static_values: false,
+                 },
+                 reuse::Options {
+                     in_place: true,
+                     workspace: false,
+                     compiler: true,
++                    static_values: false,
+                 },
+                 reuse::Options {
+                     in_place: true,
+                     workspace: true,
+                     compiler: true,
++                    static_values: false,
+                 },
+                 reuse::Options {
+                     in_place: true,
+                     workspace: false,
+                     compiler: false,
++                    static_values: false,
+                 },
+                 reuse::Options {
+                     in_place: false,
+                     workspace: true,
+                     compiler: false,
++                    static_values: false,
+                 },
+                 reuse::Options {
+                     in_place: true,
+                     workspace: true,
+                     compiler: false,
++                    static_values: false,
+                 },
+             ] {
+                 let g = Game {
+@@ -519,6 +537,7 @@ fn allocation_candidates_keep_zero_mass_and_malformed_domain_behavior() {
+                         in_place: true,
+                         workspace: true,
+                         compiler: true,
++                        static_values: true,
+                     }
+                 ))
+             );
+diff --git a/engine/search/src/bayesian/tree/tests.rs b/engine/search/src/bayesian/tree/tests.rs
+index 196be4f..3f3304c 100644
+--- a/engine/search/src/bayesian/tree/tests.rs
++++ b/engine/search/src/bayesian/tree/tests.rs
+@@ -58,6 +58,8 @@ fn scratch_reuse_matches_reference_kuhn_at_every_check_schedule() {
+                 };
+                 let reference = solve(&tree, config).unwrap();
+                 let candidate = workspace::solve(&tree, config).unwrap();
++                let cached = workspace::cached::solve(&tree, config).unwrap();
++                assert_eq!(format!("{reference:?}"), format!("{cached:?}"));
+                 assert_eq!(format!("{reference:?}"), format!("{candidate:?}"));
+             }
+         }
+@@ -105,6 +107,10 @@ fn scratch_reuse_matches_scaled_hidden_games_and_invalid_configs() {
+                     format!("{:?}", solve(&t, config)),
+                     format!("{:?}", workspace::solve(&t, config))
+                 );
++                assert_eq!(
++                    format!("{:?}", solve(&t, config)),
++                    format!("{:?}", workspace::cached::solve(&t, config))
++                );
+             }
+         }
+     }
+diff --git a/engine/search/src/bayesian/tree/workspace.rs b/engine/search/src/bayesian/tree/workspace.rs
+index 856b404..f249eeb 100644
+--- a/engine/search/src/bayesian/tree/workspace.rs
++++ b/engine/search/src/bayesian/tree/workspace.rs
+@@ -1,122 +1,123 @@
+-//! Allocation-only CFR workspace experiment. Every physical node belongs to exactly one
+-//! reachable tree, so values/reach overwrite each entry before its next read. No clearing
+-//! or history pruning is needed. Arithmetic and update order match the reference solver.
+-use super::*;
+-
+-fn values_into(tree: &Tree, policy: &Policy, values: &mut [f64]) {
+-    for &id in tree.order.iter().rev() {
+-        values[id] = match &tree.nodes[id] {
+-            Compiled::Terminal(v) => v / tree.scale,
+-            Compiled::Chance(edges) => edges.iter().map(|(p, n)| p * values[*n]).sum(),
+-            Compiled::Decision { info, children } => children
+-                .iter()
+-                .zip(&policy[*info])
+-                .map(|(n, p)| p * values[*n])
+-                .sum(),
+-        };
+-    }
+-}
+-fn reach_into(tree: &Tree, policy: &Policy, player: usize, reach: &mut [f64]) -> Result<(), Error> {
+-    reach[tree.root] = 1.;
+-    for &id in &tree.order {
+-        match &tree.nodes[id] {
+-            Compiled::Terminal(_) => {}
+-            Compiled::Chance(edges) => {
+-                for &(p, n) in edges {
+-                    reach[n] = multiply(reach[id], p)?;
+-                }
+-            }
+-            Compiled::Decision { info, children } => {
+-                for (a, &n) in children.iter().enumerate() {
+-                    reach[n] = multiply(
+-                        reach[id],
+-                        if player == tree.information[*info].player {
+-                            1.
+-                        } else {
+-                            policy[*info][a]
+-                        },
+-                    )?;
+-                }
+-            }
+-        }
+-    }
+-    Ok(())
+-}
+-
+-pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
+-    if config.iterations == 0
+-        || config.iterations > 10_000_000
+-        || config.check_every == 0
+-        || !config.tolerance.is_finite()
+-        || config.tolerance < 0.
+-    {
+-        return Err(Error("invalid CFR configuration".into()));
+-    }
+-    let mut policy = tree.uniform();
+-    let mut regrets: Policy = policy.iter().map(|p| vec![0.; p.len()]).collect();
+-    let mut sums = regrets.clone();
+-    let mut total = vec![0.; policy.len()];
+-    let mut values = vec![0.; tree.nodes.len()];
+-    let mut cf = vec![0.; tree.nodes.len()];
+-    for t in 1..=config.iterations {
+-        let weight = t as f64 / config.iterations as f64;
+-        for player in 0..2 {
+-            values_into(tree, &policy, &mut values);
+-            reach_into(tree, &policy, player, &mut cf)?;
+-            let sign = if player == 0 { 1. } else { -1. };
+-            for (i, info) in tree.information.iter().enumerate() {
+-                if info.player == player {
+-                    for &node in &info.nodes {
+-                        let Compiled::Decision { children, .. } = &tree.nodes[node] else {
+-                            unreachable!()
+-                        };
+-                        for (a, &child) in children.iter().enumerate() {
+-                            regrets[i][a] +=
+-                                weight * cf[node] * sign * (values[child] - values[node]);
+-                        }
+-                    }
+-                }
+-            }
+-            for (i, info) in tree.information.iter().enumerate() {
+-                if info.player == player {
+-                    strategy(&regrets[i], &mut policy[i]);
+-                }
+-            }
+-        }
+-        for (i, info) in tree.information.iter().enumerate() {
+-            let mut own = 1.;
+-            for &(j, a) in &info.own_sequence {
+-                own = multiply(own, policy[j][a])?;
+-            }
+-            let w = multiply(weight, own)?;
+-            total[i] += w;
+-            for (s, &p) in sums[i].iter_mut().zip(&policy[i]) {
+-                *s += w * p;
+-            }
+-        }
+-        if t % config.check_every == 0 || t == config.iterations {
+-            let average: Policy = sums
+-                .iter()
+-                .enumerate()
+-                .map(|(i, p)| {
+-                    if total[i] > 0. {
+-                        p.iter().map(|v| v / total[i]).collect()
+-                    } else {
+-                        vec![1. / p.len() as f64; p.len()]
+-                    }
+-                })
+-                .collect();
+-            let assessment = tree.assess(&average)?;
+-            let converged = assessment.gap <= config.tolerance;
+-            if converged || t == config.iterations {
+-                return Ok(Solution {
+-                    policy: average,
+-                    assessment,
+-                    iterations: t,
+-                    converged,
+-                });
+-            }
+-        }
+-    }
+-    unreachable!()
+-}
++//! Allocation-only CFR workspace experiment. Every physical node belongs to exactly one
++//! reachable tree, so values/reach overwrite each entry before its next read. No clearing
++//! or history pruning is needed. Arithmetic and update order match the reference solver.
++use super::*;
++pub mod cached;
++
++fn values_into(tree: &Tree, policy: &Policy, values: &mut [f64]) {
++    for &id in tree.order.iter().rev() {
++        values[id] = match &tree.nodes[id] {
++            Compiled::Terminal(v) => v / tree.scale,
++            Compiled::Chance(edges) => edges.iter().map(|(p, n)| p * values[*n]).sum(),
++            Compiled::Decision { info, children } => children
++                .iter()
++                .zip(&policy[*info])
++                .map(|(n, p)| p * values[*n])
++                .sum(),
++        };
++    }
++}
++fn reach_into(tree: &Tree, policy: &Policy, player: usize, reach: &mut [f64]) -> Result<(), Error> {
++    reach[tree.root] = 1.;
++    for &id in &tree.order {
++        match &tree.nodes[id] {
++            Compiled::Terminal(_) => {}
++            Compiled::Chance(edges) => {
++                for &(p, n) in edges {
++                    reach[n] = multiply(reach[id], p)?;
++                }
++            }
++            Compiled::Decision { info, children } => {
++                for (a, &n) in children.iter().enumerate() {
++                    reach[n] = multiply(
++                        reach[id],
++                        if player == tree.information[*info].player {
++                            1.
++                        } else {
++                            policy[*info][a]
++                        },
++                    )?;
++                }
++            }
++        }
++    }
++    Ok(())
++}
++
++pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
++    if config.iterations == 0
++        || config.iterations > 10_000_000
++        || config.check_every == 0
++        || !config.tolerance.is_finite()
++        || config.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    let mut policy = tree.uniform();
++    let mut regrets: Policy = policy.iter().map(|p| vec![0.; p.len()]).collect();
++    let mut sums = regrets.clone();
++    let mut total = vec![0.; policy.len()];
++    let mut values = vec![0.; tree.nodes.len()];
++    let mut cf = vec![0.; tree.nodes.len()];
++    for t in 1..=config.iterations {
++        let weight = t as f64 / config.iterations as f64;
++        for player in 0..2 {
++            values_into(tree, &policy, &mut values);
++            reach_into(tree, &policy, player, &mut cf)?;
++            let sign = if player == 0 { 1. } else { -1. };
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    for &node in &info.nodes {
++                        let Compiled::Decision { children, .. } = &tree.nodes[node] else {
++                            unreachable!()
++                        };
++                        for (a, &child) in children.iter().enumerate() {
++                            regrets[i][a] +=
++                                weight * cf[node] * sign * (values[child] - values[node]);
++                        }
++                    }
++                }
++            }
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    strategy(&regrets[i], &mut policy[i]);
++                }
++            }
++        }
++        for (i, info) in tree.information.iter().enumerate() {
++            let mut own = 1.;
++            for &(j, a) in &info.own_sequence {
++                own = multiply(own, policy[j][a])?;
++            }
++            let w = multiply(weight, own)?;
++            total[i] += w;
++            for (s, &p) in sums[i].iter_mut().zip(&policy[i]) {
++                *s += w * p;
++            }
++        }
++        if t % config.check_every == 0 || t == config.iterations {
++            let average: Policy = sums
++                .iter()
++                .enumerate()
++                .map(|(i, p)| {
++                    if total[i] > 0. {
++                        p.iter().map(|v| v / total[i]).collect()
++                    } else {
++                        vec![1. / p.len() as f64; p.len()]
++                    }
++                })
++                .collect();
++            let assessment = tree.assess(&average)?;
++            let converged = assessment.gap <= config.tolerance;
++            if converged || t == config.iterations {
++                return Ok(Solution {
++                    policy: average,
++                    assessment,
++                    iterations: t,
++                    converged,
++                });
++            }
++        }
++    }
++    unreachable!()
++}
+diff --git a/engine/search/src/bayesian/tree/workspace/cached.rs b/engine/search/src/bayesian/tree/workspace/cached.rs
+new file mode 100644
+index 0000000..2e691d7
+--- /dev/null
++++ b/engine/search/src/bayesian/tree/workspace/cached.rs
+@@ -0,0 +1,123 @@
++//! Policy-independent value backups, rebuilt for each fixed compiled tree.
++//! Chance outcomes and terminal evaluations are never pruned. Only values whose entire
++//! subtree contains no decision node are constant. Every arithmetic reduction preserves
++//! the reference child order. Reach/underflow checks and final assessment are unchanged.
++use super::*;
++
++struct CachedValues {
++    values: Vec<f64>,
++    dynamic: Vec<usize>,
++}
++impl CachedValues {
++    fn new(tree: &Tree) -> Self {
++        let mut values = vec![0.; tree.nodes.len()];
++        let mut fixed = vec![false; tree.nodes.len()];
++        let mut dynamic = Vec::new();
++        for &id in tree.order.iter().rev() {
++            match &tree.nodes[id] {
++                Compiled::Terminal(v) => {
++                    values[id] = v / tree.scale;
++                    fixed[id] = true;
++                }
++                Compiled::Chance(edges) if edges.iter().all(|(_, n)| fixed[*n]) => {
++                    values[id] = edges.iter().map(|(p, n)| p * values[*n]).sum();
++                    fixed[id] = true;
++                }
++                _ => dynamic.push(id),
++            }
++        }
++        Self { values, dynamic }
++    }
++    fn update(&mut self, tree: &Tree, policy: &Policy) {
++        for &id in &self.dynamic {
++            self.values[id] = match &tree.nodes[id] {
++                Compiled::Chance(edges) => edges.iter().map(|(p, n)| p * self.values[*n]).sum(),
++                Compiled::Decision { info, children } => children
++                    .iter()
++                    .zip(&policy[*info])
++                    .map(|(n, p)| p * self.values[*n])
++                    .sum(),
++                Compiled::Terminal(_) => unreachable!(),
++            };
++        }
++    }
++}
++
++pub fn solve(tree: &Tree, config: Config) -> Result<Solution, Error> {
++    if config.iterations == 0
++        || config.iterations > 10_000_000
++        || config.check_every == 0
++        || !config.tolerance.is_finite()
++        || config.tolerance < 0.
++    {
++        return Err(Error("invalid CFR configuration".into()));
++    }
++    let mut policy = tree.uniform();
++    let mut regrets: Policy = policy.iter().map(|p| vec![0.; p.len()]).collect();
++    let mut sums = regrets.clone();
++    let mut total = vec![0.; policy.len()];
++    let mut cache = CachedValues::new(tree);
++    let mut cf = vec![0.; tree.nodes.len()];
++    for t in 1..=config.iterations {
++        let weight = t as f64 / config.iterations as f64;
++        for player in 0..2 {
++            cache.update(tree, &policy);
++            let values = &cache.values;
++            reach_into(tree, &policy, player, &mut cf)?;
++            let sign = if player == 0 { 1. } else { -1. };
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    for &node in &info.nodes {
++                        let Compiled::Decision { children, .. } = &tree.nodes[node] else {
++                            unreachable!()
++                        };
++                        for (a, &child) in children.iter().enumerate() {
++                            regrets[i][a] +=
++                                weight * cf[node] * sign * (values[child] - values[node]);
++                        }
++                    }
++                }
++            }
++            for (i, info) in tree.information.iter().enumerate() {
++                if info.player == player {
++                    strategy(&regrets[i], &mut policy[i]);
++                }
++            }
++        }
++        for (i, info) in tree.information.iter().enumerate() {
++            let mut own = 1.;
++            for &(j, a) in &info.own_sequence {
++                own = multiply(own, policy[j][a])?;
++            }
++            let w = multiply(weight, own)?;
++            total[i] += w;
++            for (s, &p) in sums[i].iter_mut().zip(&policy[i]) {
++                *s += w * p;
++            }
++        }
++        if t % config.check_every == 0 || t == config.iterations {
++            let average: Policy = sums
++                .iter()
++                .enumerate()
++                .map(|(i, p)| {
++                    if total[i] > 0. {
++                        p.iter().map(|v| v / total[i]).collect()
++                    } else {
++                        vec![1. / p.len() as f64; p.len()]
++                    }
++                })
++                .collect();
++            let assessment = tree.assess(&average)?;
++            let converged = assessment.gap <= config.tolerance;
++            if converged || t == config.iterations {
++                return Ok(Solution {
++                    policy: average,
++                    assessment,
++                    iterations: t,
++                    converged,
++                });
++            }
++        }
++    }
++    unreachable!()
++}
+diff --git a/engine/search/src/bin/lab-belief-workspace-speed.rs b/engine/search/src/bin/lab-belief-workspace-speed.rs
+index 01de9dd..bbec3a7 100644
+--- a/engine/search/src/bin/lab-belief-workspace-speed.rs
++++ b/engine/search/src/bin/lab-belief-workspace-speed.rs
+@@ -32,6 +32,7 @@ enum Method {
+     Growing(growing::Config),
+     Reusing(growing::Config, growing::reuse::Options),
+     ExhaustiveWorkspace,
++    ExhaustiveCached,
+ }
+ fn uint(v: &Value, k: &str, d: usize) -> Result<usize, String> {
+     match v.get(k) {
+@@ -90,7 +91,10 @@ fn load(v: &Value, base: &Path) -> Result<Input, String> {
+ }
+ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output, String> {
+     let i = black_box(i);
+-    if matches!(variant, Method::Exhaustive | Method::ExhaustiveWorkspace) {
++    if matches!(
++        variant,
++        Method::Exhaustive | Method::ExhaustiveWorkspace | Method::ExhaustiveCached
++    ) {
+         let built = tree::engine::build(
+             &i.worlds,
+             SideId::One,
+@@ -100,7 +104,9 @@ fn compute(i: &Input, e: &dyn Evaluator<2>, variant: &Method) -> Result<Output,
+             i.limits,
+         )
+         .map_err(|e| e.to_string())?;
+-        let solved = if matches!(variant, Method::ExhaustiveWorkspace) {
++        let solved = if matches!(variant, Method::ExhaustiveCached) {
++            tree::workspace::cached::solve(&built.tree, i.solver)
++        } else if matches!(variant, Method::ExhaustiveWorkspace) {
+             tree::workspace::solve(&built.tree, i.solver)
+         } else {
+             tree::solve(&built.tree, i.solver)
+@@ -193,23 +199,27 @@ fn method(v: &Value, solver: bayesian::Config) -> Result<Method, String> {
+     Ok(match string(v, "kind")? {
+         "exhaustive" => Method::Exhaustive,
+         "exhaustive-workspace" => Method::ExhaustiveWorkspace,
++        "exhaustive-cached" => Method::ExhaustiveCached,
+         "growing" => Method::Growing(config),
+-        "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all" => {
+-            Method::Reusing(
+-                config,
+-                growing::reuse::Options {
+-                    in_place: matches!(
+-                        v["kind"].as_str(),
+-                        Some("in-place" | "combined" | "in-place-compiler" | "all")
+-                    ),
+-                    workspace: matches!(v["kind"].as_str(), Some("workspace" | "combined" | "all")),
+-                    compiler: matches!(
+-                        v["kind"].as_str(),
+-                        Some("compiler" | "in-place-compiler" | "all")
+-                    ),
+-                },
+-            )
+-        }
++        "in-place" | "workspace" | "combined" | "compiler" | "in-place-compiler" | "all"
++        | "cached" | "all-cached" => Method::Reusing(
++            config,
++            growing::reuse::Options {
++                in_place: matches!(
++                    v["kind"].as_str(),
++                    Some("in-place" | "combined" | "in-place-compiler" | "all" | "all-cached")
++                ),
++                workspace: matches!(
++                    v["kind"].as_str(),
++                    Some("workspace" | "combined" | "all" | "cached" | "all-cached")
++                ),
++                compiler: matches!(
++                    v["kind"].as_str(),
++                    Some("compiler" | "in-place-compiler" | "all" | "all-cached")
++                ),
++                static_values: matches!(v["kind"].as_str(), Some("cached" | "all-cached")),
++            },
++        ),
+         _ => return Err("invalid method".into()),
+     })
+ }
+diff --git a/engine/search/src/bin/lab-belief-workspace.rs b/engine/search/src/bin/lab-belief-workspace.rs
+index 30b1bc8..073a747 100644
+--- a/engine/search/src/bin/lab-belief-workspace.rs
++++ b/engine/search/src/bin/lab-belief-workspace.rs
+@@ -228,6 +228,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
+                                 in_place: true,
+                                 workspace: true,
+                                 compiler: true,
++                                static_values: true,
+                             },
+                         },
+                     )
+@@ -286,7 +287,7 @@ fn request(v: &Value, base: &Path) -> Result<Value, String> {
+     };
+     let solved = match growth_solution {
+         Some(s) => s,
+-        None => tree::workspace::solve(&tree, config).map_err(|e| e.to_string())?,
++        None => tree::workspace::cached::solve(&tree, config).map_err(|e| e.to_string())?,
+     };
+     let beliefs = tree
+         .public_beliefs(&solved.policy)
+diff --git a/engine/search/src/bin/lab-belief-workspace/observed.rs b/engine/search/src/bin/lab-belief-workspace/observed.rs
+index 118c860..4722f7f 100644
+--- a/engine/search/src/bin/lab-belief-workspace/observed.rs
++++ b/engine/search/src/bin/lab-belief-workspace/observed.rs
+@@ -189,6 +189,7 @@ pub fn request(
+                 in_place: true,
+                 workspace: true,
+                 compiler: true,
++                static_values: true,
+             },
+         )
+         .map_err(|e| e.to_string())?;

@@ -1,0 +1,64 @@
+{
+  "parent": "0501eeb7220bcc3f5e2f00145c970fa350666031",
+  "branch": "codex/s26a-bayesian-cfr-20261002",
+  "workflow": ".github/workflows/engine-s26-bayesian-cfr.yml",
+  "inherited_unchanged": 4099,
+  "changed_sha256": {
+    ".github/workflows/engine-s26-bayesian-cfr.yml": "668cc661ab5327cf1f3f13d27492f16d67f4f64b2edc4a35375d7919de6edb17",
+    "engine/benchmarks/s26_bayesian/CONTRACT.md": "8896cff78d1bde8a8a42d705ce862c47b2caf02305cd88bb8bf798823b704879",
+    "engine/benchmarks/s26_bayesian/check.py": "dadb0fdd482b42c331ddb0c4218f7aca3ab4f9ef8b328ae28f5cd9087ae90367",
+    "engine/benchmarks/s26_bayesian/matrix-example.json": "0303557fce5265f4e646dfe309f62eeff19c057e0716fb0a2fd939e909b69661",
+    "engine/search/Cargo.toml": "8c286e30e6df8eb43279153272e1f62439fd3f175288ed3b84e859efac199f94",
+    "engine/search/src/bayesian.rs": "c5f32bea60a577a7a92fdd8e257ef0b1d3cb3cc008051490fda8f7e07c8012c1",
+    "engine/search/src/bayesian/engine.rs": "e028040e668754c7d2cc8533be5f9ae8c0d1955c79a7c3d9763376275e3aba5e",
+    "engine/search/src/bayesian/tests.rs": "2ee7d7fd900c60107ecd308936d244e0ba0a44c9f4e68fea030dece950f3cd0a",
+    "engine/search/src/bin/lab-bayes.rs": "d85026ca6910c731e1069000496aaedcd2ae248e9781201734204534d6d43cd6",
+    "engine/search/src/lib.rs": "ef5bb4ed1d77fb4a110e6ef476e7367841dfdb01b4e3c17cdf7127b170499d46"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": false,
+  "correctness_scope": "shared-row/per-world-column signed linear CFR; root one-turn engine; 24 expanded games; remote 72 independent LP cases",
+  "limitations": "No multi-turn PBS, belief-aware pivots/replacements or learned continuation values; no strength/speed claim",
+  "source_sha": "90901a6bd430a560b240379d985ba3b1c8e2df09",
+  "tree": "0ad5a3ee6f7d8183ce23f1ad2a51aa19c5a14ff5",
+  "patch_sha256": "9e073bd81f22b6bca6d046939e9c0ba3d4be2516a873add5735eb1e06ca2eb63",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}

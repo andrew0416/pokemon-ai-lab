@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "all_core_bytes_unchanged": true,
+  "cursor_bytes_unchanged": true,
+  "shared_memory_debug_grammar": true,
+  "public_order_and_switch_closure_unchanged": true,
+  "exhaustive_and_growth_flow_equal_after_storage_substitutions": true,
+  "root_checks_and_observation_allowlist_unchanged": true,
+  "defaults_unchanged": true,
+  "unchanged_hashes": {
+    "engine/core/src/turn/mod.rs": "f0d554b19f383cabe37c47abaf84562320c454590436aee2312318e3592da535",
+    "engine/core/src/turn/diff.rs": "3244151cf87579553fcc3c44bfad9bb3a0329103127cbf6f62a3b51ecda7c429",
+    "engine/core/src/turn/final_states.rs": "6f581d4c6d38994c88655f6204a70e1468ec72455e868d4188da23ed142a5761",
+    "engine/search/src/budgeted/engine.rs": "b741802faa9e17982d3decdbf333eb340fc335ccc50a678d774d17ca104cc719",
+    "engine/search/src/budgeted/engine/owned.rs": "ba52196b93c26c38f387cb8b1c6b298d5239869d08a286c0f0641b68930427f6",
+    "engine/search/src/bayesian/tree.rs": "dba4b93667ed86c6105a0826a6d5517d97db69f8d49e7a48b1203c17efc78442",
+    "engine/search/src/bayesian/tree/compiler.rs": "d2721d9fdf9d51aaba47e0235a567bb15a0587ad791a01d640db6cf812e4da36",
+    "engine/search/src/bayesian/tree/workspace.rs": "0dfa89d2ccc8479eec42392223210a2f7ab7925b3757006b8fce24981edd26a1",
+    "engine/search/src/bayesian/tree/workspace/cached.rs": "d9872fd12aa31608f6cf4aa2572398ad94f4fba26735113d48cc172dc85d647c"
+  },
+  "scope": "Builder representation is refactored through a generic storage trait. These checks cover explicit control-flow substitutions; runtime differential tests cover complete returned results and call order."
+}

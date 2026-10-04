@@ -1,0 +1,12 @@
+{
+  "completed_scope": "S26a Bayesian fixed matrix kernel and conservative one-turn bridge",
+  "source_sha": "90901a6bd430a560b240379d985ba3b1c8e2df09",
+  "ci_run": 37008543602,
+  "ci_success": true,
+  "vault_installed": true,
+  "shared_checkout_unchanged": true,
+  "production_changed": false,
+  "default_off": true,
+  "multi_turn_pbs_implemented": false,
+  "performance_measured": false
+}

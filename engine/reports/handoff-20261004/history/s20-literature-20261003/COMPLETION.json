@@ -1,0 +1,22 @@
+{
+  "status": "research-complete",
+  "papers": 10,
+  "proposed_tasks": 7,
+  "new_vault_notes": 18,
+  "engine_executions": 0,
+  "performance_measured": false,
+  "production_changed": false,
+  "source_hashes_unchanged": true,
+  "new_vault_errors": 0,
+  "new_stale_references": 0,
+  "inherited_vault_errors": 14,
+  "inherited_stale_references": 1069,
+  "strict_vault_pass": false,
+  "sha256": {
+    "research.json": "aad9d1383df82b08b3dcd1f169b5dd7fdfa5674a335a8f0745c729866424a9a8",
+    "NEXT-OPTIMIZATIONS.md": "6cc0de5f5fcab83438ab5cabb8ef0385c2e73d6c8d506bb2c9027737e9ee16f0",
+    "task-receipt.json": "5d99c92006d2ce637d0eb2be82a553eadcf792ead0ca6b3e55ca8cfee6aba79b",
+    "vault/install-receipt.json": "03a71e238b453dac189e92668c89f415042c5cad7cfd2edb2c6d84d7369c3e4f",
+    "vault/installed-validation.json": "8f4a75e4218af94f81e5b1122ae2db09c7a0bbe32b6fb5de88d4e03a3493d93e"
+  }
+}

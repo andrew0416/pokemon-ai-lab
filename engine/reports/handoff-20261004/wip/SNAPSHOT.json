@@ -1,0 +1,117 @@
+{
+  "captured_at": "2026-10-04T06:00:44.187468+00:00",
+  "head": "4ce5f0c1dc3a04e19328982e33ca0d90b6899a26",
+  "branch": "lab-engine",
+  "index_sha256": "661d5714d95c7b64e8b01e272f88e841bea643acf38f7751334e33ef19371ad3",
+  "status": " M .gitignore\n M engine/CONTEXT.md\n M engine/REFUSALS.md\n M engine/core/src/turn/abilities.rs\n M engine/core/src/turn/battle.rs\n M engine/core/src/turn/lock.rs\n M engine/core/src/turn/moves.rs\n M engine/core/src/turn/moves/ability_hooks.rs\n M engine/scenario/src/parity.rs\n M engine/scenario/tests/refusals_rr.rs\n M engine/scripts/refusals.classification.json\n M engine/search/src/game.rs\n?? engine/core/src/turn/moves/absent_user_tests.rs\n?? engine/scenario/tests/r5d_future_absent_overlay.rs\n?? engine/search/tests/fixtures/forced_ally_charge/.gitattributes\n?? engine/search/tests/fixtures/forced_ally_charge/electro-shot.before.json\n?? engine/search/tests/fixtures/forced_ally_charge/electro-shot.scenario.json\n?? engine/search/tests/fixtures/forced_ally_charge/provenance.json\n?? engine/search/tests/fixtures/forced_ally_charge/solar-beam.before.json\n?? engine/search/tests/fixtures/forced_ally_charge/solar-beam.scenario.json\n?? engine/search/tests/forced_ally_charge.rs\n",
+  "files": {
+    ".gitignore": {
+      "sha256": "45c67766bd75373e67bed1c06ed99d18f7235df4dbf10345c67b8080ca0f54c6",
+      "bytes": 217,
+      "untracked": false
+    },
+    "engine/CONTEXT.md": {
+      "sha256": "561d298d897fef9d6e2290073e874878e9aebd088135410567c71af0f1a397b6",
+      "bytes": 93103,
+      "untracked": false
+    },
+    "engine/REFUSALS.md": {
+      "sha256": "b493aa938898b03eb930789332ee329cb57d4adf0feb84dc038273ad87565b59",
+      "bytes": 89079,
+      "untracked": false
+    },
+    "engine/core/src/turn/abilities.rs": {
+      "sha256": "baea4da20480f0528b45b83200fb94d6bc342a55cd5e625f9cf6f20939fa56e7",
+      "bytes": 128979,
+      "untracked": false
+    },
+    "engine/core/src/turn/battle.rs": {
+      "sha256": "f8b59ac5a9c36b28cd6d3dff913c52570d111963543c0110f0d2846905d16fe3",
+      "bytes": 114603,
+      "untracked": false
+    },
+    "engine/core/src/turn/lock.rs": {
+      "sha256": "94e75ca4ac6b541809223285db414064c64d4ca9fb0c623c0e0ae4b8cf0a469d",
+      "bytes": 4818,
+      "untracked": false
+    },
+    "engine/core/src/turn/moves.rs": {
+      "sha256": "3c53874aa8f1a46d8de5e02af9e6c11d06a20cb3e805e2b1240f83a104656f34",
+      "bytes": 198520,
+      "untracked": false
+    },
+    "engine/core/src/turn/moves/ability_hooks.rs": {
+      "sha256": "20c2b095014ae350cdc8551abecd4c9babd26fb0428c52a8f5fe5aa438beeb4f",
+      "bytes": 37726,
+      "untracked": false
+    },
+    "engine/core/src/turn/moves/absent_user_tests.rs": {
+      "sha256": "a4ff4dba10ad5c06605c903b5b5bc841c0ec64599378c111536563e97b831581",
+      "bytes": 12311,
+      "untracked": true
+    },
+    "engine/scenario/src/parity.rs": {
+      "sha256": "d4d6bc725b4e9b8133c05ba060319abe6186782139767f5dc724f1e1c2fcc7ad",
+      "bytes": 12790,
+      "untracked": false
+    },
+    "engine/scenario/tests/r5d_future_absent_overlay.rs": {
+      "sha256": "c61a656f142a0eedaa9c46770feb41255379c34fc52f8c32b31cd34c541dc648",
+      "bytes": 2438,
+      "untracked": true
+    },
+    "engine/scenario/tests/refusals_rr.rs": {
+      "sha256": "b29b3c771cd9a22185eec130dac9f3d8e0a54182f59a5a367bf14f722896cb86",
+      "bytes": 7059,
+      "untracked": false
+    },
+    "engine/scripts/refusals.classification.json": {
+      "sha256": "c4be560af69ebe24a36bead09883b76c50fd3adb999d7c15343bf63dc2effa6e",
+      "bytes": 82215,
+      "untracked": false
+    },
+    "engine/search/src/game.rs": {
+      "sha256": "ec49e671ffed9f418989f972bbd4b45bd656e045f1b03fa39d647dd7118ae4e5",
+      "bytes": 12469,
+      "untracked": false
+    },
+    "engine/search/tests/fixtures/forced_ally_charge/.gitattributes": {
+      "sha256": "7c475c00d6509abf8a7fa54e70bbc5080a685a42f36398e6a0d5eca84a6cd8c1",
+      "bytes": 168,
+      "untracked": true
+    },
+    "engine/search/tests/fixtures/forced_ally_charge/electro-shot.before.json": {
+      "sha256": "38d6637542193e6246a5e2fa7033e5b3575f7ad5f540917d956b666611e63b32",
+      "bytes": 4453,
+      "untracked": true
+    },
+    "engine/search/tests/fixtures/forced_ally_charge/electro-shot.scenario.json": {
+      "sha256": "ed69d052aaf54a0a9d569f4babd10108f0498cd40a2047e6cb5d01d2de1b064c",
+      "bytes": 81931,
+      "untracked": true
+    },
+    "engine/search/tests/fixtures/forced_ally_charge/provenance.json": {
+      "sha256": "c907d7e4ae488a981be09ce9d4ec28fbe2186a94dc9c1ef908cd40b9c1c3d4de",
+      "bytes": 1518,
+      "untracked": true
+    },
+    "engine/search/tests/fixtures/forced_ally_charge/solar-beam.before.json": {
+      "sha256": "f4ea0fcb18c8648bc8778f9222dce0f16526858d4c2a9c6f68a5a82f924edbde",
+      "bytes": 4407,
+      "untracked": true
+    },
+    "engine/search/tests/fixtures/forced_ally_charge/solar-beam.scenario.json": {
+      "sha256": "b6bc5706064945d307b9fa63abbd31e492db3b1c130f66be549682e77a91f51f",
+      "bytes": 16940,
+      "untracked": true
+    },
+    "engine/search/tests/forced_ally_charge.rs": {
+      "sha256": "a05e263d48fd5969360d2f611407bb5c121df856ba1db109ef98920a34b6fa64",
+      "bytes": 14925,
+      "untracked": true
+    }
+  },
+  "tracked_patch_sha256": "cd041c5f76e55991b590ddddd9ac0f0e4772188e8ebd8f29d26e461ffe464ce0",
+  "scope": "unverified concurrent working-copy snapshot; NOT merged into experimental engine and no new tests claimed",
+  "restore": "In a separate checkout at head, verify preimages/apply tracked.patch, then restore untracked files from files/. Never apply automatically over existing work."
+}

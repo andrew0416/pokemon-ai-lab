@@ -1,0 +1,13 @@
+{
+  "completed_scope": "Speed-only paired comparison of existing S26c algorithms",
+  "source_sha": "5b79d6e30b1fc0c39da227700ca3b169b60691b2",
+  "ci_run": 37025196260,
+  "ci_success": true,
+  "performance_measured": true,
+  "wins_evaluated": false,
+  "algorithms_changed": false,
+  "production_changed": false,
+  "shared_checkout_unchanged": true,
+  "default_off": true,
+  "vault_installed": true
+}

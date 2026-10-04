@@ -1,0 +1,815 @@
+{
+  "source_sha": "cab569eec64dc3213bedf934f69e7c4a78ef38c4",
+  "parent": "ec9b72e149b9d72e762e4023a84365e3f72a2ff5",
+  "run": 37085660921,
+  "passed": true,
+  "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+  "binary_sha256": "191a7782cbf95ed723be699e127a1615334ef42686cb71a86be0aa82fe4f19d5",
+  "artifact_sha256": "e313652de2660f9ea3a3113525e181bf811d627a4d74e01ee2fdaefaab447944",
+  "cases": 12,
+  "treatments": 12,
+  "paired_blocks": 108,
+  "timing_samples": 432,
+  "timed_solves": 900,
+  "comparison_contracts": [
+    "exact-same-work"
+  ],
+  "test_counts": {
+    "core": 101,
+    "owned": 6,
+    "history": 2,
+    "on": 94,
+    "off": 17,
+    "cli": 1
+  },
+  "bootstrap_recomputed": true,
+  "lp_inherited": false,
+  "lp_certificates": {
+    "tree-lp": 49,
+    "growing-lp": 96
+  },
+  "wins_evaluated": false,
+  "shared_git_unchanged": true,
+  "groups": [
+    {
+      "case": "stats-w1-d2-history-growing",
+      "mode": "interned",
+      "baseline_ms": 93.74757975,
+      "candidate_ms": 92.8894745,
+      "ratio": 0.9927081320240675,
+      "reduction_percent": 0.7291867975932509,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9927081320240675,
+          "ratio_bootstrap95": [
+            0.9881488273014165,
+            1.0000009694776018
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 93.4781805,
+              "candidate_ms": 93.601964,
+              "ratio": 1.0013241967198967
+            },
+            {
+              "baseline_ms": 93.859523,
+              "candidate_ms": 93.17511175,
+              "ratio": 0.9927081320240675
+            },
+            {
+              "baseline_ms": 93.78143375,
+              "candidate_ms": 92.8894745,
+              "ratio": 0.9904889569893145
+            },
+            {
+              "baseline_ms": 93.74757975,
+              "candidate_ms": 92.18997725,
+              "ratio": 0.9833851444042212
+            },
+            {
+              "baseline_ms": 93.06627,
+              "candidate_ms": 92.780853,
+              "ratio": 0.9969331853527598
+            },
+            {
+              "baseline_ms": 93.88244975,
+              "candidate_ms": 93.04016075,
+              "ratio": 0.9910282592514049
+            },
+            {
+              "baseline_ms": 94.13737175,
+              "candidate_ms": 93.0217335,
+              "ratio": 0.9881488273014165
+            },
+            {
+              "baseline_ms": 92.32876925,
+              "candidate_ms": 92.176147,
+              "ratio": 0.9983469697339219
+            },
+            {
+              "baseline_ms": 92.57563025,
+              "candidate_ms": 92.57572,
+              "ratio": 1.0000009694776018
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w1-d2-history-exhaustive",
+      "mode": "interned",
+      "baseline_ms": 69.7291745,
+      "candidate_ms": 68.7385385,
+      "ratio": 0.9856682347343673,
+      "reduction_percent": 1.4331765265632734,
+      "seeds": [
+        {
+          "seed": null,
+          "ratio": 0.9856682347343673,
+          "ratio_bootstrap95": [
+            0.9833913067019796,
+            0.9915802379900047
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 69.765916,
+              "candidate_ms": 68.953495,
+              "ratio": 0.9883550443170559
+            },
+            {
+              "baseline_ms": 69.57348375,
+              "candidate_ms": 68.45405425,
+              "ratio": 0.9839101128811881
+            },
+            {
+              "baseline_ms": 69.75466825,
+              "candidate_ms": 69.08315,
+              "ratio": 0.9903731425172395
+            },
+            {
+              "baseline_ms": 69.85139325,
+              "candidate_ms": 69.8252045,
+              "ratio": 0.9996250790602519
+            },
+            {
+              "baseline_ms": 69.7195125,
+              "candidate_ms": 68.5615625,
+              "ratio": 0.9833913067019796
+            },
+            {
+              "baseline_ms": 69.7291745,
+              "candidate_ms": 68.5145815,
+              "ratio": 0.9825812795188047
+            },
+            {
+              "baseline_ms": 69.73800725,
+              "candidate_ms": 68.7385385,
+              "ratio": 0.9856682347343673
+            },
+            {
+              "baseline_ms": 69.71752875,
+              "candidate_ms": 69.13052375,
+              "ratio": 0.9915802379900047
+            },
+            {
+              "baseline_ms": 69.28783275,
+              "candidate_ms": 68.271411,
+              "ratio": 0.985330443893845
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2-history-growing",
+      "mode": "interned",
+      "baseline_ms": 171.1187165,
+      "candidate_ms": 165.061858,
+      "ratio": 0.9651414112177672,
+      "reduction_percent": 3.48585887822328,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9651414112177672,
+          "ratio_bootstrap95": [
+            0.9615846479770721,
+            0.9660851665230195
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 170.0212535,
+              "candidate_ms": 164.255011,
+              "ratio": 0.9660851665230195
+            },
+            {
+              "baseline_ms": 170.4524075,
+              "candidate_ms": 164.6505395,
+              "ratio": 0.9659619474720532
+            },
+            {
+              "baseline_ms": 170.7035105,
+              "candidate_ms": 165.7359295,
+              "ratio": 0.970899362377202
+            },
+            {
+              "baseline_ms": 171.1187165,
+              "candidate_ms": 165.0055925,
+              "ratio": 0.9642755384972748
+            },
+            {
+              "baseline_ms": 170.7402715,
+              "candidate_ms": 164.9306695,
+              "ratio": 0.9659740379410138
+            },
+            {
+              "baseline_ms": 171.685683,
+              "candidate_ms": 165.1698525,
+              "ratio": 0.9620479099588053
+            },
+            {
+              "baseline_ms": 173.1339305,
+              "candidate_ms": 165.061858,
+              "ratio": 0.9533767154902084
+            },
+            {
+              "baseline_ms": 171.5807125,
+              "candidate_ms": 165.599651,
+              "ratio": 0.9651414112177672
+            },
+            {
+              "baseline_ms": 172.2071425,
+              "candidate_ms": 165.5917445,
+              "ratio": 0.9615846479770721
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2-history-exhaustive",
+      "mode": "interned",
+      "baseline_ms": 133.790109,
+      "candidate_ms": 127.858458,
+      "ratio": 0.9556645028221032,
+      "reduction_percent": 4.433549717789676,
+      "seeds": [
+        {
+          "seed": null,
+          "ratio": 0.9556645028221032,
+          "ratio_bootstrap95": [
+            0.9546463701464617,
+            0.9570997127861463
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 133.7938595,
+              "candidate_ms": 128.0540645,
+              "ratio": 0.9570997127861464
+            },
+            {
+              "baseline_ms": 134.0640435,
+              "candidate_ms": 128.1549505,
+              "ratio": 0.9559233568842791
+            },
+            {
+              "baseline_ms": 133.790109,
+              "candidate_ms": 127.858458,
+              "ratio": 0.9556645028221032
+            },
+            {
+              "baseline_ms": 133.7379325,
+              "candidate_ms": 127.9771375,
+              "ratio": 0.9569247490796974
+            },
+            {
+              "baseline_ms": 134.3089935,
+              "candidate_ms": 127.6117705,
+              "ratio": 0.9501357070329024
+            },
+            {
+              "baseline_ms": 133.256807,
+              "candidate_ms": 127.3255295,
+              "ratio": 0.9554898722734666
+            },
+            {
+              "baseline_ms": 133.183677,
+              "candidate_ms": 127.262505,
+              "ratio": 0.9555413085644122
+            },
+            {
+              "baseline_ms": 133.1805925,
+              "candidate_ms": 127.5747305,
+              "ratio": 0.9579078160355835
+            },
+            {
+              "baseline_ms": 133.9762665,
+              "candidate_ms": 127.8999565,
+              "ratio": 0.9546463701464617
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "pivot-w1-d1-history-growing",
+      "mode": "interned",
+      "baseline_ms": 23.525725700000002,
+      "candidate_ms": 22.646378300000002,
+      "ratio": 0.9661770076701223,
+      "reduction_percent": 3.3822992329877732,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9661770076701223,
+          "ratio_bootstrap95": [
+            0.9573338196561734,
+            0.9722150122663377
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 23.672891299999996,
+              "candidate_ms": 22.905293,
+              "ratio": 0.9675747972534308
+            },
+            {
+              "baseline_ms": 23.525725700000002,
+              "candidate_ms": 22.872063699999998,
+              "ratio": 0.9722150122663377
+            },
+            {
+              "baseline_ms": 23.6164557,
+              "candidate_ms": 22.8176765,
+              "ratio": 0.9661770076701223
+            },
+            {
+              "baseline_ms": 23.5315744,
+              "candidate_ms": 22.654243,
+              "ratio": 0.9627168422695933
+            },
+            {
+              "baseline_ms": 23.316476100000003,
+              "candidate_ms": 22.590405899999997,
+              "ratio": 0.9688602086830778
+            },
+            {
+              "baseline_ms": 23.2431985,
+              "candidate_ms": 22.646378300000002,
+              "ratio": 0.97432280243186
+            },
+            {
+              "baseline_ms": 23.3281855,
+              "candidate_ms": 22.256063899999997,
+              "ratio": 0.9540417920630817
+            },
+            {
+              "baseline_ms": 23.387455799999998,
+              "candidate_ms": 22.4942096,
+              "ratio": 0.9618066108755619
+            },
+            {
+              "baseline_ms": 23.633135,
+              "candidate_ms": 22.624799399999997,
+              "ratio": 0.9573338196561734
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "pivot-w1-d1-history-exhaustive",
+      "mode": "interned",
+      "baseline_ms": 21.4460518,
+      "candidate_ms": 21.7201513,
+      "ratio": 1.015406223073499,
+      "reduction_percent": -1.5406223073499037,
+      "seeds": [
+        {
+          "seed": null,
+          "ratio": 1.015406223073499,
+          "ratio_bootstrap95": [
+            1.0085430840984846,
+            1.0184940924090766
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 21.6573825,
+              "candidate_ms": 21.8909453,
+              "ratio": 1.0107844426721464
+            },
+            {
+              "baseline_ms": 21.487944300000002,
+              "candidate_ms": 21.855791399999998,
+              "ratio": 1.0171187664517538
+            },
+            {
+              "baseline_ms": 21.4460518,
+              "candidate_ms": 21.7201513,
+              "ratio": 1.0127808839853685
+            },
+            {
+              "baseline_ms": 21.3209922,
+              "candidate_ms": 21.715304600000003,
+              "ratio": 1.0184940924090766
+            },
+            {
+              "baseline_ms": 21.423712899999998,
+              "candidate_ms": 21.753771399999998,
+              "ratio": 1.015406223073499
+            },
+            {
+              "baseline_ms": 21.3692209,
+              "candidate_ms": 21.745286799999995,
+              "ratio": 1.0175984843696382
+            },
+            {
+              "baseline_ms": 21.502504,
+              "candidate_ms": 21.6862017,
+              "ratio": 1.0085430840984846
+            },
+            {
+              "baseline_ms": 21.602051399999997,
+              "candidate_ms": 21.5774165,
+              "ratio": 0.9988596036763436
+            },
+            {
+              "baseline_ms": 21.0839687,
+              "candidate_ms": 21.6250355,
+              "ratio": 1.025662474067323
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "sand-damage-w1-d1-history-growing",
+      "mode": "interned",
+      "baseline_ms": 300.9395005,
+      "candidate_ms": 308.3899805,
+      "ratio": 1.0241931244791704,
+      "reduction_percent": -2.4193124479170436,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.0241931244791704,
+          "ratio_bootstrap95": [
+            1.0200489953711134,
+            1.031894707809925
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 299.3722395,
+              "candidate_ms": 307.710069,
+              "ratio": 1.0278510442849529
+            },
+            {
+              "baseline_ms": 301.1248095,
+              "candidate_ms": 308.4099595,
+              "ratio": 1.0241931244791704
+            },
+            {
+              "baseline_ms": 300.9395005,
+              "candidate_ms": 310.7972345,
+              "ratio": 1.0327565307432947
+            },
+            {
+              "baseline_ms": 301.791914,
+              "candidate_ms": 309.5028055,
+              "ratio": 1.0255503581848784
+            },
+            {
+              "baseline_ms": 302.048208,
+              "candidate_ms": 308.3899805,
+              "ratio": 1.0209958951320777
+            },
+            {
+              "baseline_ms": 300.5251835,
+              "candidate_ms": 307.1809335,
+              "ratio": 1.0221470624274653
+            },
+            {
+              "baseline_ms": 300.3545465,
+              "candidate_ms": 309.934267,
+              "ratio": 1.0318947078099248
+            },
+            {
+              "baseline_ms": 301.425182,
+              "candidate_ms": 305.5979705,
+              "ratio": 1.013843529834876
+            },
+            {
+              "baseline_ms": 300.8327045,
+              "candidate_ms": 306.864098,
+              "ratio": 1.0200489953711134
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "sand-damage-w1-d1-history-exhaustive",
+      "mode": "interned",
+      "baseline_ms": 300.24468,
+      "candidate_ms": 302.5691595,
+      "ratio": 1.008209498259263,
+      "reduction_percent": -0.8209498259263093,
+      "seeds": [
+        {
+          "seed": null,
+          "ratio": 1.008209498259263,
+          "ratio_bootstrap95": [
+            1.0058095867010866,
+            1.0150350839901012
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 301.064068,
+              "candidate_ms": 303.8817845,
+              "ratio": 1.0093591922766418
+            },
+            {
+              "baseline_ms": 300.24468,
+              "candidate_ms": 301.9889775,
+              "ratio": 1.0058095867010866
+            },
+            {
+              "baseline_ms": 302.4842435,
+              "candidate_ms": 306.8662595,
+              "ratio": 1.014486757886283
+            },
+            {
+              "baseline_ms": 301.141916,
+              "candidate_ms": 305.66961,
+              "ratio": 1.0150350839901012
+            },
+            {
+              "baseline_ms": 303.6215395,
+              "candidate_ms": 306.11412,
+              "ratio": 1.008209498259263
+            },
+            {
+              "baseline_ms": 299.517456,
+              "candidate_ms": 301.7138215,
+              "ratio": 1.0073330133386282
+            },
+            {
+              "baseline_ms": 298.020087,
+              "candidate_ms": 302.5691595,
+              "ratio": 1.0152643150526965
+            },
+            {
+              "baseline_ms": 299.2495535,
+              "candidate_ms": 300.665964,
+              "ratio": 1.0047332083989224
+            },
+            {
+              "baseline_ms": 298.226803,
+              "candidate_ms": 300.421526,
+              "ratio": 1.0073592412818775
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w4-d2-history-growing",
+      "mode": "interned",
+      "baseline_ms": 338.967918,
+      "candidate_ms": 322.152009,
+      "ratio": 0.9506231613638086,
+      "reduction_percent": 4.937683863619135,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9506231613638086,
+          "ratio_bootstrap95": [
+            0.946793547023748,
+            0.9520904511674494
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 338.820308,
+              "candidate_ms": 323.156771,
+              "ratio": 0.9537703714028852
+            },
+            {
+              "baseline_ms": 339.636167,
+              "candidate_ms": 323.6948875,
+              "ratio": 0.9530636573813412
+            },
+            {
+              "baseline_ms": 341.080089,
+              "candidate_ms": 323.2848575,
+              "ratio": 0.9478268240395586
+            },
+            {
+              "baseline_ms": 338.362819,
+              "candidate_ms": 322.152009,
+              "ratio": 0.9520904511674494
+            },
+            {
+              "baseline_ms": 339.500831,
+              "candidate_ms": 321.437196,
+              "ratio": 0.9467935470237479
+            },
+            {
+              "baseline_ms": 338.967918,
+              "candidate_ms": 320.6338455,
+              "ratio": 0.9459120715371063
+            },
+            {
+              "baseline_ms": 338.016654,
+              "candidate_ms": 321.312777,
+              "ratio": 0.9505826804616555
+            },
+            {
+              "baseline_ms": 339.023683,
+              "candidate_ms": 322.487338,
+              "ratio": 0.9512236288224148
+            },
+            {
+              "baseline_ms": 337.4784,
+              "candidate_ms": 320.8147835,
+              "ratio": 0.9506231613638086
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w4-d2-history-exhaustive",
+      "mode": "interned",
+      "baseline_ms": 264.475581,
+      "candidate_ms": 247.8943095,
+      "ratio": 0.9371310181562661,
+      "reduction_percent": 6.28689818437339,
+      "seeds": [
+        {
+          "seed": null,
+          "ratio": 0.9371310181562661,
+          "ratio_bootstrap95": [
+            0.9341308561711554,
+            0.9405158103430844
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 266.7940955,
+              "candidate_ms": 249.71073,
+              "ratio": 0.9359679775971653
+            },
+            {
+              "baseline_ms": 264.475581,
+              "candidate_ms": 247.8482705,
+              "ratio": 0.9371310181562661
+            },
+            {
+              "baseline_ms": 263.863534,
+              "candidate_ms": 248.1678255,
+              "ratio": 0.9405158103430843
+            },
+            {
+              "baseline_ms": 265.714044,
+              "candidate_ms": 247.8943095,
+              "ratio": 0.9329364220582935
+            },
+            {
+              "baseline_ms": 263.681223,
+              "candidate_ms": 247.7313325,
+              "ratio": 0.9395107079733168
+            },
+            {
+              "baseline_ms": 264.5670945,
+              "candidate_ms": 247.1402865,
+              "ratio": 0.9341308561711555
+            },
+            {
+              "baseline_ms": 264.050896,
+              "candidate_ms": 255.4786655,
+              "ratio": 0.9675356886499639
+            },
+            {
+              "baseline_ms": 265.5918185,
+              "candidate_ms": 248.132425,
+              "ratio": 0.934262306728398
+            },
+            {
+              "baseline_ms": 264.108896,
+              "candidate_ms": 247.5188775,
+              "ratio": 0.9371849310975121
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "narrow-w1-d3-history-growing",
+      "mode": "interned",
+      "baseline_ms": 68.33274025,
+      "candidate_ms": 66.68218225,
+      "ratio": 0.9762753827526504,
+      "reduction_percent": 2.3724617247349644,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9762753827526504,
+          "ratio_bootstrap95": [
+            0.9611114545388374,
+            0.988556745523593
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 68.7070275,
+              "candidate_ms": 67.9207955,
+              "ratio": 0.988556745523593
+            },
+            {
+              "baseline_ms": 69.543987,
+              "candidate_ms": 66.8395225,
+              "ratio": 0.9611114545388374
+            },
+            {
+              "baseline_ms": 68.33274025,
+              "candidate_ms": 68.895675,
+              "ratio": 1.008238141013231
+            },
+            {
+              "baseline_ms": 67.731716,
+              "candidate_ms": 65.69572825,
+              "ratio": 0.9699404079766707
+            },
+            {
+              "baseline_ms": 67.82052825,
+              "candidate_ms": 66.21900575,
+              "ratio": 0.9763858739923631
+            },
+            {
+              "baseline_ms": 68.5745415,
+              "candidate_ms": 66.94763675,
+              "ratio": 0.9762753827526504
+            },
+            {
+              "baseline_ms": 68.073733,
+              "candidate_ms": 66.68218225,
+              "ratio": 0.9795581836242181
+            },
+            {
+              "baseline_ms": 68.3225485,
+              "candidate_ms": 66.2867725,
+              "ratio": 0.9702034534030884
+            },
+            {
+              "baseline_ms": 68.427374,
+              "candidate_ms": 65.69249825,
+              "ratio": 0.9600324316113606
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "narrow-w1-d3-history-exhaustive",
+      "mode": "interned",
+      "baseline_ms": 41.87363633333333,
+      "candidate_ms": 40.87890933333333,
+      "ratio": 0.9769502580712734,
+      "reduction_percent": 2.3049741928726553,
+      "seeds": [
+        {
+          "seed": null,
+          "ratio": 0.9769502580712734,
+          "ratio_bootstrap95": [
+            0.9728561609909023,
+            0.9783361600578747
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 41.86272466666667,
+              "candidate_ms": 40.89779966666667,
+              "ratio": 0.9769502580712734
+            },
+            {
+              "baseline_ms": 41.87739883333333,
+              "candidate_ms": 40.98822316666667,
+              "ratio": 0.9787671705636383
+            },
+            {
+              "baseline_ms": 41.822403166666675,
+              "candidate_ms": 40.87890933333333,
+              "ratio": 0.9774404682205032
+            },
+            {
+              "baseline_ms": 41.90788266666667,
+              "candidate_ms": 40.766941333333335,
+              "ratio": 0.9727750184277184
+            },
+            {
+              "baseline_ms": 41.824128333333334,
+              "candidate_ms": 40.872679166666664,
+              "ratio": 0.9772511895745027
+            },
+            {
+              "baseline_ms": 41.87363633333333,
+              "candidate_ms": 40.902385,
+              "ratio": 0.9768051829652022
+            },
+            {
+              "baseline_ms": 41.771157333333335,
+              "candidate_ms": 40.86623366666667,
+              "ratio": 0.9783361600578748
+            },
+            {
+              "baseline_ms": 41.994373,
+              "candidate_ms": 40.8544845,
+              "ratio": 0.9728561609909022
+            },
+            {
+              "baseline_ms": 41.92225766666667,
+              "candidate_ms": 40.889105666666666,
+              "ratio": 0.975355525739696
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

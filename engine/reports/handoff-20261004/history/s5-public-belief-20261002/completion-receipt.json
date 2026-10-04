@@ -1,0 +1,15 @@
+{
+  "completed_scope": "S26b finite multi-turn information-tree CFR and snapshot observation bridge",
+  "source_sha": "12a28a527d6b67856f77b2de4f077b9cf4b41d90",
+  "ci_run": 37014537106,
+  "ci_success": true,
+  "vault_installed": true,
+  "shared_checkout_unchanged": true,
+  "production_changed": false,
+  "default_off": true,
+  "multi_turn_information_tree": true,
+  "belief_aware_switches": true,
+  "full_battle_log_information": false,
+  "selective_gt_cfr": false,
+  "performance_measured": false
+}

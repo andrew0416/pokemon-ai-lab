@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "default_off": true,
+  "benchmark_baseline": "S14 all-owned; shared final passes OFF",
+  "core_unchanged": true,
+  "cfr_unchanged": true,
+  "growing_selection_unchanged": true,
+  "full_dfs_validation_identical": true,
+  "scope": "Incremental raw-node conversion, full canonical remap and DFS retained; private append/replace-leaf builder only.",
+  "correctness": "canonical IDs reordered by raw index; shrinking scale; invalid recall/cycles/error order; 3 snapshots parse 5+3+3 instead of 5+7+9; all admission budgets"
+}

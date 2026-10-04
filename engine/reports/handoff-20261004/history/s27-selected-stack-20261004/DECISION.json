@@ -1,0 +1,337 @@
+{
+  "state": "direct-stack-measured-large-bottleneck-selected",
+  "source_sha": "8c1bd43c0589ea74b99de439f38ae6f24cf87fd5",
+  "run_id": 37173941021,
+  "direct_reduction_range_percent": [
+    -8.03011481556184,
+    14.825896282439233
+  ],
+  "faster_intervals": 9,
+  "faster_outside_aa": 9,
+  "above_five_percent": 9,
+  "history_off_repeat": {
+    "case": "narrow-w1-d3-cadence1",
+    "coverage": "inherited",
+    "comparison": "history-off-regression",
+    "censored": false,
+    "ratio_median": 1.0261333282977618,
+    "time_reduction_percent": -2.6133328297761826,
+    "ratio_bootstrap95": [
+      1.0025790225524063,
+      1.0638951918502928
+    ],
+    "baseline_ms": 56.815711,
+    "candidate_ms": 58.1259435,
+    "pairs": [
+      {
+        "block": 0,
+        "baseline_ms": 56.815711,
+        "candidate_ms": 56.96224,
+        "ratio": 1.0025790225524063
+      },
+      {
+        "block": 1,
+        "baseline_ms": 57.0871985,
+        "candidate_ms": 58.579077,
+        "ratio": 1.0261333282977618
+      },
+      {
+        "block": 2,
+        "baseline_ms": 56.7911045,
+        "candidate_ms": 58.1259435,
+        "ratio": 1.0235043676602558
+      },
+      {
+        "block": 3,
+        "baseline_ms": 53.27368,
+        "candidate_ms": 58.945262,
+        "ratio": 1.1064612393962647
+      },
+      {
+        "block": 4,
+        "baseline_ms": 55.8350855,
+        "candidate_ms": 59.402679,
+        "ratio": 1.0638951918502928
+      },
+      {
+        "block": 5,
+        "baseline_ms": 56.884458,
+        "candidate_ms": 58.0568435,
+        "ratio": 1.0206099441081078
+      },
+      {
+        "block": 6,
+        "baseline_ms": 57.4297395,
+        "candidate_ms": 57.276395,
+        "ratio": 0.997329876448421
+      },
+      {
+        "block": 7,
+        "baseline_ms": 57.037035,
+        "candidate_ms": 59.170667,
+        "ratio": 1.0374078351022278
+      },
+      {
+        "block": 8,
+        "baseline_ms": 55.731273,
+        "candidate_ms": 57.4699885,
+        "ratio": 1.031198201770844
+      }
+    ],
+    "within_run_direction": "higher",
+    "aa_envelope_percent": 3.382709291079322,
+    "outside_aa_envelope": false
+  },
+  "history_off_cause_resolved": false,
+  "direct_regressions": [
+    {
+      "case": "heldout-mega-synthesis",
+      "coverage": "heldout",
+      "comparison": "direct-stack",
+      "censored": false,
+      "ratio_median": 1.0803011481556184,
+      "time_reduction_percent": -8.03011481556184,
+      "ratio_bootstrap95": [
+        1.0497732107734918,
+        1.1411963313651088
+      ],
+      "baseline_ms": 0.272926,
+      "candidate_ms": 0.292031,
+      "pairs": [
+        {
+          "block": 0,
+          "baseline_ms": 0.300858,
+          "candidate_ms": 0.254862,
+          "ratio": 0.8471172446802145
+        },
+        {
+          "block": 1,
+          "baseline_ms": 0.294312,
+          "candidate_ms": 0.309344,
+          "ratio": 1.0510750496072196
+        },
+        {
+          "block": 2,
+          "baseline_ms": 0.310832,
+          "candidate_ms": 0.2992755,
+          "ratio": 0.9628207520461214
+        },
+        {
+          "block": 3,
+          "baseline_ms": 0.272926,
+          "candidate_ms": 0.303162,
+          "ratio": 1.1107846082820985
+        },
+        {
+          "block": 4,
+          "baseline_ms": 0.274043,
+          "candidate_ms": 0.287683,
+          "ratio": 1.0497732107734918
+        },
+        {
+          "block": 5,
+          "baseline_ms": 0.2553535,
+          "candidate_ms": 0.2931685,
+          "ratio": 1.148088825882551
+        },
+        {
+          "block": 6,
+          "baseline_ms": 0.2610735,
+          "candidate_ms": 0.286431,
+          "ratio": 1.0971278203264598
+        },
+        {
+          "block": 7,
+          "baseline_ms": 0.2652515,
+          "candidate_ms": 0.2865515,
+          "ratio": 1.0803011481556184
+        },
+        {
+          "block": 8,
+          "baseline_ms": 0.255899,
+          "candidate_ms": 0.292031,
+          "ratio": 1.1411963313651088
+        }
+      ],
+      "within_run_direction": "higher",
+      "aa_envelope_percent": 4.389519911084605,
+      "outside_aa_envelope": true
+    }
+  ],
+  "summary_ko": "최근 유지 5개 옵션은 10조건 중 9조건에서 8.00~14.83% 단축됐다. 작은 메가 국면은 8.03% 느려져 보편적 개선이나 생산 채택으로 판정하지 않는다. 다음 후보는 엔진 전용 관측 생성의 배치 병렬화 하나로 좁힌다.",
+  "selected_next": {
+    "id": "S26m-engine-observation-batch",
+    "title_ko": "엔진 전용 관측 생성을 기존 전이 워커에 함께 배치",
+    "state": "selected-for-isolated-experiment-not-implemented",
+    "whole_compute_target_percent": 5,
+    "phase_costs": [
+      {
+        "case": "stats-w1-d2",
+        "threads": 4,
+        "maximum_eligible_parallelism_bound": 4,
+        "transition_wall_percent": 50.69000635430957,
+        "observation_wall_percent": 16.389810768596817,
+        "observation_calls": 1056,
+        "ideal_observation_only_parallel_reduction_percent": 12.292358076447613,
+        "required_observation_speed_factor_for_five_percent": 1.438988856055945
+      },
+      {
+        "case": "stats-w2-d2",
+        "threads": 4,
+        "maximum_eligible_parallelism_bound": 4,
+        "transition_wall_percent": 51.621626114837156,
+        "observation_wall_percent": 18.14897675051919,
+        "observation_calls": 2112,
+        "ideal_observation_only_parallel_reduction_percent": 13.611732562889392,
+        "required_observation_speed_factor_for_five_percent": 1.380257726123257
+      },
+      {
+        "case": "pivot-w1-d1",
+        "threads": 1,
+        "maximum_eligible_parallelism_bound": 1,
+        "transition_wall_percent": 41.0640855119682,
+        "observation_wall_percent": 16.12814576448111,
+        "observation_calls": 429,
+        "ideal_observation_only_parallel_reduction_percent": 0.0,
+        "required_observation_speed_factor_for_five_percent": null
+      },
+      {
+        "case": "sand-damage-w1-d1",
+        "threads": 4,
+        "maximum_eligible_parallelism_bound": 4,
+        "transition_wall_percent": 43.73379905438372,
+        "observation_wall_percent": 23.17487827362362,
+        "observation_calls": 8013,
+        "ideal_observation_only_parallel_reduction_percent": 17.381158705217715,
+        "required_observation_speed_factor_for_five_percent": 1.275105006191776
+      },
+      {
+        "case": "stats-w4-d2",
+        "threads": 4,
+        "maximum_eligible_parallelism_bound": 4,
+        "transition_wall_percent": 52.40735509479534,
+        "observation_wall_percent": 18.373961349617293,
+        "observation_calls": 4224,
+        "ideal_observation_only_parallel_reduction_percent": 13.78047101221297,
+        "required_observation_speed_factor_for_five_percent": 1.3738608082745118
+      },
+      {
+        "case": "narrow-w1-d3",
+        "threads": 4,
+        "maximum_eligible_parallelism_bound": 4,
+        "transition_wall_percent": 44.98981930276148,
+        "observation_wall_percent": 15.285469814334782,
+        "observation_calls": 584,
+        "ideal_observation_only_parallel_reduction_percent": 11.464102360751086,
+        "required_observation_speed_factor_for_five_percent": 1.4861226652993078
+      },
+      {
+        "case": "stats-w4-d2-cadence1",
+        "threads": 4,
+        "maximum_eligible_parallelism_bound": 4,
+        "transition_wall_percent": 49.88677388874309,
+        "observation_wall_percent": 17.236616803286275,
+        "observation_calls": 4224,
+        "ideal_observation_only_parallel_reduction_percent": 12.927462602464706,
+        "required_observation_speed_factor_for_five_percent": 1.408609673766788
+      },
+      {
+        "case": "narrow-w1-d3-cadence1",
+        "threads": 4,
+        "maximum_eligible_parallelism_bound": 4,
+        "transition_wall_percent": 39.398808531249415,
+        "observation_wall_percent": 13.80169460780572,
+        "observation_calls": 584,
+        "ideal_observation_only_parallel_reduction_percent": 10.35127095585429,
+        "required_observation_speed_factor_for_five_percent": 1.568072425003906
+      },
+      {
+        "case": "heldout-unseen-fist-protect",
+        "threads": 4,
+        "maximum_eligible_parallelism_bound": 4,
+        "transition_wall_percent": 41.02282123295203,
+        "observation_wall_percent": 21.536314681745374,
+        "observation_calls": 3295,
+        "ideal_observation_only_parallel_reduction_percent": 16.15223601130903,
+        "required_observation_speed_factor_for_five_percent": 1.3023648313562608
+      },
+      {
+        "case": "heldout-mega-synthesis",
+        "threads": 4,
+        "maximum_eligible_parallelism_bound": 2,
+        "transition_wall_percent": 51.69865590714465,
+        "observation_wall_percent": 9.348872174989921,
+        "observation_calls": 2,
+        "ideal_observation_only_parallel_reduction_percent": 4.674436087494961,
+        "required_observation_speed_factor_for_five_percent": 2.1497233762709036
+      }
+    ],
+    "evidence": [
+      {
+        "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/source/engine/search/src/bayesian/tree/engine/parallel.rs",
+        "sha256": "c61139a9e0c9abce21abe89bc8a781b40a8c3dab0aea82626d27b3b3b3c45e57",
+        "anchor": "//! Bounded immutable transition jobs.",
+        "line": 1,
+        "claim": "Existing workers enumerate transitions only; observation is explicitly serial."
+      },
+      {
+        "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/source/engine/search/src/bayesian/tree/builder/growing.rs",
+        "sha256": "4b0d73ce1a9765e46ffd7d49116705d58c91b6905a801ad744e2ca12ad13b221",
+        "anchor": "self.b.domain.observation(&position)?",
+        "line": 353,
+        "claim": "Every child is observed after the batch returns, before serial phase/history/evaluation."
+      },
+      {
+        "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/source/engine/search/src/bayesian/tree/engine.rs",
+        "sha256": "502665a0d21feed66f4feae960d95c1c1200beb12ee47947430fb35e5ac65734",
+        "anchor": "fn snapshot_impl",
+        "line": 65,
+        "claim": "The pure engine snapshot serializer has a single explicit disclosure allowlist."
+      },
+      {
+        "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/source/engine/search/src/bayesian/tree/engine/pipeline.rs",
+        "sha256": "47dc16300b265801ffa1dfccb01434493cc01ed50a09f42ef534ba39b48a17ba",
+        "anchor": "let batch = settings",
+        "line": 51,
+        "claim": "Pool width >1 selects the immutable bounded batch; one-thread fallback exists."
+      },
+      {
+        "path": "C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/search-experiments/s27-selected-stack-20261004/source/engine/search/src/bayesian/tree/phase_cost.rs",
+        "sha256": "463fdde1ce9390ebd3ad68a645c130fdd8ccce88c146cbc6dc4c8006604f3702",
+        "anchor": "//! Only the calling thread is recorded.",
+        "line": 2,
+        "claim": "Transition phase is submit-and-wait wall, not summed worker CPU."
+      }
+    ],
+    "rationale_ko": "전이 워커가 반환된 뒤 호출자에서 모든 확률 자식의 관측 문자열을 순차 생성한다. 이 순수 엔진 관측만 기존 최대 4개 작업에 합치면 큰 직렬 구간을 병렬화할 여지가 있다.",
+    "implementation_plan": [
+      "Create a new isolated S28 experiment from pinned S25 selected-five. Add an explicitly engine-only prepared-observation batch; default OFF.",
+      "Reuse snapshot_impl and exactly the same phase text/disclosure allowlist. Each joint worker produces ending states plus per-child deferred observation Result. No generic observer/evaluator/prior callbacks move to workers.",
+      "Consume joints and children in their original indexed order. Observe errors only when their child would have been visited. Transition errors, invalid chance mass, node limits, first error and atomic publication remain serial and in the old order.",
+      "Keep pool width <=4, cap attempted transitions identically, preserve factored-mode propagation and input restoration. One-thread/no-pool route uses the existing serial implementation.",
+      "Measure observation calls actually eligible for preparation, batch occupancy, bytes retained and deferred errors before claiming the whole phase moved. Do not call the ideal bound a forecast."
+    ],
+    "go_no_go": [
+      "Exact full tree/solution/search-work parity for ON/OFF with 1/2/4 workers; errors, node/transition caps, switch closure, rollback and future synthetic observer cases included.",
+      "A generic stateful domain/evaluator/prior keeps the original callback trace. Purity permission belongs only to the concrete engine snapshot adapter; no new Send/Sync requirement for generic Domain.",
+      "Independent BR/LP and intermediate snapshot audits after any builder/interface change; preserved public/private partitions, source-registered observation fields and strict Illusion rejection.",
+      "Clean same-runner selected-five vs selected-five+candidate, isolated targets and A/A; target >=5% complete-compute reduction on at least two preregistered nontrivial workloads with ratio interval entirely below 0.95.",
+      "Include one-thread fallback, heldouts, return/live heap and peak RSS; do not promote a systematic regression or unbounded speculative observation storage.",
+      "Generic x86-64 scalar build remains supported; no AVX2 dependency. No strength/win-rate experiment."
+    ],
+    "limitations": [
+      "The projected f*(1-1/k), k<=4, is an optimistic Amdahl ceiling for the separately instrumented observation phase, not measured savings. The two-transition tiny case cannot fill four jobs.",
+      "Root observations and serial fallbacks cannot all move. Unequal outcome counts, small batches, scheduler, allocator and result-transfer overhead reduce benefit.",
+      "Precomputed strings may raise peak memory; discarded/capped speculative work must remain bounded and counted.",
+      "This is not observation caching, history interning, direct_write, or the rejected borrowed public-boundary clone change; those costs/contracts differ.",
+      "Production remains unchanged. Before promotion, unresolved S25 OFF-layout/codegen cost needs separate diagnosis."
+    ]
+  },
+  "deferred": [
+    "S26k-private-key-view-candidate"
+  ],
+  "rejected_boundary_stays_rejected": true,
+  "production_adopted": false,
+  "default_off": true,
+  "wins_evaluated": false
+}

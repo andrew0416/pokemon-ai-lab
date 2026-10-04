@@ -1,0 +1,38 @@
+{
+  "completed": true,
+  "source_sha": "70d5b0b463dc2cab2deb365c67ffcb2e2e7f95b8",
+  "branch": "codex/s26g-pipeline-20261003",
+  "run_id": 37123954718,
+  "run_url": "https://github.com/andrew0416/pokemon-ai-lab/actions/runs/37123954718",
+  "directions_completed": [
+    "frontier node index and allocation-free chance selection",
+    "consuming compiled-tree storage reuse",
+    "incremental sequence payoff with scale refresh",
+    "compressed internal checks with original final certification"
+  ],
+  "search_tests": 115,
+  "new_pipeline_certificates": 652,
+  "total_lp_certificates": 1752,
+  "equal_gap_speed_comparisons": 36,
+  "production_adopted": false,
+  "default_off": true,
+  "portable_cpu": "x86-64",
+  "shared_git_unchanged": true,
+  "vault_new_notes": 8,
+  "vault_changed_existing_notes": 3,
+  "vault_new_errors": 0,
+  "vault_new_stale": 0,
+  "inherited_vault_errors": 14,
+  "inherited_vault_stale": 1069,
+  "strict_vault_pass": false,
+  "artifact_sha256": {
+    "RESULTS.json": "8ad5557d00ca1f9fc6eb96b2ada27d5ca04310cb2d3f44ca57ea0dc89868c32b",
+    "RESULTS.md": "8a6257d88ed304afcb1ff6c7805bc7b200275011a3ab96cbe8157eb4169d94b3",
+    "DECISION.json": "6c19ec7ebd3b996b259aed292c2b91107bfa71182f95c80e9d9f51e94bddde2b",
+    "publication/receipt.json": "10c75c6d688e969b6a733adf8376169435a7ecbc468aecf4d79c64f38c73b59a",
+    "publication/push.json": "b14c07853d22b40f138c9774981ef7ed9203c38e30245aaf7c77508ad5818db6",
+    "vault-final/install-receipt.json": "f4305b48c6ec4c7282f08af0fc8f060d4017c7f884ad715c4fdc4fa38b2e4dcf",
+    "board-receipt.json": "d8eb788926f64e03e9e04db8edd3639bfc2c13496b8c66fe9d651db425198a51",
+    "followup-board-receipt.json": "9457fec7808c75e277fa92b12747cd7a3365e25a06d5f23fb9bf9d475ea334bd"
+  }
+}

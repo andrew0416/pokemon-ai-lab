@@ -1,0 +1,405 @@
+# lab-engine 진행 보드 (prog, 중앙 모드). 편집은 사용자 위임으로 Fable 세션이 한다(2026-09-26).
+# 영구 기록(커밋 해시·fixture·병합 해소)은 engine/WORKPLAN.md §4, 여기는 살아 있는 상태만.
+# 규칙(2026-09-27 사용자 지적): 모든 todo는 발견 즉시 여기에 올리고 depends_on을 적는다. 에이전트 보고의 '범위 밖'·'미확인'·'한계'도 빠짐없이.
+# 연구(탐색·평가·전략 비교) 작업은 M1-engine-complete에 의존한다(사용자 우선순위: 엔진 완결이 먼저).
+# 2026-09-27 사용자 지시: 진행 중인 작업이 끝나면 새 웨이브를 띄우지 말고 PLAN1(교통정리)부터 한다.
+# touches 충돌 회피는 끈다: volatile.rs·battle.rs처럼 모든 단위가 건드리는 파일이 있어
+# 켜면 병렬성이 사라진다. 병합 충돌은 병합하는 세션(Fable)이 해소한다.
+policy:
+  claim_ttl: 45m
+  max_escalation: 1
+  session_gap: 30m
+  estimates: manual
+  touch_conflicts: false
+  min_samples: 3
+bars:
+  - {name: all, filter: "*"}
+  - {name: engine, filter: engine}
+  - {name: bugs, filter: bugs}
+  - {name: coverage, filter: coverage}
+  - {name: search, filter: search}
+  - {name: verify, filter: verify}
+  - {name: docs, filter: docs}
+  - {name: refusal, filter: refusal}
+  - {name: perf, filter: perf}
+  - {name: py, filter: py}
+tasks:
+  # ---------------- 2026-09-26 완료분 (기준선; 이벤트는 실제 담당 actor 이름으로 기록)
+  - {id: S16-belief-mixture, desc: "믿음 분포(모델 ③ 확장) lab-plan --believed-weight", tags: [search], weight: 3}
+  - {id: S17-observed-once, desc: "모델 ② 관측 1회 갱신 --observed, --setup-rolls", tags: [search], weight: 3}
+  - {id: S18-observed-turns, desc: "모델 ② 여러 턴 관측 갱신 --observed-turn, scenario_positions_filtered/consistent", tags: [search], weight: 3}
+  - {id: S19-lab-rollout, desc: "자기대전 승률 도구 lab-rollout + sample_resume_turn", tags: [search], weight: 4}
+  - {id: W1-eject-pack, desc: "이젹트팩", tags: [engine, items], weight: 3}
+  - {id: W2-metronome-destiny-knot, desc: "메트로놈(도구)·데스티니노트", tags: [engine, items], weight: 3}
+  - {id: W3-berry-juice, desc: "베리쥬스 + Update 도구 수집 수정", tags: [engine, items], weight: 2}
+  - {id: W4-leek, desc: "리크", tags: [engine, items], weight: 1}
+  - {id: W5-autotomize, desc: "바디퍼지(무게 상태)", tags: [engine, moves], weight: 2}
+  - {id: W6-skill-swap-unify, desc: "스킬스웹 구현 통합", tags: [engine, abilities], weight: 2}
+  - {id: W7-update-order, desc: "Update 패스 수집 시점·공생 동률", tags: [engine], weight: 2}
+  - {id: V1-sleep-moves, desc: "드림이터·나이트메어·잠깨우기·기루기루", tags: [engine, moves], weight: 2}
+  - {id: V2-self-boost-moves, desc: "성장·페르스팅어·오더업·고대의노래", tags: [engine, moves], weight: 2}
+  - {id: V3-trapping-moves, desc: "앵커샷·스피릿셰이드·턱악물기·옥토락", tags: [engine, moves], weight: 3}
+  - {id: V4-crit-volatiles, desc: "기합모으기·드래곤치어·레이저포커스", tags: [engine, moves], weight: 2}
+  - {id: V5-copy-moves, desc: "카피캣·오웅·되받아치기, battle.lastMove", tags: [engine, moves], weight: 3}
+  - {id: V6-utility-moves, desc: "아쿠아링·훔치기·모조베기·파워트릭·베스토우·지압", tags: [engine, moves], weight: 3}
+  - {id: V7-two-turn-more, desc: "로켓박치기·바람일으키기·프리즈볼트·콜드플레어·지오컨트롤", tags: [engine, moves], weight: 2}
+  - {id: V8-misc-moves, desc: "폭풍·프리지프로스트·매직파우더·스톡파일류 등", tags: [engine, moves], weight: 3}
+  - {id: V9-power-identify-rollout, desc: "프레젠트·비밀의힘·변덕빔 등, 식별 기술, 구르기·아이스볼", tags: [engine, moves], weight: 3}
+  - {id: U1-ability-suppression, desc: "위액·화학변화가스 특성 억제 계층 + 감사", tags: [engine, abilities], weight: 5}
+  - {id: U2-poison-heal-slow-start-truant, desc: "포이즌힐·슬로스타트·게으름, start_effect 수정", tags: [engine, abilities], weight: 3}
+  - {id: U3-dancer-berries, desc: "댄서·볼주머니·반추·숙성·독의꼭두각시", tags: [engine, abilities], weight: 4}
+  - {id: U4-gulp-missile-bad-dreams, desc: "꿀꺽미사일·나이트메어(특성)", tags: [engine, abilities], weight: 2}
+  - {id: U5-opportunist-receiver, desc: "기회주의·리시버/화학의힘", tags: [engine, abilities], weight: 2}
+  - {id: merge-wave-8, desc: "U/V/W 병합(충돌 해소)·게이트·COVERAGE 재생성·WORKPLAN 행", tags: [engine, docs], weight: 3}
+  - {id: prog-install, desc: "prog 보드 설치(D:\\tools\\prog, 중앙 모드) + 기준선 기록", tags: [docs], weight: 1}
+  # ---------------- 남은 일: 문서
+  - id: ctx-wave8-docs
+    desc: "CONTEXT.md 8차 병합 문단(새 API·커버리지·범위 밖 버그 목록), WORKPLAN S18/S19 해시 정리, 에이전트 프롬프트에 prog claim/done 문구"
+    tags: [docs]
+    weight: 2
+    min_level: 1
+  - id: rollout-readme
+    desc: "runs/rollout-20260926 배치 완료 뒤 make_readme.py로 README, WORKPLAN S19 결과 행, 사용자 보고"
+    tags: [docs, search]
+    weight: 2
+    min_level: 1
+  # ---------------- 남은 일: 엔진 버그 (8차 보고서의 범위 밖 항목)
+  - {id: B1-trick-item-start-ignoring, desc: "trick_item_start: 도구 무시 보유자(서투름·매직룸)에도 도구 Start 실행(하양허브·구애 choicelock) — Showdown singleEvent('Start') 예외 없음", tags: [engine, bugs, items], weight: 2}
+  - {id: B2-speed-snapshot, desc: "행동별 pokemon.speed 스냅숏(행동 사이·잔여·턴 시작에서만 갱신) — 공생 쌍·이젹트팩 둘의 순서; F급", tags: [engine, bugs], weight: 4, min_level: 1}
+  - {id: B3-switchflag-unprocessed-faint, desc: "이젹트버튼·이젹트팩의 switchFlag===true 검사가 기절 미처리 0HP 포켓몬을 포함해야 함(getAllActive)", tags: [engine, bugs, items], weight: 1}
+  - {id: B4-sleep-talk-called-tail, desc: "잠꼬대가 부른 기술의 run_move_tail이 호출자 id·타입을 씀 — 불러낸 기술 기준으로(전기 기술이 충전 종료); 오라클로 확인 뒤 수정, V 호출자들의 전기+충전 거부 해제", tags: [engine, bugs, moves], weight: 2}
+  - {id: B5-oblivious-bypassed-stale, desc: "ability_hooks::oblivious_bypassed의 헤롱헤롱·도발 휘발 부재 가정 재검토(둘 다 있음)", tags: [engine, bugs, abilities], weight: 1}
+  - {id: B6-status-immune-goggles-raw, desc: "Battle::status_immune의 방진고글 원시 도구 읽기 → 유효 도구", tags: [engine, bugs, items], weight: 1}
+  - {id: B7-hazards-boots-raw, desc: "conditions::entry_hazards의 두꺼운장화 원시 읽기 → 유효 도구", tags: [engine, bugs, items], weight: 1}
+  - {id: B8-bug-bite-ignoring-item, desc: "벌레먹기·쪼아대기: 사용자가 도구를 무시하면 열매 onEat 생략", tags: [engine, bugs, moves], weight: 1}
+  - {id: B9-trace-shield-raw, desc: "switching::trace의 어빌리티실드 원시 읽기 → 유효 도구", tags: [engine, bugs, abilities], weight: 1}
+  - {id: B10-cud-chew-queue, desc: "반추의 '큐 비었음'이 잔여 뒤 요청된 교체 배치(잔여 피해 위기회피)에서 거짓", tags: [engine, bugs, abilities], weight: 1}
+  - {id: B11-raw-ability-reads, desc: "skill_swap·바디퍼지 심술꾸러기·공생 동률의 원시 b.ability 읽기를 ability()/raw_ability()로 정리", tags: [engine, bugs, abilities], weight: 1}
+  - {id: B12-set-ability-paths, desc: "abilities::receiver·set_ability·skill_swap의 setAbility 경로 통합", tags: [engine, bugs, abilities], weight: 2}
+  - {id: B13-no-guard-ohko, desc: "노가드 + 일격기: moves.rs accuracy_check의 OHKO 분기가 accuracy_event 전에 반환해 필중이 안 됨(오라클: 노가드 괴력몬 지진소용돌이 1결과 vs 엔진 30/70, TV 0.70) — Z 보고", tags: [engine, bugs, moves], weight: 1}
+  - {id: B14-canonical-pseudoweather-order, desc: "scenario/src/canonical.rs가 magicroom을 trickroom·wonderroom 뒤에 써서 canonical.cjs의 id 알파벳순과 byte 불일치(매직룸+다른 룸 동시). 테스트는 JSON 재파싱이라 못 잡음 — 순서 수정 + byte 비교 테스트 — Z 보고", tags: [verify, bugs], weight: 1, min_level: 1}
+  - {id: B15-choicelock-struggle, desc: "choicelock onBeforeMove는 발버둥 예외(move.id !== 'struggle')인데 items::before_move는 아님; PP 패치 수단 확보 뒤 오라클 검증 — X 보고", tags: [engine, bugs, items], weight: 1}
+  - {id: B16-choicelock-hasmove, desc: "choicelock onDisableMove는 잠긴 기술이 없어지면(!hasMove) 해제인데 end_turn_disable_move는 미검사(흉내내기·스케치류 뒤) — X 보고", tags: [engine, bugs, items], weight: 1}
+  - {id: B17-emergency-exit-flags, desc: "switching::emergency_exit가 all_alive()로 플래그를 지움; Showdown은 side.active 전부(B3의 거부 경우에서만 차이) — X 보고", tags: [engine, bugs], weight: 1}
+  - {id: B18-called-move-aftermove-lift, desc: "called_move_problem의 onAfterMove 거부(카피캣→스파클링아리아·스핏업 등)를 B4 뒤 해제 가능성; 오라클로 확인 후 해제 — X 보고", tags: [engine, bugs, moves], weight: 1}
+  - {id: B19-umbrella-trick-start, desc: "트릭으로 우산을 받은 도구 무시 보유자의 Start가 Showdown에선 WeatherChange를 실행; 반응 핸들러 없다는 기존 주장 재검 — X 보고", tags: [engine, bugs, items], weight: 1}
+  - {id: B20-kings-rock-shield-dust, desc: "왕의징표석의 추가 10% 풀죽음이 린트를 무시(spread_move_hit가 keeps_secondary(커버트클록)만 거침; Showdown ModifySecondaries가 제거). 스크래치로 TV 0.1 확인됨 — 오라클 fixture 만들고 수정 — Y 보고", tags: [engine, bugs, items], weight: 1}
+  - {id: B21-kings-rock-serene-grace, desc: "왕의징표석/예리한이빨 + 하늘의은총: Showdown 20% 풀죽음, 엔진 10%(추가 풀죽음이 하늘의은총 뒤에 붙음 → 앞으로) — AA 오라클 확인", tags: [engine, bugs, items], weight: 1}
+  - {id: B22-recharge-fractional-priority, desc: "재충전 턴이 분수 우선도(시간벌기 등)를 무시해 느린 보복 사용자보다 먼저 행동(Showdown은 뒤) — AA 오라클 확인, 분포 불일치", tags: [engine, bugs], weight: 1}
+  - {id: B23-hydro-steam-sun, desc: "쾌청의 하이드로스팀: Showdown 1.5배, 엔진 0.5배(쾌청 피해 핸들러 특례 없음) — AA 오라클 확인", tags: [engine, bugs, moves], weight: 1}
+  - {id: B24-umbrella-weatherchange, desc: "우산(유틸리티 엄브렐러)이 내는 WeatherChange 이벤트 미실행: 기상천외·플라워기프트 보유자의 우산 거부 해제 — AA 의심(미확인)", tags: [engine, bugs, items], weight: 2}
+  - {id: B25-mega-sol-duration, desc: "메가 솔의 쾌청 시야가 Showdown은 행동 끝까지, 엔진은 기술 끝까지 — 같은 행동 안 기술 뒤 날씨 판정에서만 차이 — AA 의심(미확인)", tags: [engine, bugs, abilities], weight: 1, depends_on: [B25a-mega-sol-window-repro]}
+  - {id: B26-mold-breaker-phaze-window, desc: "틀깨기 강제 교체 창: Showdown activeMove가 강제 교체 단계 뒤 clearActiveMove()까지 살아 있어 끌려온 포켓몬의 breakable 특성 SwitchIn(플라워기프트·위협 등)이 억제됨; 엔진은 기술 끝에 끝남(TV 1.0). 탐침 시나리오는 BB 스크래치패드 — BB 보고", tags: [engine, bugs, abilities], weight: 2}
+  - {id: B27-emergency-exit-recoil-lift, desc: "X-B3의 거부 해제: 자기 반동으로 기절한 위기회피 사용자(switchFlag 유지, 기절 미처리) — 플래그 정리(CC-B17)는 끝났고 이젹트버튼/이젹트팩의 switchFlag===true 검사가 getAllActive(기절 미처리 0HP 포함)를 봐야 함; 오라클 fixture: 헤드스매시 반동 기절 골리소포드 + 체시 이젹트팩", tags: [engine, bugs, items], weight: 2}
+  - {id: B28-guard-dog-phazing, desc: "가드독의 onDragOut 미검사: moves.rs forceSwitch·switching::drag_in·붉은카드(items.rs)가 흡반만 검사해 울부짖기·드래곤테일·붉은카드가 가드독 포켓몬을 끌어냄(Showdown은 차단); support.rs의 '강제 교체 기술 전부 거부' 주석 정리 — DD 보고", tags: [engine, bugs, abilities], weight: 1}
+  # ---------------- 남은 일: 커버리지(라이브러리 밖). 2026-09-26 기준 기술 766/938, 특성 289/321, 도구 496/583
+  - {id: cov-moves-vgc, desc: "미지원 기술 중 실전(VGC) 관련: 셰드테일·배턴터치·칠리레셉션·타이디업·시럽봄·타르샷·저주·소란·집단구타·던지기·달의춤·텔레포트·일렉트로드리프트/충돌·심판/멀티어택/레벨레이션댄스/테크노블래스트·아이비커젤·파워풀/부시·차지·매직코트·스틸/스내치·파우더·연속베기/에코보이스/라운드·플레지 3종·마인드블로운/강철빔·헤롱헤롱(기술)", tags: [engine, coverage, moves], weight: 6}
+  - {id: cov-moves-rest, desc: "나머지 미지원 기술(라이브러리 밖·희귀): 봉인·염동력·작아지기·매그니튜드·자연의은혜·사우전드웨이브·베놈트랩·숲의저주/할로윈·튀어오르기류·어시스트/메트로놈(기술)/흉내내기/스케치/텍스처2/도들·틀어박히기·원한·분노·미퍼스트·록온/마인드리더·페어리록·플라즈마샤워/플라스마피스트·일렉트릭필드화·오라휠·사이코시프트·괴상한소리·코어퓨니셔·불꽃튀기기·머드스포츠/워터스포츠 — Z기술·G맥스·테라·CAP·Past는 제외", tags: [engine, coverage, moves], weight: 6}
+  - {id: cov-abilities-32, desc: "미지원 특성 32개(일루전·괴짜·변신 제외 대상 확인)", tags: [engine, coverage, abilities], weight: 5}
+  - {id: cov-items-87, desc: "미지원 도구 87개(Past 판정 제외 후 합법인 것)", tags: [engine, coverage, items], weight: 4}
+  # ---------------- 남은 일: 검증
+  - {id: O105-canonical-recheck, desc: "새 휘발(101종)·슬롯 조건·상태 필드가 canonical.cjs와 byte 일치인지 fixture 전체 재확인", tags: [verify], weight: 2}
+  - {id: verify-library-turns, desc: "라이브러리 상위 파티 실제 1턴들을 오라클 시나리오 묶음으로(회귀); Unsupported는 목록", tags: [verify], weight: 3}
+  # ---------------- 남은 일: 웨이브 12 — 엔진 완결 (2026-09-27; 사용자 우선순위: 전략 비교보다 엔진 구현)
+  - {id: EE1-transform-imposter, desc: "딧토: 변신(transformInto)·임포스터 — 상태에 기본 기술 슬롯·transformed 플래그 추가, 종·능력치·타입·랭크·특성 복사, 5PP 가상 기술, 오라클 fixture", tags: [engine, moves, abilities], weight: 5}
+  - {id: EE2-illusion, desc: "조로아크(·히스이) 일루전 — 완전정보 엔진에서 기계적 효과 없음을 오라클로 확인하고 거부 해제(onBeforeSwitchIn/onDamagingHit/onEnd/onFaint), fixture", tags: [engine, abilities], weight: 1}
+  - {id: FF-parity-harness, desc: "실전 국면 오라클 검증 하네스: 무작위/균형 정책 자기대전의 매 턴을 setupTurns 시나리오로 내보내 enumerate.cjs와 정확 분포 대조, 불일치율 보고·불일치는 fixture로 고정", tags: [verify], weight: 5}
+  - {id: GG-turn-throughput, desc: "턴 처리량 벤치(enumerate_turn·sample_turn, 라이브러리 국면, median/extremes/full) + 프로파일 + 동작 불변 최적화(전체 fixture 게이트)", tags: [engine, perf], weight: 4}
+  - {id: HH-python-api, desc: "engine/py: 시나리오 로드·국면·합법 선택·enumerate/sample 턴·교체·canonical JSON·평가값을 pyo3로 노출, maturin wheel + pytest 스모크", tags: [engine, py], weight: 4}
+  - {id: II-singles-loader, desc: "싱글(gen9championsbssregmc, 3/6 선출, State<1>) 로더·오라클 fixture — 구조만 유지 방침이라 후순위", tags: [engine], weight: 4}
+  - {id: DOC-showdown-gaps-refresh, desc: "SHOWDOWN-GAPS.md(2026-09-25 작성, 수치 낡음) 재생성 또는 폐기 표시; CONTEXT '다음 할 일' 4항 갱신", tags: [docs], weight: 1}
+  - {id: B29-setup-suspension-drop, desc: "setupTurns 재생: 설정 턴이 midTurn 선택 누락으로 중단 상태로 끝나면 명령만 적용하고 suspension을 버림 → 그 국면의 decision()이 오류 — HH 보고", tags: [engine, bugs], weight: 1}
+  - {id: T1-scenario-typed-errors, desc: "lab_scenario scenario_positions_*의 오류가 String — Unsupported/Invalid 구분을 타입으로(node::classify의 문자열 검사 제거) — HH 보고", tags: [engine], weight: 1}
+  - {id: CI-wheel-pytest, desc: "engine.yml wheels 잡에 wheel 설치 + pytest engine/py/tests 단계 추가 — HH 보고", tags: [verify], weight: 1}
+  - {id: B30-switch-in-action-speed, desc: "등장 핸들러 순서: switching::run_switch_in이 원시 저장 스피드로 정렬하지만 Showdown은 BattleQueue.insertChoice가 runSwitch마다 updateSpeed() → 행동 스피드(구애스카프·검은철구·마비·순풍·트릭룸 부호 반전) 순. 오라클 관측: 스카프 임포스터 딧토(68→102)가 위협 어흥염(80)보다 먼저. 트릭룸 교체 묶음 역순은 코드 독해만(미확인) — EE 보고", tags: [engine, bugs], weight: 2}
+  - {id: B31-loader-level-default, desc: "로더가 level 없는 팀 세트를 50으로 읽음 — Showdown custom game 기본은 100(Champions 능력치는 레벨 무관, 피해만 약 2배 차이 → 조용한 불일치). 오라클과 같은 기본값 또는 명시 요구 — FF 보고", tags: [engine, bugs], weight: 1}
+  - {id: V2-parity-heavy-turns, desc: "검증 하네스 한계 보완: 선두 턴 자취 제공, extremes 6만 분기 초과 턴(광역기 겹침) 비교 방법, 압정·벽·대타·혼란·씨뿌리기가 나오는 팀 쌍 추가 — FF 보고", tags: [verify], weight: 3}
+  - {id: B32-cache-key-collision, desc: "search/src/solve.rs nash_cache와 lab-rollout StrategyCache가 상태의 64비트 해시만 키로 쓰고 동등 비교 없음 — 충돌 시 다른 국면 값을 조용히 재사용. 키에 State를 함께 두거나 Eq 확인 — GG 보고", tags: [engine, bugs, search], weight: 2}
+  - {id: JJ-heavy-turn-parity, desc: "무거운 턴(extremes 6만 분기 초과: 광역기 겹침) 검증: 피해 난수를 고정한 정확 대조(오라클 fixed-roll 모드 ↔ 엔진 RollMode) + 필요 시 MC 주변분포 대조; 두 패리티 실행의 oracle-overflow 국면에 적용, 불일치는 fixture로", tags: [verify], weight: 4, depends_on: [FF-parity-harness]}
+  # ---------------- 남은 일: 검증 (2026-09-27 전수 등록)
+  - {id: V2a-sweep-more-matchups, desc: "V2 대조 실행 runs/parity-20260927b: 더블 라이브러리 20팀 10쌍 + 싱글 라이브러리 16팀 8쌍(기계적 대조) 90판 1,000국면, 생성 완료·스윕 진행 중(분리 프로세스)", tags: [verify], weight: 3}
+  - {id: V2b-rerun-after-b29, desc: "V2 스윕의 engine-error 행(B29 첫 구현의 과잉 검사) 재대조: lab-check 릴리스 재빌드 → rows 삭제 → --resume; README·summary 확정, 불일치는 fixture", tags: [verify], weight: 1, depends_on: [V2a-sweep-more-matchups]}
+  - {id: V2c-feature-coverage-report, desc: "패리티 실행들에서 실제로 비교된 국면의 특징 집계(휘발·진영 조건·필드·상태이상·특성·도구·기술별 등장 수)와 한 번도 안 나온 Champions 표준 특징 목록 — 검증 공백의 정량화", tags: [verify], weight: 3, depends_on: [V2b-rerun-after-b29, JJ-heavy-turn-parity]}
+  - {id: V3-lead-turn-trace, desc: "선두 턴은 국면이 아니라 자취가 없어 무거운 선두 턴이면 그 판 전체를 오라클이 재현 못 함(FF: 5국면) — 선두 턴 자취 기록/제공", tags: [verify], weight: 2, depends_on: [JJ-heavy-turn-parity]}
+  - {id: V4-mental-herb-priority, desc: "멘탈허브로 앙코르가 풀리는 경로에서 활성 기술의 우선도(FF 미확인) — 오라클 시나리오로 확인", tags: [verify, engine], weight: 1}
+  - {id: V5-drag-in-raw-speed, desc: "끌려온 포켓몬의 원시 스피드 vs onAnySwitchIn 보유자(파스텔베일·기회주의자·흰허브) 순서(B30 미확인) — 오라클 시나리오로 확인", tags: [verify, engine], weight: 1}
+  - {id: V6-trick-room-speed-wrap, desc: "트릭룸 스피드 trunc(10000 - speed, 13): 1809 이상 랩어라운드와 원시 스피드·상수 스피드와의 혼합 비교(B30에서 표현을 바꿨으나 오라클 fixture 없음) — 시나리오로 고정", tags: [verify, engine], weight: 2}
+  - {id: V7-ci-first-run, desc: "GitHub Actions(engine.yml: core·wheels+pytest·poke-engine 기준선)가 한 번도 실행된 적 없음 — 원격 저장소·인증 필요(사용자 결정)", tags: [verify], weight: 2}
+  - {id: V8-parity-regression-corpus, desc: "두 패리티 실행(1,729국면)과 무거운 턴 보고서를 --keep-reports all로 다시 만들어 보관 → 엔진 변경 때 lab-check만으로 전수 재대조하는 회귀 말뭉치(현재 HEAD로 전수 재확인 포함), 실행 스크립트·소요 시간 기록", tags: [verify], weight: 3, depends_on: [JJ-heavy-turn-parity]}
+  - {id: V9-heavy-turn-full-rolls, desc: "무거운 턴 93국면의 16난수 전체 비교 — LL 미완 인계(2026-09-27): 측정 1건(단계별 full 3,664회·17초·일치), 스윕의 --full-staged-max-branches 단계는 패치로 보관(runs/parity-20260927d/v9/), 12국면 측정 대기열은 중지됨. 코드 독해로는 난수 번호가 Chooser::roll 밖으로 안 나가 비교한 벡터는 정확; 미확립은 내부 난수 벡터(같은 값 경계, 반동·흡수·카운터류 반올림)", tags: [verify], weight: 1, depends_on: [V9a-resume-12-queue, V9b-full-staged-patch]}
+  - {id: V10-staged-serializer-faithful, desc: "단계별 열거는 Showdown Battle.fromJSON이 턴 중 행동 사이에서 충실하다는 가정에 의존 — plain 851 fixture와 실제 3국면에서 동일했지만, 직렬화에서 빠지는 상태(예: effectOrder, activeMove 잔여)를 코드로 점검", tags: [verify], weight: 2, depends_on: [JJ-heavy-turn-parity]}
+  - {id: S27-rollout-rerun-after-confusion-fix, desc: "혼란 자해 난수 수정(JJ) 전의 Median/Extremes 정책 계산은 혼란 국면에서 틀린 분기를 썼음 — S19–S22 롤아웃 결과 중 혼란이 있던 판의 영향 범위 확인·재측정", tags: [search], weight: 2, min_level: 1, depends_on: [M1-engine-complete]}
+  # ---------------- 남은 일: 상황별 거부(엔진이 실행을 거부하는 국면). core/src/turn의 unsupported() 73곳 전수(2026-09-27 추출)
+  - {id: R0-refusal-audit, desc: "거부 73곳 전수 감사: 각 사유를 Champions 표준 범위에서 도달 가능/불가능(Past 전용 가드)으로 분류, 도달 가능한 것은 오라클 재현 시나리오, 자동 생성 목록 engine/REFUSALS.md(스크립트), FF의 Battle::refused·check_state 거부 포함", tags: [engine, refusal, verify], weight: 4}
+  - {id: R1-trace-seeking, desc: "트레이스: 복사할 상대가 없어 이후 Update에서 계속 찾는 상태(seeking) / 메가의 특성으로서의 트레이스(메가후딘·메가냐오닉스 암수) / 위액을 배턴터치로 받아 시작하지 못한 트레이스 — repro rr-trace-no-traceable, rr-mega-alakazam-trace, rr-trace-gastro-acid-baton-pass (사용자 파티의 가디안에 직접 해당; 새 상태 필요)", tags: [engine, refusal], weight: 3, depends_on: [R0-refusal-audit]}
+  - {id: R2-hazard-effect-order, desc: "압정 순서: 스텔스록 + 독압정이 깔린 곳에 독 타입이 나와 흡수 전에 기절하는 경우(Showdown effectOrder) — repro rr-hazard-order (독압정 vs 싱크로는 RR이 수정)", tags: [engine, refusal], weight: 1, depends_on: [R2a-hazard-effectorder]}
+  - {id: R3-emergency-exit-replacement, desc: "교체로 나온 위기회피 보유자가 압정으로 절반이 되는 경우(교체 결정이 중단될 수 없음) — repro rr-emergency-exit-replacement", tags: [engine, refusal], weight: 1, depends_on: [R3a-emergency-exit-replacement-hazards]}
+  - {id: R4-redirection-tie, desc: "날따름·분노가루 동률: 오라클은 65,536분기에서 결과 1개(날따름이 항상 이김) — 엔진 주석의 'effectOrder로 가름'과 다르므로 순서를 다시 유도 — repro rr-redirect-tie", tags: [engine, refusal], weight: 2, depends_on: [R0-refusal-audit]}
+  - {id: R5-future-move-edges, desc: "미래예지: 사용자가 필드를 떠난 뒤 명중(벤치 사용자의 저장 능력치) / 레드카드 보유자에게 명중(잔류 뒤 강제 교체) — repro rr-future-sight-user-left, rr-future-sight-red-card (탈출버튼은 RR이 수정)", tags: [engine, refusal], weight: 1, depends_on: [R5a-future-move-user-left, R5b-future-move-red-card]}
+  - {id: R6-instruct, desc: "지휘: lastMoveTargetLoc 미보존(슬롯별 마지막 기술 대상 위치) / 선제공격손톱·퀵드로 보유자 — repro rr-instruct-target, rr-instruct-quick-claw, rr-instruct-quick-draw (모르는 기술·플래그는 RR이 수정)", tags: [engine, refusal], weight: 2, depends_on: [R0-refusal-audit]}
+  - {id: R7-ally-switch-target, desc: "사이드체인지 뒤 원래 대상을 추적하는 기술(스나이프샷 등) — repro rr-ally-switch-snipe-shot", tags: [engine, refusal], weight: 2, depends_on: [R0-refusal-audit]}
+  - {id: R8-encore-edges, desc: "앙코르가 대기 행동을 카운터·미러코트·기합펀치·부리캐논으로 바꾸는 경우(자체 행동을 큐에 넣는 기술; FF Battle::refused) — repro rr-encore-counter", tags: [engine, refusal], weight: 2, depends_on: [R0-refusal-audit, R21-copycat-called-moves]}
+  - {id: R9-beat-up-order, desc: "집단구타: 위력이 다른 벤치 아군의 순서(파티 순서를 State에) — repro rr-beat-up-bench(extremes)", tags: [engine, refusal], weight: 1, depends_on: [R9a-party-order-state, R9b-beat-up-uses-order]}
+  - {id: R10-once-per-battle-flags, desc: "슈퍼스위트시럽: 배틀 시작 뒤 등장 시 1회성 플래그가 상태에 없음 — repro rr-supersweet-syrup-switch (배틀본드는 Past 폼 전용이라 도달 불가)", tags: [engine, refusal], weight: 1, depends_on: [R10a-supersweet-syrup-flag]}
+  - {id: R11-item-restart, desc: "리사이클로 되찾은 필드 시드의 Start — repro rr-recycle-seed", tags: [engine, refusal], weight: 1, depends_on: [R0-refusal-audit]}
+  - {id: R12-syrup-bomb-source, desc: "시럽봄 잔류 효과의 시전자가 필드에도 없고 제자리 기절도 아닌 경우 — conditions.rs 951", tags: [engine, refusal], weight: 1, depends_on: [R0-refusal-audit]}
+  - {id: R13-attract-gender, desc: "성별 미정 세트: 헤롱헤롱·헤롱헤롱바디·투쟁심(등장 포함) — Showdown은 팀 생성 때 난수로 정함(초기 분포의 일부); 로더 또는 초기 분포에서 성별을 뽑기 — repro rr-attract-undecided-gender, rr-cute-charm-*, rr-rivalry-*", tags: [engine, refusal], weight: 1, depends_on: [R13a-loader-gender, R13b-initial-gender-roll]}
+  - {id: R14-called-multi-hit, desc: "흉내내기·잠꼬대가 불러낸 연속기 — repro rr-copycat-multihit, rr-sleep-talk-multihit (call_move 공유: R21)", tags: [engine, refusal], weight: 1, depends_on: [R0-refusal-audit, R21-copycat-called-moves]}
+  - {id: R15-no-pp-when-used, desc: "사용 시점에 PP가 없는 기술(프레셔·원한 등으로 턴 중 소진) — moves.rs 845", tags: [engine, refusal], weight: 1, depends_on: [R0-refusal-audit]}
+  - {id: R16-fling-user-fainted, desc: "던지기: 도구를 던지기 전에 사용자가 기절(내용물분출 등) — RR이 update_event에 거부를 넣어 조용히 틀린 lastItem을 막음; 구현 필요 — repro rr-fling-innards-out", tags: [engine, refusal], weight: 1, depends_on: [R0-refusal-audit]}
+  - {id: R17-trick-or-treat-curse, desc: "핼러윈의 저주 글리치(고스트가 된 대상의 대기 중 저주) — repro rr-trick-or-treat-curse-glitch", tags: [engine, refusal], weight: 1, depends_on: [R0-refusal-audit]}
+  - {id: R18-baton-pass-volatiles, desc: "배턴터치가 넘기는 휘발 중 거부되는 것 — switching.rs 877", tags: [engine, refusal], weight: 1, depends_on: [R0-refusal-audit]}
+  - {id: R19-transformed-off-field, desc: "필드 밖의 변신 상태(check_state 거부)와 변신이 복사하는 특성 중 거부되는 것 — transform.rs 197", tags: [engine, refusal], weight: 1, depends_on: [R0-refusal-audit]}
+  - {id: R20-generic-guards, desc: "나머지 가드(미지원 특성·도구·기술 이름을 받는 format 거부: abilities.rs 339·352·779·841·990·1595·1772, battle.rs 972, forme.rs 502·653·661, items.rs 629·639, mod.rs 626, switching.rs 1157·1336·1438·1494, update.rs 224·239, handlers.rs 847·873·1158·1263·1289·2674·2760·2893·3438, moves.rs 517·729·1645·3539)가 Champions 표준 범위에서 도달 불가능함을 증명하거나 구현", tags: [engine, refusal], weight: 2, depends_on: [R0-refusal-audit]}
+  - {id: R21-copycat-called-moves, desc: "흉내내기가 불러낸 2턴 기술(솔라빔)·잠금 기술(역린)·자체 행동을 큐에 넣는 기술(미러코트) — repro rr-copycat-two-turn, rr-copycat-outrage(extremes), rr-copycat-mirror-coat", tags: [engine, refusal], weight: 3}
+  - {id: R22-forced-eat-ignored-item, desc: "다과회·볼가득넣기로 도구가 무시되는 보유자(서투름·매직룸)의 열매를 강제로 먹이는 경우 — repro rr-teatime-klutz", tags: [engine, refusal], weight: 1}
+  - {id: B33-instruct-counter, desc: "지휘를 카운터·미러코트 사용자에게: Showdown은 콜백 행동만 실행해 카운터가 돌지 않고 PP도 안 씀, 엔진은 카운터를 실행(PP 19 vs 18) — 확인된 오답, fixture rr-x-instruct-counter(테스트 ignore) — RR 보고", tags: [engine, bugs], weight: 2, depends_on: [R6-instruct]}
+  - {id: B34-instruct-during-charge, desc: "지휘 대상이 기합펀치·부리캐논·트랩셸을 충전 중이면 Showdown은 실패, 엔진은 확인하지 않음(오라클 미확인) — RR 보고", tags: [engine, bugs], weight: 1, depends_on: [R6-instruct]}
+  - {id: B35-forced-eat-eatitem, desc: "강제로 먹이기(다과회·볼가득넣기)가 EatItem 이벤트를 돌리지 않아 볼주머니·되새김질·숙성이 발동하지 않음(오라클 미확인) — RR 보고", tags: [engine, bugs], weight: 2, depends_on: [R22-forced-eat-ignored-item]}
+  - {id: B36-refusal-messages, desc: "거부 문구 정리: berry_problem이 혼란 미구현이라고 잘못 말함, 미러허브·집단구타 문구에 줄바꿈 리터럴의 긴 공백 — RR 보고", tags: [engine, docs], weight: 1}
+  - {id: A4-loader-refusal-audit, desc: "시나리오 로더의 거부(LoadError·SwitchInError: 형식·레벨·모르는 필드·팀 프리뷰 괄호 선택 등)는 R0에서 감사하지 않음 — 같은 방식으로 분류하고 REFUSALS.md에 포함", tags: [engine, verify], weight: 2, depends_on: [T1-scenario-typed-errors]}
+  - {id: B37-quash-fixture, desc: "quash.json fixture가 설명과 달리 명령을 시험하지 않음(그래스슬라이더가 먼저 움직여 명령 실패) — 설명을 고치거나 시나리오를 바로잡기; ll-staged-quash-order가 의도한 경우를 덮음 — LL 보고", tags: [verify], weight: 1}
+  - {id: B38-recharge-legal-choice, desc: "재충전 중인 포켓몬: legal_joint_actions가 RECHARGE_INDEX를 내놓는데 Ruleset::validate_slot_action이 MoveIndexOutOfRange로 거부 → lab-plan이 no legal choice로 실패(hyper-beam-recharge.json --position 1로 확인) — NN 보고", tags: [engine, bugs, search], weight: 2}
+  - {id: B39-plan-locked-own-choice, desc: "lab-plan이 시나리오의 원래 선택을 정규화된 행동과 비교해 잠긴 포켓몬의 자기 선택을 고려한 선택에 없음으로 보고 — NN 보고", tags: [bugs, search], weight: 1}
+  - {id: B40-refusals-stale-text, desc: "refusals.py 설명과 REFUSALS.md 머리말에 삭제된 Battle::refused 언급 — NN 보고", tags: [docs], weight: 1}
+  - {id: B41-copycat-uturn-switch-flag, desc: "흉내내기가 유턴류를 부른 뒤 호출 기술의 spread_move_hit이 불러낸 기술이 세운 b.move_self_switch를 읽음(오라클 미확인) — NN 보고", tags: [engine, bugs], weight: 1, depends_on: [B41a-copycat-uturn-flag-repro]}
+  - {id: B42-instructed-callback-order, desc: "지휘된 콜백 행동(order 3)이 다른 order 3 행동과 (우선도, 스피드)로 정렬됨 — Showdown은 바로 다음에 실행(오라클 미확인) — NN 보고", tags: [engine, bugs], weight: 1, depends_on: [B42a-instruct-callback-immediate]}
+  - {id: B43-encore-after-you-callback, desc: "애프터유가 대상의 행동을 order 3으로 옮긴 뒤 앙코르가 콜백 기술로 바꾸면 엔진은 기술을 콜백보다 먼저 실행(Showdown은 콜백 먼저) — 미모델 — NN 보고", tags: [engine, bugs], weight: 1, depends_on: [B43a-after-you-encore-callback]}
+  - {id: B44-fling-used-item-pickup, desc: "던지기 조건이 usedItemThisTurn을 기록하지 않아 인접한 픽업 보유자가 던진 도구를 못 주움(Showdown은 기록); 주석도 픽업 미구현이라고 낡음 — 오라클 미확인 — OO 보고", tags: [engine, bugs], weight: 1, depends_on: [B44a-fling-pickup-repro]}
+  - {id: B45-pinned-ability-order, desc: "핀 시나리오(startState·setupStates)로 읽은 국면의 Slot::ability_order는 기본값 — 설정 턴에 교체나 특성 변경이 있었다면 Showdown의 effectOrder와 달라 유도 동률 결과가 달라질 수 있음(숨은 상태라 핀으로 복원 불가; 설정 턴 재생으로는 맞음) — OO 보고", tags: [engine, verify], weight: 1, depends_on: [B45a-ability-order-pin-limit]}
+  - {id: B46-original-target-rebuilt-actions, desc: "지휘·앙코르가 새로 만든 행동에 originalTarget이 없음(Showdown은 다시 resolve) — 같은 턴에 추적 기술과 사이드체인지가 겹칠 때만 차이 — OO 보고", tags: [engine, bugs], weight: 1, depends_on: [B46a-rebuilt-original-target]}
+  # ---------------- 남은 일: 조용한 근사(거부하지 않고 근사하는 곳) — 코드 주석 전수(2026-09-27)
+  - {id: A1-ignored-events-audit, desc: "Showdown 이벤트 119종과 sim/pokemon.ts 상태 필드를 엔진과 재대조: 각각 구현/거부/불필요(증명)로 분류해 조용히 무시되는 것이 없음을 확인 — SHOWDOWN-GAPS.md §3(2026-09-25 스냅숏)의 '무시' 항목이 출발점, Champions 모드 오버라이드 포함", tags: [engine, verify], weight: 1, depends_on: [A1a-events-action-target, A1b-events-hit-loop, A1c-events-switch-residual-field, A1d-pokemon-fields, A1e-callback-universe]}
+  - {id: A2-speed-refresh-skip, desc: "Showdown은 다음 대기 행동이 기술이 아니면 행동 사이 updateSpeed를 건너뜀(이전 행동에서 스피드가 바뀐 뒤 교체가 이어지는 경우) — 엔진은 단계마다 스냅숏을 새로 뜸(order.rs event_speed 주석의 '미모델'); 오라클 시나리오로 차이를 확인하고 구현, 주석의 낡은 '등장한 포켓몬은 live로 읽음' 정리(B30 뒤)", tags: [engine, verify], weight: 2}
+  - {id: A3-ruin-holder-flip, desc: "재앙 특성 보유자 둘의 스피드 순서가 연속기 도중 뒤집히는 경우의 저장된 보유자(abilities.rs ruin_handler 주석의 '미모델') — 표준 보유자: 없음(도달 불가 확인만)", tags: [engine, verify], weight: 1}
+  # ---------------- 남은 일: 성능
+  - {id: P1-full-mode-hp-explosion, desc: "F18 2부: 정확 분포(Full) 모드의 HP 조합 폭발 — 광역기 겹침 턴(spread-damage)은 메모리 초과. 표현(인수분해·지연 병합) 설계와 구현", tags: [engine, perf], weight: 1, depends_on: [P1a-full-repr-design, P1b-frontier-compress, P1c-result-cap-approx, P1d-spread-damage-full]}
+  - {id: P2-legal-joint-actions, desc: "legal_joint_actions 3–166 µs: check_side가 63%, 이차 중복 제거 30%(GG가 남김)", tags: [engine, perf], weight: 1, depends_on: [P2a-check-side-early, P2b-dedup-removal]}
+  - {id: P3-state-hash-incremental, desc: "State 해시가 병합 비용의 18%(GG 뒤): 증분 해시 또는 더 싼 키(GG가 남김)", tags: [engine, perf], weight: 1, depends_on: [P3a-incremental-hash, P3b-merge-key]}
+  - {id: P4-move-code-allocations, desc: "기술 코드의 작은 Vec 할당 13%·State 복사 12%(GG가 남김)", tags: [engine, perf], weight: 1, depends_on: [P4a-move-smallvec, P4b-state-copy]}
+  - {id: P5-corpus-check-speed, desc: "말뭉치 재대조 582초 중 엔진 시간은 315초 — 나머지는 712 MB 보고서 압축 해제와 프로세스 시작; lab-check 일괄·gz 처리 또는 결과별 로그 없는 보고서 — KK 보고", tags: [verify, perf], weight: 2}
+  - {id: V11-unseen-feature-scenarios, desc: "말뭉치에 한 번도 안 나온 표준 범위(휘발 75종·진영 조건 8·슬롯 조건 3·의사날씨 3 등: features.md)를 노리는 팀·정책으로 국면을 더 만들어 대조 — 씨뿌리기·잠금 기술·끈적끈적네트·미래 기술·매직룸 등", tags: [verify], weight: 1, depends_on: [V11a-seed-lock-web, V11b-future-rooms-pseudoweather, V11c-side-slot-conditions, V11d-remaining-volatiles]}
+  - {id: V12-corpus-excluded-positions, desc: "말뭉치에서 빠진 FF 11국면: 선두 턴 미발견 5개는 LL V3 탐색으로 재생성해 편입, 멸망의노래 6개는 낡은 핀이라 폐기 기록", tags: [verify], weight: 1, depends_on: [V3-lead-turn-trace, V8-parity-regression-corpus]}
+  # ---------------- 남은 일: 파이썬 API
+  - {id: PY1-python-singles, desc: "engine/py의 format=singles(NotImplementedError)", tags: [engine, py], weight: 2, depends_on: [II-singles-loader]}
+  - {id: PY2-hand-built-positions, desc: "파이썬에서 손으로 만든/수정한 국면을 넣는 경로(지금은 시나리오 로더뿐)", tags: [engine, py], weight: 3}
+  - {id: PY3-deep-search-api, desc: "maximin·deep·deep-nash·--plan·상대 모델 ②③·lab-rollout 로직이 빈(bin)에 있어 파이썬에 미노출 — 라이브러리 함수로 옮기고 노출", tags: [search, py], weight: 1, depends_on: [PY3a-search-bin-to-lib, PY3b-python-search-expose]}
+  # ---------------- 남은 일: 운영(삭제는 사용자 승인 필요)
+  - {id: OPS1-worktree-cleanup, desc: "병합 끝난 Opus 워크트리 26개(.claude/worktrees, 1.4 GB+) 정리 — 삭제이므로 사용자 승인 필요", tags: [docs], weight: 1}
+  - {id: OPS2-target-dir-cleanup, desc: "D:/cargo-target-opus-* 빌드 디렉터리 40여 개(GG의 -prof/-dev/-bench/-base/-samply 포함) 정리 — 삭제이므로 사용자 승인 필요", tags: [docs], weight: 1}
+  - {id: DOC3-showdown-gaps-events, desc: "SHOWDOWN-GAPS.md §3(이벤트 119종별 상태)는 2026-09-25 스냅숏 — 거부 감사 결과로 재작성하거나 REFUSALS.md로 대체", tags: [docs], weight: 2, depends_on: [A1-ignored-events-audit]}
+  - {id: PLAN1-traffic-control, desc: "교통정리(사용자 지시 2026-09-27): 진행 중인 5개 세션(MM·NN·OO·KK·LL) 병합 뒤 새 웨이브를 띄우기 전에 남은 작업의 경로·병렬 차선·버릴 것·사용자 결정 사항·예상 비용을 정리해 보고", tags: [docs], weight: 2, min_level: 1, depends_on: [R1-trace-seeking, B34-instruct-during-charge, B36-refusal-messages, V2c-feature-coverage-report]}
+  # ---------------- 2026-09-27 교통정리(PLAN1) 원자화 — 근거·차선은 engine/PLAN-20260927.md. 부모 ID는 원자를 닫는 마무리(w1).
+  # G1 숨은 상태 (차선 15-L1: state.rs·canonical.rs·로더)
+  - {id: R9a-party-order-state, desc: "Showdown side.pokemon 순서(교체로 바뀌는 파티 순서)를 State에 필드로 — Instruction·canonical·staged 직렬화, 교체 시 갱신", tags: [engine, refusal], weight: 2}
+  - {id: R9b-beat-up-uses-order, desc: "집단구타 beat_up_powers가 파티 순서 필드를 읽음 — 거부 제거, rr-beat-up-bench(extremes) fixture", tags: [engine, refusal], weight: 1, depends_on: [R9a-party-order-state]}
+  - {id: R10a-supersweet-syrup-flag, desc: "슈퍼스위트시럽 1회성 플래그(파티 구성원별)를 State에 — once_per_battle 거부 제거, rr-supersweet-syrup-switch fixture", tags: [engine, refusal], weight: 2, depends_on: [R9a-party-order-state]}
+  - {id: B45a-ability-order-pin-limit, desc: "핀 국면의 Slot::ability_order 기본값 한계: 설정 턴에 교체·특성 변경이 있는 시나리오로 staged 재생 vs 핀 비교, 차이가 나면 canonical 숨은 필드로 넣을지 결정·문서화", tags: [engine, verify], weight: 1}
+  - {id: R13a-loader-gender, desc: "시나리오 세트의 gender 입력(M/F/N) 로더 지원 + 성별 미정 세트의 거부 문구 유지", tags: [engine, refusal], weight: 1}
+  - {id: R13b-initial-gender-roll, desc: "성별 미정 종의 성별을 초기 분포(initial_outcomes)에서 Showdown 팀 생성 비율로 뽑기 — rr-attract-*, rr-cute-charm-*, rr-rivalry-* 거부 제거", tags: [engine, refusal], weight: 2, depends_on: [R13a-loader-gender]}
+  # G2 큐 순서 + G4 독립 소형 (차선 15-L2: queue.rs·conditions.rs·items.rs)
+  - {id: R2a-hazard-effectorder, desc: "entry_hazards가 진영 조건을 Showdown effectOrder로 순회(스텔스록+독압정, 독 타입 흡수 전 기절) — rr-hazard-order fixture", tags: [engine, refusal], weight: 2}
+  - {id: B42a-instruct-callback-immediate, desc: "오라클 재현: 지휘된 콜백 행동(order 3)이 다른 order 3와 (우선도, 스피드)로 섞이는가 vs 바로 다음 실행 — 불일치면 queue.rs 수정, 일치면 skip", tags: [engine, bugs], weight: 1}
+  - {id: B43a-after-you-encore-callback, desc: "오라클 재현: 애프터유로 옮긴 행동을 앙코르가 콜백 기술로 바꿀 때 콜백 우선 — B42a 결과 위에서 수정 또는 skip", tags: [engine, bugs], weight: 1, depends_on: [B42a-instruct-callback-immediate]}
+  - {id: B46a-rebuilt-original-target, desc: "오라클 재현: 지휘·앙코르가 새로 만든 행동의 originalTarget 재해결(추적 기술+사이드체인지 같은 턴) — 수정 또는 skip", tags: [engine, bugs], weight: 1}
+  - {id: B44a-fling-pickup-repro, desc: "오라클 재현: 던지기 뒤 인접 픽업 보유자가 도구를 줍는가(usedItemThisTurn) — 수정 + 낡은 주석 정리, 일치면 skip", tags: [engine, bugs, items], weight: 1}
+  - {id: B25a-mega-sol-window-repro, desc: "오라클 재현: 메가 솔 쾌청이 같은 행동 안 기술 뒤 날씨 판정까지 보이는가 — 수정 또는 skip", tags: [engine, bugs, abilities], weight: 1}
+  # G3 교체 중단·플래그 (차선 15-L3: switching.rs·mod.rs·moves.rs)
+  - {id: R3a-emergency-exit-replacement-hazards, desc: "run_replacements: 교체로 나온 위기회피 보유자가 압정으로 절반 이하 — 교체 결정 중이라 중단 불가(Showdown 동작 확인) — rr-emergency-exit-replacement fixture", tags: [engine, refusal], weight: 2}
+  - {id: R5a-future-move-user-left, desc: "미래예지 사용자가 필드를 떠난 뒤 명중: 벤치 사용자의 저장 능력치로 계산 — rr-future-sight-user-left(full 20)", tags: [engine, refusal], weight: 2}
+  - {id: R5b-future-move-red-card, desc: "미래예지가 붉은카드 보유자에 명중: 잔류 뒤 강제 교체 창 — rr-future-sight-red-card(full 10)", tags: [engine, refusal], weight: 1, depends_on: [R5a-future-move-user-left]}
+  - {id: B41a-copycat-uturn-flag-repro, desc: "오라클 재현: 흉내내기가 유턴류를 부른 뒤 호출 기술이 b.move_self_switch를 읽는 문제 — 수정 또는 skip", tags: [engine, bugs], weight: 1}
+  # G5 이벤트 감사 (차선 15-L5, 읽기 전용: 결과는 todo로 등록)
+  - {id: A1a-events-action-target, desc: "SHOWDOWN-GAPS §3.1–3.2(행동 시작·순서·대상 결정 이벤트)를 엔진과 재대조: 구현/거부/불필요(증명) 분류, 빠진 것은 보드에 todo", tags: [engine, verify], weight: 2}
+  - {id: A1b-events-hit-loop, desc: "§3.3–3.4(명중 7단계·타격 루프) 이벤트 재대조", tags: [engine, verify], weight: 2}
+  - {id: A1c-events-switch-residual-field, desc: "§3.5–3.7(교체·등장, 턴 종료 residual, 필드·진영) 이벤트 재대조", tags: [engine, verify], weight: 2}
+  - {id: A1d-pokemon-fields, desc: "§3.8 sim/pokemon.ts 상태 필드 중 엔진에 없는 것 재대조(읽는 이가 없음을 증명하거나 todo)", tags: [engine, verify], weight: 1}
+  - {id: A1e-callback-universe, desc: "§3.9 콜백 우주 + Champions 모드 오버라이드(data/mods/champions) 재대조", tags: [engine, verify], weight: 1}
+  # G7 말뭉치 검증 실행 (차선 15-L4 → 16-L4)
+  - {id: V9a-resume-12-queue, desc: "V9 12국면 측정 대기열 재개(LL 중지분), 결과를 runs/parity-20260927d/v9/에 — P5 뒤", tags: [verify], weight: 1, depends_on: [P5-corpus-check-speed]}
+  - {id: V9b-full-staged-patch, desc: "parity_sweep의 --full-staged-max-branches 단계(패치 보관분) 편입 + 나머지 무거운 턴 full 비교 완료·미확립(내부 난수 벡터) 기록", tags: [verify], weight: 2, depends_on: [V9a-resume-12-queue]}
+  - {id: V11a-seed-lock-web, desc: "미등장 기능 국면: 씨뿌리기·잠금 기술·끈적끈적네트를 노리는 팀·정책으로 국면 생성·대조", tags: [verify], weight: 2}
+  - {id: V11b-future-rooms-pseudoweather, desc: "미등장 기능 국면: 미래 기술·매직룸·원더룸·의사날씨", tags: [verify], weight: 2}
+  - {id: V11c-side-slot-conditions, desc: "미등장 기능 국면: 진영 조건 8·슬롯 조건 3", tags: [verify], weight: 2}
+  - {id: V11d-remaining-volatiles, desc: "미등장 기능 국면: features.md의 나머지 휘발(75종 중 앞 원자가 못 덮은 것)", tags: [verify], weight: 2, depends_on: [V11a-seed-lock-web, V11b-future-rooms-pseudoweather, V11c-side-slot-conditions]}
+  # 웨이브 15 병합 이정표 (핫 패스 성능 작업의 선행)
+  - {id: merge-wave-15, desc: "웨이브 15(L1 state·L2 queue·L3 switch·L4 scenario·L5 audit) 병합·게이트·REFUSALS/COVERAGE 재생성", tags: [engine, docs], weight: 2, depends_on: [R9-beat-up-order, R10-once-per-battle-flags, R13-attract-gender, R2-hazard-effect-order, R3-emergency-exit-replacement, R5-future-move-edges, A4-loader-refusal-audit, A1-ignored-events-audit]}
+  # G8 알고리즘 개선: 성능 (웨이브 16, 병합 뒤)
+  - {id: P1a-full-repr-design, desc: "Full 모드 HP 조합 폭발의 표현 설계: 슬롯별 독립 HP 분포의 인수분해·지연 병합·정확성 조건(어떤 상호작용이 인수분해를 깨는가) — DESIGN.md 절", tags: [engine, perf], weight: 2, depends_on: [merge-wave-15]}
+  - {id: P1b-frontier-compress, desc: "프런티어 압축: 비-HP 상태가 같은 결과의 HP 벡터를 묶는 표현(branch.rs·merge.rs)", tags: [engine, perf], weight: 3, depends_on: [P1a-full-repr-design]}
+  - {id: P1c-result-cap-approx, desc: "결과 수 상한과 근사 모드(상한 초과 시 HP 구간 병합), 오차 보고", tags: [engine, perf], weight: 2, depends_on: [P1b-frontier-compress]}
+  - {id: P1d-spread-damage-full, desc: "spread-damage·실전형 무거운 턴 Full 완주 측정, fixture 정확성 유지 확인", tags: [engine, perf], weight: 1, depends_on: [P1c-result-cap-approx]}
+  - {id: P2a-check-side-early, desc: "legal_joint_actions: check_side(63%) 조기 판정·캐시", tags: [engine, perf], weight: 1, depends_on: [merge-wave-15]}
+  - {id: P2b-dedup-removal, desc: "legal_joint_actions: 이차 중복 제거(30%)를 생성 단계에서 없앰", tags: [engine, perf], weight: 1, depends_on: [P2a-check-side-early]}
+  - {id: P3a-incremental-hash, desc: "State 해시를 Instruction apply/reverse에서 증분 갱신(병합 비용 18%)", tags: [engine, perf], weight: 2, depends_on: [merge-wave-15]}
+  - {id: P3b-merge-key, desc: "병합 키 재설계(더 싼 키·충돌 검사), 측정", tags: [engine, perf], weight: 1, depends_on: [P3a-incremental-hash]}
+  - {id: P4a-move-smallvec, desc: "기술 코드의 소형 Vec 할당(13%) 제거 — 기술 코드 전체를 만지므로 웨이브 15 병합 뒤 단독", tags: [engine, perf], weight: 1, depends_on: [merge-wave-15, P3b-merge-key]}
+  - {id: P4b-state-copy, desc: "State 복사(12%) 감소(분기 시 복사 시점 늦추기)", tags: [engine, perf], weight: 1, depends_on: [P4a-move-smallvec]}
+  # G9 알고리즘 개선: 탐색 (웨이브 16 L3)
+  - {id: PY3a-search-bin-to-lib, desc: "lab-plan·lab-rollout 빈의 maximin·deep·deep-nash·--plan·상대 모델 ②③·롤아웃 로직을 lab-search 라이브러리 함수로 이동(동작 불변, 테스트 유지)", tags: [search, py], weight: 3, depends_on: [S24-baseline-timing]}
+  - {id: S24a-transposition-table, desc: "전치표: 현재 State 해시를 키로 깊이 2 탐색의 중복 국면 병합(P3a 병합 뒤 키만 교체) — 기준 시나리오(sand-owen deep-nash 빔 4, 3.5분) 시간 기록", tags: [search], weight: 2, depends_on: [PY3a-search-bin-to-lib]}
+  - {id: S24b-incremental-eval, desc: "증분 평가(Heuristic을 Instruction 단위로 갱신)", tags: [search], weight: 2, depends_on: [S24p-parallel-root]}
+  - {id: S24c-depth3-measure, desc: "깊이 3 deep-nash(자식도 deep-nash) 구현·기준 시나리오 측정 — 시험 파티 결과는 판정에 쓰지 않음", tags: [search], weight: 2, depends_on: [S24b-incremental-eval]}
+  # 탐색 속도 차선 (2026-09-27 사용자 우선: "속도 빨라지는 거 우선"). search/ 크레이트라 웨이브 15 규칙 차선과 충돌 없음. 매 원자 끝에 기준 시나리오 시간 기록.
+  - {id: S24-baseline-timing, desc: "기준 측정 스크립트: sand-owen·psy-cona 등 3개 시나리오 × (nash, deep-nash 빔 4, --plan) 시간·노드 수·열거 횟수를 JSON으로 남기는 engine/scripts/search_bench.py — 이후 원자마다 재실행", tags: [search, perf], weight: 1}
+  - {id: S24p-parallel-root, desc: "루트 행동(및 자식 행렬 셀) 병렬 탐색(rayon): 결정론 유지(시드·순서 독립 결과), 코어 수 대비 배속 측정", tags: [search, perf], weight: 2, depends_on: [S24a-transposition-table, S24-baseline-timing]}
+  - {id: S24d-dominated-joint-actions, desc: "지배되는 합법 조합·대칭(같은 기술 다른 슬롯 순서) 제거로 행렬 크기 축소 — 정확성(균형 값 불변) 테스트", tags: [search, perf], weight: 2, depends_on: [S24a-transposition-table]}
+  # G10 파이썬
+  - {id: PY3b-python-search-expose, desc: "PY3a 라이브러리 함수를 engine/py에 노출(더블), README", tags: [search, py], weight: 1, depends_on: [PY3a-search-bin-to-lib]}
+  # WW 이벤트 감사(2026-09-27, engine/reports/events-audit-2026-09-27.md)가 낸 todo
+  - {id: A1-t1-turn-limit-tie, desc: "Showdown은 턴 1000을 넘기면 무승부(sim/battle.ts:1839, 클로즈와 무관) — 엔진은 계속 Ongoing. 재현: startState turn 1000", tags: [engine, bugs], weight: 1}
+  - {id: A1-t2-fixture-gaps, desc: "고유 핸들러가 있는데 오라클 fixture도 라이브러리 사용도 없는 표준 항목의 정확 일치 fixture: Upper Hand·Illuminate·Rattled(위협 AfterBoost)·Gluttony·Leppa Berry / Misty Explosion·Skill Link·Axe Kick·Supercell Slam·Temper Flare·Dragonize / Phantom Force·Solar Blade·Sky Attack / Flail·Water Spout·Power Trip·Infernal Parade / Big Pecks·White Smoke·Queenly Majesty — 목록은 보고서 JSON reactors_without_oracle_fixture", tags: [verify], weight: 3}
+  - {id: A1-t3-support-stale-comments, desc: "support.rs 주석이 Baton Pass의 condition.onCopy(Gastro Acid·Power Trick·Power Shift)를 미지원이라 적음 — 실제는 switching::copy_volatile_from이 구현. 주석 정정", tags: [docs], weight: 1}
+  - {id: A1-t4-refusals-dead-pattern, desc: "refusals.py가 없어진 refused.get_or_insert_with( 패턴을 아직 검색 — 제거", tags: [docs], weight: 1, depends_on: [B40-refusals-stale-text]}
+  - {id: A1-t5-gaps-summary-row, desc: "SHOWDOWN-GAPS.md §1 표의 '핵심 이벤트 119종(§3은 2026-09-25 스냅숏)' 행을 124행·보고서 링크로 갱신 + 감사 추출 스크립트(WW scratchpad handlers.cjs·analyze.py·gen_report.py, 미커밋)를 engine/scripts/events_audit/로 이전해 재현 가능하게", tags: [docs], weight: 1}
+  # TT(2026-09-28) 범위 밖 발견
+  - {id: R2-t1-hazard-order-canonical, desc: "압정 순서(SideHistory::hazard_order)가 canonical JSON에 없어 canonical만으로 만든 국면(PY2 손 국면)은 기본 순서 — canonical 숨은 필드로 넣을지 결정(핀은 설정 턴 재생이라 유지됨)", tags: [engine, verify], weight: 1, depends_on: [PY2-hand-built-positions]}
+  - {id: R2-t2-collapse-secondaries-marker, desc: "fixture 파일에 --collapse-secondaries 사용 표시가 남지 않음(tt-mega-sol-dancer) — 오라클 보고서 메타에 옵션 기록", tags: [verify], weight: 1}
+  # UU(2026-09-28) 범위 밖 발견
+  - {id: R5c-future-move-absent-user-occupant, desc: "R5a의 AbsentUser 방식이 낳은 좁은 거부 `{} of {} hitting after its user left the field, {}`: 앉힌 자리의 원래 포켓몬이 onAny/onAlly/onFoe 핸들러·억제자이거나 대상이 내용물분출·솜털·꿀꺽미사일·리샘열매 — repro uu-future-sight-absent-user-unnerve(full 6). 규칙이 보수적(프렌드가드도 거부) — 정확한 재현으로 거부 축소 또는 제거", tags: [engine, refusal], weight: 2}
+  - {id: R5-t1-absent-user-attackedby-slot, desc: "벤치 사용자의 미래예지 명중 때 대상에 기록되는 attackedBy.slot이 Showdown과 같은지 미확인 — 오라클로 확인(메탈버스트·리벤지류 읽기)", tags: [verify], weight: 1}
+  - {id: R5-t2-residual-early-return-dragout, desc: "잔류 중 배틀 종료로 일찍 반환하면 붉은카드 끌어내기 단계를 건너뜀(Showdown은 실행) — 승패 뒤라 결과 차이 없다고 봄, 확인", tags: [verify], weight: 1}
+  # XX(2026-09-28) 범위 밖 발견 — 벤치 runs/search-bench-20260927/README.md
+  - {id: S24-t1-tt-key-after-p3, desc: "정확 키 전치표는 깊이 2에서 PP 차이만으로 거의 적중 안 함(sand-owen 4/45, psy-cona 0/53) — P3a/P3b 병합 키 뒤 재측정·키 교체", tags: [search, perf], weight: 1, depends_on: [P3b-merge-key]}
+  - {id: S24-t2-replacement-child-balance, desc: "교체(Replacement) 자식 셀은 깊이 1 maximin이라 무겁고 스레드 간 작업 불균형 — 작업 분할 단위 조정", tags: [search, perf], weight: 2}
+  - {id: S24-t3-rollout-lazy-default, desc: "lab-rollout에서 --lazy(루트 double oracle)를 기본값으로 쓸지 — 허용 오차 안에서 전략이 바뀌어 게임 결과도 달라짐 — 사용자 결정", tags: [search], weight: 1}
+  - {id: S24-t4-exact-lines-thread-nodes, desc: "exact_lines의 노드 수·동률 응수 표시가 1스레드와 여러 스레드에서 다름(값은 같음, 9ff1081부터) — 결정론적 표시로", tags: [search, bugs], weight: 1}
+  - {id: S24-t5-thread-scaling-idle, desc: "무부하 기기에서 스레드 배속 재측정(XX 측정은 CPU 포화 상태, 6스레드에 실제 3.6코어)", tags: [search, perf], weight: 1}
+  # VV(2026-09-28) 범위 밖 발견
+  - {id: A4-t1-loader-unsupported-3, desc: "로더 미지원 3개: 커스텀 게임의 레벨 50 외, 임시 폼을 종으로 쓴 세트, 한 편의 같은 이름 — 구현 또는 명시적 한계", tags: [engine, refusal], weight: 2}
+  - {id: A4-t2-loader-stricter-than-showdown, desc: "로더가 Showdown보다 엄격한 입력: 모르는 성별(Showdown 무시)·팀 프리뷰 '2x'(Showdown은 2) — Showdown 동작에 맞출지 결정·문서", tags: [engine, verify], weight: 1}
+  - {id: A4-t3-switchin-error-classification, desc: "expand_switch_ins가 Unsupported가 아닌 TurnError도 SwitchInError::Unsupported로 감쌈 — 분류 정확히", tags: [engine, bugs], weight: 1}
+  - {id: P5-t1-batch-timeout, desc: "lab-check --batch에 보고서별 시간 제한 없음(--per-report에는 있음) — 추가", tags: [verify], weight: 1}
+  - {id: V9c-timeout-positions, desc: "V9 전체 난수 비교에서 오라클 900 s 제한 초과 국면(12국면 중 7, 나머지 81 중 진행분 9+)은 비교 불가 — 더 긴 제한으로 재시도(액션 러너 후보) 또는 한계로 확정 — 사용자 결정", tags: [verify], weight: 2}
+  # 관련 프로젝트 조사(2026-09-28, engine/reports/related-work-20260928.md)에서 나온 후보
+  - {id: P6-pgo, desc: "릴리스 바이너리 PGO(프로파일 유도 최적화): search_bench 3국면으로 프로파일 수집 → 재빌드, 배속 측정(pokeuraou pgo.sh 참고)", tags: [engine, perf], weight: 2, depends_on: [P4b-state-copy]}
+  - {id: V13-replay-parity, desc: "Showdown 공개 리플레이(gen9championsvgc2026regmc)를 말뭉치 출처로: 리플레이 로그 → 팀·선택 복원 → 핀 국면 → 대조(PokaiEngine은 리플레이 256으로 버그 4개)", tags: [verify], weight: 4}
+  - {id: V14-diverge-lift, desc: "parity_sweep/parity_corpus 불일치 보고에 효과별 lift = P(효과|불일치)/P(효과|일치) 귀속 추가(pokeuraou diverge_report 방식)", tags: [verify], weight: 2}
+  - {id: S28-belief-classes, desc: "모델 ②: 배분 후보를 군집(클래스)으로 묶어 행렬 수 축소 + 상대 4/6 선출 후보를 믿음에 추가(PokaiTrainer 공개 믿음 상태 β=(s,b))", tags: [search], weight: 4, depends_on: [S23-model2-rest]}
+  # AB(2026-09-28) 범위 밖 발견
+  - {id: R5d-absent-user-no-seat, desc: "R5c 잔여 거부(사용자 편 두 자리가 모두 문제 점유자 / 솜털이 밀려난 점유자에 닿음)를 없애려면 어느 자리에도 없는 공격자 표현(State<N> 구조 변경) 필요 — repro ab-future-sight-absent-user-two-occupants(6), …-cotton-down-displaced(16)", tags: [engine, refusal], weight: 3}
+  - {id: S24-t6-exact-single-thread-cost, desc: "S24-t4 대가: 1스레드 --exact가 행 안 베타 컷·행 사이 전치표 재사용을 잃어 느려짐, --max-turns는 루트 행렬 전체 뒤 검사 — 결정론 유지하면서 되살릴 방법", tags: [search, perf], weight: 2}
+  - {id: R5-t3-rowap-berry-guard, desc: "리샘열매 가드는 Showdown 코드 독해만(Champions에서 Past라 fixture 없음) — 표준 범위 밖이면 가드 제거 검토", tags: [verify], weight: 1}
+  # AE(2026-09-28) 범위 밖 발견
+  - {id: A4-t4-from-canonical-audit, desc: "from_canonical.rs의 거부(정보가 빠지는 휘발·변신·미래기술·턴 중 교체 요청)를 refusals.py 로더 감사(LOADER_FILES)에 포함", tags: [verify], weight: 1}
+  - {id: V15-frozen-turns-canonical, desc: "canonical(오라클 포함)에 얼음 상태의 남은 턴이 없어 얼음 턴 수만 다른 상태가 대조로 구별되지 않음 — 검증 공백 확인(미확인)", tags: [verify], weight: 2}
+  - {id: II-t1-singles-parity, desc: "싱글은 fixture 2개만 — N=1에서 더블 전제 코드 경로 점검 + 싱글 말뭉치(lab-parity N=1) 대조", tags: [verify], weight: 3, depends_on: [II-singles-loader]}
+  - {id: P5-t2-batch-timeout-cancel, desc: "lab-check --timeout: 엔진 열거를 중단할 수 없어 시간을 넘긴 검사가 배치 끝까지 코어를 씀 — 취소 가능한 열거(예산 검사)", tags: [verify, perf], weight: 2}
+  - {id: A4-t5-level-u8, desc: "레벨 255 초과가 u8 JSON 오류로 거부(Showdown은 9999까지) — 명시적 한계 또는 확장", tags: [engine], weight: 1}
+  # 액션 파이프라인 첫 실행(2026-09-28)에서 나온 것
+  - {id: ACT1-sweep-parse-deep-nash, desc: "plan_sweep.py 요약이 deep-nash 출력('deep matrix … equilibrium X (exploitability Y)')을 파싱하지 못함 — 파서 보완 + search.yml 잡에 --setup-rolls median 기본(설정 턴 시나리오가 국면 수천 개로 갈라져 러너 상한 초과)", tags: [search, docs], weight: 1}
+  # AC(2026-09-28) 범위 밖 발견 — runs/perf-full-20260928/README.md
+  - {id: P1e-lazy-damage-rolls, desc: "데미지 롤을 지연 단위에 흡수(지금은 실행을 갈래로 나누고 단계 끝 압축이 합침; 두 대상 광역기 겹침 11 s) — 반동·흡수·이력도 지연화 필요", tags: [engine, perf], weight: 4, depends_on: [P1-full-mode-hp-explosion]}
+  - {id: P1-t1-factored-resume, desc: "lab-turn --factored가 중간 교체(suspension)를 재개하지 않음(펼치는 경로·lab-check는 재개) — 재개 지원", tags: [engine], weight: 2}
+  - {id: P1-t2-tv-bound-tight, desc: "근사 모드(--max-support)의 TV 상한이 단계별 누적 합이라 느슨함 — 더 엄밀한 상한", tags: [engine, perf], weight: 1}
+  - {id: V16-factored-unverified, desc: "오라클 900 s 초과 국면 중 인수분해만 끝난 2국면·spread-damage Full은 정답 없이 표본 주변분포로만 확인 — 더 긴 오라클(액션 러너)로 확정", tags: [verify], weight: 2, depends_on: [V9c-timeout-positions]}
+  # AD(2026-09-28) 범위 밖 발견
+  - {id: S24-t7-replacement-cell-solver, desc: "교체 자식 셀이 깊이 1 pure maximin이라 깊이 2 비용의 88%(sand-owen 3,937셀 중 42셀) — 1턴 균형/double oracle로 바꾸면 값이 바뀜 — 사용자 결정", tags: [search, perf], weight: 2}
+  - {id: S24-t8-root-replacement-depth, desc: "루트가 교체·미드턴 결정이면 깊이를 소비(롤아웃 deep-nash의 교체 결정이 한 턴 얕음) — level_cost를 비용 예산으로", tags: [search], weight: 2}
+  - {id: PY3-t1-python-remaining, desc: "파이썬 미노출: --dump-children, --before, 평가 함수 이름(material/file:), believed는 파일 시나리오만·더블 전용", tags: [py], weight: 2}
+  - {id: S24-t9-depth3-full-beam-idle, desc: "깊이 3 빔 4,3/4,2 coaching-panda 미완(61분 중단) — 무부하 재측정(S24-t5와 함께)", tags: [search, perf], weight: 1, depends_on: [S24-t5-thread-scaling-idle]}
+  # VC(2026-09-28) 리플레이 말뭉치 후속
+  - {id: V13a-ingest-run, desc: "리플레이 잡(run 36400574774, 250국면) 결과 ingest(replay_summary.py ingest) → sources.json rows, 불일치 재현 핀", tags: [verify], weight: 1}
+  - {id: V13b-rest-positions, desc: "리플레이 나머지 약 1,400국면 러너 대조(pack/list-2.txt 250개부터)", tags: [verify], weight: 2, depends_on: [V13a-ingest-run]}
+  - {id: V13c-observation-mismatches, desc: "관측 불일치 후보 30건 분류: 가정(SP·비공개 특성/도구·HP 오차) 원인인지 엔진 버그인지 — 예: Serperior 특공+2는 심술꾸러기", tags: [verify], weight: 3}
+  - {id: V13d-observation-scope, desc: "관측 비교가 휘발(도발·앙코르)·행동 순서·빗나감·급소를 비교하지 않음 — 비교 항목 확장", tags: [verify], weight: 2}
+  - {id: V13e-replay-full-memory, desc: "lab-replay Full 난수 재생이 18경기에서 4 GB 초과(결정당 결과 폭발) — 인수분해 경로(LAB_ENGINE_FACTORED) 사용", tags: [engine, perf], weight: 1}
+  - {id: OPS3-github-token, desc: "GitHub API 무인증 한도(IP당 60/h)가 차선들 사이에서 소진 — 읽기 전용 토큰(actions:read)을 둘지 사용자 결정", tags: [docs], weight: 1}
+  # VD(2026-09-28) 범위 밖 발견
+  - {id: V15a-frozen-statustime-schema, desc: "canonical.cjs·canonical.rs에 얼음 statusTime 추가 + from_canonical이 읽게(스키마 변경 → 웨이브 사이에; 얼음 fixture 4개 재생성: burn-up-frozen, o12-tri-attack, o5-blizzard-snow, o60-sheer-force, 얼음 든 핀 국면 재핀)", tags: [engine, verify], weight: 3}
+  - {id: II-t2-singles-search-py, desc: "lab-rollout·lab-plan·파이썬 탐색 API는 더블 전용(싱글은 lab-check·lab-parity만) — 필요 시 확장", tags: [search, py], weight: 3}
+  # VA(2026-09-28) 범위 밖 발견
+  - {id: V11e-runner-rows-ingest, desc: "러너 잡 v11-heavy(남은 20)·v11-f1/f2·v11-f3 결과를 sweep rows 형식으로 변환해 말뭉치 편입 — 변환 도구 필요(oracle_job.py 주석 → rows); f1/f2의 charge-vs-eye 국면은 f6ed481 이전 핀이라 오라클 오류 예상(무시 또는 v11-f3처럼 재핀)", tags: [verify], weight: 2}
+  - {id: V11-t1-switch-shape-branches, desc: "비교 턴의 교체 요청 모양이 분기마다 다르면(동속 2슬롯 한 번 vs 1슬롯 두 번) 오라클·엔진 모두 조건부 분포 불가 — pause-vs-flash.random.g000.s00 제외; 방법 필요", tags: [verify], weight: 2}
+  - {id: V11-t2-nightmare-uncovered, desc: "악몽(Past)은 휘발이 한 번도 안 걸림, 속임수방어·트랩셸 계열은 기술 선택만 확인 — 표준 범위 밖이라 우선순위 낮음", tags: [verify], weight: 1}
+  # 2026-09-28 구조 비교(사용자 질문)에서 나온 후보
+  - {id: P7-fork-at-chance, desc: "단계 안 난수 경로를 재실행(replay)으로 열거하는 구조를 분기점 fork+분기 전 계산 공유로 — 재실행 비용(분기 전 부분 × 경로 수) 제거; 되돌리기·병합·인수분해와의 정합, 정확성(fixture 전부) 유지. PokaiEngine 'fork된 상태들을 공유 속성으로 묶어 진행'과 같은 계열", tags: [engine, perf], weight: 5, depends_on: [P1e-lazy-damage-rolls]}
+  # SIMD/CUDA 위임 검토(2026-09-28, engine/reports/astra-handoff-20260928.md) — 외부 에이전트(Astra) 후보
+  - {id: SIMD1-damage-rolls-feasibility, desc: "damage_rolls 16롤 SIMD: 벤치가 rolls[15]만 소비하는 결함 수정 → 실전 국면에서 호출 수·비중 측정 → 릴리스 기계어 자동 벡터화 확인 → 비중 ≥2%일 때만 AVX2(런타임 감지+스칼라 폴백) 구현, 10^6 무작위+경계 격자 비트 일치, 탐색 CPU 시간 ±3% 초과 개선 시에만 채택. 파일: core/src/damage.rs·benches/damage.rs·core/tests. 위임 가능(Astra high)", tags: [engine, perf], weight: 2}
+  - {id: SIMD2-rmplus-row-block, desc: "nash.rs RM+ 행 블록 벡터화(합산 순서 보존, 비트 동일성 테스트 유지) — 보류: 최신 프로파일에서 RM+ ≥5%일 때", tags: [search, perf], weight: 2, depends_on: [SIMD1-damage-rolls-feasibility]}
+  - {id: CUDA1-batched-matrix-eval, desc: "자식 행렬 GPU 배치 평가(새 크레이트 engine/gpu) — 보류: RM+가 전체 5% 미만이라 전송·동기화 비용을 못 이김; S24-t7 결정 뒤 재검토. 전체 시간(준비·전송·동기화 포함) 측정 필수", tags: [search, perf], weight: 3, depends_on: [S24-t7-replacement-cell-solver]}
+  - {id: SIMD3-hp-distribution-batch, desc: "HP 분포 이동·합성곱·집계의 배치 연산(lazy.rs·frontier.rs) — 보류: P1e·P7이 표현을 바꾸므로 그 뒤", tags: [engine, perf], weight: 3, depends_on: [P1e-lazy-damage-rolls, P7-fork-at-chance]}
+  # VE(2026-09-28) 로컬 오라클 배치에서 발견
+  - {id: V13f-recharge-choice-string, desc: "리플레이 핀 국면 생성기가 재충전 턴을 'move recharge'로 써서 Showdown이 거부(recharge needs a target) — 'move 1' 형식으로(2689029362.s04, 2689036534.s04)", tags: [verify, bugs], weight: 1}
+  - {id: V13g-setup-staged-branch-limit, desc: "설정 턴 재현 탐색이 enumerate.cjs 기본 --setup-staged-max-branches 200000에서 끊겨 핀 상태 미도달(5국면, 결정적) — 한도 상향 또는 setup-rolls 고정으로 재핀", tags: [verify], weight: 1}
+  # ---------------- 이정표
+  - {id: M1-engine-complete, desc: "엔진 완결 선언: 도달 가능한 거부 0 또는 명시적 목록, 검증 실행 결과 확정, 문서(CONTEXT·WORKPLAN·AGENTS·REFUSALS) 갱신 — 연구 작업의 선행 조건", tags: [engine, docs], weight: 2, depends_on: [R1-trace-seeking, R2-hazard-effect-order, R3-emergency-exit-replacement, R4-redirection-tie, R5-future-move-edges, R6-instruct, R7-ally-switch-target, R8-encore-edges, R9-beat-up-order, R10-once-per-battle-flags, R11-item-restart, R13-attract-gender, R14-called-multi-hit, R16-fling-user-fainted, R17-trick-or-treat-curse, R21-copycat-called-moves, R22-forced-eat-ignored-item, B33-instruct-counter, B34-instruct-during-charge, B35-forced-eat-eatitem, A1-ignored-events-audit, A4-loader-refusal-audit, V2c-feature-coverage-report, V3-lead-turn-trace, V8-parity-regression-corpus, V9-heavy-turn-full-rolls, V10-staged-serializer-faithful, T1-scenario-typed-errors]}
+  # ---------------- 연구(엔진 완결 뒤)
+  - {id: S23-model2-rest, desc: "상대 모델 ② 나머지: 행동 순서(스피드)·도구/특성 노출·상태이상 관측, 로그에서 관측 자동 추출, maximin·deep·plan 모드의 믹스처", tags: [search], weight: 4, min_level: 1, depends_on: [M1-engine-complete]}
+  - {id: S24-depth3, desc: "깊이 3(자식도 deep-nash): 전치표·증분 평가 선행", tags: [search], weight: 1, min_level: 1, depends_on: [S24a-transposition-table, S24b-incremental-eval, S24c-depth3-measure, S24p-parallel-root, S24d-dominated-joint-actions]}
+  - {id: S25-rollout-remaining-opponents, desc: "가디안 vs 아쿠스타: coaching-panda·psy-sand-udon 상대 깊이 2·적합 평가 롤아웃(캐시 + 빔 2·결과 1)", tags: [search], weight: 3, min_level: 1, depends_on: [M1-engine-complete]}
+  - {id: S26-real-game-calibration, desc: "평가 값·롤아웃 승률을 실제 경기(Sol 완주 기록)와 대조", tags: [search], weight: 3, min_level: 1, depends_on: [M1-engine-complete, S12-fit-proper]}
+  # ---------------- 남은 일: 탐색·평가 (Fable)
+  - {id: S12-fit-proper, desc: "상태이상·휘발 있는 국면 표본으로 평가 가중치 정식 적합, 실제 경기 대조", tags: [search], weight: 5, min_level: 1, depends_on: [M1-engine-complete]}
+  - {id: S20-position-mixture, desc: "모델 ②: 관측이 못 가르는 생존 국면들(수면 턴 수 등)을 확률 믹스처로 두고 최적 응답", tags: [search], weight: 3, min_level: 1}
+  - {id: S21-deep-mixed-tt, desc: "깊이 2 혼합 전략 정식화·전치표", tags: [search], weight: 4, min_level: 1}
+  - {id: S22-rollout-depth2-policy, desc: "lab-rollout 정책을 --child-nash/깊이 2로 바꿔 승률 변화 측정(평가 함수 의존 감소 확인)", tags: [search], weight: 3, min_level: 1}
+
+  # 2026-09-28 사용자 우선순위: PGO 후순위, 병렬화 병목 실측
+  - {"id": "S24-t10-parallel-cost-profile", "desc": "병렬화 후보 1차 실행량/CPU cycle 계측: 고정 bb94a1 사본, nash 3국면 1/6스레드 3반복 및 깊이2 1국면, observer overhead/출력동일성 확인. runs/parallel-profile-20260928", "tags": ["search", "perf"], "weight": 1, "depends_on": ["S24-baseline-timing"]}
+  - {"id": "S24-t11-heavy-cell-critical-path", "desc": "1차 계측 후속: 무거운 교체/중단 자식 셀의 내부 작업량·컷오프 및 game/cell/thread 시작종료 trace로 임계경로/라운드 대기 확인. 무부하 반복·setup/search phase 분리·계측 메모리 상한, 깊이3/Full 표본 범위 확장. 비용 확인 후 게임별 라운드 진행 또는 선택적 frontier/diff 분할 검토(값/합산순서/작업량 유지)", "tags": ["search", "perf"], "weight": 3, "depends_on": ["S24-t10-parallel-cost-profile"]}
+  - {"id": "S24-t12-stats-time-label", "desc": "SearchStats enumerate_seconds/nash_seconds는 Instant 경과시간의 thread sum인데 CPU time이라 쓴 solve.rs 주석/관련 해석 정정; 실제 프로세스CPU/스레드cycles와 구분", "tags": ["search", "docs"], "weight": 1, "depends_on": ["S24-baseline-timing"]}
+  - {"id":"S24-t13-memo-reuse-profile","desc":"DP 추가 여지 계측: 기존 Nash/deep TT 및 턴 단계 병합과 구분해 maximin value/leaf/choices/State+행동쌍의 셀 내부·셀 간 동일 입력 반복률, 반복 구간 CPU 비용, hash+Eq+복사 비용, 재사용 거리·메모리 비용 확인. 효과 확인 뒤 bounded exact-result cache 또는 Exact/Lower/Upper 구분 TT 검토. 설정·Suspension·깊이·Budget/오류 의미와 결정론 보존. 현재 heavy trace 10/32개 비leaf 조회·중복0만으로 효과 부정 불가","tags":["search","perf"],"weight":2,"depends_on":["S24-t10-parallel-cost-profile"]}
+
+  # 2026-09-29 다른 방향 최적화 조사: 후보별 독립 실험, 생산 변경 없음
+  - {"id": "P8a-merger-lazy-index", "desc": "소형 Merger index 지연 생성 실험: next 결과0/1은 table 없이 hash+전체Eq로 병합, 2번째 고유결과부터 기존 table 승격. CHUNK8/확률순서/상태위치 유지. 기존 profile next0/1은59~69%; 할당수이지 배속아님. 독립사본 1/6t A/B, CPU/wall/memory 및 충돌/grow/Full/rollback/hash/fingerprint 검증. runs/optimization-directions-20260929.", "tags": ["engine", "perf"], "weight": 2, "depends_on": ["S24-t10-parallel-cost-profile"]}
+  - {"id": "P8b-replay-scratch", "desc": "replay 입력 State 사이 Chooser prefix/trace 버퍼 용량 재사용 실험. prefix/trace/probability/mode 완전초기화와 재귀수명 유지, 기존 RunBuffers 재사용과 구분. 후속 RunStart snapshot clone_from/Pending 재사용은 따로 측정. 상태별 실제할당수 계측, 순서/확률bits/seed/오류 원복 비교.", "tags": ["engine", "perf"], "weight": 2, "depends_on": ["S24-t10-parallel-cost-profile"]}
+  - {"id": "P8c-turn-validation", "desc": "사용자 승인 P8c 격리 구현·로직 검증 완료. 공통 P8g693cd58의 독립 원본/후보, 소유한 부모State/Ruleset snapshot에 기존 부모·side·support 검증 결과를 지연 저장. 순차 maximin/value/mixed 및 실제1t parallel_matrix에 적용, 셀별 오류우선순위·정규화·Unsupported·카운터·입력원복 유지. Full/factored/비턴 fallback. 후보124/원본113 tests, 독립20행21330bytes 일치, 3994원본파일 SHA 보존. 2x3 검증호출 [6,12,6]→[1,5,1]. 실제 CPU/wall/메모리 성능 미측정, 생산미채택. lazy/child-cell/row_min 전체와 다중worker 준비공유는 별도. experiments/p8c-prepared-turn-20260929/README.md 및 root-review-audit.json.", "tags": ["engine", "perf"], "weight": 3, "depends_on": ["S24-t10-parallel-cost-profile"]}
+  - {"id": "P8d-replay-action-keys", "desc": "같은 stage 입력의 replay 간 priority/speed action_key 재사용 실험. 첫 우선도추첨, 중간교체, multi-hit재개, factored는 초기범위에서 제외. 동속난수/queue순서 보존, 다른stage 재사용금지. guarded replay/키생성 CPU 비중 계측 뒤 채택; P7과 별도 작은후보.", "tags": ["engine", "perf"], "weight": 3, "depends_on": ["S24-t10-parallel-cost-profile"]}
+  - {"id": "P8e-slot-diff", "desc": "동일 점유자의 Slot에서 last_move/target/move_actions만 다르면 기존 Set명령으로 최소diff 표현. 다른모든필드동일 엄격gate, 그외 Switch+Box fallback. instruction배열 변경과 State동등성 구분; apply/reverse/hash/분포bits 및 AllySwitch/변신/기절 검증. diff4~6% 외 후속 명령소비비용도 계측.", "tags": ["engine", "perf"], "weight": 3, "depends_on": ["S24-t10-parallel-cost-profile"]}
+  - {"id": "P8f-stats-off-cost", "desc": "통계off 상태의 stage별 env 조회/Instant 고정비 제거 실험. 열거진입시 설정1회, on일때만시계. 실행중 env변경 의미 명시, 다른후보와 분리 A/B. 호출수만으로 성능주장 금지.", "tags": ["engine", "perf"], "weight": 1, "depends_on": ["S24-t10-parallel-cost-profile"]}
+
+  - {"id": "P7a-accuracy-continuation-experiment", "desc": "Astra 격리 실험: flat stage DFS의 직접 단일대상 단일타격 공격을 명중 직전부터 재개. 전체 State/Battle/Pending/Chooser frame, prefix invalidation/fallback, 정확 출력·확률bits·순서·원복, 실행량 observer와 독립 CPU/wall/memory A/B. runs/chance-continuation-20260929. P7 전체와 P1e factored/lazy 완료를 뜻하지 않음; production 기본 미채택.", "tags": ["engine", "perf"], "weight": 4, "depends_on": ["S24-t10-parallel-cost-profile"]}
+
+  - {"id": "P7b-retained-suffix-experiment", "desc": "Astra 격리 후속 실험: P7a 동일 명중 경계에서 prefix State 유지, suffix log만 rollback, 원점 Battle/Pending 초기화와 State snapshot 복사 생략. invalidation/종료/오류는전체rollback; generic stage/defaultoff/factored/sampler fallback 유지. 독립 정확성·48회 CPU/wall/memory·rollback/init observer 및 원자료보고. runs/chance-continuation-suffix-20260929. P7/P1e 완료나생산채택아님.", "tags": ["engine", "perf"], "weight": 4, "depends_on": ["P7a-accuracy-continuation-experiment"]}
+
+  - {"id": "P7c-continuation-cost-diagnostic", "desc": "Astra CPU 비용 진단: 보존 원본/P7b 바이너리에서 실제 CPU sampling·stack 분포 비교. 도구·symbol/inline·오버헤드·불확실성 검증, 원자료/독립검증/보고. 새 최적화 및 생산/P7a/P7b 변경 없음. runs/continuation-cost-profile-20260929.", "tags": ["engine", "perf"], "weight": 2, "depends_on": ["P7b-retained-suffix-experiment"]}
+
+  - {"id": "P8g-hurt-readers-experiment", "desc": "Astra 격리 단일후보: hurt_readers의 일회성 known/mega Vec 제거, 실제 메가스톤 선필터 및 mon별 untransformed_species 중복조회 축소. 전체party/변신 전후기술/능력·메가보수판정과 전역A/H/T 논리 보존. production929e6298 baseline 단독, feature-off원본; direct differential+회귀 및 48 fresh-process CPU/wall/memory A/B. runs/hurt-readers-20260929. 생산채택/커밋없음.", "tags": ["engine", "perf"], "weight": 3, "depends_on": ["P7c-continuation-cost-diagnostic"]}
+
+  - {"id": "P8h-history-capability-contract", "desc": "미래 기믹/새 move·ability 확장 안전계약 후속: Ruleset은현재 check_turn 검증까지만전달되고 HistoryReaders::of는State만읽음. 명시적 history dependency/coverage(미분류기본Unknown)와턴시작전보수적hurt 기록정책을설계·검증, flat/factored/sample/start/replacements/resume 및Suspension/RunStart에동일문맥전달. mid-turn부여이전피해복구불가,기존필드fallback과미구현필드/handler Unsupported 구분. 추가기록의StateEq/merger/확률합산/근사cap/lazyHP Expand 비용·정확성회귀확인. 현재non-Mega activation은Unsupported이므로현행오류확정아님; P8g동치성과완료결과유지. 사용자현재요청은설계검토,이항목구현·벤치미착수.", "tags": ["engine", "verify"], "weight": 3, "depends_on": ["P8g-hurt-readers-experiment"]}
+
+  - {"id": "P8ha-move-history-registration", "desc": "사용자승인 구현: 기술 지원 등록 row에 callback+선택적history+간접source를필수선언,일반data-only도명시감사등록,O(1)lookup/누락Unknown·Unsupported,HistoryReaders실제소비 및변신전·호출대상폐쇄검증. 격리 history-registration-20260929,production/P8g보존. 부모P8h의Ruleset·기믹전체policy전파는별도미완료. 빌드/회귀/등록문서/패치/독립리뷰.", "tags": ["engine", "verify"], "weight": 3, "depends_on": ["P8g-hurt-readers-experiment"]}
+
+  - {"id": "CI1-paired-benchmark", "desc": "사용자 승인 GitHub Actions 수동 A/B 성능 비교: 동일 VM·공통 exact-bit 하네스·고정 fixture·AB/BA·warmup·회귀·타임아웃·artifact. 기본브랜치 설치 후 A/A smoke 실행 검증. 알고리즘/P8g/P8ha 채택 없음. C:/Users/admin/Documents/ChatGPT/pokemon-ai-lab/experiments/github-benchmark-20260929.", "tags": ["engine", "perf", "ci"], "weight": 2, "depends_on": ["P8g-hurt-readers-experiment"]}
+
+  - {"id": "CI2-p8g-github-measurement", "desc": "사용자 승인 실측: 보존 P8g 단독 후보를 별도 브랜치에 패키징, 동일 manifest 원본 feature off/후보 on을 실제 Cargo fingerprint로 확인. GitHub 동일 VM 1t coaching/sand 각6쌍 AB/BA +warmup, 전체회귀 후 rawbits/work guard·CPU/wall·독립검증. P8ha/다른최적화 결합 및 생산채택 없음. experiments/p8g-github-20260929.", "tags": ["engine", "perf", "ci"], "weight": 2, "depends_on": ["CI1-paired-benchmark", "P8g-hurt-readers-experiment"]}
+
+  - {"id": "P9-leaf-ending-state", "desc": "사용자 승인 P9 격리 구현·논리 검증 완료. 동일 P8g693cd58 원본/후보 off/on, flat Next::Depth(0)의 최종 State를 기존 Evaluator에 직접 전달하여 diff/Instruction/apply/reverse 왕복 제거. 기존 공개 API·factored/재귀/plan/replacement/resume fallback, 오류·순서·bits·카운터 보존. 선택회귀225 통과, 독립96레코드 동일,359 ending/192 chance 대조. 성능·peak memory·전체 release 검증·생산채택은 후속. experiments/p9-leaf-ending-20260929/README.md.", "tags": ["engine", "search", "perf"], "weight": 4, "depends_on": ["CI2-p8g-github-measurement"]}
+
+  - {"id": "P10-compact-volatiles-study", "desc": "장기 제안/미착수: Slot별112개 VolatileState dense 배열을 작은inline non-NONE 목록+bitmap+overflow로 축소할 타당성. 먼저 점유수/get-has-set/merger clone-Eq bytes 관측. inactive이지만NONE과다른payload,논리Eq/Hash·등록순서·hidden·원복·신규volatile확장 보존, dense논리상태와차등검증. 조회/삽입/할당회귀 위험을포함 CPU/wall/memory 비교, AVX2필수없음. P9/P8c와별도후보, 설계근거 experiments/next-optimization-20260929/README.md.", "tags": ["engine", "perf", "memory"], "weight": 5, "depends_on": ["P9-leaf-ending-state"]}
+
+  - {"id": "DOC1-local-obsidian-vault", "desc": "사용자 승인 로컬 전용 Obsidian vault: 전체 추적 파일 정적 색인, 코드·계약·기존/신규 최적화·폐기 실험 원자 문서, 엄격한 메타데이터·근거·양방향 링크·에이전트 조회 도구·검증. Astra xhigh 1인 최적화 이력 조사. Gitignore 및 local exclude, 엔진 변경/성능실행/게시 없음.", "tags": ["engine", "docs"], "weight": 3, "depends_on": ["CI2-p8g-github-measurement"]}
+
+  - {"id": "P9-leaf-ending-perf", "desc": "P9 CPU/wall 실측 완료: GitHub run36561223990 success, 동일 P8g 원본/후보 observer-off narrow1t depth2 beam2 cap2 Median coaching/sand 각6쌍 AB/BA. paired wall 중앙비율0.900981/0.966190(시간9.90%/3.38%감소),28회 bits/work/원복 동일. genericLinux core/scenario/search gate 원본1238/후보1245 passed,0fail/ignored. root원자료/fingerprint/summary독립검증. peak memory는 별도 P9-leaf-ending-memory로 분리. 생산미채택. experiments/p9-github-20260929/results.md.", "tags": ["engine", "perf"], "weight": 2, "depends_on": ["P9-leaf-ending-state"]}
+
+  - {"id": "P9-leaf-ending-release-validation", "desc": "P9 채택 전 남은 release 검증: 전체 parity corpus·Python 바인딩 회귀. WindowsMSVC 선택225 및96차등, GitHub Linuxgeneric core/scenario/search 전체선택 gate(원본1238/후보1245)와 fingerprint로 공통P8g/후보P9/observeroff 확인 완료. 이 성공을 전체 parity/Python 검증으로 대체하지 않는다.", "tags": ["engine", "verify"], "weight": 2, "depends_on": ["P9-leaf-ending-state"]}
+
+  - {"id": "P9-leaf-ending-adoption", "desc": "P9 correctness·CPU/wall·peak memory·release 근거를 검토하여 생산 적용과 feature 기본값 결정. 현재 별도 후보이며 생산미채택. P8c와 결합은 별도 동일기준선 차등/성능 확인 후 결정.", "tags": ["engine", "perf"], "weight": 1, "depends_on": ["P9-leaf-ending-perf", "P9-leaf-ending-release-validation", "P9-leaf-ending-memory"]}
+
+  # 2026-09-29 P8c 완료 범위와 별도 후속 (로직 감사만 완료)
+  - {"id": "P8c-turn-validation-perf", "desc": "P8c GitHub 독립실측 dispatch 완료 run36571389780. 양쪽P8g/후보P8c/observeroff, narrow1t coaching/sand 각6쌍(28회), 별도RSS 2쌍(8회), 새9차등검사는별도observer target. 컨트롤러53테스트·독립review통과, 원본3994/후보3997파일hash보존. 현재원격빌드/측정결과대기이며성능성공주장없음. P9결합/생산채택미실시. experiments/p8c-github-20260929/launch.json.", "tags": ["engine", "search", "perf"], "weight": 2, "depends_on": ["P8c-turn-validation"]}
+  - {"id": "P8c-turn-validation-release-validation", "desc": "P8c 생산 채택 전 검증 후속: 전체 parity corpus·새 oracle 표본·Python 바인딩 회귀·Linux generic/release 빌드·기본off/on 확인. 현재 WindowsMSVC 선택124 tests와 원본/후보20행만 검증. Full/factored·오류·중간교체·원복과 지원거부 유지. production 적용/P9조합 판단은 별도 성능 근거까지 확인한 뒤 진행.", "tags": ["engine", "verify"], "weight": 2, "depends_on": ["P8c-turn-validation"]}
+  - {"id": "P8c-turn-validation-scope-expansion", "desc": "조건부 P8c 범위 확대 검토: nash_cells 상위 빔 쌍, child_cells light/lazy 요청, row_min 여러라운드 및 다중worker 사이에서 동일 부모 검증을 안전하게 공유할지 결정. 현재 해당 직접호출은 기존검증이며1t deep 표본의 감소는얕은행렬이주된부분. 현 후보 성능 근거를 먼저 확인, 부모/Ruleset 고정·오류시점·셀freshSolver/absorb 순서·budget·카운터 유지. RunStart/HistoryReaders 공유나P9결합을자동으로포함하지않음.", "tags": ["engine", "search", "perf"], "weight": 2, "depends_on": ["P8c-turn-validation-perf"]}
+
+  - {"id": "DOC2-vault-contract-deepening", "desc": "사용자 승인 vault 계속 작업: 생산 탐색/규칙 계약의 원자 정적 분석 보강, P9/P8c 구현 근거와 설계 지도 연결, 관계 종류·소스 anchor·변경 영향 조회 개선 및 vault 검증. 엔진 코드/성능실행/게시 변경 없음.", "tags": ["engine", "docs"], "weight": 2, "depends_on": ["DOC1-local-obsidian-vault"]}
+
+  - {"id": "S24-budget-scope-reproduce", "desc": "재현 완료: 생산4ce5f0c 변경없이 합성 State<1> depth1 Full Expect 2x1에서16검증. max_turns1 mixed 1t Budget leaf1 vs2t 성공 turns2 leaf2; exact_lines는1/2t 모두 leaf2뒤Budget. None/2 결과bits/통계동일,0 leaf0,모두전체State복원. 생산72파일hash·git동일. 전체검색 N회허용/N+1열거전Budget을 후속계약기준으로 기록. private오류turns추측없음. experiments/budget-scope-20260929/README.md; P9독립·수정미구현.", "tags": ["engine", "search", "correctness"], "weight": 2, "depends_on": ["DOC2-vault-contract-deepening"]}
+
+  - {"id": "S24-budget-scope-resolution", "desc": "재현확인 후 전체검색 전이열거 N회허용/N+1직전Budget 계약에 맞춰 수정·회귀. mixed 유한예산만직렬화하면 exact 초과실행남음; 공통행렬 finitebudget row-major freshSolver잔여량전달 후보 검토,unlimited병렬유지. 오류/통계/결정성·0/1/C경계·depth2·iterative 누적 검증. child/lazy/plan은별도전체경로감사 의존작업으로 분리. 현재수정미구현.", "tags": ["engine", "search", "correctness"], "weight": 2, "depends_on": ["S24-budget-scope-reproduce"]}
+
+  - {"id": "P9-leaf-ending-memory", "desc": "P9 최종State batch peak memory 검증. CPU/wall GitHub성공과분리: 동일P8g 기준선·observeroff·P9만차이·동일fixture/작업량/결과guard로 peak RSS 또는 명시된동등지표 수집. 이번CI에는RSS자료없음. 결과와Full/폭큰배치위험을채택판단에반영. 현재미착수.", "tags": ["engine", "perf", "memory"], "weight": 2, "depends_on": ["P9-leaf-ending-perf"]}
+
+  - {"id": "S24-budget-all-paths-audit", "desc": "유한 max_turns 전체검색 계약의 child/lazy/nash_cells/solve_children/plan/split 경로감사. freshSolver 예산전달·배치경계예외·오류후미흡수작업량·교체/resume·반복깊이누적을검증. mixed/exact 최소수정만으로 전체계약완료라보고하지않음. 성능계측아님.", "tags": ["engine", "search", "correctness"], "weight": 3, "depends_on": ["S24-budget-scope-resolution"]}
+
+  - {"id": "CI3-validated-build-reuse", "desc": "사용자 CI대기시간 질문 후속: P9전체61m42 중빌드/회귀49m36. 매번cold build하는현재설정의안전한캐시/검증artifact재사용설계. source SHA·toolchain·target·features·lock·RUSTFLAGS/profile·harness·controller 식별및hash/실제fingerprint검증,observertarget격리,원본/후보동일정책,stale불일치거부. 기존fresh-target요구와충돌해단순cache복원불가. 미구현·성능수치없음·진행중P8c job변경금지.", "tags": ["engine", "ci", "perf"], "weight": 2, "depends_on": ["CI1-paired-benchmark", "P8c-turn-validation-perf"]}
+
+  - {"id": "DOC3-field-change-ledger", "desc": "Vault 미착수 보강: State/Slot/Pending의 중요 필드별 소유·생성/변경/초기화·교체/변신/메가/턴종료 수명과 Instruction apply/reverse·diff·hash/Eq·hidden·Suspension 관련 소스 anchor를 원자 문서로 연결. 일반 원칙을 구체 변경 대장으로 확장, 전체 필드 감사 완료를 과장하지 않음.", "tags": ["engine", "docs"], "weight": 3, "depends_on": ["DOC2-vault-contract-deepening"]}
+
+  - {"id": "DOC3-contract-test-trace", "desc": "Vault 미착수 보강: 핵심 정확성 계약마다 실제 테스트명/fixture/feature/경로·assertion·미검증 범위 연결. MAP-tests 자동색인과 구분하며 새 테스트 실행/통과를 주장하지 않음. 필드변경 대장과 함께 회귀 선택에 활용.", "tags": ["engine", "docs", "verify"], "weight": 3, "depends_on": ["DOC2-vault-contract-deepening"]}
+
+  - {"id": "DOC3-feature-baseline-map", "desc": "Vault 미착수 보강: 생산/P8g/P8c/P9 기준 SHA·core/search features·runtime 설정·Full/factored/threads별 적용/검증/미검증 조합표. P9+P8c는 미구현 상태로 표시, 실제 증거 링크를 우선하며 과거 controller 문서의 유효 scope 보존.", "tags": ["engine", "docs"], "weight": 2, "depends_on": ["DOC2-vault-contract-deepening"]}
+
+  - {"id": "DOC3-execution-trace", "desc": "Vault 미착수 보강: 일반 턴·중간교체 대표 경로를 함수 단위로 API→검증→열거→평가→복원 추적, depth/budget/error 분기와 상태 소유권 연결. 기존 고수준 Mermaid를 보완하되 전체 컴파일러 호출그래프 또는 실행 계측이라고 주장하지 않음.", "tags": ["engine", "docs"], "weight": 2, "depends_on": ["DOC2-vault-contract-deepening"]}
+
+  - {"id": "DOC3-experiment-reopen-conditions", "desc": "Vault 조건부 보강: 미채택 P8a/P8b/P7/DP 재실험에 필요한 새 근거·측정범위·변경 가설을 명시. SIMD/PGO의 기존 조건은 링크로 모아 중복하지 않고 보존 원자료99개 수정금지. 실패 원인을 실측 없이 단정하지 않음.", "tags": ["engine", "docs"], "weight": 1, "depends_on": ["DOC2-vault-contract-deepening"]}

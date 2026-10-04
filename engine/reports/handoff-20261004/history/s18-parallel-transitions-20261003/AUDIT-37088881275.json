@@ -1,0 +1,1204 @@
+{
+  "source_sha": "19061c2c08b3d5c25f2a696eb12b2b2c8b943435",
+  "parent": "d32fd5ae016e6fc23465b6e63de209919469e7ed",
+  "run": 37088881275,
+  "passed": true,
+  "cpu": "AMD EPYC 7763 64-Core Processor",
+  "binary_sha256": "d9c6380558c3f583f389ea348a40fecd011fedc893847e93e9adb55cd2abc653",
+  "artifact_sha256": "7e93156454bc9372200a3f5bd68e4b966adf0ae2f00160cb895d9c2c9ca90cc5",
+  "cases": 6,
+  "treatments": 18,
+  "paired_blocks": 162,
+  "timing_samples": 648,
+  "timed_solves": 1134,
+  "comparison_contracts": [
+    "exact-same-work"
+  ],
+  "test_counts": {
+    "core": 101,
+    "owned": 7,
+    "on": 92,
+    "off": 17,
+    "cli": 1
+  },
+  "bootstrap_recomputed": true,
+  "lp_inherited": false,
+  "lp_certificates": {
+    "tree-lp": 49,
+    "growing-lp": 96
+  },
+  "wins_evaluated": false,
+  "shared_git_unchanged": true,
+  "groups": [
+    {
+      "case": "stats-w1-d2-parallel-growing",
+      "mode": "parallel-1",
+      "baseline_ms": 89.0735825,
+      "candidate_ms": 88.95267525,
+      "ratio": 0.9993349448402834,
+      "reduction_percent": 0.06650551597165988,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9993349448402834,
+          "ratio_bootstrap95": [
+            0.9935066251714846,
+            1.0062130324618996
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 90.00660325,
+              "candidate_ms": 90.46724925,
+              "ratio": 1.0051179133904267
+            },
+            {
+              "baseline_ms": 88.9260825,
+              "candidate_ms": 88.86694175,
+              "ratio": 0.9993349448402834
+            },
+            {
+              "baseline_ms": 89.1470475,
+              "candidate_ms": 89.700921,
+              "ratio": 1.0062130324618994
+            },
+            {
+              "baseline_ms": 88.888302,
+              "candidate_ms": 89.0112575,
+              "ratio": 1.0013832585079643
+            },
+            {
+              "baseline_ms": 89.20465325,
+              "candidate_ms": 88.625414,
+              "ratio": 0.9935066251714846
+            },
+            {
+              "baseline_ms": 89.0422335,
+              "candidate_ms": 88.95267525,
+              "ratio": 0.9989942048118099
+            },
+            {
+              "baseline_ms": 88.96488425,
+              "candidate_ms": 89.85989225,
+              "ratio": 1.0100602390206561
+            },
+            {
+              "baseline_ms": 89.0735825,
+              "candidate_ms": 88.764809,
+              "ratio": 0.9965335008278128
+            },
+            {
+              "baseline_ms": 90.638284,
+              "candidate_ms": 88.6049065,
+              "ratio": 0.9775660194537663
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w1-d2-parallel-growing",
+      "mode": "parallel-2",
+      "baseline_ms": 89.385021,
+      "candidate_ms": 108.658724,
+      "ratio": 1.2170379446260826,
+      "reduction_percent": -21.70379446260826,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.2170379446260826,
+          "ratio_bootstrap95": [
+            1.213181579942796,
+            1.228256347615685
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 89.385021,
+              "candidate_ms": 108.440261,
+              "ratio": 1.213181579942796
+            },
+            {
+              "baseline_ms": 89.770393,
+              "candidate_ms": 109.143618,
+              "ratio": 1.2158086241195358
+            },
+            {
+              "baseline_ms": 90.55054175,
+              "candidate_ms": 106.5330385,
+              "ratio": 1.1765036016474193
+            },
+            {
+              "baseline_ms": 89.042125,
+              "candidate_ms": 113.9377085,
+              "ratio": 1.2795933217002626
+            },
+            {
+              "baseline_ms": 89.05747925,
+              "candidate_ms": 108.3863315,
+              "ratio": 1.2170379446260826
+            },
+            {
+              "baseline_ms": 89.54589225,
+              "candidate_ms": 109.783096,
+              "ratio": 1.2259981250005358
+            },
+            {
+              "baseline_ms": 88.4658355,
+              "candidate_ms": 108.658724,
+              "ratio": 1.2282563476156851
+            },
+            {
+              "baseline_ms": 88.67112325,
+              "candidate_ms": 108.5298875,
+              "ratio": 1.2239597686612143
+            },
+            {
+              "baseline_ms": 90.38425025,
+              "candidate_ms": 109.6613725,
+              "ratio": 1.2132796609661538
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w1-d2-parallel-growing",
+      "mode": "parallel-4",
+      "baseline_ms": 89.0143365,
+      "candidate_ms": 84.1971275,
+      "ratio": 0.945874861262333,
+      "reduction_percent": 5.4125138737667005,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.945874861262333,
+          "ratio_bootstrap95": [
+            0.9363210975571334,
+            1.0290236517709261
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 90.46989575,
+              "candidate_ms": 93.0956625,
+              "ratio": 1.0290236517709261
+            },
+            {
+              "baseline_ms": 88.85547225,
+              "candidate_ms": 83.29224525,
+              "ratio": 0.9373901588824203
+            },
+            {
+              "baseline_ms": 89.163065,
+              "candidate_ms": 85.510875,
+              "ratio": 0.9590392053032273
+            },
+            {
+              "baseline_ms": 88.8965895,
+              "candidate_ms": 84.1971275,
+              "ratio": 0.9471356322392996
+            },
+            {
+              "baseline_ms": 89.4527755,
+              "candidate_ms": 84.3182775,
+              "ratio": 0.9426010208034293
+            },
+            {
+              "baseline_ms": 89.74325,
+              "candidate_ms": 92.4199575,
+              "ratio": 1.0298262821994968
+            },
+            {
+              "baseline_ms": 88.83688375,
+              "candidate_ms": 82.3039285,
+              "ratio": 0.9264612290050077
+            },
+            {
+              "baseline_ms": 89.0143365,
+              "candidate_ms": 83.34600125,
+              "ratio": 0.9363210975571334
+            },
+            {
+              "baseline_ms": 88.91488525,
+              "candidate_ms": 84.10235475,
+              "ratio": 0.945874861262333
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2-parallel-growing",
+      "mode": "parallel-1",
+      "baseline_ms": 167.9757085,
+      "candidate_ms": 168.8777355,
+      "ratio": 1.0053093101391737,
+      "reduction_percent": -0.5309310139173684,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.0053093101391737,
+          "ratio_bootstrap95": [
+            1.0009471429313452,
+            1.0100471253556285
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 172.608489,
+              "candidate_ms": 169.1969695,
+              "ratio": 0.9802355056824581
+            },
+            {
+              "baseline_ms": 167.9757085,
+              "candidate_ms": 169.6633815,
+              "ratio": 1.0100471253556285
+            },
+            {
+              "baseline_ms": 168.7179355,
+              "candidate_ms": 168.8777355,
+              "ratio": 1.0009471429313452
+            },
+            {
+              "baseline_ms": 168.4883805,
+              "candidate_ms": 168.859787,
+              "ratio": 1.0022043448865603
+            },
+            {
+              "baseline_ms": 167.965052,
+              "candidate_ms": 170.0923795,
+              "ratio": 1.0126652983740927
+            },
+            {
+              "baseline_ms": 167.861129,
+              "candidate_ms": 168.20476,
+              "ratio": 1.002047114790941
+            },
+            {
+              "baseline_ms": 168.8619375,
+              "candidate_ms": 170.079556,
+              "ratio": 1.007210733916872
+            },
+            {
+              "baseline_ms": 167.457443,
+              "candidate_ms": 168.3465265,
+              "ratio": 1.0053093101391737
+            },
+            {
+              "baseline_ms": 166.517467,
+              "candidate_ms": 167.934489,
+              "ratio": 1.0085097499111009
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2-parallel-growing",
+      "mode": "parallel-2",
+      "baseline_ms": 168.826174,
+      "candidate_ms": 208.774663,
+      "ratio": 1.2247975777406326,
+      "reduction_percent": -22.47975777406326,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.2247975777406326,
+          "ratio_bootstrap95": [
+            1.2139936555767288,
+            1.2385241299668357
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 170.319908,
+              "candidate_ms": 208.845667,
+              "ratio": 1.2261964526190325
+            },
+            {
+              "baseline_ms": 171.9927155,
+              "candidate_ms": 210.644123,
+              "ratio": 1.224727003045661
+            },
+            {
+              "baseline_ms": 170.7209265,
+              "candidate_ms": 210.6320305,
+              "ratio": 1.2337797996896416
+            },
+            {
+              "baseline_ms": 168.826174,
+              "candidate_ms": 206.145744,
+              "ratio": 1.2210532236547633
+            },
+            {
+              "baseline_ms": 168.360267,
+              "candidate_ms": 210.28901,
+              "ratio": 1.2490417944039016
+            },
+            {
+              "baseline_ms": 168.5672955,
+              "candidate_ms": 208.774663,
+              "ratio": 1.2385241299668357
+            },
+            {
+              "baseline_ms": 169.88463,
+              "candidate_ms": 206.238863,
+              "ratio": 1.213993655576729
+            },
+            {
+              "baseline_ms": 168.278924,
+              "candidate_ms": 206.1076185,
+              "ratio": 1.2247975777406326
+            },
+            {
+              "baseline_ms": 166.830624,
+              "candidate_ms": 201.750522,
+              "ratio": 1.2093134771227614
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w2-d2-parallel-growing",
+      "mode": "parallel-4",
+      "baseline_ms": 169.1141805,
+      "candidate_ms": 159.109038,
+      "ratio": 0.9383843325400779,
+      "reduction_percent": 6.161566745992209,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9383843325400779,
+          "ratio_bootstrap95": [
+            0.9244225740256289,
+            0.9521638974056765
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 172.117214,
+              "candidate_ms": 159.109038,
+              "ratio": 0.9244225740256289
+            },
+            {
+              "baseline_ms": 169.845681,
+              "candidate_ms": 159.380526,
+              "ratio": 0.9383843325400779
+            },
+            {
+              "baseline_ms": 168.681046,
+              "candidate_ms": 160.8519895,
+              "ratio": 0.9535866258500673
+            },
+            {
+              "baseline_ms": 169.126649,
+              "candidate_ms": 156.947572,
+              "ratio": 0.9279884212688446
+            },
+            {
+              "baseline_ms": 168.514079,
+              "candidate_ms": 159.53405,
+              "ratio": 0.9467105119448209
+            },
+            {
+              "baseline_ms": 169.1141805,
+              "candidate_ms": 159.292252,
+              "ratio": 0.9419213192473826
+            },
+            {
+              "baseline_ms": 169.2395005,
+              "candidate_ms": 157.580025,
+              "ratio": 0.9311066537920916
+            },
+            {
+              "baseline_ms": 167.229217,
+              "candidate_ms": 154.241855,
+              "ratio": 0.9223379608361139
+            },
+            {
+              "baseline_ms": 166.398485,
+              "candidate_ms": 158.43863,
+              "ratio": 0.9521638974056764
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "pivot-w1-d1-parallel-growing",
+      "mode": "parallel-1",
+      "baseline_ms": 25.171606625,
+      "candidate_ms": 24.947269625,
+      "ratio": 0.9972402288008504,
+      "reduction_percent": 0.27597711991496077,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9972402288008504,
+          "ratio_bootstrap95": [
+            0.9834379255522239,
+            0.9980038301723372
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 24.985896,
+              "candidate_ms": 24.92405275,
+              "ratio": 0.9975248736327087
+            },
+            {
+              "baseline_ms": 25.52209,
+              "candidate_ms": 25.313508,
+              "ratio": 0.9918273934462264
+            },
+            {
+              "baseline_ms": 25.974355625,
+              "candidate_ms": 25.291014375,
+              "ratio": 0.9736916957684874
+            },
+            {
+              "baseline_ms": 25.3674065,
+              "candidate_ms": 24.947269625,
+              "ratio": 0.9834379255522239
+            },
+            {
+              "baseline_ms": 24.729629625,
+              "candidate_ms": 24.67270675,
+              "ratio": 0.9976981913654519
+            },
+            {
+              "baseline_ms": 25.171606625,
+              "candidate_ms": 25.10213875,
+              "ratio": 0.9972402288008504
+            },
+            {
+              "baseline_ms": 24.804628,
+              "candidate_ms": 24.75511375,
+              "ratio": 0.9980038301723372
+            },
+            {
+              "baseline_ms": 25.205106875,
+              "candidate_ms": 24.9926365,
+              "ratio": 0.991570344214222
+            },
+            {
+              "baseline_ms": 24.8518635,
+              "candidate_ms": 24.808146875,
+              "ratio": 0.9982409115920019
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "pivot-w1-d1-parallel-growing",
+      "mode": "parallel-2",
+      "baseline_ms": 25.0012985,
+      "candidate_ms": 38.03847033333333,
+      "ratio": 1.517620865104676,
+      "reduction_percent": -51.76208651046761,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.517620865104676,
+          "ratio_bootstrap95": [
+            1.3488734465025556,
+            1.5921838880065509
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 25.0012985,
+              "candidate_ms": 33.31843716666667,
+              "ratio": 1.3326682678768331
+            },
+            {
+              "baseline_ms": 25.470427,
+              "candidate_ms": 38.804468166666666,
+              "ratio": 1.5235107038710685
+            },
+            {
+              "baseline_ms": 25.27740275,
+              "candidate_ms": 38.03847033333333,
+              "ratio": 1.5048409328103667
+            },
+            {
+              "baseline_ms": 25.248382,
+              "candidate_ms": 38.31747133333333,
+              "ratio": 1.517620865104676
+            },
+            {
+              "baseline_ms": 24.61358675,
+              "candidate_ms": 40.36202533333333,
+              "ratio": 1.6398270493158957
+            },
+            {
+              "baseline_ms": 25.03685125,
+              "candidate_ms": 39.86327116666667,
+              "ratio": 1.5921838880065506
+            },
+            {
+              "baseline_ms": 24.742393625,
+              "candidate_ms": 36.5638295,
+              "ratio": 1.477780608221166
+            },
+            {
+              "baseline_ms": 24.79132525,
+              "candidate_ms": 33.44036033333333,
+              "ratio": 1.3488734465025556
+            },
+            {
+              "baseline_ms": 24.906011375,
+              "candidate_ms": 37.893538666666664,
+              "ratio": 1.5214615498290187
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "pivot-w1-d1-parallel-growing",
+      "mode": "parallel-4",
+      "baseline_ms": 24.966780625,
+      "candidate_ms": 39.62358866666666,
+      "ratio": 1.5719588924318562,
+      "reduction_percent": -57.19588924318562,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.5719588924318562,
+          "ratio_bootstrap95": [
+            1.5642999548802383,
+            1.5986159977382022
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 25.44722375,
+              "candidate_ms": 40.396127,
+              "ratio": 1.5874473143656782
+            },
+            {
+              "baseline_ms": 25.376741125,
+              "candidate_ms": 39.80566516666667,
+              "ratio": 1.5685885343036408
+            },
+            {
+              "baseline_ms": 25.600521125,
+              "candidate_ms": 40.242966833333334,
+              "ratio": 1.5719588924318562
+            },
+            {
+              "baseline_ms": 24.966780625,
+              "candidate_ms": 40.505136666666665,
+              "ratio": 1.6223612196963688
+            },
+            {
+              "baseline_ms": 24.772534,
+              "candidate_ms": 38.66943583333333,
+              "ratio": 1.5609802304977494
+            },
+            {
+              "baseline_ms": 24.79597425,
+              "candidate_ms": 39.4335015,
+              "ratio": 1.5903186986089082
+            },
+            {
+              "baseline_ms": 25.100882375,
+              "candidate_ms": 39.26530916666667,
+              "ratio": 1.564299954880238
+            },
+            {
+              "baseline_ms": 24.724317,
+              "candidate_ms": 38.843550333333326,
+              "ratio": 1.5710666682251861
+            },
+            {
+              "baseline_ms": 24.786183,
+              "candidate_ms": 39.62358866666666,
+              "ratio": 1.598615997738202
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "sand-damage-w1-d1-parallel-growing",
+      "mode": "parallel-1",
+      "baseline_ms": 318.2662915,
+      "candidate_ms": 318.454434,
+      "ratio": 1.0016709921971323,
+      "reduction_percent": -0.16709921971322927,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.0016709921971323,
+          "ratio_bootstrap95": [
+            0.9981324882947691,
+            1.0073618878998103
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 318.4073205,
+              "candidate_ms": 320.7513995,
+              "ratio": 1.0073618878998103
+            },
+            {
+              "baseline_ms": 318.489785,
+              "candidate_ms": 320.113646,
+              "ratio": 1.0050986282024714
+            },
+            {
+              "baseline_ms": 319.7037525,
+              "candidate_ms": 319.106702,
+              "ratio": 0.998132488294769
+            },
+            {
+              "baseline_ms": 318.2662915,
+              "candidate_ms": 318.454434,
+              "ratio": 1.0005911480575378
+            },
+            {
+              "baseline_ms": 317.4491185,
+              "candidate_ms": 317.9795735,
+              "ratio": 1.0016709921971323
+            },
+            {
+              "baseline_ms": 316.124109,
+              "candidate_ms": 318.789808,
+              "ratio": 1.0084324444865418
+            },
+            {
+              "baseline_ms": 317.124835,
+              "candidate_ms": 318.1175915,
+              "ratio": 1.0031304911833852
+            },
+            {
+              "baseline_ms": 325.3330665,
+              "candidate_ms": 317.197206,
+              "ratio": 0.9749922115586735
+            },
+            {
+              "baseline_ms": 316.391366,
+              "candidate_ms": 316.35079,
+              "ratio": 0.9998717537696652
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "sand-damage-w1-d1-parallel-growing",
+      "mode": "parallel-2",
+      "baseline_ms": 317.8089035,
+      "candidate_ms": 284.876462,
+      "ratio": 0.8954994455240282,
+      "reduction_percent": 10.450055447597183,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.8954994455240282,
+          "ratio_bootstrap95": [
+            0.8937648719332186,
+            0.9051293614845439
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 318.998494,
+              "candidate_ms": 285.6629745,
+              "ratio": 0.8954994455240282
+            },
+            {
+              "baseline_ms": 317.859273,
+              "candidate_ms": 285.744509,
+              "ratio": 0.898965464506049
+            },
+            {
+              "baseline_ms": 317.467162,
+              "candidate_ms": 288.006892,
+              "ratio": 0.90720215024948
+            },
+            {
+              "baseline_ms": 317.3659375,
+              "candidate_ms": 284.876462,
+              "ratio": 0.8976277172152416
+            },
+            {
+              "baseline_ms": 317.3063855,
+              "candidate_ms": 283.597301,
+              "ratio": 0.8937648719332187
+            },
+            {
+              "baseline_ms": 317.8089035,
+              "candidate_ms": 284.4041345,
+              "ratio": 0.8948903928363354
+            },
+            {
+              "baseline_ms": 318.4784485,
+              "candidate_ms": 284.4458545,
+              "ratio": 0.8931400408401574
+            },
+            {
+              "baseline_ms": 318.170951,
+              "candidate_ms": 284.506878,
+              "ratio": 0.8941950140507955
+            },
+            {
+              "baseline_ms": 316.7653235,
+              "candidate_ms": 286.713595,
+              "ratio": 0.9051293614845438
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "sand-damage-w1-d1-parallel-growing",
+      "mode": "parallel-4",
+      "baseline_ms": 317.573457,
+      "candidate_ms": 276.280776,
+      "ratio": 0.8699743946169909,
+      "reduction_percent": 13.002560538300912,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.8699743946169909,
+          "ratio_bootstrap95": [
+            0.8570242356865275,
+            0.8818665743310655
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 318.4947045,
+              "candidate_ms": 280.869834,
+              "ratio": 0.8818665743310655
+            },
+            {
+              "baseline_ms": 318.1094345,
+              "candidate_ms": 279.997722,
+              "ratio": 0.8801930770776935
+            },
+            {
+              "baseline_ms": 318.320653,
+              "candidate_ms": 272.3807605,
+              "ratio": 0.8556804528168646
+            },
+            {
+              "baseline_ms": 316.7799175,
+              "candidate_ms": 274.273929,
+              "ratio": 0.8658185505083352
+            },
+            {
+              "baseline_ms": 317.692425,
+              "candidate_ms": 286.8816805,
+              "ratio": 0.9030170628084696
+            },
+            {
+              "baseline_ms": 317.573457,
+              "candidate_ms": 276.280776,
+              "ratio": 0.8699743946169909
+            },
+            {
+              "baseline_ms": 317.1459345,
+              "candidate_ms": 273.197748,
+              "ratio": 0.8614259817982941
+            },
+            {
+              "baseline_ms": 317.2553,
+              "candidate_ms": 271.895481,
+              "ratio": 0.8570242356865276
+            },
+            {
+              "baseline_ms": 316.515653,
+              "candidate_ms": 278.4882285,
+              "ratio": 0.8798561014611179
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w4-d2-parallel-growing",
+      "mode": "parallel-1",
+      "baseline_ms": 337.5849495,
+      "candidate_ms": 338.1456155,
+      "ratio": 1.0027460288184442,
+      "reduction_percent": -0.2746028818444213,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.0027460288184442,
+          "ratio_bootstrap95": [
+            0.9994933197177033,
+            1.0049845172883174
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 338.2548425,
+              "candidate_ms": 338.114054,
+              "ratio": 0.9995837797946677
+            },
+            {
+              "baseline_ms": 337.7437515,
+              "candidate_ms": 338.1456155,
+              "ratio": 1.00118984880761
+            },
+            {
+              "baseline_ms": 342.3075775,
+              "candidate_ms": 342.134137,
+              "ratio": 0.9994933197177034
+            },
+            {
+              "baseline_ms": 337.9451615,
+              "candidate_ms": 339.629655,
+              "ratio": 1.0049845172883176
+            },
+            {
+              "baseline_ms": 337.5849495,
+              "candidate_ms": 338.5119675,
+              "ratio": 1.0027460288184442
+            },
+            {
+              "baseline_ms": 335.793921,
+              "candidate_ms": 337.148877,
+              "ratio": 1.0040350819811297
+            },
+            {
+              "baseline_ms": 337.2761525,
+              "candidate_ms": 338.5464445,
+              "ratio": 1.0037663261709557
+            },
+            {
+              "baseline_ms": 337.290466,
+              "candidate_ms": 336.7850105,
+              "ratio": 0.9985014236957412
+            },
+            {
+              "baseline_ms": 336.0632355,
+              "candidate_ms": 337.846179,
+              "ratio": 1.005305380986847
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w4-d2-parallel-growing",
+      "mode": "parallel-2",
+      "baseline_ms": 337.722598,
+      "candidate_ms": 410.4189235,
+      "ratio": 1.2152545489419693,
+      "reduction_percent": -21.525454894196926,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.2152545489419693,
+          "ratio_bootstrap95": [
+            1.2021197595597732,
+            1.2314643902780968
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 338.9670065,
+              "candidate_ms": 409.6677945,
+              "ratio": 1.2085771967307974
+            },
+            {
+              "baseline_ms": 337.830448,
+              "candidate_ms": 409.956159,
+              "ratio": 1.2134967745713674
+            },
+            {
+              "baseline_ms": 341.5432645,
+              "candidate_ms": 410.575907,
+              "ratio": 1.202119759559773
+            },
+            {
+              "baseline_ms": 337.5677935,
+              "candidate_ms": 415.702717,
+              "ratio": 1.2314643902780968
+            },
+            {
+              "baseline_ms": 337.38708,
+              "candidate_ms": 415.47236,
+              "ratio": 1.2314412276842372
+            },
+            {
+              "baseline_ms": 337.722598,
+              "candidate_ms": 410.4189235,
+              "ratio": 1.2152545489419693
+            },
+            {
+              "baseline_ms": 337.6267055,
+              "candidate_ms": 416.5252995,
+              "ratio": 1.2336858806330413
+            },
+            {
+              "baseline_ms": 339.3890895,
+              "candidate_ms": 406.7672925,
+              "ratio": 1.1985278993478075
+            },
+            {
+              "baseline_ms": 335.8831875,
+              "candidate_ms": 409.18755,
+              "ratio": 1.2182436192939843
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "stats-w4-d2-parallel-growing",
+      "mode": "parallel-4",
+      "baseline_ms": 337.8688,
+      "candidate_ms": 319.9380365,
+      "ratio": 0.9471729185508415,
+      "reduction_percent": 5.282708144915849,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9471729185508415,
+          "ratio_bootstrap95": [
+            0.9402650269727116,
+            0.9524038820469339
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 338.001716,
+              "candidate_ms": 320.7349235,
+              "ratio": 0.9489150744429948
+            },
+            {
+              "baseline_ms": 337.3278365,
+              "candidate_ms": 327.0164505,
+              "ratio": 0.9694321520957552
+            },
+            {
+              "baseline_ms": 340.5751275,
+              "candidate_ms": 322.5835375,
+              "ratio": 0.9471729185508415
+            },
+            {
+              "baseline_ms": 339.4353755,
+              "candidate_ms": 319.1592125,
+              "ratio": 0.9402650269727116
+            },
+            {
+              "baseline_ms": 338.116481,
+              "candidate_ms": 320.1340175,
+              "ratio": 0.9468157735262837
+            },
+            {
+              "baseline_ms": 335.9268505,
+              "candidate_ms": 319.9380365,
+              "ratio": 0.9524038820469339
+            },
+            {
+              "baseline_ms": 337.8688,
+              "candidate_ms": 316.560234,
+              "ratio": 0.9369324246571449
+            },
+            {
+              "baseline_ms": 336.8877845,
+              "candidate_ms": 318.4110125,
+              "ratio": 0.9451545207332979
+            },
+            {
+              "baseline_ms": 335.7983645,
+              "candidate_ms": 318.1577155,
+              "ratio": 0.9474665428276676
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "narrow-w1-d3-parallel-growing",
+      "mode": "parallel-1",
+      "baseline_ms": 58.97873025,
+      "candidate_ms": 58.56289225,
+      "ratio": 0.9968846128237169,
+      "reduction_percent": 0.3115387176283124,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.9968846128237169,
+          "ratio_bootstrap95": [
+            0.9863622773751002,
+            0.9979482137121798
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 58.97873025,
+              "candidate_ms": 58.8577185,
+              "ratio": 0.9979482137121797
+            },
+            {
+              "baseline_ms": 59.763699,
+              "candidate_ms": 58.94865825,
+              "ratio": 0.9863622773751002
+            },
+            {
+              "baseline_ms": 59.22739525,
+              "candidate_ms": 58.98999,
+              "ratio": 0.9959916310856165
+            },
+            {
+              "baseline_ms": 59.2749345,
+              "candidate_ms": 59.21183125,
+              "ratio": 0.9989354142601373
+            },
+            {
+              "baseline_ms": 62.53557925,
+              "candidate_ms": 58.5286475,
+              "ratio": 0.9359255675240268
+            },
+            {
+              "baseline_ms": 58.661334,
+              "candidate_ms": 58.36415925,
+              "ratio": 0.9949340608244607
+            },
+            {
+              "baseline_ms": 58.52680925,
+              "candidate_ms": 58.38167225,
+              "ratio": 0.9975201620956298
+            },
+            {
+              "baseline_ms": 58.7459085,
+              "candidate_ms": 58.56289225,
+              "ratio": 0.9968846128237169
+            },
+            {
+              "baseline_ms": 58.53139575,
+              "candidate_ms": 58.4076665,
+              "ratio": 0.9978861045697854
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "narrow-w1-d3-parallel-growing",
+      "mode": "parallel-2",
+      "baseline_ms": 59.10470775,
+      "candidate_ms": 69.14142125,
+      "ratio": 1.17278664046064,
+      "reduction_percent": -17.278664046063994,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 1.17278664046064,
+          "ratio_bootstrap95": [
+            1.1663393315697985,
+            1.1839085605736726
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 59.687562,
+              "candidate_ms": 70.770714,
+              "ratio": 1.185686123350121
+            },
+            {
+              "baseline_ms": 60.1016285,
+              "candidate_ms": 70.408315,
+              "ratio": 1.1714876411377106
+            },
+            {
+              "baseline_ms": 59.2309045,
+              "candidate_ms": 69.4652135,
+              "ratio": 1.17278664046064
+            },
+            {
+              "baseline_ms": 59.10470775,
+              "candidate_ms": 68.87621675,
+              "ratio": 1.1653253923753644
+            },
+            {
+              "baseline_ms": 60.120966,
+              "candidate_ms": 70.23513025,
+              "ratio": 1.168230235189501
+            },
+            {
+              "baseline_ms": 58.79054375,
+              "candidate_ms": 68.5697235,
+              "ratio": 1.1663393315697985
+            },
+            {
+              "baseline_ms": 58.24782825,
+              "candidate_ms": 68.9601025,
+              "ratio": 1.1839085605736728
+            },
+            {
+              "baseline_ms": 58.6937345,
+              "candidate_ms": 69.11667525,
+              "ratio": 1.177581829454045
+            },
+            {
+              "baseline_ms": 58.71936575,
+              "candidate_ms": 69.14142125,
+              "ratio": 1.1774892382927347
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "narrow-w1-d3-parallel-growing",
+      "mode": "parallel-4",
+      "baseline_ms": 59.06866875,
+      "candidate_ms": 57.350407,
+      "ratio": 0.967778850593734,
+      "reduction_percent": 3.222114940626597,
+      "seeds": [
+        {
+          "seed": 1,
+          "ratio": 0.967778850593734,
+          "ratio_bootstrap95": [
+            0.963576978643797,
+            0.9766561351962508
+          ],
+          "pairs": [
+            {
+              "baseline_ms": 59.8719155,
+              "candidate_ms": 59.832255,
+              "ratio": 0.9993375775658957
+            },
+            {
+              "baseline_ms": 59.06866875,
+              "candidate_ms": 58.2702795,
+              "ratio": 0.9864837101140865
+            },
+            {
+              "baseline_ms": 59.29799325,
+              "candidate_ms": 57.38734375,
+              "ratio": 0.967778850593734
+            },
+            {
+              "baseline_ms": 59.2760115,
+              "candidate_ms": 57.350407,
+              "ratio": 0.9675146074900804
+            },
+            {
+              "baseline_ms": 58.7180955,
+              "candidate_ms": 57.20579525,
+              "ratio": 0.9742447326139861
+            },
+            {
+              "baseline_ms": 58.990188,
+              "candidate_ms": 56.94403475,
+              "ratio": 0.965313667927283
+            },
+            {
+              "baseline_ms": 58.549687,
+              "candidate_ms": 56.4171305,
+              "ratio": 0.963576978643797
+            },
+            {
+              "baseline_ms": 60.1308755,
+              "candidate_ms": 57.005091,
+              "ratio": 0.948016980062098
+            },
+            {
+              "baseline_ms": 58.76189575,
+              "candidate_ms": 57.390166,
+              "ratio": 0.9766561351962508
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

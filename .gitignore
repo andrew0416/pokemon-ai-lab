@@ -9,3 +9,6 @@ engine/target/
 engine/py/dist/
 models/**/*.zip
 .claude/worktrees/
+
+# Local Obsidian vault remains outside shared branches.
+/knowledge-vault/

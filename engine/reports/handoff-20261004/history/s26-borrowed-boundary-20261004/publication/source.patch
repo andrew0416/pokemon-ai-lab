@@ -1,0 +1,4163 @@
+diff --git a/.github/workflows/engine-s26k-boundary.yml b/.github/workflows/engine-s26k-boundary.yml
+new file mode 100644
+index 0000000..7f6c603
+--- /dev/null
++++ b/.github/workflows/engine-s26k-boundary.yml
+@@ -0,0 +1,131 @@
++name: S26k borrowed boundaries and version controls
++on:
++  push:
++    branches: [codex/s26k-boundary-20261004]
++permissions:
++  contents: read
++concurrency:
++  group: s26k-boundary
++  cancel-in-progress: false
++env:
++  CARGO_TERM_COLOR: never
++  CARGO_INCREMENTAL: "0"
++  CARGO_BUILD_JOBS: "2"
++  CARGO_TARGET_DIR: ${{ github.workspace }}/target-s25
++  CARGO_PROFILE_DEV_DEBUG: "0"
++  CARGO_PROFILE_TEST_DEBUG: "0"
++  CARGO_PROFILE_RELEASE_DEBUG: "0"
++  RUSTFLAGS: "-C target-cpu=x86-64"
++  RUST_MIN_STACK: "16777216"
++  RUST_TEST_THREADS: "1"
++  RAYON_NUM_THREADS: "1"
++  OPENBLAS_NUM_THREADS: "1"
++  OMP_NUM_THREADS: "1"
++  PYTHONUTF8: "1"
++  PYTHONHASHSEED: "0"
++jobs:
++  compare:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 35
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - uses: actions/checkout@v4
++        with:
++          ref: d90c80b4001e43807d404454280f1511329ef952
++          path: reference-s24
++          persist-credentials: false
++      - uses: actions/checkout@v4
++        with:
++          ref: 2bb9cf595f675d269406bbe783e88154ed517cb4
++          path: reference-s25
++          persist-credentials: false
++      - uses: dtolnay/rust-toolchain@1.98.1
++        with:
++          components: clippy
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.12"
++      - uses: Swatinem/rust-cache@v2
++        with:
++          prefix-key: engine-search-quality-deps-v1
++          workspaces: engine -> ../target-s25
++          cache-workspace-crates: false
++          cache-bin: false
++      - name: Independent oracle dependencies
++        run: python -m pip install numpy==2.2.6 scipy==1.15.3
++      - name: Frozen reference builds with identical benchmark transport
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26k-boundary-results "$RUNNER_TEMP/s26k-bins"
++          python -B engine/benchmarks/s26_boundary/prepare_reference.py reference-s24 s24 s26k-boundary-results/references
++          python -B engine/benchmarks/s26_boundary/prepare_reference.py reference-s25 s25 s26k-boundary-results/references
++          for revision in s24 s25; do
++            cargo build --locked --release --manifest-path "reference-$revision/engine/Cargo.toml" -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee "s26k-boundary-results/reference-$revision-speed.log"
++            cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/$revision-speed"
++          done
++          cargo build --locked --release --manifest-path reference-s25/engine/Cargo.toml -p lab-search --bin lab-phase-speed --features experiment-allocation-audit 2>&1 | tee s26k-boundary-results/reference-s25-memory.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/s25-memory"
++      - name: Correctness, fallback, and separate portable release builds
++        shell: bash
++        run: |
++          set -euo pipefail
++          mkdir -p s26k-boundary-results "$RUNNER_TEMP/s26k-bins"
++          cd engine
++          cargo test --locked -p lab-search --lib --features experiment-phase-cost,experiment-snapshot-audit,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26k-boundary-results/instrumented-tests.log
++          cargo test --locked -p lab-search --lib --features experiment-growth-pipeline,experiment-response-sweeps,experiment-search-quality 2>&1 | tee ../s26k-boundary-results/uninstrumented-tests.log
++          cargo test --locked -p lab-search --lib 2>&1 | tee ../s26k-boundary-results/default-off.log
++          cargo check --locked -p lab-search --lib --no-default-features --features experiment-phase-cost 2>&1 | tee ../s26k-boundary-results/no-default.log
++          cargo check --locked -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26k-boundary-results/fallback.log
++          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-phase-cost -- -D warnings 2>&1 | tee ../s26k-boundary-results/instrumented-clippy.log
++          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-growth-pipeline -- -D warnings 2>&1 | tee ../s26k-boundary-results/uninstrumented-clippy.log
++          cargo build --locked -p lab-search --bin lab-belief-workspace --features experiment-snapshot-audit 2>&1 | tee ../s26k-boundary-results/oracle-build.log
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-growth-pipeline 2>&1 | tee ../s26k-boundary-results/speed-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/speed"
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-phase-cost 2>&1 | tee ../s26k-boundary-results/profile-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/profile"
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-snapshot-audit 2>&1 | tee ../s26k-boundary-results/audit-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/audit"
++          cargo build --locked --release -p lab-search --bin lab-phase-speed --features experiment-allocation-audit 2>&1 | tee ../s26k-boundary-results/memory-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-phase-speed" "$RUNNER_TEMP/s26k-bins/memory"
++          cargo clippy --locked -p lab-search --lib --bin lab-phase-speed --features experiment-allocation-audit,experiment-snapshot-audit -- -D warnings 2>&1 | tee ../s26k-boundary-results/audit-clippy.log
++          cargo build --locked --release -p lab-search --bin lab-belief-workspace --features experiment-belief-workspace 2>&1 | tee ../s26k-boundary-results/scalar-build.log
++          cp "$CARGO_TARGET_DIR/release/lab-belief-workspace" "$RUNNER_TEMP/s26k-bins/scalar"
++          rustc --edition=2021 -C opt-level=2 -C target-cpu=x86-64 benchmarks/s26_boundary/cpu_probe.rs -o "$RUNNER_TEMP/s26k-bins/cpu-probe"
++          git rev-parse HEAD > ../s26k-boundary-results/source-sha.txt
++          rustc --version > ../s26k-boundary-results/rustc.txt
++          sha256sum "$RUNNER_TEMP/s26k-bins/"* > ../s26k-boundary-results/binaries.sha256
++      - name: Independent pipeline exhaustive BR and LP certificates
++        run: python -B engine/benchmarks/s26_boundary/contract_check.py --binary target-s25/debug/lab-belief-workspace --out s26k-boundary-results/pipeline-lp --require-lp
++      - name: Uninstrumented full-result witnesses
++        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/speed" --out s26k-boundary-results/check --mode check
++      - name: Instrumentation counters and cross-build parity
++        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/profile" --out s26k-boundary-results/profile-check --mode profile-check --parity s26k-boundary-results/check/summary.json
++      - name: Every intermediate snapshot shadow checks
++        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/audit" --out s26k-boundary-results/audit-check --mode check --parity s26k-boundary-results/check/summary.json
++      - name: Uninstrumented A-A and boundary comparison
++        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/speed" --out s26k-boundary-results/paired --mode speed --parity s26k-boundary-results/check/summary.json
++      - name: Same-runner pinned version comparisons and true A-A
++        run: python -B engine/benchmarks/s26_boundary/cross_version.py --s24 "$RUNNER_TEMP/s26k-bins/s24-speed" --s25 "$RUNNER_TEMP/s26k-bins/s25-speed" --current "$RUNNER_TEMP/s26k-bins/speed" --parity s26k-boundary-results/check/summary.json --out s26k-boundary-results/cross-version
++      - name: Separate instrumented phase diagnostics
++        run: python -B engine/benchmarks/s26_boundary/run.py --binary "$RUNNER_TEMP/s26k-bins/profile" --out s26k-boundary-results/profile --mode profile --parity s26k-boundary-results/check/summary.json
++      - name: Ephemeral runner CPU emulator
++        run: |
++          sudo apt-get update -qq
++          sudo apt-get install -y --no-install-recommends qemu-user time
++      - name: Fresh-process allocation and RSS measurements
++        run: python -B engine/benchmarks/s26_boundary/memory_run.py --binary "$RUNNER_TEMP/s26k-bins/memory" --out s26k-boundary-results/memory --parity s26k-boundary-results/check/summary.json
++      - name: Rotated sand RSS repetition in plain and instrumented binaries
++        run: python -B engine/benchmarks/s26_boundary/rss_repeat.py --old-speed "$RUNNER_TEMP/s26k-bins/s25-speed" --old-memory "$RUNNER_TEMP/s26k-bins/s25-memory" --speed "$RUNNER_TEMP/s26k-bins/speed" --memory "$RUNNER_TEMP/s26k-bins/memory" --parity s26k-boundary-results/check/summary.json --out s26k-boundary-results/rss-repeat
++      - name: Non-AVX2 emulated execution and scalar fallback
++        run: python -B engine/benchmarks/s26_boundary/portability.py --binary "$RUNNER_TEMP/s26k-bins/speed" --scalar "$RUNNER_TEMP/s26k-bins/scalar" --probe "$RUNNER_TEMP/s26k-bins/cpu-probe" --out s26k-boundary-results/portability
++      - name: Preserve evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: s26k-boundary-${{ github.run_id }}-${{ github.run_attempt }}
++          path: s26k-boundary-results/
++          if-no-files-found: error
++          retention-days: 30
+diff --git a/engine/benchmarks/s26_boundary/README.md b/engine/benchmarks/s26_boundary/README.md
+new file mode 100644
+index 0000000..837ac2c
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/README.md
+@@ -0,0 +1,70 @@
++# Borrowed public-boundary lookup and historical controls
++
++Parent S25: `2bb9cf595f675d269406bbe783e88154ed517cb4`.
++S24 reference: `d90c80b4001e43807d404454280f1511329ef952`.
++Experimental `pipeline.borrowed_boundary` defaults to false; production unchanged.
++
++## Representation contract
++
++The old growing builder clones `Vec<String>` before every boundary lookup, including
++hits. The new path borrows `[String]` with exactly the Hash/Eq behavior of the owned
++vector. It clones only on a miss. The same derived Debug format creates the exported
++public key. Both paths share private-key interning and boundary insertion. Neither
++information ID assignment order, public-frontier lexicographic order, observations,
++menus, callbacks, evaluator values, chance mass, solver or certificate changes.
++This is not a hash-only identity, observer cache or altered disclosure policy.
++
++The flag is a growing-request storage option; fixed-tree requests reject it. The
++private Growing layout and helper boundaries can affect the OFF path in an experiment
++build. Compare against pinned predecessors instead of assuming that overhead is zero.
++
++## Correctness and ordinary comparisons
++
++Inherited Cursor and trace tests are retained. New callback trace comparisons cover
++the boundary flag with encoded history both OFF and ON, switch closure, budgets,
++fork/in-place storage and the other pipeline flags. Original compiled tree metadata,
++solutions, work and error behavior must match. The expanded oracle uses a fresh seed,
++escaped future semantic labels and both history modes; it compares entire OFF/ON JSON
++and independent exhaustive BR/LP, with capped nonconvergence separately recorded.
++
++Eight settings from six bounded engine fixtures. Three same-binary pairs, each with
++an identical-call A/A, use 9 ABBA/BAAB blocks: option alone, on top of encoded history,
++and on top of the previous five options. Total 48 comparisons. The 56 profile
++configurations are separately checked across clean, phase and snapshot binaries;
++phase timings (5 captures each) and allocator counts are diagnostic, not speed gains.
++
++## Pinned version controls
++
++S24 and S25 are checked out at exact SHAs on the temporary runner. Only their benchmark
++CLI is replaced by the exact S26 CLI, after verifying the original Git blob hash and
++that the only working-tree diff is this file. Libraries/engine are untouched. Patch,
++source SHA and binary SHA256 are recorded. All three use Rust 1.98.1 and generic x86-64.
++
++The common stdin transport keeps input loading and pool creation outside each sample.
++Three persistent processes receive commands serially, with up to four CPUs shared;
++workers are never requested to compute simultaneously. One warm computation per
++binding precedes 9 rotated ABBA/BAAB blocks, one compute per sample. Every sample's full
++result/work witness must match the preflight. JSON, stdin wait and returned-result
++destruction are outside compute. Input/pool ownership and code generation still differ
++between versions; the comparison intentionally includes library layout changes.
++
++Six comparisons per setting (48 total): S24 A/A, S24→S25 all options OFF, S25 A/A,
++S25→S26 OFF, S25 encoded/full-five A/A, and S25→S26 full-five (boundary OFF).
++This guards both the earlier history change and this candidate's OFF wrapper cost.
++Intervals are exploratory within-run estimates, not a proof of zero overhead or a
++statistical multiplicity correction. The local worker smoke test uses only current
++binaries with timing disabled and is not historical-version performance evidence.
++
++## Sand RSS repetition
++
++Use 12 rotated blocks of five fresh processes per mode: S25 all-four, identical A/A,
++S25 all-five, S26 all-five, S26 all-six. Repeat separately for clean `--check` and
++allocator-instrumented `--memory`: 120 processes. `/usr/bin/time` measures each child's
++whole peak RSS, including input/pool/loading/witness; modes must not be pooled.
++Each result/work witness equals the corresponding clean reference. Instrumented
++requested heap and whole-process RSS have different scopes. The repeats assess the
++previous 5.58% sand RSS observation; they do not diagnose fragmentation or leaks alone.
++
++Non-AVX2 Nehalem emulation verifies CPUID and exact native/emulated results for two
++engine cases × seven configurations and the legacy scalar solver. This is not real
++old-hardware timing. All experiments are speed/correctness only; no win rate evaluated.
+diff --git a/engine/benchmarks/s26_boundary/contract_check.py b/engine/benchmarks/s26_boundary/contract_check.py
+new file mode 100644
+index 0000000..d5cd5f1
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/contract_check.py
+@@ -0,0 +1,147 @@
++"""New seeds and matrix families, independent strategic-form BR, optional required LP.
++
++Fixture builders and the oracle are extracted from the inherited Python oracle,
++not from the Rust solver. Local checks do not need SciPy; CI requires it.
++Different rules need not return identical policies. Every certificate must match
++exhaustive pure plans for the actual exported game, including partial growth.
++"""
++from pathlib import Path
++import argparse,ast,copy,hashlib,itertools,json,math,random,subprocess
++import numpy as np
++
++HERE=Path(__file__).resolve().parent
++def helpers(path,names):
++    module=ast.parse(path.read_text(encoding='utf-8'))
++    selected=[n for n in module.body if isinstance(n,ast.FunctionDef) and n.name in names]
++    assert {n.name for n in selected}==set(names)
++    scope=dict(np=np,itertools=itertools)
++    exec(compile(ast.Module(body=selected,type_ignores=[]),str(path),'exec'),scope)
++    return [scope[n] for n in names]
++generated,kuhn,normal_form=helpers(HERE.parent/'s26_tree/check.py',['generated','kuhn','normal_form'])
++observed,canonical=helpers(HERE.parent/'s26_tree/growing_check.py',['generated','canonical'])
++RULES=['lcfr','cfr','cfr-simultaneous','dcfr','pcfr+','sapcfr+','hs-dcfr-15','hs-dcfr-30','hs-pcfr-15','hs-pcfr-30']
++
++def matrix_case(rng,i):
++    # Chance after each joint choice, varying player order and utility offsets.
++    rows=2+i%3;cols=2+(i//3)%2;nodes=[None];children=[]
++    def add(n):nodes.append(n);return len(nodes)-1
++    first=i%2;other=1-first
++    for a in range(rows):
++        n=add(None);children.append(n);leaves=[]
++        for b in range(cols):
++            value=rng.randrange(-10,11)+(1000 if i%4==0 else 0)
++            chance=add(None);leaves.append(chance)
++            x=add(dict(type='terminal',value=value));y=add(dict(type='terminal',value=-value/3))
++            p=0. if i%5==0 else (i%3+1)/4
++            nodes[chance]=dict(type='chance',edges=[dict(probability=p,child=x),dict(probability=1-p,child=y)])
++        nodes[n]=dict(type='decision',player=other,information='second',actions=[f'c{b}' for b in range(cols)],children=leaves)
++    nodes[0]=dict(type='decision',player=first,information='first',actions=[f'r{a}' for a in range(rows)],children=children)
++    return dict(mode='tree',root=0,nodes=nodes,include_keys=True,solver=dict(iterations=4096,tolerance=.02,check_every=32))
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
++    p.add_argument('--require-lp',action='store_true');p.add_argument('--small',action='store_true');a=p.parse_args()
++    linprog=None
++    if a.require_lp:from scipy.optimize import linprog
++    a.out.mkdir(parents=True,exist_ok=False);binary=a.binary.resolve();rng=random.Random(261006517);records=[];lp_cache={}
++    def run(name,q,ok=True):
++        path=a.out/(name+'-request.json');path.write_text(json.dumps(q),encoding='utf-8')
++        child=subprocess.run([str(binary),str(path.resolve())],capture_output=True,timeout=90)
++        (a.out/(name+'-result.json')).write_bytes(child.stdout);(a.out/(name+'-stderr.txt')).write_bytes(child.stderr)
++        assert (child.returncode==0)==ok,(name,child.stderr.decode(errors='replace'))
++        return json.loads(child.stdout) if ok else None
++    def certify(name,q,r):
++        game=r.get('oracle_tree',q);key=json.dumps(dict(root=game['root'],nodes=game['nodes']),sort_keys=True)
++        if key not in lp_cache:
++            keys,plans,A=normal_form(game);n,m=A.shape;value=None
++            if linprog:
++                lp=linprog(np.r_[np.zeros(n),-1.],A_ub=np.c_[-A.T,np.ones(m)],b_ub=np.zeros(m),
++                    A_eq=np.array([np.r_[np.ones(n),0.]]),b_eq=[1.],bounds=[(0,None)]*n+[(None,None)],method='highs')
++                assert lp.success,lp.message
++                value=-lp.fun
++            lp_cache[key]=keys,plans,A,value
++        keys,plans,A,value=lp_cache[key];lookup={i['key']:i for i in r['policies']}
++        assert set(lookup)==set(keys[0]+keys[1])
++        for v in lookup.values():assert min(v['probabilities'])>=0 and abs(sum(v['probabilities'])-1)<1e-10
++        pure=[np.array([math.prod(lookup[k]['probabilities'][act] for k,act in zip(keys[player],plan)) for plan in plans[player]]) for player in range(2)]
++        lower=float(min(pure[0]@A));upper=float(max(A@pure[1]));profile=float(pure[0]@A@pure[1]);gap=upper-lower
++        for k,v in [('value',profile),('lower',lower),('upper',upper),('finite_game_gap',gap)]:
++            assert abs(r[k]-v)<1e-7,(name,k,r[k],v)
++        if value is not None:assert lower-1e-7<=value<=upper+1e-7,(name,value,lower,upper)
++        converge=r.get('surrogate_converged',r['converged'])
++        assert converge==(r['finite_game_gap']<=q['solver']['tolerance'])
++        paper=r.get('paper',(r.get('metadata',{}).get('growth') or {}).get('paper',{})) or {}
++        records.append(dict(case=name,gap=gap,iterations=r['iterations'],converged=converge,lp_value=value,paper=paper))
++        return value
++    tree_count=4 if a.small else 16;matrix_count=4 if a.small else 12
++    cases=[(f'new-hidden-{i}',generated(rng,i)) for i in range(tree_count)]
++    cases += [(f'matrix-{i}',matrix_case(rng,i)) for i in range(matrix_count)]+[('kuhn',kuhn())]
++    for name,q in cases:
++        q['solver'].update(iterations=8192,tolerance=.02)
++        original=run(name+'-original',q);certify(name+'-original',q,original)
++        variants=[(dict(rule=r,sequence=True,checks='periodic'),dict(compressed_checks=True)) for r in ['lcfr','cfr-simultaneous','dcfr','sapcfr+']]
++        variants.append((dict(sequence=True),{}))
++        reference_request=copy.deepcopy(q);reference_request['solver']['paper']=dict(sequence=True)
++        reference=run(name+'-sequence',reference_request);certify(name+'-sequence',reference_request,reference)
++        for i,(setting,pipeline) in enumerate(variants):
++            request=copy.deepcopy(q);request['solver'].update(paper=setting,pipeline=pipeline);tag=name+f'-p{i}'
++            r=run(tag,request);value=certify(tag,request,r)
++            if not pipeline:
++                for field in ['policies','value','lower','upper','finite_game_gap','iterations','converged']:assert r[field]==reference[field],(name,field)
++            if name=='kuhn' and value is not None:assert abs(value+1/18)<1e-10
++    allflags=dict(frontier_index=True,owned_compiler=True,incremental_sequence=True,compressed_checks=True)
++    growth_settings=[(dict(sequence=True),p) for p in [dict(),dict(frontier_index=True),dict(owned_compiler=True),dict(owned_compiler=True,incremental_sequence=True),dict(compressed_checks=True),allflags]]
++    growth_settings += [(dict(sequence=True,reuse_policy=True),allflags),(dict(sequence=True,rule='cfr-simultaneous',warm_iterations=8),allflags)]
++    growth_settings += [(setting, dict(pipeline, encoded_history=True)) for setting,pipeline in list(growth_settings)]
++    growth_count=3 if a.small else 32
++    for i in range(growth_count):
++        q=observed(rng,i)
++        # Bijective label extension preserves information partitions while exercising
++        # quoting, control bytes, Unicode and future mechanic/action identifiers.
++        suffix='-新기믹\"\\\n\t\0-'+str(i)
++        for state in q['states']:
++            state['public'] += suffix
++            state['private'] = [v+suffix for v in state['private']]
++            if 'actions' in state: state['actions']=[[v+suffix for v in menu] for menu in state['actions']]
++        for world in q['worlds']:world['id'] += suffix
++        q['solver'].update(iterations=8192,tolerance=.03,paper=dict(sequence=True))
++        full=run(f'growth-{i}-full',q);certify(f'growth-{i}-full',q,full)
++        for budget in [1,2,99]:
++            control=copy.deepcopy(q);control['growth']=dict(cadence=4,max_expansions=budget,max_walks=1000,seed=i+1)
++            original=run(f'growth-{i}-budget{budget}-control',control);certify(f'growth-{i}-budget{budget}-control',control,original)
++            for v,(setting,pipeline) in enumerate(growth_settings):
++                request=copy.deepcopy(control);request['solver'].update(paper=setting,pipeline=pipeline)
++                tag=f'growth-{i}-v{v}-budget{budget}';r=run(tag,request);certify(tag,request,r)
++                encoded=copy.deepcopy(request);encoded['solver']['pipeline']['borrowed_boundary']=True
++                encoded_result=run(tag+'-borrowed',encoded);certify(tag+'-borrowed',encoded,encoded_result)
++                assert encoded_result==r, ('entire observed result differs',tag)
++                g=r['metadata']['growth'];assert g['committed_expansions']==(3 if budget==99 else budget)
++                assert r['converged']==(g['horizon_complete'] and r['surrogate_converged'])
++                if v<3:
++                    for field in ['policies','value','lower','upper','finite_game_gap','iterations','converged']:assert r[field]==original[field],(tag,field)
++                    for field in ['walks','solves','total_cfr_iterations','attempted_transitions','committed_expansions']:assert g[field]==original['metadata']['growth'][field],(tag,field)
++                if budget==99:assert canonical(r['oracle_tree'])==canonical(full['oracle_tree'])
++                else:assert r['full_horizon_gap'] is None and r['certificate_scope']=='current-fixed-leaf-surrogate-only'
++    # Abort after a complete pending group plus part of the next: no unsolved publish.
++    q=observed(rng,2);q['solver'].update(paper=dict(sequence=True),pipeline=allflags);q['growth']=dict(max_expansions=1,seed=1,cadence=4)
++    root=run('rollback-root',q);q['growth'].update(max_expansions=2,cadence=1);one=run('rollback-one',q)
++    cap=one['metadata']['growth']['attempted_transitions']+1;q['growth'].update(max_expansions=100,cadence=4);q['limits']['max_transitions']=cap
++    r=run('rollback-batch',q);certify('rollback-batch',q,r)
++    assert r['policies']==root['policies'] and canonical(r['oracle_tree'])==canonical(root['oracle_tree'])
++    g=r['metadata']['growth'];assert g['attempted_transitions']==cap and g['committed_expansions']==1 and g['solves']==1 and g['stop']=='TransitionLimit'
++    encoded=copy.deepcopy(q);encoded['solver']['pipeline']['borrowed_boundary']=True
++    er=run('rollback-borrowed',encoded);certify('rollback-borrowed',encoded,er);assert er==r
++    fixed_history=kuhn();fixed_history['solver'].update(paper=dict(sequence=True),pipeline=dict(borrowed_boundary=True));run('invalid-fixed-boundary',fixed_history,False)
++    for index,pipeline in enumerate([dict(unknown=True),dict(frontier_index=1),dict(incremental_sequence=True)]):
++        q['solver'].update(paper=dict(sequence=True),pipeline=pipeline);run(f'invalid-pipeline-{index}',q,False)
++    q['solver'].update(paper=dict(),pipeline=dict(compressed_checks=True));run('invalid-check-kernel',q,False)
++    q['solver'].update(paper=dict(sequence=True,compact=True),pipeline=allflags);run('invalid-compact',q,False)
++    q['solver'].pop('paper');run('missing-explicit-paper',q,False)
++    fixed=kuhn();fixed['solver'].update(paper=dict(sequence=True),pipeline=dict(owned_compiler=True));run('invalid-fixed-growth-flag',fixed,False)
++    summary=dict(passed=True,certificates=len(records),distinct_fixed_games=len(cases),distinct_growing_games=growth_count,
++        new_seed=261006517,independent_exhaustive_best_responses=True,independent_lp=a.require_lp,
++        converged=sum(r['converged'] for r in records),warm_applications=sum(r['paper'].get('warm_applied',0) for r in records),
++        reuse_acceptances=sum(r['paper'].get('reused',0) for r in records),atomic_rollback=True,performance=False,
++        binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),cases=records)
++    (a.out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8');print(json.dumps({k:v for k,v in summary.items() if k!='cases'}))
++if __name__=='__main__':main()
+diff --git a/engine/benchmarks/s26_boundary/cpu_probe.rs b/engine/benchmarks/s26_boundary/cpu_probe.rs
+new file mode 100644
+index 0000000..b08d186
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/cpu_probe.rs
+@@ -0,0 +1,7 @@
++fn main() {
++    let avx=std::arch::is_x86_feature_detected!("avx");
++    let avx2=std::arch::is_x86_feature_detected!("avx2");
++    let sse2=std::arch::is_x86_feature_detected!("sse2");
++    println!("{{\"avx\":{avx},\"avx2\":{avx2},\"sse2\":{sse2}}}");
++    if std::env::args().any(|a|a=="--require-no-avx") {assert!(!avx && !avx2 && sse2);}
++}
+diff --git a/engine/benchmarks/s26_boundary/cross_version.py b/engine/benchmarks/s26_boundary/cross_version.py
+new file mode 100644
+index 0000000..f9657de
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/cross_version.py
+@@ -0,0 +1,77 @@
++"""Interleave pinned versions with an identical, benchmark-only worker transport."""
++from pathlib import Path
++import argparse,copy,hashlib,json,os,platform,queue,random,statistics,subprocess,threading
++import run as common
++HERE=Path(__file__).resolve().parent
++ALL4=dict(frontier_index=True,owned_compiler=True,incremental_sequence=True,compressed_checks=True)
++PAPER=dict(rule='lcfr',checks='periodic',sequence=True)
++def option(name,flags):return dict(id=name,paper=PAPER,pipeline=flags)
++OFF=option('new-off',{});ALL5=option('all-history',dict(ALL4,encoded_history=True));ALL6=option('all-six',dict(ALL4,encoded_history=True,borrowed_boundary=True))
++def identity(row):return dict(witness=row['witness'],diagnostics=row['diagnostics'])
++def summary(samples):
++ ratios=[x['ratio'] for x in samples];rng=random.Random(261006)
++ bootstrap=sorted(statistics.median(rng.choices(ratios,k=len(ratios))) for _ in range(4000));ratio=statistics.median(ratios)
++ return dict(ratio_median=ratio,time_reduction_percent=100*(1-ratio),ratio_bootstrap95=[bootstrap[100],bootstrap[3899]],pairs=samples)
++def request(case):
++ q=copy.deepcopy(case)
++ for w in q['worlds']:w['scenario']=(HERE.parents[2]/w['scenario']).as_posix()
++ return q
++class Worker:
++ def __init__(self,binary,path,prefix,timing):
++  self.log=Path(str(prefix)+'-stdout.jsonl').open('w',encoding='utf-8');self.err=Path(str(prefix)+'-stderr.txt').open('w',encoding='utf-8')
++  self.q=queue.Queue();self.p=subprocess.Popen([str(binary.resolve()),'--worker' if timing else '--worker-check',str(path.resolve())],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.err,text=True,encoding='utf-8',bufsize=1)
++  def reader():
++   for line in self.p.stdout:self.log.write(line);self.log.flush();self.q.put(line)
++   self.q.put(None)
++  self.thread=threading.Thread(target=reader,daemon=True);self.thread.start()
++  assert self.receive()==dict(type='ready',timing=timing)
++ def receive(self):
++  line=self.q.get(timeout=180)
++  assert line is not None,'worker terminated; inspect saved stderr'
++  return json.loads(line)
++ def ask(self,variant):
++  self.p.stdin.write(json.dumps(dict(variant=variant,count=1))+'\n');self.p.stdin.flush();return self.receive()
++ def close(self):
++  self.p.stdin.close()
++  try:self.p.wait(timeout=15)
++  except subprocess.TimeoutExpired:self.p.kill();self.p.wait();raise
++  self.thread.join(timeout=5);self.log.close();self.err.close();assert self.p.returncode==0
++def main():
++ p=argparse.ArgumentParser();p.add_argument('--s24',type=Path);p.add_argument('--s25',type=Path);p.add_argument('--current',type=Path,required=True);p.add_argument('--parity',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--self-check',action='store_true');a=p.parse_args()
++ timing=not a.self_check
++ if timing:assert os.environ.get('GITHUB_ACTIONS')=='true'
++ a.out.mkdir(parents=True,exist_ok=False);plan=json.loads((HERE/'plan.json').read_bytes());ref=json.loads(a.parity.read_bytes());assert ref['passed']
++ env=dict(LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1');os.environ.update(env)
++ paths=dict(s24=a.s24 or a.current,s25=a.s25 or a.current,current=a.current)
++ meta=dict(source_sha=os.environ.get('GITHUB_SHA'),timing=timing,platform=platform.platform(),binaries={k:hashlib.sha256(v.read_bytes()).hexdigest() for k,v in paths.items()},sample_count=1,rounds=9 if timing else 1,scope='one warmed compute; inputs, pool, stdin, witness/JSON and result drop excluded; separate persistent processes receive interleaved commands')
++ if timing:
++  allowed=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,set(allowed[:4]));meta.update(available_cpus=allowed,parallel_cpus=allowed[:4],load_before=os.getloadavg(),cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0])
++ common.write(a.out/'environment.json',meta)
++ bindings={'a':('s24',OFF),'b':('s25',OFF),'c':('current',OFF),'d':('s25',ALL5),'e':('current',ALL5),'f':('current',ALL6)}
++ pairs=[('s24-aa','a','a'),('s24-to-s25-off','a','b'),('s25-aa','b','b'),('s25-to-current-off','b','c'),('s25-history-aa','d','d'),('s25-to-current-history','d','e')]
++ results=[];witnesses={}
++ cases=plan['profile_cases'] if timing else [plan['profile_cases'][-1]]
++ for case in cases:
++  path=a.out/(case['id']+'-request.json');common.write(path,request(case));workers={};expected={};samples={name:[] for name,_,_ in pairs}
++  try:
++   for name,binary in paths.items():workers[name]=Worker(binary,path,a.out/(case['id']+'-'+name),timing)
++   for key,(version,var) in bindings.items():
++    row=workers[version].ask(var);expect=ref['witnesses'][case['id']+'|'+common.route(var)]
++    assert identity(row)==expect,(case['id'],key,'preflight mismatch');expected[key]=expect
++   witnesses[case['id']]=expected
++   for block in range(meta['rounds']):
++    for offset in range(len(pairs)):
++     name,ak,bk=pairs[(offset+block)%len(pairs)];values=[]
++     for key in ([ak,bk,bk,ak] if block%2==0 else [bk,ak,ak,bk]):
++      version,var=bindings[key];row=workers[version].ask(var);assert identity(row)==expected[key]
++      assert ('ns_per_solve' in row)==timing
++      if timing:values.append(row['ns_per_solve'])
++     if timing:
++      am=statistics.mean([values[0],values[3]] if block%2==0 else values[1:3]);bm=statistics.mean(values[1:3] if block%2==0 else [values[0],values[3]])
++      samples[name].append(dict(block=block,baseline_ms=am/1e6,candidate_ms=bm/1e6,ratio=bm/am))
++   if timing:results.extend(dict(case=case['id'],comparison=name,**summary(samples[name])) for name,_,_ in pairs)
++  finally:
++   for worker in workers.values():worker.close()
++  print(json.dumps(dict(case=case['id'],passed=True)),flush=True)
++ common.write(a.out/'summary.json',dict(passed=True,timing=timing,self_check=a.self_check,source_sha=os.environ.get('GITHUB_SHA'),results=results,witnesses=witnesses,performance_scope=meta['scope'],baseline_source='d90c80b4001e43807d404454280f1511329ef952',history_source='2bb9cf595f675d269406bbe783e88154ed517cb4'))
++if __name__=='__main__':main()
+diff --git a/engine/benchmarks/s26_boundary/memory_run.py b/engine/benchmarks/s26_boundary/memory_run.py
+new file mode 100644
+index 0000000..485c95b
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/memory_run.py
+@@ -0,0 +1,37 @@
++"""Independent process per configuration; allocator diagnostics are not timings."""
++from pathlib import Path
++import argparse,copy,hashlib,json,os,subprocess,sys
++import run as common
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--parity',type=Path,required=True);p.add_argument('--local-check',action='store_true');a=p.parse_args()
++    if not a.local_check and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Memory experiment runs on the GitHub runner; --local-check validates accounting only.')
++    a.out.mkdir(parents=True);plan=json.loads((common.HERE/'plan.json').read_bytes());reference=json.loads(a.parity.read_bytes());rows=[]
++    env=dict(os.environ,LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
++    cases=plan['profile_cases'][-1:] if a.local_check else plan['profile_cases']
++    for case in cases:
++        choices=[case['baseline'],*case['variants']]
++        if a.local_check:choices=[v for v in choices if v['id'] in ('all-history','all-six')]
++        for variant in choices:
++            for repeat in range(1 if a.local_check else 3):
++                request=copy.deepcopy(case);request['baseline']=variant;request['variants']=[]
++                for w in request['worlds']:w['scenario']=(common.HERE.parents[2]/w['scenario']).as_posix()
++                tag=case['id']+'-'+variant['id']+'-'+str(repeat);path=a.out/(tag+'.json');common.write(path,request)
++                command=[str(a.binary.resolve()),'--memory',str(path.resolve())]
++                rss=a.out/(tag+'-rss.txt')
++                if not a.local_check:command=['/usr/bin/time','-f','%M','-o',str(rss.resolve()),*command]
++                result=subprocess.run(command,capture_output=True,env=env,timeout=300)
++                (a.out/(tag+'-stderr.txt')).write_bytes(result.stderr)
++                assert result.returncode==0,(tag,result.stderr.decode(errors='replace'))
++                data=json.loads(result.stdout);assert data['type']=='memory' and not data['timing']
++                expected=reference['witnesses'][case['id']+'|'+common.route(variant)]
++                assert dict(witness=data['witness'],diagnostics=data['diagnostics'])==expected
++                assert data['peak_requested_bytes']>=data['baseline_requested_bytes']
++                assert data['peak_above_baseline_bytes']>=data['returned_live_above_baseline_bytes']
++                assert data['allocations']>0 and data['result_drop_freed_bytes']>0
++                if not a.local_check:data['process_peak_rss_kib']=int(rss.read_text());assert data['process_peak_rss_kib']<512*1024
++                common.write(a.out/(tag+'-result.json'),data)
++                rows.append(dict(case=case['id'],repeat=repeat,**data))
++        print(json.dumps(dict(case=case['id'],passed=True)),flush=True)
++    common.write(a.out/'summary.json',dict(passed=True,source_sha=os.environ.get('GITHUB_SHA'),timing=False,local_accounting_check=a.local_check,configuration_processes=len(rows),rows=rows,
++        binary_sha256=hashlib.sha256(a.binary.read_bytes()).hexdigest(),scope='Rust requested heap bytes include parallel workers; RSS fresh child process peak includes load/pool, allocator metadata and non-Rust memory; allocator instrumentation excluded from speed'))
++if __name__=='__main__':main()
+diff --git a/engine/benchmarks/s26_boundary/plan.json b/engine/benchmarks/s26_boundary/plan.json
+new file mode 100644
+index 0000000..380439f
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/plan.json
+@@ -0,0 +1,2712 @@
++{
++  "rounds": 9,
++  "sample_ms": 50,
++  "profile_rounds": 5,
++  "cases": [
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w1-d2-boundary-only",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w1-d2",
++      "comparison_group": "boundary-only"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w1-d2-after-history",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w1-d2",
++      "comparison_group": "after-history"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w1-d2-after-five",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "all-history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "frontier_index": true,
++          "owned_compiler": true,
++          "incremental_sequence": true,
++          "compressed_checks": true,
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "all-history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w1-d2",
++      "comparison_group": "after-five"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w2-d2-boundary-only",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w2-d2",
++      "comparison_group": "boundary-only"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w2-d2-after-history",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w2-d2",
++      "comparison_group": "after-history"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w2-d2-after-five",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "all-history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "frontier_index": true,
++          "owned_compiler": true,
++          "incremental_sequence": true,
++          "compressed_checks": true,
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "all-history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w2-d2",
++      "comparison_group": "after-five"
++    },
++    {
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 1,
++      "id": "pivot-w1-d1-boundary-only",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "pivot-w1-d1",
++      "comparison_group": "boundary-only"
++    },
++    {
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 1,
++      "id": "pivot-w1-d1-after-history",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "pivot-w1-d1",
++      "comparison_group": "after-history"
++    },
++    {
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 1,
++      "id": "pivot-w1-d1-after-five",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "all-history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "frontier_index": true,
++          "owned_compiler": true,
++          "incremental_sequence": true,
++          "compressed_checks": true,
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "all-history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "pivot-w1-d1",
++      "comparison_group": "after-five"
++    },
++    {
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "sand-damage-w1-d1-boundary-only",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "sand-damage-w1-d1",
++      "comparison_group": "boundary-only"
++    },
++    {
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "sand-damage-w1-d1-after-history",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "sand-damage-w1-d1",
++      "comparison_group": "after-history"
++    },
++    {
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "sand-damage-w1-d1-after-five",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "all-history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "frontier_index": true,
++          "owned_compiler": true,
++          "incremental_sequence": true,
++          "compressed_checks": true,
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "all-history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "sand-damage-w1-d1",
++      "comparison_group": "after-five"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-boundary-only",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w4-d2",
++      "comparison_group": "boundary-only"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-after-history",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w4-d2",
++      "comparison_group": "after-history"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-after-five",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "all-history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "frontier_index": true,
++          "owned_compiler": true,
++          "incremental_sequence": true,
++          "compressed_checks": true,
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "all-history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w4-d2",
++      "comparison_group": "after-five"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-boundary-only",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "narrow-w1-d3",
++      "comparison_group": "boundary-only"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-after-history",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "narrow-w1-d3",
++      "comparison_group": "after-history"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-after-five",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "all-history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "frontier_index": true,
++          "owned_compiler": true,
++          "incremental_sequence": true,
++          "compressed_checks": true,
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "all-history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "narrow-w1-d3",
++      "comparison_group": "after-five"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-cadence1-boundary-only",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w4-d2-cadence1",
++      "comparison_group": "boundary-only"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-cadence1-after-history",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w4-d2-cadence1",
++      "comparison_group": "after-history"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-cadence1-after-five",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "all-history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "frontier_index": true,
++          "owned_compiler": true,
++          "incremental_sequence": true,
++          "compressed_checks": true,
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "all-history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "stats-w4-d2-cadence1",
++      "comparison_group": "after-five"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-cadence1-boundary-only",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "new-off",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {},
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "new-off-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "narrow-w1-d3-cadence1",
++      "comparison_group": "boundary-only"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-cadence1-after-history",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "narrow-w1-d3-cadence1",
++      "comparison_group": "after-history"
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-cadence1-after-five",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "all-history",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        },
++        "pipeline": {
++          "frontier_index": true,
++          "owned_compiler": true,
++          "incremental_sequence": true,
++          "compressed_checks": true,
++          "encoded_history": true
++        },
++        "exact_control": true
++      },
++      "variants": [
++        {
++          "id": "all-history-aa",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ],
++      "workload": "narrow-w1-d3-cadence1",
++      "comparison_group": "after-five"
++    }
++  ],
++  "profile_cases": [
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w1-d2",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w2-d2",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "pivot",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/eject-button-uturn.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 1,
++      "id": "pivot-w1-d1",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "sand",
++          "weight": 1,
++          "scenario": "engine/oracle/scenarios/q-sand-force-battery-power-spot.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 1,
++        "max_nodes": 200000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "sand-damage-w1-d1",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3",
++      "phase": "growing",
++      "cadence": 4,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/normal.json"
++        },
++        {
++          "id": "speed",
++          "weight": 7,
++          "scenario": "engine/benchmarks/s26_speed/fixtures/speed.json"
++        },
++        {
++          "id": "atk",
++          "weight": 2,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/atk.json"
++        },
++        {
++          "id": "spa",
++          "weight": 3,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/spa.json"
++        }
++      ],
++      "hidden_stats": true,
++      "limits": {
++        "turns": 2,
++        "max_nodes": 100000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "stats-w4-d2-cadence1",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ]
++    },
++    {
++      "worlds": [
++        {
++          "id": "normal",
++          "weight": 1,
++          "scenario": "engine/benchmarks/s26_confirm/fixtures/narrow.json"
++        }
++      ],
++      "hidden_stats": false,
++      "limits": {
++        "turns": 3,
++        "max_nodes": 50000,
++        "max_transitions": 20000,
++        "max_decisions": 32
++      },
++      "solver": {
++        "iterations": 4096,
++        "tolerance": 0.1,
++        "check_every": 32
++      },
++      "threads": 4,
++      "id": "narrow-w1-d3-cadence1",
++      "phase": "growing",
++      "cadence": 1,
++      "baseline": {
++        "id": "original",
++        "paper": {
++          "rule": "lcfr",
++          "checks": "periodic",
++          "sequence": true
++        }
++      },
++      "variants": [
++        {
++          "id": "new-off",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {},
++          "exact_control": true
++        },
++        {
++          "id": "boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "history-boundary",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-history",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true
++          },
++          "exact_control": true
++        },
++        {
++          "id": "all-six",
++          "paper": {
++            "rule": "lcfr",
++            "checks": "periodic",
++            "sequence": true
++          },
++          "pipeline": {
++            "frontier_index": true,
++            "owned_compiler": true,
++            "incremental_sequence": true,
++            "compressed_checks": true,
++            "encoded_history": true,
++            "borrowed_boundary": true
++          },
++          "exact_control": true
++        }
++      ]
++    }
++  ],
++  "basis": "S22; identical-path A/A; old/new-OFF path control; new-path OFF/ON; dependency-matched owned/delta",
++  "headline": "uninstrumented generic x86-64 compute only",
++  "phase_scope": "separate instrumented caller wall time; exclusive rows sum to compute; teardown separately reported"
++}
+diff --git a/engine/benchmarks/s26_boundary/portability.py b/engine/benchmarks/s26_boundary/portability.py
+new file mode 100644
+index 0000000..29fac7e
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/portability.py
+@@ -0,0 +1,31 @@
++"""Non-AVX2 CPU emulation, explicitly not real old-hardware timing."""
++from pathlib import Path
++import argparse,copy,json,os,subprocess
++import run as common
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--scalar',type=Path,required=True);p.add_argument('--probe',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
++    assert os.environ.get('GITHUB_ACTIONS')=='true';a.out.mkdir(parents=True)
++    prefix=['qemu-x86_64','-cpu','Nehalem'];env=dict(os.environ,LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1')
++    def execute(name,command):
++        r=subprocess.run(command,capture_output=True,timeout=300,env=env)
++        (a.out/(name+'-stdout.txt')).write_bytes(r.stdout);(a.out/(name+'-stderr.txt')).write_bytes(r.stderr)
++        assert r.returncode==0,(name,r.stderr.decode(errors='replace'));return r.stdout
++    version=execute('qemu-version',['qemu-x86_64','--version']).decode().splitlines()[0]
++    cpu=json.loads(execute('cpu-probe',[*prefix,str(a.probe.resolve()),'--require-no-avx']))
++    assert cpu==dict(avx=False,avx2=False,sse2=True)
++    plan=json.loads((common.HERE/'plan.json').read_bytes());cases=[plan['profile_cases'][0],plan['profile_cases'][-1]];captured=[]
++    for case in cases:
++        q=copy.deepcopy(case);q['threads']=1;q['variants']=[v for v in q['variants'] if v['id'] in ('new-off','boundary','history','history-boundary','all-history','all-six')]
++        for w in q['worlds']:w['scenario']=(common.HERE.parents[2]/w['scenario']).as_posix()
++        path=a.out/(q['id']+'.json');common.write(path,q)
++        args=[str(a.binary.resolve()),'--check',str(path.resolve())]
++        native=execute(q['id']+'-native',args);emulated=execute(q['id']+'-nehalem',prefix+args)
++        assert [json.loads(x) for x in native.splitlines()]==[json.loads(x) for x in emulated.splitlines()]
++        captured.append(q['id'])
++    def decision(player,key,children):return dict(type='decision',player=player,information=key,actions=['A','B'],children=children)
++    q=dict(mode='tree',root=0,nodes=[decision(0,'row',[1,2]),decision(1,'column',[3,4]),decision(1,'column',[5,6]),*[dict(type='terminal',value=v) for v in (1,-1,-1,1)]],solver=dict(iterations=256,tolerance=.01,check_every=32))
++    path=a.out/'scalar.json';common.write(path,q);args=[str(a.scalar.resolve()),str(path.resolve())]
++    native=json.loads(execute('scalar-native',args));emulated=json.loads(execute('scalar-nehalem',prefix+args));assert native==emulated
++    common.write(a.out/'summary.json',dict(passed=True,source_sha=os.environ.get('GITHUB_SHA'),qemu=version,cpu_model='Nehalem',cpuid=cpu,engine_workloads=captured,engine_configurations=14,scalar_legacy_equal=True,actual_old_hardware=False,emulated=True,timing=False))
++    print('Non-AVX2 emulated engine and legacy scalar results match native.')
++if __name__=='__main__':main()
+diff --git a/engine/benchmarks/s26_boundary/prepare_reference.py b/engine/benchmarks/s26_boundary/prepare_reference.py
+new file mode 100644
+index 0000000..785e3ee
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/prepare_reference.py
+@@ -0,0 +1,17 @@
++"""Only the common benchmark CLI is patched in frozen reference checkouts."""
++from pathlib import Path
++import hashlib,json,subprocess,sys
++HERE=Path(__file__).resolve().parent
++pins={'s24':'d90c80b4001e43807d404454280f1511329ef952','s25':'2bb9cf595f675d269406bbe783e88154ed517cb4'}
++root=Path(sys.argv[1]);label=sys.argv[2];out=Path(sys.argv[3]);out.mkdir(parents=True,exist_ok=True)
++def git(*args):return subprocess.check_output(['git','-C',str(root),*args]).decode().strip()
++assert git('rev-parse','HEAD')==pins[label] and git('status','--porcelain')==''
++name='engine/search/src/bin/lab-phase-speed.rs';p=root/name
++original_blob=subprocess.check_output(['git','-C',str(root),'show','HEAD:'+name])
++assert hashlib.sha256(original_blob).hexdigest()=='8cce269c0ceeed232a32fdba37e1b5a3ed7dbaabd97e1a589d5316b0616d19ea'
++assert p.read_bytes().replace(b'\r\n',b'\n')==original_blob.replace(b'\r\n',b'\n')
++source=HERE.parents[2]/name;payload=source.read_bytes();p.write_bytes(payload)
++assert git('diff','--name-only')==name
++(out/(label+'-harness.patch')).write_text(git('diff','--',name),encoding='utf-8')
++(out/(label+'-reference.json')).write_text(json.dumps(dict(source_sha=pins[label],original_cli_sha256='8cce269c0ceeed232a32fdba37e1b5a3ed7dbaabd97e1a589d5316b0616d19ea',patched_cli_sha256=hashlib.sha256(payload).hexdigest(),only_changed=name,library_unchanged=True),indent=2)+'\n')
++print(label+' reference library frozen; common benchmark transport installed')
+diff --git a/engine/benchmarks/s26_boundary/rss_repeat.py b/engine/benchmarks/s26_boundary/rss_repeat.py
+new file mode 100644
+index 0000000..55e7b21
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/rss_repeat.py
+@@ -0,0 +1,48 @@
++"""Fresh-process, rotated RSS comparisons with and without allocator instrumentation."""
++from pathlib import Path
++import argparse,copy,hashlib,json,os,random,statistics,subprocess
++import run as common
++from cross_version import ALL4,ALL5,ALL6,option,identity,request,summary
++def main():
++ p=argparse.ArgumentParser()
++ for name in ('old-speed','old-memory','speed','memory'):p.add_argument('--'+name,type=Path,required=True)
++ p.add_argument('--parity',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
++ assert os.environ.get('GITHUB_ACTIONS')=='true';a.out.mkdir(parents=True,exist_ok=False)
++ paths=vars(a);ref=json.loads(a.parity.read_bytes());assert ref['passed']
++ case=next(c for c in json.loads((common.HERE/'plan.json').read_bytes())['profile_cases'] if c['id']=='sand-damage-w1-d1')
++ choices=[('old-four','old',option('all-four',ALL4)),('old-four-aa','old',option('all-four',ALL4)),('old-five','old',ALL5),('current-five','current',ALL5),('current-six','current',ALL6)]
++ env=dict(os.environ,LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1')
++ records=[]
++ for block in range(12):
++  for mode in (['plain','instrumented'] if block%2==0 else ['instrumented','plain']):
++   for offset in range(len(choices)):
++    label,version,var=choices[(block+offset)%len(choices)]
++    q=request(case);q['baseline']=var;q['variants']=[]
++    tag=f'{mode}-{block}-{label}';path=a.out/(tag+'-request.json');common.write(path,q);rss=a.out/(tag+'-rss.txt')
++    key=('old_' if version=='old' else '')+('memory' if mode=='instrumented' else 'speed');binary=paths[key]
++    command=['/usr/bin/time','-f','%M','-o',str(rss.resolve()),str(binary.resolve()),'--memory' if mode=='instrumented' else '--check',str(path.resolve())]
++    child=subprocess.run(command,capture_output=True,env=env,timeout=90)
++    (a.out/(tag+'-stdout.jsonl')).write_bytes(child.stdout);(a.out/(tag+'-stderr.txt')).write_bytes(child.stderr)
++    assert child.returncode==0,(tag,child.stderr.decode(errors='replace'))
++    lines=[json.loads(line) for line in child.stdout.splitlines()]
++    data=lines[0] if mode=='instrumented' else next(v for v in lines if v['type']=='baseline')
++    expected=ref['witnesses'][case['id']+'|'+common.route(ALL6 if label=='current-six' else ALL5)]
++    assert identity(data)==expected,(tag,'result mismatch')
++    peak=int(rss.read_text());assert 0<peak<512*1024
++    row=dict(mode=mode,block=block,label=label,process_peak_rss_kib=peak,witness=data['witness'])
++    if mode=='instrumented':row.update({k:data[k] for k in ('allocations','reallocations','requested_growth_bytes','peak_above_baseline_bytes','returned_live_above_baseline_bytes','retained_after_result_drop_bytes')})
++    records.append(row)
++  print(json.dumps(dict(block=block,passed=True)),flush=True)
++ results=[]
++ for mode in ('plain','instrumented'):
++  for name,b,c in [('aa','old-four','old-four-aa'),('history','old-four','old-five'),('wrapper','old-five','current-five'),('boundary','current-five','current-six')]:
++   pairs=[]
++   for block in range(12):
++    left=next(r for r in records if r['mode']==mode and r['block']==block and r['label']==b);right=next(r for r in records if r['mode']==mode and r['block']==block and r['label']==c)
++    pairs.append(dict(block=block,ratio=right['process_peak_rss_kib']/left['process_peak_rss_kib'],baseline_rss_kib=left['process_peak_rss_kib'],candidate_rss_kib=right['process_peak_rss_kib']))
++   s=summary(pairs);s['rss_reduction_percent']=s.pop('time_reduction_percent')
++   results.append(dict(mode=mode,comparison=name,**s))
++ common.write(a.out/'summary.json',dict(passed=True,source_sha=os.environ.get('GITHUB_SHA'),timing=False,processes=len(records),blocks=12,rows=records,comparisons=results,
++  binary_sha256={k:hashlib.sha256(v.read_bytes()).hexdigest() for k,v in paths.items() if k in ('old_speed','old_memory','speed','memory')},
++  scope='whole-child peak RSS including loading/pool/compute/witness; plain and instrumented builds analyzed separately; rotated fresh processes, no wall-time gain claims'))
++if __name__=='__main__':main()
+diff --git a/engine/benchmarks/s26_boundary/run.py b/engine/benchmarks/s26_boundary/run.py
+new file mode 100644
+index 0000000..a2edd00
+--- /dev/null
++++ b/engine/benchmarks/s26_boundary/run.py
+@@ -0,0 +1,129 @@
++"""Clean path controls, separate instrumentation, portable same-binary speed pairs."""
++from pathlib import Path
++import argparse, copy, hashlib, importlib.util, json, math, os, platform, statistics, subprocess, sys
++
++HERE = Path(__file__).resolve().parent
++spec = importlib.util.spec_from_file_location('s22_summary', HERE.parent/'s26_pipeline/run.py')
++old = importlib.util.module_from_spec(spec); spec.loader.exec_module(old)
++write = old.write
++
++def route(v):
++    assert set(v) <= {'id', 'paper', 'pipeline', 'exact_control'}
++    return json.dumps({k:x for k,x in v.items() if k not in ('id','exact_control')},sort_keys=True,separators=(',',':'))
++
++def validate_plan(p):
++    assert len(p['profile_cases']) == 8 and len(p['cases']) == 24
++    assert sum(len(c['variants']) for c in p['cases']) == 48
++    for c in p['cases']:
++        b=c['baseline']; aa, candidate=c['variants']
++        assert route(b)==route(aa) and aa['exact_control']
++        expected=copy.deepcopy(b);expected['id']=candidate['id'];expected['exact_control']=True
++        expected['pipeline']['borrowed_boundary']=True
++        assert expected==candidate
++        assert b['pipeline'].get('borrowed_boundary',False) is False
++    assert {c['cadence'] for c in p['profile_cases']}=={1,4}
++
++
++def collect_witnesses(case, rows, out):
++    workload=case.get('workload',case['id'])
++    pre=[(case['baseline'], next(r for r in rows if r['type']=='baseline'))]
++    pre += [(r['variant'], r) for r in rows if r['type']=='validation']
++    assert len(pre)==1+len(case['variants'])
++    for variant,row in pre:
++        key=workload+'|'+route(variant)
++        value=dict(witness=row['witness'],diagnostics=row['diagnostics'])
++        if key in out: assert out[key]==value, 'same API arguments changed result or work'
++        out[key]=value
++
++def profile_summary(rows):
++    grouped={}
++    for r in rows:
++        if r['type']!='profile':continue
++        assert r['balanced']
++        assert sum(p['exclusive_ns'] for p in r['phases'])==r['compute_ns']
++        grouped.setdefault(r['variant'],[]).append(r)
++    result=[]
++    for variant, samples in grouped.items():
++        result.append(dict(variant=variant,samples=len(samples),diagnostics=samples[0]['diagnostics'],
++            compute_ms=statistics.median(r['compute_ns']/1e6 for r in samples),
++            returned_result_drop_ms=statistics.median(r['returned_result_drop_ns']/1e6 for r in samples),
++            phases=[dict(phase=p['phase'],calls=p['calls'],
++                aggregate_exclusive_percent=100*sum(r['phases'][i]['exclusive_ns'] for r in samples)/sum(r['compute_ns'] for r in samples),
++                exclusive_ms=statistics.median(r['phases'][i]['exclusive_ns']/1e6 for r in samples),
++                inclusive_ms=statistics.median(r['phases'][i]['inclusive_ns']/1e6 for r in samples),
++                exclusive_percent=statistics.median(100*r['phases'][i]['exclusive_ns']/r['compute_ns'] for r in samples))
++                for i,p in enumerate(samples[0]['phases'])]))
++    return result
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--binary',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
++    p.add_argument('--mode',choices=['check','speed','profile','profile-check'],required=True)
++    p.add_argument('--parity',type=Path);a=p.parse_args()
++    timing=a.mode in ('speed','profile')
++    if timing and os.environ.get('GITHUB_ACTIONS')!='true':raise SystemExit('Local performance runs are disabled. Use check or profile-check.')
++    plan=json.loads((HERE/'plan.json').read_bytes());validate_plan(plan)
++    binary=a.binary.resolve();repo=HERE.parents[2];a.out.mkdir(parents=True,exist_ok=False)
++    env=dict(os.environ,LAB_ENGINE_FACTORED='0',RAYON_NUM_THREADS='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',PYTHONHASHSEED='0')
++    metadata=dict(platform=platform.platform(),python=sys.version,binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
++        source_sha=os.environ.get('GITHUB_SHA'),mode=a.mode,timing=timing,plan_sha256=hashlib.sha256((HERE/'plan.json').read_bytes()).hexdigest(),
++        portable='-C target-cpu=x86-64; no AVX2 requirement',enumeration='flat',
++        scope='compute excludes loading/JSON/returned result drop; phase mode separately reports result drop; transitions are caller wall time including scheduling/wait, not worker CPU sums',
++        witness='streaming FNV-1a-128 and byte length of full Tree, Solution and diagnostic text; noncryptographic cross-build regression witness; evidence files use SHA256')
++    if timing:
++        allowed=sorted(os.sched_getaffinity(0));os.sched_setaffinity(0,set(allowed[:4]))
++        metadata.update(available_cpus=allowed,parallel_cpus=allowed[:4],load_before=os.getloadavg(),cpuinfo=Path('/proc/cpuinfo').read_text().split('\n\n')[0])
++    write(a.out/'environment.json',metadata)
++    conditions=plan['cases'] if a.mode=='speed' else plan['profile_cases']
++    statuses=[];results=[];profiles=[];witnesses={};audits=[]
++    flag={'speed':'--measure','check':'--check','profile':'--profile','profile-check':'--profile-check'}[a.mode]
++    for case in conditions:
++        request=copy.deepcopy(case)
++        for world in request['worlds']:world['scenario']=(repo/world['scenario']).as_posix()
++        for k in ('rounds','sample_ms','profile_rounds'):request[k]=plan[k]
++        request_path=a.out/(case['id']+'-request.json');write(request_path,request)
++        log=a.out/(case['id']+'-raw.jsonl');err=a.out/(case['id']+'-stderr.txt')
++        with log.open('wb') as stdout,err.open('wb') as stderr:
++            try: code=subprocess.run([str(binary),flag,str(request_path.resolve())],env=env,stdout=stdout,stderr=stderr,timeout=300).returncode
++            except subprocess.TimeoutExpired:code=-999
++        status=dict(case=case['id'],exit_code=code)
++        if timing:
++            import resource
++            status['cumulative_child_peak_rss_kib']=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
++            if status['cumulative_child_peak_rss_kib']>512*1024:code=status['exit_code']=-998
++        if code==0:
++            rows=[json.loads(s) for s in log.read_text().splitlines()]
++            assert rows[-1]['type']=={'check':'checked','profile-check':'checked','speed':'completed','profile':'profiled'}[a.mode]
++            collect_witnesses(case,rows,witnesses)
++            audits.extend(dict(case=case['id'],**r) for r in rows if r['type']=='audit')
++            if a.mode=='speed':
++                found=old.summarize(rows)
++                assert all(r['censored'] or len(r['pairs'])==plan['rounds'] for r in found)
++                results.extend(dict(case=case['id'],workload=case['workload'],comparison_group=case['comparison_group'],**r) for r in found)
++            elif a.mode=='profile':profiles.extend(dict(case=case['id'],**r) for r in profile_summary(rows))
++            elif a.mode=='profile-check':
++                measured=[r for r in rows if r['type']=='profile']
++                assert len(measured)==1+len(case['variants'])
++                assert all('compute_ns' not in r and all(set(p)=={'phase','calls'} for p in r['phases']) for r in measured)
++        else:status['error']=err.read_text(errors='replace')[-2000:]
++        statuses.append(status);print(json.dumps(status),flush=True)
++        if code:break
++    parity=False
++    if a.parity:
++        reference=json.loads(a.parity.read_bytes());assert reference['passed']
++        for k,v in witnesses.items():
++            key=k
++            if key not in reference['witnesses']:
++                workload, raw=key.split('|',1);option=json.loads(raw)
++                assert option.get('pipeline',{}).pop('borrowed_boundary',False) is True
++                key=workload+'|'+json.dumps(option,sort_keys=True,separators=(',',':'))
++            assert reference['witnesses'].get(key)==v, ('full result/work witness differs',k)
++        parity=True
++    passed=len(statuses)==len(conditions) and all(s['exit_code']==0 for s in statuses)
++    summary=dict(passed=passed,timing=timing,mode=a.mode,source_sha=os.environ.get('GITHUB_SHA'),cases=statuses,
++        results=results,profiles=profiles,witnesses=witnesses,audits=audits,cross_build_parity=parity,paired_rounds=plan['rounds'],
++        wins_evaluated=False,engine_unchanged=True,search_algorithm_unchanged=True)
++    if timing:summary['load_after']=os.getloadavg()
++    write(a.out/'summary.json',summary)
++    raise SystemExit(0 if passed else 1)
++
++if __name__=='__main__':main()
+diff --git a/engine/search/src/bayesian/tree/builder.rs b/engine/search/src/bayesian/tree/builder.rs
+index 31ed853..9b18acf 100644
+--- a/engine/search/src/bayesian/tree/builder.rs
++++ b/engine/search/src/bayesian/tree/builder.rs
+@@ -134,6 +134,27 @@ impl<D: ObservedDomain> Builder<'_, D> {
+             self.public.insert(public, id);
+             id
+         };
++        self.mark_private(node, world, public_id, keys);
++    }
++    #[cfg(feature = "experiment-growth-pipeline")]
++    fn mark_borrowed(&mut self, node: usize, world: usize, public: &[String], keys: &[String; 2]) {
++        #[cfg(feature = "experiment-phase-cost")]
++        let _mark = crate::bayesian::tree::phase_cost::Span::new(
++            crate::bayesian::tree::phase_cost::Phase::Boundary,
++        );
++        // Vec<String> borrows [String] with the same Hash/Eq semantics. Interning
++        // order and full equality stay intact; only a miss needs an owned copy.
++        let public_id = if let Some(&id) = self.public.get(public) {
++            id
++        } else {
++            let id = self.public_keys.len();
++            self.public_keys.push(format!("{public:?}"));
++            self.public.insert(public.to_vec(), id);
++            id
++        };
++        self.mark_private(node, world, public_id, keys);
++    }
++    fn mark_private(&mut self, node: usize, world: usize, public_id: usize, keys: &[String; 2]) {
+         let mut private = [0; 2];
+         for (side, key) in keys.iter().enumerate() {
+             private[side] = if let Some(&id) = self.private.get(key) {
+diff --git a/engine/search/src/bayesian/tree/builder/growing.rs b/engine/search/src/bayesian/tree/builder/growing.rs
+index 26528ca..ab8b63c 100644
+--- a/engine/search/src/bayesian/tree/builder/growing.rs
++++ b/engine/search/src/bayesian/tree/builder/growing.rs
+@@ -135,6 +135,8 @@ impl<P: Clone> Clone for Frontier<P> {
+     }
+ }
+ struct Growing<'a, D: ObservedDomain> {
++    #[cfg(feature = "experiment-growth-pipeline")]
++    borrowed_boundary: bool,
+     #[cfg(feature = "experiment-parallel-transitions")]
+     batch: Option<&'a dyn Batch<D>>,
+     b: Builder<'a, D>,
+@@ -159,6 +161,8 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
+             },
+             #[cfg(feature = "experiment-parallel-transitions")]
+             batch: self.batch,
++            #[cfg(feature = "experiment-growth-pipeline")]
++            borrowed_boundary: self.borrowed_boundary,
+             root: self.root,
+             worlds: self.worlds.clone(),
+             frontier: self.frontier.clone(),
+@@ -199,6 +203,13 @@ impl<'a, D: ObservedDomain> Growing<'a, D> {
+             );
+             h.memory.keys()
+         };
++        #[cfg(feature = "experiment-growth-pipeline")]
++        if self.borrowed_boundary {
++            self.b.mark_borrowed(node, h.world, &h.public, &keys);
++        } else {
++            self.b.mark(node, h.world, h.public.clone(), &keys);
++        }
++        #[cfg(not(feature = "experiment-growth-pipeline"))]
+         self.b.mark(node, h.world, h.public.clone(), &keys);
+         if h.phase != Phase::Terminal && !(h.phase == Phase::Turn && h.turns == 0) {
+             #[cfg(feature = "experiment-phase-cost")]
+@@ -572,6 +583,8 @@ pub fn search<D: ObservedDomain, P: Prior>(
+     normalize(&mut weights)?;
+     let first = domain.observation(&seeds[0].position)?;
+     let mut growing = Growing {
++        #[cfg(feature = "experiment-growth-pipeline")]
++        borrowed_boundary: false,
+         #[cfg(feature = "experiment-parallel-transitions")]
+         batch: None,
+         b: Builder {
+diff --git a/engine/search/src/bayesian/tree/builder/growing/reuse.rs b/engine/search/src/bayesian/tree/builder/growing/reuse.rs
+index 8ee6a20..8d56499 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/reuse.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/reuse.rs
+@@ -182,6 +182,8 @@ fn search_impl<D: ObservedDomain, P: Prior, const SHARED: bool, const INCREMENTA
+     normalize(&mut weights)?;
+     let first = domain.observation(&seeds[0].position)?;
+     let mut growing = Growing {
++        #[cfg(feature = "experiment-growth-pipeline")]
++        borrowed_boundary: false,
+         #[cfg(feature = "experiment-parallel-transitions")]
+         batch,
+         b: Builder {
+diff --git a/engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs b/engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs
+index 0fcd67b..1a6fa1f 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/reuse/cadence.rs
+@@ -88,6 +88,8 @@ fn search_impl<
+     normalize(&mut weights)?;
+     let first = domain.observation(&seeds[0].position)?;
+     let mut growing = Growing {
++        #[cfg(feature = "experiment-growth-pipeline")]
++        borrowed_boundary: false,
+         #[cfg(feature = "experiment-parallel-transitions")]
+         batch,
+         b: Builder {
+diff --git a/engine/search/src/bayesian/tree/builder/growing/reuse/paper.rs b/engine/search/src/bayesian/tree/builder/growing/reuse/paper.rs
+index 4f692f3..f80bf05 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/reuse/paper.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/reuse/paper.rs
+@@ -127,6 +127,8 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
+     normalize(&mut weights)?;
+     let first = domain.observation(&seeds[0].position)?;
+     let mut growing = Growing {
++        #[cfg(feature = "experiment-growth-pipeline")]
++        borrowed_boundary: false,
+         #[cfg(feature = "experiment-parallel-transitions")]
+         batch,
+         b: Builder {
+diff --git a/engine/search/src/bayesian/tree/builder/growing/reuse/pipeline.rs b/engine/search/src/bayesian/tree/builder/growing/reuse/pipeline.rs
+index 18f3e93..0c08bc3 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/reuse/pipeline.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/reuse/pipeline.rs
+@@ -140,6 +140,8 @@ fn search_impl<D: ObservedDomain, P: Prior, const INCREMENTAL: bool, const CADEN
+     normalize(&mut weights)?;
+     let first = domain.observation(&seeds[0].position)?;
+     let mut growing = Growing {
++        #[cfg(feature = "experiment-growth-pipeline")]
++        borrowed_boundary: pipeline_settings.borrowed_boundary,
+         #[cfg(feature = "experiment-parallel-transitions")]
+         batch,
+         b: Builder {
+diff --git a/engine/search/src/bayesian/tree/builder/growing/tests/history_tests.rs b/engine/search/src/bayesian/tree/builder/growing/tests/history_tests.rs
+index 33ccf51..1200e77 100644
+--- a/engine/search/src/bayesian/tree/builder/growing/tests/history_tests.rs
++++ b/engine/search/src/bayesian/tree/builder/growing/tests/history_tests.rs
+@@ -1,152 +1,161 @@
+-use super::*;
+-use std::cell::RefCell;
+-struct Traced {
+-    game: Game,
+-    calls: RefCell<Vec<String>>,
+-}
+-impl Traced {
+-    fn log(&self, p: &Position, operation: &str) {
+-        self.calls.borrow_mut().push(format!(
+-            "{operation}:{}:{}:{}:{}:{}",
+-            p.world, p.stage, p.own, p.other, p.signal
+-        ));
+-    }
+-}
+-impl Domain for Traced {
+-    type Position = Position;
+-    type Action = usize;
+-    fn phase(&self, p: &Position) -> Result<Phase, String> {
+-        self.log(p, "phase");
+-        self.game.phase(p)
+-    }
+-    fn actions(&self, p: &Position, side: usize) -> Result<Vec<usize>, String> {
+-        self.log(p, &format!("actions:{side}"));
+-        self.game.actions(p, side)
+-    }
+-    fn value(&self, p: &Position) -> f32 {
+-        self.log(p, "value");
+-        self.game.value(p)
+-    }
+-    fn transitions(&self, p: &Position, a: [&usize; 2]) -> Result<Vec<(f64, Position)>, String> {
+-        self.log(p, &format!("transition:{}:{}", a[0], a[1]));
+-        self.game.transitions(p, a)
+-    }
+-}
+-impl ObservedDomain for Traced {
+-    fn observation(&self, p: &Position) -> Result<Observation, String> {
+-        self.log(p, "observation");
+-        let mut obs = self.game.observation(p)?;
+-        obs.public.push_str("-메가\"\\\n]");
+-        obs.private = ["우리\0".into(), "상대\t".into()];
+-        Ok(obs)
+-    }
+-    fn action_id(&self, p: &Position, side: usize, a: &usize) -> String {
+-        self.log(p, &format!("action_id:{side}:{a}"));
+-        format!("new-mechanic-{a}-\"\\\t")
+-    }
+-}
+-#[derive(Default)]
+-struct TracedPrior(RefCell<Vec<String>>);
+-impl Prior for TracedPrior {
+-    fn weights(&self, information: &Information) -> Vec<f64> {
+-        self.0.borrow_mut().push(format!("{information:?}"));
+-        vec![1.; information.actions.len()]
+-    }
+-}
+-
+-#[test]
+-fn encoded_history_preserves_every_callback_and_atomic_result() {
+-    for switch in [false, true] {
+-        for cap in [8, 25, 10000] {
+-            for budget in [1, 2, 99] {
+-                for all in [false, true] {
+-                    let make = || Traced {
+-                        game: Game {
+-                            switch,
+-                            ..Game::new()
+-                        },
+-                        calls: RefCell::default(),
+-                    };
+-                    let left = make();
+-                    let right = make();
+-                    let lp = TracedPrior::default();
+-                    let rp = TracedPrior::default();
+-                    let run = |domain: &Traced, prior: &TracedPrior, enabled| {
+-                        reuse::pipeline::search(
+-                            domain,
+-                            &seeds(),
+-                            Limits {
+-                                max_transitions: cap,
+-                                ..Limits::default()
+-                            },
+-                            Config {
+-                                solver: CfrConfig {
+-                                    iterations: 128,
+-                                    tolerance: 0.03,
+-                                    check_every: 32,
+-                                },
+-                                ..config(budget)
+-                            },
+-                            prior,
+-                            reuse::Options {
+-                                in_place: all,
+-                                ..Default::default()
+-                            },
+-                            4,
+-                            tree::paper::Settings {
+-                                sequence: true,
+-                                ..Default::default()
+-                            },
+-                            tree::pipeline::Settings {
+-                                frontier_index: all,
+-                                owned_compiler: all,
+-                                incremental_sequence: all,
+-                                compressed_checks: all,
+-                                encoded_history: enabled,
+-                            },
+-                        )
+-                    };
+-                    match (run(&left, &lp, false), run(&right, &rp, true)) {
+-                        (Ok(a), Ok(b)) => {
+-                            assert_eq!(
+-                                format!("{:?}", a.search.built.tree),
+-                                format!("{:?}", b.search.built.tree)
+-                            );
+-                            assert_eq!(
+-                                format!("{:?}", a.search.solution),
+-                                format!("{:?}", b.search.solution)
+-                            );
+-                            assert_eq!(
+-                                format!("{:?}", a.search.work),
+-                                format!("{:?}", b.search.work)
+-                            );
+-                            assert_eq!(
+-                                format!("{:?}", a.search.built.stats),
+-                                format!("{:?}", b.search.built.stats)
+-                            );
+-                            assert_eq!(format!("{:?}", a.stats), format!("{:?}", b.stats));
+-                            assert_eq!(format!("{:?}", a.metrics), format!("{:?}", b.metrics));
+-                            assert_eq!(a.search.stop, b.search.stop);
+-                            assert_eq!(
+-                                (
+-                                    a.search.frontier_histories,
+-                                    a.search.frontier_public_groups,
+-                                    a.search.horizon_complete
+-                                ),
+-                                (
+-                                    b.search.frontier_histories,
+-                                    b.search.frontier_public_groups,
+-                                    b.search.horizon_complete
+-                                )
+-                            );
+-                        }
+-                        (Err(a), Err(b)) => assert_eq!(a.to_string(), b.to_string()),
+-                        _ => panic!("encoded history changed success/error behavior"),
+-                    }
+-                    assert_eq!(*left.calls.borrow(), *right.calls.borrow());
+-                    assert_eq!(*lp.0.borrow(), *rp.0.borrow());
+-                }
+-            }
+-        }
+-    }
+-}
++use super::*;
++use std::cell::RefCell;
++struct Traced {
++    game: Game,
++    calls: RefCell<Vec<String>>,
++}
++impl Traced {
++    fn log(&self, p: &Position, operation: &str) {
++        self.calls.borrow_mut().push(format!(
++            "{operation}:{}:{}:{}:{}:{}",
++            p.world, p.stage, p.own, p.other, p.signal
++        ));
++    }
++}
++impl Domain for Traced {
++    type Position = Position;
++    type Action = usize;
++    fn phase(&self, p: &Position) -> Result<Phase, String> {
++        self.log(p, "phase");
++        self.game.phase(p)
++    }
++    fn actions(&self, p: &Position, side: usize) -> Result<Vec<usize>, String> {
++        self.log(p, &format!("actions:{side}"));
++        self.game.actions(p, side)
++    }
++    fn value(&self, p: &Position) -> f32 {
++        self.log(p, "value");
++        self.game.value(p)
++    }
++    fn transitions(&self, p: &Position, a: [&usize; 2]) -> Result<Vec<(f64, Position)>, String> {
++        self.log(p, &format!("transition:{}:{}", a[0], a[1]));
++        self.game.transitions(p, a)
++    }
++}
++impl ObservedDomain for Traced {
++    fn observation(&self, p: &Position) -> Result<Observation, String> {
++        self.log(p, "observation");
++        let mut obs = self.game.observation(p)?;
++        obs.public.push_str("-메가\"\\\n]");
++        obs.private = ["우리\0".into(), "상대\t".into()];
++        Ok(obs)
++    }
++    fn action_id(&self, p: &Position, side: usize, a: &usize) -> String {
++        self.log(p, &format!("action_id:{side}:{a}"));
++        format!("new-mechanic-{a}-\"\\\t")
++    }
++}
++#[derive(Default)]
++struct TracedPrior(RefCell<Vec<String>>);
++impl Prior for TracedPrior {
++    fn weights(&self, information: &Information) -> Vec<f64> {
++        self.0.borrow_mut().push(format!("{information:?}"));
++        vec![1.; information.actions.len()]
++    }
++}
++
++#[test]
++fn encoded_history_preserves_every_callback_and_atomic_result() {
++    compare(false, false);
++}
++#[test]
++fn borrowed_boundary_preserves_callbacks_keys_and_atomic_results() {
++    compare(true, false);
++    compare(true, true);
++}
++fn compare(boundary: bool, history: bool) {
++    for switch in [false, true] {
++        for cap in [8, 25, 10000] {
++            for budget in [1, 2, 99] {
++                for all in [false, true] {
++                    let make = || Traced {
++                        game: Game {
++                            switch,
++                            ..Game::new()
++                        },
++                        calls: RefCell::default(),
++                    };
++                    let left = make();
++                    let right = make();
++                    let lp = TracedPrior::default();
++                    let rp = TracedPrior::default();
++                    let run = |domain: &Traced, prior: &TracedPrior, enabled| {
++                        reuse::pipeline::search(
++                            domain,
++                            &seeds(),
++                            Limits {
++                                max_transitions: cap,
++                                ..Limits::default()
++                            },
++                            Config {
++                                solver: CfrConfig {
++                                    iterations: 128,
++                                    tolerance: 0.03,
++                                    check_every: 32,
++                                },
++                                ..config(budget)
++                            },
++                            prior,
++                            reuse::Options {
++                                in_place: all,
++                                ..Default::default()
++                            },
++                            4,
++                            tree::paper::Settings {
++                                sequence: true,
++                                ..Default::default()
++                            },
++                            tree::pipeline::Settings {
++                                frontier_index: all,
++                                owned_compiler: all,
++                                incremental_sequence: all,
++                                compressed_checks: all,
++                                encoded_history: if boundary { history } else { enabled },
++                                borrowed_boundary: boundary && enabled,
++                            },
++                        )
++                    };
++                    match (run(&left, &lp, false), run(&right, &rp, true)) {
++                        (Ok(a), Ok(b)) => {
++                            assert_eq!(
++                                format!("{:?}", a.search.built.tree),
++                                format!("{:?}", b.search.built.tree)
++                            );
++                            assert_eq!(
++                                format!("{:?}", a.search.solution),
++                                format!("{:?}", b.search.solution)
++                            );
++                            assert_eq!(
++                                format!("{:?}", a.search.work),
++                                format!("{:?}", b.search.work)
++                            );
++                            assert_eq!(
++                                format!("{:?}", a.search.built.stats),
++                                format!("{:?}", b.search.built.stats)
++                            );
++                            assert_eq!(format!("{:?}", a.stats), format!("{:?}", b.stats));
++                            assert_eq!(format!("{:?}", a.metrics), format!("{:?}", b.metrics));
++                            assert_eq!(a.search.stop, b.search.stop);
++                            assert_eq!(
++                                (
++                                    a.search.frontier_histories,
++                                    a.search.frontier_public_groups,
++                                    a.search.horizon_complete
++                                ),
++                                (
++                                    b.search.frontier_histories,
++                                    b.search.frontier_public_groups,
++                                    b.search.horizon_complete
++                                )
++                            );
++                        }
++                        (Err(a), Err(b)) => assert_eq!(a.to_string(), b.to_string()),
++                        _ => panic!("encoded history changed success/error behavior"),
++                    }
++                    assert_eq!(*left.calls.borrow(), *right.calls.borrow());
++                    assert_eq!(*lp.0.borrow(), *rp.0.borrow());
++                }
++            }
++        }
++    }
++}
+diff --git a/engine/search/src/bayesian/tree/pipeline.rs b/engine/search/src/bayesian/tree/pipeline.rs
+index cf1996c..237a8a3 100644
+--- a/engine/search/src/bayesian/tree/pipeline.rs
++++ b/engine/search/src/bayesian/tree/pipeline.rs
+@@ -1,67 +1,69 @@
+-//! Independent opt-in growth experiments; every flag defaults to false.
+-#[derive(Clone, Copy, Debug, Default)]
+-pub struct Settings {
+-    pub frontier_index: bool,
+-    pub owned_compiler: bool,
+-    pub incremental_sequence: bool,
+-    pub compressed_checks: bool,
+-    /// Storage-only, byte-identical private history keys; growing requests only.
+-    pub encoded_history: bool,
+-}
+-
+-#[derive(Clone, Debug, Default)]
+-pub struct Metrics {
+-    pub owned_compiles: usize,
+-    pub sequence_full_builds: usize,
+-    pub sequence_delta_updates: usize,
+-    pub sequence_leaf_visits: usize,
+-    pub sequence_scale_refreshes: usize,
+-    pub sequence_fallbacks: usize,
+-    pub compressed_checks: usize,
+-    pub compressed_rejections: usize,
+-}
+-pub(crate) use super::workspace::cached::paper::pipeline::{solve_from, Context};
+-pub fn validate(settings: Settings, solver: super::paper::Settings) -> Result<(), super::Error> {
+-    if settings.incremental_sequence
+-        && (!settings.owned_compiler || !solver.sequence || solver.compact)
+-    {
+-        return Err(super::Error(
+-            "incremental sequence requires owned compiler, sequence=true, compact=false".into(),
+-        ));
+-    }
+-    if settings.compressed_checks && (!solver.sequence || solver.compact) {
+-        return Err(super::Error(
+-            "compressed checks require sequence=true, compact=false".into(),
+-        ));
+-    }
+-    Ok(())
+-}
+-
+-pub struct Run {
+-    pub run: super::paper::Run,
+-    pub metrics: Metrics,
+-}
+-pub fn solve(
+-    tree: &super::Tree,
+-    config: super::Config,
+-    solver: super::paper::Settings,
+-    settings: Settings,
+-) -> Result<Run, super::Error> {
+-    if settings.encoded_history {
+-        return Err(super::Error(
+-            "encoded history requires a growing request".into(),
+-        ));
+-    }
+-    let mut metrics = Metrics::default();
+-    let run = solve_from(
+-        tree,
+-        config,
+-        solver,
+-        None,
+-        settings,
+-        None,
+-        &mut Context::default(),
+-        &mut metrics,
+-    )?;
+-    Ok(Run { run, metrics })
+-}
++//! Independent opt-in growth experiments; every flag defaults to false.
++#[derive(Clone, Copy, Debug, Default)]
++pub struct Settings {
++    pub frontier_index: bool,
++    pub owned_compiler: bool,
++    pub incremental_sequence: bool,
++    pub compressed_checks: bool,
++    /// Storage-only, byte-identical private history keys; growing requests only.
++    pub encoded_history: bool,
++    /// Borrow public history on boundary lookup; clone only when interning a new one.
++    pub borrowed_boundary: bool,
++}
++
++#[derive(Clone, Debug, Default)]
++pub struct Metrics {
++    pub owned_compiles: usize,
++    pub sequence_full_builds: usize,
++    pub sequence_delta_updates: usize,
++    pub sequence_leaf_visits: usize,
++    pub sequence_scale_refreshes: usize,
++    pub sequence_fallbacks: usize,
++    pub compressed_checks: usize,
++    pub compressed_rejections: usize,
++}
++pub(crate) use super::workspace::cached::paper::pipeline::{solve_from, Context};
++pub fn validate(settings: Settings, solver: super::paper::Settings) -> Result<(), super::Error> {
++    if settings.incremental_sequence
++        && (!settings.owned_compiler || !solver.sequence || solver.compact)
++    {
++        return Err(super::Error(
++            "incremental sequence requires owned compiler, sequence=true, compact=false".into(),
++        ));
++    }
++    if settings.compressed_checks && (!solver.sequence || solver.compact) {
++        return Err(super::Error(
++            "compressed checks require sequence=true, compact=false".into(),
++        ));
++    }
++    Ok(())
++}
++
++pub struct Run {
++    pub run: super::paper::Run,
++    pub metrics: Metrics,
++}
++pub fn solve(
++    tree: &super::Tree,
++    config: super::Config,
++    solver: super::paper::Settings,
++    settings: Settings,
++) -> Result<Run, super::Error> {
++    if settings.encoded_history || settings.borrowed_boundary {
++        return Err(super::Error(
++            "history/boundary storage requires a growing request".into(),
++        ));
++    }
++    let mut metrics = Metrics::default();
++    let run = solve_from(
++        tree,
++        config,
++        solver,
++        None,
++        settings,
++        None,
++        &mut Context::default(),
++        &mut metrics,
++    )?;
++    Ok(Run { run, metrics })
++}
+diff --git a/engine/search/src/bin/lab-belief-workspace/pipeline_options.rs b/engine/search/src/bin/lab-belief-workspace/pipeline_options.rs
+index 8697182..faf8053 100644
+--- a/engine/search/src/bin/lab-belief-workspace/pipeline_options.rs
++++ b/engine/search/src/bin/lab-belief-workspace/pipeline_options.rs
+@@ -10,6 +10,7 @@ pub fn parse(v: &Value) -> Result<Settings, String> {
+             "incremental_sequence",
+             "compressed_checks",
+             "encoded_history",
++            "borrowed_boundary",
+         ]
+         .contains(&key.as_str())
+         {
+@@ -27,6 +28,7 @@ pub fn parse(v: &Value) -> Result<Settings, String> {
+         incremental_sequence: flag("incremental_sequence")?,
+         compressed_checks: flag("compressed_checks")?,
+         encoded_history: flag("encoded_history")?,
++        borrowed_boundary: flag("borrowed_boundary")?,
+     })
+ }
+ pub fn metrics(m: &Metrics) -> Value {
+@@ -43,7 +45,11 @@ pub fn request(v: &Value) -> Result<Option<Settings>, String> {
+             .ok_or("pipeline requires explicit paper settings")?,
+     )?;
+     lab_search::bayesian::tree::pipeline::validate(p, solver).map_err(|e| e.to_string())?;
+-    if (p.frontier_index || p.owned_compiler || p.incremental_sequence || p.encoded_history)
++    if (p.frontier_index
++        || p.owned_compiler
++        || p.incremental_sequence
++        || p.encoded_history
++        || p.borrowed_boundary)
+         && v.get("growth").is_none()
+     {
+         return Err("growth pipeline flags require a growing request".into());
+diff --git a/engine/search/src/bin/lab-phase-speed.rs b/engine/search/src/bin/lab-phase-speed.rs
+index 9fee528..8260df7 100644
+--- a/engine/search/src/bin/lab-phase-speed.rs
++++ b/engine/search/src/bin/lab-phase-speed.rs
+@@ -326,6 +326,8 @@ fn main() -> std::process::ExitCode {
+                 "--profile",
+                 "--profile-check",
+                 "--memory",
++                "--worker",
++                "--worker-check",
+             ]
+             .contains(&args[0].as_str())
+         {
+@@ -335,14 +337,16 @@ fn main() -> std::process::ExitCode {
+             );
+         }
+         let measure = args[0] == "--measure";
++        let worker = args[0] == "--worker" || args[0] == "--worker-check";
++        let worker_timing = args[0] == "--worker";
+         let profile = args[0] == "--profile" || args[0] == "--profile-check";
+         let profile_check = args[0] == "--profile-check";
+-        if (measure || (profile && !profile_check))
++        if (measure || worker_timing || (profile && !profile_check))
+             && std::env::var("GITHUB_ACTIONS").as_deref() != Ok("true")
+         {
+             return Err("performance measurements require GitHub Actions".into());
+         }
+-        if measure
++        if (measure || worker_timing)
+             && (cfg!(feature = "experiment-phase-cost")
+                 || cfg!(feature = "experiment-allocation-audit")
+                 || cfg!(feature = "experiment-snapshot-audit"))
+@@ -387,6 +391,37 @@ fn main() -> std::process::ExitCode {
+         } else {
+             None
+         };
++        if worker {
++            emit(json!({"type":"ready","timing":worker_timing}))?;
++            let stdin = std::io::stdin();
++            let mut line = String::new();
++            loop {
++                line.clear();
++                if stdin.read_line(&mut line).map_err(|e| e.to_string())? == 0 {
++                    break;
++                }
++                let request: Value = serde_json::from_str(&line).map_err(|e| e.to_string())?;
++                let count = uint(&request, "count", 1)?;
++                if !(1..=64).contains(&count) {
++                    return Err("invalid worker sample count".into());
++                }
++                let variant = &request["variant"];
++                let (ns, result) = if worker_timing {
++                    timed(&i, e.as_ref(), &fixed, pool.as_ref(), variant, count)?
++                } else {
++                    (0., compute(&i, e.as_ref(), &fixed, pool.as_ref(), variant)?)
++                };
++                let mut row = json!({"type":"sample","timing":worker_timing,
++                    "witness":witness(&result,&fixed),"diagnostics":result.diagnostics(&fixed)});
++                if worker_timing {
++                    row["ns_per_solve"] = json!(ns);
++                    row["count"] = json!(count);
++                }
++                emit(row)?;
++                // Result destruction, JSON and stdin waits are outside timed compute.
++            }
++            return Ok(());
++        }
+         let baseline = &v["baseline"];
+         #[cfg(feature = "experiment-snapshot-audit")]
+         tree::snapshot_audit::reset();

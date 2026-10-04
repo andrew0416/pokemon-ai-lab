@@ -1,0 +1,156 @@
+{
+  "parent": "b6e1e284a67ace9bde7ceffbc9da4dfaf73e9f75",
+  "branch": "codex/s26k-boundary-fix-20261004",
+  "workflow": ".github/workflows/engine-s26k-boundary-fix.yml",
+  "inherited_unchanged": 4246,
+  "changed_sha256": {
+    ".github/workflows/engine-s26k-boundary-fix.yml": "e42a5fe5f4ded60e207da4afe20f391044b40c69826579e5b80e099e16354cb1",
+    "engine/benchmarks/s26_boundary/binary_identity.py": "72e5159168309e6ae950e17680afdf5d52392696ada813607ae8c3be5ee3ed6d"
+  },
+  "old_workflow_triggers": {
+    ".github/workflows/engine-benchmark.yml": null,
+    ".github/workflows/engine-s25b-search-quality.yml": {
+      "branches": [
+        "codex/s25b-search-quality-20261002"
+      ]
+    },
+    ".github/workflows/engine-s25d-response-sweeps.yml": {
+      "branches": [
+        "codex/s25d-response-sweeps-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26-bayesian-cfr.yml": {
+      "branches": [
+        "codex/s26a-bayesian-cfr-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26b-public-belief.yml": {
+      "branches": [
+        "codex/s26b-public-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-compiler.yml": {
+      "branches": [
+        "codex/s26c-compiler-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-confirm.yml": {
+      "branches": [
+        "codex/s26c-confirm-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-growing-belief.yml": {
+      "branches": [
+        "codex/s26c-growing-belief-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-speed.yml": {
+      "branches": [
+        "codex/s26c-speed-20261002"
+      ]
+    },
+    ".github/workflows/engine-s26c-static.yml": {
+      "branches": [
+        "codex/s26c-static-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-workspace.yml": {
+      "branches": [
+        "codex/s26c-workspace-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26c-writer.yml": {
+      "branches": [
+        "codex/s26c-writer-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-cadence.yml": {
+      "branches": [
+        "codex/s26e-cadence-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-incremental.yml": {
+      "branches": [
+        "codex/s26e-incremental-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-owned.yml": {
+      "branches": [
+        "codex/s26e-owned-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-parallel.yml": {
+      "branches": [
+        "codex/s26e-parallel-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26e-shared.yml": {
+      "branches": [
+        "codex/s26e-shared-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26f-papers.yml": {
+      "branches": [
+        "codex/s26f-papers-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26g-pipeline.yml": {
+      "branches": [
+        "codex/s26g-pipeline-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26h-phases.yml": {
+      "branches": [
+        "codex/s26h-phases-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26i-audit.yml": {
+      "branches": [
+        "codex/s26i-audit-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26j-history.yml": {
+      "branches": [
+        "codex/s26j-history-20261003"
+      ]
+    },
+    ".github/workflows/engine-s26k-boundary.yml": {
+      "branches": [
+        "codex/s26k-boundary-20261004"
+      ]
+    },
+    ".github/workflows/engine.yml": {
+      "branches": [
+        "lab-engine",
+        "main"
+      ],
+      "paths": [
+        "engine/**",
+        ".github/workflows/engine.yml"
+      ]
+    },
+    ".github/workflows/oracle.yml": {
+      "paths": [
+        "engine/jobs/*/oracle.json"
+      ]
+    },
+    ".github/workflows/search.yml": {
+      "paths": [
+        "engine/jobs/*/job.json"
+      ]
+    }
+  },
+  "default_off": true,
+  "production_modified": false,
+  "performance": true,
+  "correctness_scope": "borrow public boundary keys on lookup; exact full key/ID/callback/rollback parity; BR/LP and intermediate rebuilds; pinned historical library controls; plain/instrumented interleaved RSS and non-AVX2 execution",
+  "limitations": "single-runner bounded fixtures; equal-gap comparisons with censored caps; no wins/strength evaluation",
+  "source_sha": "3f0b28e7f317c84acffa21a1354351cfb8dcbe3d",
+  "tree": "4a1fdbde91efc36386baf33d3b8a74fbe0f2a1b4",
+  "patch_sha256": "f34cea03bc4b66792b179e351f11905b725be3dc341f92c5b05a2885ec1a6338",
+  "shared_git": {
+    "head": "0089576756fde3886282c706c098979d89c88278",
+    "status": "",
+    "index_sha256": "b01f8913c4b8481075d94c79fe54b6cfe231d3b4b222bf6fc057c54004a6f2bc"
+  }
+}
